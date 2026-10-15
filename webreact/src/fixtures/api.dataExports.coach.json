@@ -1,0 +1,16 @@
+{
+ "$captured": {
+  "route": "GET /api/settings/data/exports",
+  "rank": "coach",
+  "status": 403,
+  "world": true
+ },
+ "body": {
+  "error": {
+   "kind": "forbidden",
+   "message": "refused: requires_admin",
+   "requestId": "00000000-0000-4000-8000-000000000339",
+   "retryable": false
+  }
+ }
+}

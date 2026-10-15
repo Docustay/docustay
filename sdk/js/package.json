@@ -1,0 +1,45 @@
+{
+  "name": "@docustay2026/sdk",
+  "version": "0.1.0",
+  "description": "Docustay API client for JavaScript and TypeScript. No dependencies.",
+  "type": "module",
+  "license": "MIT",
+  "main": "./src/index.js",
+  "types": "./src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "import": "./src/index.js"
+    }
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
+  "homepage": "https://docustay.app/developers",
+  "keywords": [
+    "docustay",
+    "e-signature",
+    "esignature",
+    "documents",
+    "signing"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/docustay/docustay.git",
+    "directory": "sdk/js"
+  },
+  "bugs": {
+    "url": "https://github.com/docustay/docustay/issues"
+  }
+}

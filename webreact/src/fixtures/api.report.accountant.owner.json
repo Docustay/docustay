@@ -1,0 +1,31 @@
+{
+ "$captured": {
+  "route": "GET /api/reports/accountant",
+  "rank": "owner",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "out": {
+   "workbench_minor": null,
+   "stripe_fees_minor": null
+  },
+  "month": "2026-09-26",
+  "balance": null,
+  "payouts": [],
+  "sessions": {
+   "total": 0,
+   "no_show": 0,
+   "attended": 0
+  },
+  "in_by_method": [
+   {
+    "method": "all",
+    "amount_minor": 0
+   }
+  ],
+  "still_owed_minor": 0,
+  "owed_in_work_minor": 0,
+  "unexecuted_documents": 0
+ }
+}

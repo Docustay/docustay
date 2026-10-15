@@ -1,0 +1,129 @@
+{
+ "$captured": {
+  "route": "GET /api/records/document/:world.instance",
+  "rank": "admin",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "shell": {
+   "type": "document",
+   "label": "Document",
+   "fields": {
+    "state": "sent",
+    "executed_at": null,
+    "title": "Reference Coaching agreement for Adult",
+    "archived_at": null,
+    "is_session_note": false
+   },
+   "readOnly": false,
+   "archived": false,
+   "header": {
+    "title": "Reference Coaching agreement for Adult",
+    "status": "sent"
+   },
+   "highlights": [
+    {
+     "key": "title",
+     "label": "Document",
+     "from": "document_instance.title",
+     "empty": "Untitled",
+     "format": "text",
+     "value": "Reference Coaching agreement for Adult",
+     "present": true
+    },
+    {
+     "key": "state",
+     "label": "State",
+     "from": "document_instance.state",
+     "empty": "Unknown",
+     "format": "enum",
+     "value": "sent",
+     "present": true
+    },
+    {
+     "key": "subject",
+     "label": "Subject",
+     "from": "derived:document_subject",
+     "empty": "Nobody named",
+     "format": "text",
+     "value": "Reference Adult",
+     "present": true
+    },
+    {
+     "key": "age",
+     "label": "Out for",
+     "from": "derived:days_since_sent",
+     "empty": "Not sent",
+     "format": "text",
+     "value": "Sent today",
+     "present": true
+    }
+   ],
+   "panels": [
+    {
+     "key": "basics",
+     "label": "Basics",
+     "fields": [
+      {
+       "field": "builder",
+       "label": "Builder",
+       "format": "enum",
+       "value": "contract",
+       "currency": null
+      },
+      {
+       "field": "state",
+       "label": "State",
+       "format": "enum",
+       "value": "sent",
+       "currency": null
+      },
+      {
+       "field": "sent_at",
+       "label": "Sent",
+       "format": "datetime",
+       "value": "2026-09-26T17:56:06.226Z",
+       "currency": null
+      },
+      {
+       "field": "executed_at",
+       "label": "Executed",
+       "format": "datetime",
+       "value": null,
+       "currency": null
+      }
+     ]
+    }
+   ],
+   "related": [],
+   "activity": {
+    "key": "activity",
+    "label": "Activity",
+    "kind": "list",
+    "of": "event"
+   }
+  },
+  "activity": [
+   {
+    "id": "00000000-0000-4000-8000-000000000383",
+    "topic": "documents.document.sent",
+    "emitted_by": "documents",
+    "status": "pending",
+    "created_at": "2026-09-26T17:56:06.226Z",
+    "reason": null
+   },
+   {
+    "id": "00000000-0000-4000-8000-000000000384",
+    "topic": "documents.document.created",
+    "emitted_by": "documents",
+    "status": "pending",
+    "created_at": "2026-09-26T17:56:06.221Z",
+    "reason": null
+   }
+  ],
+  "relatedCounts": {},
+  "relatedRows": {},
+  "whatKeepsWorking": {}
+ }
+}

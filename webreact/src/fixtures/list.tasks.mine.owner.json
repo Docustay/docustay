@@ -1,0 +1,76 @@
+{
+ "$captured": {
+  "route": "GET /api/list/tasks/mine",
+  "rank": "owner",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/tasks/mine",
+  "title": "My tasks",
+  "columns": [
+   {
+    "field": "title",
+    "label": "Task",
+    "format": "text"
+   },
+   {
+    "field": "written_by",
+    "label": "Who",
+    "format": "text"
+   },
+   {
+    "field": "about",
+    "label": "About",
+    "format": "text"
+   },
+   {
+    "field": "due_at",
+    "label": "Due",
+    "format": "datetime"
+   },
+   {
+    "field": "topic",
+    "label": "Where it came from",
+    "format": "enum"
+   },
+   {
+    "field": "state",
+    "label": "State",
+    "format": "enum"
+   }
+  ],
+  "recordType": null,
+  "empty": "Tasks assigned to you appear here. An empty list means you are caught up.",
+  "canWrite": null,
+  "noWriteNotice": null,
+  "summary": null,
+  "emptyState": {
+   "kind": "first-run",
+   "icon": "IconCheckbox",
+   "headline": "Nothing on your plate",
+   "line": "Tasks assigned to you appear here. An empty list means you are caught up.",
+   "action": {
+    "label": "Add task",
+    "href": "/tasks/mine?new=1"
+   },
+   "blockedAction": null,
+   "blockedLine": null,
+   "errorWhenEmpty": false,
+   "noWrite": null,
+   "firstRun": null
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 0
+  }
+ }
+}

@@ -1,0 +1,83 @@
+{
+ "$captured": {
+  "route": "GET /api/list/reports",
+  "rank": "owner",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/reports",
+  "title": "Reports",
+  "columns": [
+   {
+    "field": "label",
+    "label": "Report",
+    "format": "text"
+   },
+   {
+    "field": "question",
+    "label": "Answers",
+    "format": "text"
+   },
+   {
+    "field": "rows",
+    "label": "Rows",
+    "format": "number"
+   }
+  ],
+  "recordType": null,
+  "empty": "Each report answers one question in plain words. They need a few weeks of sessions and invoices behind them first.",
+  "canWrite": null,
+  "noWriteNotice": null,
+  "summary": null,
+  "emptyState": {
+   "kind": "period",
+   "icon": "IconChartBar",
+   "headline": "Reports appear as your data grows",
+   "line": "Each report answers one question in plain words. They need a few weeks of sessions and invoices behind them first.",
+   "action": null,
+   "blockedAction": null,
+   "blockedLine": null,
+   "errorWhenEmpty": false,
+   "noWrite": null,
+   "firstRun": null
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [
+   {
+    "id": "documents",
+    "label": "Documents waiting",
+    "question": "Which documents have been sent and not signed, and for how long?",
+    "rows": 1
+   },
+   {
+    "id": "revenue",
+    "label": "Revenue by month",
+    "question": "What was invoiced and what was actually paid, month by month?",
+    "rows": 1
+   },
+   {
+    "id": "run",
+    "label": "Run metrics by month",
+    "question": "What did each connected account report, month by month?",
+    "rows": 0
+   },
+   {
+    "id": "sessions",
+    "label": "Sessions by coach",
+    "question": "How many sessions did each coach hold, and how many were attended or missed?",
+    "rows": 1
+   }
+  ],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 4
+  }
+ }
+}

@@ -1,0 +1,5672 @@
+{
+ "categories": [
+  {
+   "id": "general",
+   "label": "General"
+  },
+  {
+   "id": "events",
+   "label": "Events"
+  },
+  {
+   "id": "people",
+   "label": "People and HR"
+  },
+  {
+   "id": "money",
+   "label": "Orders and money"
+  },
+  {
+   "id": "operations",
+   "label": "Operations"
+  },
+  {
+   "id": "property",
+   "label": "Property and facilities"
+  },
+  {
+   "id": "education",
+   "label": "Education"
+  }
+ ],
+ "forms": [
+  {
+   "slug": "contact-and-inquiry",
+   "title": "Contact and inquiry",
+   "use": "general",
+   "summary": "A short contact form: who is asking, how to reply, what it is about and the message.",
+   "who": "Anyone who wants a simple way for people to get in touch, ask a question or request information.",
+   "purpose": "Collect questions and requests in one place, with a reply address you can trust.",
+   "intro": "Tell us how we can help and how to reach you. We reply to every message.",
+   "roles": [
+    "Visitor"
+   ],
+   "counterSign": false,
+   "publish": {
+    "verifyEmail": false,
+    "fillAgain": true,
+    "notifyOwner": true,
+    "confirmRespondent": true,
+    "thankYou": "Thank you. We have your message and will reply soon."
+   },
+   "sections": [
+    {
+     "heading": "About you",
+     "fields": [
+      {
+       "label": "Full name",
+       "type": "text",
+       "role": "Visitor",
+       "required": true,
+       "max": 120
+      },
+      {
+       "label": "Email",
+       "type": "email",
+       "role": "Visitor",
+       "required": true
+      },
+      {
+       "label": "Phone",
+       "type": "phone",
+       "role": "Visitor",
+       "required": false,
+       "help": "Optional. Used only to reach you about this form."
+      }
+     ]
+    },
+    {
+     "heading": "Your message",
+     "fields": [
+      {
+       "label": "Topic",
+       "type": "choice",
+       "role": "Visitor",
+       "required": true,
+       "options": [
+        "A question",
+        "A quote or estimate",
+        "Support with something you already have",
+        "Feedback",
+        "Something else"
+       ]
+      },
+      {
+       "label": "Subject",
+       "type": "text",
+       "role": "Visitor",
+       "required": true,
+       "help": "A few words, for example “Opening hours” or “Quote for a group”.",
+       "max": 120
+      },
+      {
+       "label": "Message",
+       "type": "text",
+       "role": "Visitor",
+       "required": true,
+       "help": "As much detail as you like.",
+       "max": 2000
+      },
+      {
+       "label": "Reply by",
+       "type": "choice",
+       "role": "Visitor",
+       "required": true,
+       "options": [
+        "Email",
+        "Phone",
+        "Either"
+       ]
+      },
+      {
+       "label": "Attachment",
+       "type": "file (PDF or picture)",
+       "role": "Visitor",
+       "required": false,
+       "help": "A PDF or a picture (PNG or JPEG). It is kept exactly as you upload it."
+      },
+      {
+       "label": "I understand that what I enter here is stored by the organization that published this form and used only for the purpose",
+       "type": "tick box",
+       "role": "Visitor",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "Signature",
+     "fields": [
+      {
+       "label": "Visitor signature",
+       "type": "signature",
+       "role": "Visitor",
+       "required": true
+      },
+      {
+       "label": "Visitor date signed",
+       "type": "date signed",
+       "role": "Visitor",
+       "required": true
+      }
+     ]
+    }
+   ],
+   "consent": [
+    "I understand that what I enter here is stored by the organization that published this form and used only for the purpose described above."
+   ],
+   "fieldCount": 11,
+   "counterFields": 0,
+   "required": 9,
+   "minutes": 3
+  },
+  {
+   "slug": "event-registration",
+   "title": "Event registration",
+   "use": "events",
+   "summary": "Register for an event: attendee details, sessions or tickets, dietary and access needs, and agreement to the event rules.",
+   "who": "An organizer who needs attendees to register for an event, with their choices and needs.",
+   "purpose": "Know who is coming, what they chose and what they need, before the day.",
+   "intro": "Please register below. Your place is confirmed when you sign.",
+   "roles": [
+    "Attendee"
+   ],
+   "counterSign": false,
+   "publish": {
+    "verifyEmail": true,
+    "fillAgain": false,
+    "notifyOwner": true,
+    "confirmRespondent": true,
+    "responseLimit": 200,
+    "thankYou": "You are registered. A confirmation is on its way to your email."
+   },
+   "sections": [
+    {
+     "heading": "About you",
+     "fields": [
+      {
+       "label": "Full name",
+       "type": "text",
+       "role": "Attendee",
+       "required": true,
+       "max": 120
+      },
+      {
+       "label": "Email",
+       "type": "email",
+       "role": "Attendee",
+       "required": true
+      },
+      {
+       "label": "Phone",
+       "type": "phone",
+       "role": "Attendee",
+       "required": false,
+       "help": "Optional. Used only to reach you about this form."
+      }
+     ]
+    },
+    {
+     "heading": "Your registration",
+     "fields": [
+      {
+       "label": "Organization",
+       "type": "text",
+       "role": "Attendee",
+       "required": false,
+       "max": 120
+      },
+      {
+       "label": "Ticket type",
+       "type": "choice",
+       "role": "Attendee",
+       "required": true,
+       "options": [
+        "General",
+        "Member",
+        "Student",
+        "Speaker or guest",
+        "Volunteer"
+       ]
+      },
+      {
+       "label": "Sessions",
+       "type": "choose any",
+       "role": "Attendee",
+       "required": false,
+       "help": "Choose any that apply.",
+       "options": [
+        "Morning session",
+        "Afternoon session",
+        "Evening session",
+        "Workshop",
+        "Networking"
+       ]
+      },
+      {
+       "label": "Guests",
+       "type": "text",
+       "role": "Attendee",
+       "required": false,
+       "help": "0 if you are coming alone."
+      }
+     ]
+    },
+    {
+     "heading": "So we can look after you",
+     "fields": [
+      {
+       "label": "Dietary needs",
+       "type": "text",
+       "role": "Attendee",
+       "required": false,
+       "max": 200
+      },
+      {
+       "label": "Access needs",
+       "type": "text",
+       "role": "Attendee",
+       "required": false,
+       "help": "Anything that helps you take part fully, such as step-free access, seating or a sign language interpreter.",
+       "max": 2000
+      },
+      {
+       "label": "Emergency contact name and phone",
+       "type": "text",
+       "role": "Attendee",
+       "required": false,
+       "max": 160
+      },
+      {
+       "label": "I will follow the event's rules and the instructions of the organizers and venue staff.",
+       "type": "tick box",
+       "role": "Attendee",
+       "required": true
+      },
+      {
+       "label": "I understand that general photographs of the event may be taken. I will tell the organizers on the day if I do not want ",
+       "type": "tick box",
+       "role": "Attendee",
+       "required": false
+      },
+      {
+       "label": "I understand that what I enter here is stored by the organization that published this form and used only for the purpose",
+       "type": "tick box",
+       "role": "Attendee",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "Signature",
+     "fields": [
+      {
+       "label": "Attendee signature",
+       "type": "signature",
+       "role": "Attendee",
+       "required": true
+      },
+      {
+       "label": "Attendee date signed",
+       "type": "date signed",
+       "role": "Attendee",
+       "required": true
+      }
+     ]
+    }
+   ],
+   "consent": [
+    "I will follow the event's rules and the instructions of the organizers and venue staff.",
+    "I understand that general photographs of the event may be taken. I will tell the organizers on the day if I do not want to appear in them.",
+    "I understand that what I enter here is stored by the organization that published this form and used only for the purpose described above."
+   ],
+   "fieldCount": 15,
+   "counterFields": 0,
+   "required": 7,
+   "minutes": 4
+  },
+  {
+   "slug": "rsvp",
+   "title": "RSVP",
+   "use": "events",
+   "summary": "Reply to an invitation: attending or not, how many, meal choice and a note for the host.",
+   "who": "A host who wants a quick yes or no, with numbers and meal choices.",
+   "purpose": "Get a clear head count and choices in one reply.",
+   "intro": "Please let us know if you can come.",
+   "roles": [
+    "Guest"
+   ],
+   "counterSign": false,
+   "publish": {
+    "verifyEmail": false,
+    "fillAgain": false,
+    "notifyOwner": true,
+    "confirmRespondent": true,
+    "thankYou": "Thank you for replying."
+   },
+   "sections": [
+    {
+     "heading": "About you",
+     "fields": [
+      {
+       "label": "Full name",
+       "type": "text",
+       "role": "Guest",
+       "required": true,
+       "max": 120
+      },
+      {
+       "label": "Email",
+       "type": "email",
+       "role": "Guest",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "Your reply",
+     "fields": [
+      {
+       "label": "Attending",
+       "type": "choice",
+       "role": "Guest",
+       "required": true,
+       "help": "Choose “Not sure yet” and you can reply again later.",
+       "options": [
+        "Yes",
+        "I will be there",
+        "Sorry",
+        "I cannot come",
+        "Not sure yet"
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "If you are coming",
+     "fields": [
+      {
+       "label": "Party size",
+       "type": "text",
+       "role": "Guest",
+       "required": false,
+       "help": "Leave empty if you are not coming."
+      },
+      {
+       "label": "Meal choice",
+       "type": "choice",
+       "role": "Guest",
+       "required": false,
+       "help": "One choice for your party add the rest in the note.",
+       "options": [
+        "Standard",
+        "Vegetarian",
+        "Vegan",
+        "Children's meal",
+        "No meal"
+       ]
+      },
+      {
+       "label": "Dietary needs",
+       "type": "text",
+       "role": "Guest",
+       "required": false,
+       "max": 200
+      },
+      {
+       "label": "Note",
+       "type": "text",
+       "role": "Guest",
+       "required": false,
+       "max": 2000
+      },
+      {
+       "label": "I will tell the host if my plans change.",
+       "type": "tick box",
+       "role": "Guest",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "Signature",
+     "fields": [
+      {
+       "label": "Guest signature",
+       "type": "signature",
+       "role": "Guest",
+       "required": true
+      },
+      {
+       "label": "Guest date signed",
+       "type": "date signed",
+       "role": "Guest",
+       "required": true
+      }
+     ]
+    }
+   ],
+   "consent": [
+    "I will tell the host if my plans change."
+   ],
+   "fieldCount": 10,
+   "counterFields": 0,
+   "required": 6,
+   "minutes": 3
+  },
+  {
+   "slug": "volunteer-application",
+   "title": "Volunteer application",
+   "use": "people",
+   "summary": "Apply to volunteer: interests, availability, experience, references and agreement to the volunteer code.",
+   "who": "An organization recruiting volunteers who wants to know interests, availability and suitability.",
+   "purpose": "Match volunteers to the right roles and times, with references to follow up.",
+   "intro": "Thank you for your interest in volunteering. This application helps us find a role that suits you. It is not a contract of employment.",
+   "roles": [
+    "Applicant",
+    "Coordinator"
+   ],
+   "counterSign": true,
+   "publish": {
+    "verifyEmail": true,
+    "fillAgain": false,
+    "notifyOwner": true,
+    "confirmRespondent": true,
+    "counterSign": true,
+    "thankYou": "Thank you for offering your time. We will be in touch."
+   },
+   "sections": [
+    {
+     "heading": "About you",
+     "fields": [
+      {
+       "label": "Full name",
+       "type": "text",
+       "role": "Applicant",
+       "required": true,
+       "max": 120
+      },
+      {
+       "label": "Email",
+       "type": "email",
+       "role": "Applicant",
+       "required": true
+      },
+      {
+       "label": "Phone",
+       "type": "phone",
+       "role": "Applicant",
+       "required": false,
+       "help": "Optional. Used only to reach you about this form."
+      },
+      {
+       "label": "Street address",
+       "type": "text",
+       "role": "Applicant",
+       "required": true,
+       "max": 200
+      },
+      {
+       "label": "City",
+       "type": "text",
+       "role": "Applicant",
+       "required": true,
+       "max": 80
+      },
+      {
+       "label": "State or region",
+       "type": "text",
+       "role": "Applicant",
+       "required": true,
+       "max": 80
+      },
+      {
+       "label": "ZIP or postal code",
+       "type": "postal code",
+       "role": "Applicant",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "What you would like to do",
+     "fields": [
+      {
+       "label": "Areas of interest",
+       "type": "choose any",
+       "role": "Applicant",
+       "required": true,
+       "options": [
+        "Events",
+        "Administration",
+        "Outreach",
+        "Fundraising",
+        "Practical help",
+        "Mentoring",
+        "Anything needed"
+       ]
+      },
+      {
+       "label": "Why you would like to volunteer",
+       "type": "text",
+       "role": "Applicant",
+       "required": true,
+       "max": 2000
+      }
+     ]
+    },
+    {
+     "heading": "When you are available",
+     "fields": [
+      {
+       "label": "Days available",
+       "type": "choose any",
+       "role": "Applicant",
+       "required": true,
+       "options": [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday"
+       ]
+      },
+      {
+       "label": "Times available",
+       "type": "choose any",
+       "role": "Applicant",
+       "required": true,
+       "options": [
+        "Mornings",
+        "Afternoons",
+        "Evenings"
+       ]
+      },
+      {
+       "label": "Earliest start date",
+       "type": "text",
+       "role": "Applicant",
+       "required": false
+      }
+     ]
+    },
+    {
+     "heading": "Experience and skills",
+     "fields": [
+      {
+       "label": "Relevant experience",
+       "type": "text",
+       "role": "Applicant",
+       "required": false,
+       "help": "Paid, voluntary or personal. Anything that helps us understand your strengths.",
+       "max": 2000
+      },
+      {
+       "label": "Languages",
+       "type": "text",
+       "role": "Applicant",
+       "required": false,
+       "max": 160
+      },
+      {
+       "label": "CV or résumé",
+       "type": "file (PDF or picture)",
+       "role": "Applicant",
+       "required": false,
+       "help": "A PDF or a picture (PNG or JPEG). It is kept exactly as you upload it."
+      }
+     ]
+    },
+    {
+     "heading": "References",
+     "fields": [
+      {
+       "label": "Reference one",
+       "type": "text",
+       "role": "Applicant",
+       "required": true,
+       "help": "Someone who knows you well and is not a relative.",
+       "max": 200
+      },
+      {
+       "label": "Reference two",
+       "type": "text",
+       "role": "Applicant",
+       "required": false,
+       "max": 200
+      },
+      {
+       "label": "If I am accepted, I will follow the organization's volunteer code of conduct and its safety and privacy policies.",
+       "type": "tick box",
+       "role": "Applicant",
+       "required": true
+      },
+      {
+       "label": "I understand that some roles need further checks before I start, and that the organization will explain any check and as",
+       "type": "tick box",
+       "role": "Applicant",
+       "required": true
+      },
+      {
+       "label": "The information I have given is true and complete to the best of my knowledge.",
+       "type": "tick box",
+       "role": "Applicant",
+       "required": true
+      },
+      {
+       "label": "I understand that what I enter here is stored by the organization that published this form and used only for the purpose",
+       "type": "tick box",
+       "role": "Applicant",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "Signature",
+     "fields": [
+      {
+       "label": "Applicant signature",
+       "type": "signature",
+       "role": "Applicant",
+       "required": true
+      },
+      {
+       "label": "Applicant date signed",
+       "type": "date signed",
+       "role": "Applicant",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "For coordinator use",
+     "fields": [
+      {
+       "label": "Decision",
+       "type": "choice",
+       "role": "Coordinator",
+       "required": true,
+       "options": [
+        "Accepted",
+        "Accepted for another role",
+        "Not accepted at this time"
+       ]
+      },
+      {
+       "label": "Note",
+       "type": "text",
+       "role": "Coordinator",
+       "required": false,
+       "help": "Optional. Shown on the signed copy.",
+       "max": 2000
+      },
+      {
+       "label": "Coordinator signature",
+       "type": "signature",
+       "role": "Coordinator",
+       "required": true
+      },
+      {
+       "label": "Coordinator date signed",
+       "type": "date signed",
+       "role": "Coordinator",
+       "required": true
+      }
+     ]
+    }
+   ],
+   "consent": [
+    "If I am accepted, I will follow the organization's volunteer code of conduct and its safety and privacy policies.",
+    "I understand that some roles need further checks before I start, and that the organization will explain any check and ask my permission separately.",
+    "The information I have given is true and complete to the best of my knowledge.",
+    "I understand that what I enter here is stored by the organization that published this form and used only for the purpose described above."
+   ],
+   "fieldCount": 23,
+   "counterFields": 4,
+   "required": 17,
+   "minutes": 6
+  },
+  {
+   "slug": "job-application",
+   "title": "Job application",
+   "use": "people",
+   "summary": "Apply for a job: contact details, the role, right to work, experience, education, availability and references.",
+   "who": "An employer collecting applications for an open role, in a consistent format.",
+   "purpose": "Receive every application in the same shape, so candidates are compared fairly.",
+   "intro": "Please complete every section. We consider every application on its merits.",
+   "roles": [
+    "Applicant"
+   ],
+   "counterSign": false,
+   "publish": {
+    "verifyEmail": true,
+    "fillAgain": false,
+    "notifyOwner": true,
+    "confirmRespondent": true,
+    "thankYou": "Thank you for applying. We will review your application and contact you."
+   },
+   "sections": [
+    {
+     "heading": "About you",
+     "fields": [
+      {
+       "label": "Full name",
+       "type": "text",
+       "role": "Applicant",
+       "required": true,
+       "max": 120
+      },
+      {
+       "label": "Email",
+       "type": "email",
+       "role": "Applicant",
+       "required": true
+      },
+      {
+       "label": "Phone",
+       "type": "phone",
+       "role": "Applicant",
+       "required": false,
+       "help": "Optional. Used only to reach you about this form."
+      },
+      {
+       "label": "Street address",
+       "type": "text",
+       "role": "Applicant",
+       "required": true,
+       "max": 200
+      },
+      {
+       "label": "City",
+       "type": "text",
+       "role": "Applicant",
+       "required": true,
+       "max": 80
+      },
+      {
+       "label": "State or region",
+       "type": "text",
+       "role": "Applicant",
+       "required": true,
+       "max": 80
+      },
+      {
+       "label": "ZIP or postal code",
+       "type": "postal code",
+       "role": "Applicant",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "The role",
+     "fields": [
+      {
+       "label": "Position",
+       "type": "text",
+       "role": "Applicant",
+       "required": true,
+       "max": 160
+      },
+      {
+       "label": "Type of work",
+       "type": "choice",
+       "role": "Applicant",
+       "required": true,
+       "options": [
+        "Full time",
+        "Part time",
+        "Temporary",
+        "Either"
+       ]
+      },
+      {
+       "label": "Available from",
+       "type": "text",
+       "role": "Applicant",
+       "required": true
+      },
+      {
+       "label": "Right to work",
+       "type": "choice",
+       "role": "Applicant",
+       "required": true,
+       "help": "We may ask for proof if we offer you the job. Do not send any documents now.",
+       "options": [
+        "Yes",
+        "No"
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Experience",
+     "fields": [
+      {
+       "label": "Most recent employer and role",
+       "type": "text",
+       "role": "Applicant",
+       "required": false,
+       "max": 200
+      },
+      {
+       "label": "Dates",
+       "type": "text",
+       "role": "Applicant",
+       "required": false,
+       "max": 80
+      },
+      {
+       "label": "Main duties",
+       "type": "text",
+       "role": "Applicant",
+       "required": false,
+       "max": 2000
+      },
+      {
+       "label": "Other experience",
+       "type": "text",
+       "role": "Applicant",
+       "required": false,
+       "max": 2000
+      }
+     ]
+    },
+    {
+     "heading": "Education and skills",
+     "fields": [
+      {
+       "label": "Highest qualification",
+       "type": "text",
+       "role": "Applicant",
+       "required": false,
+       "max": 160
+      },
+      {
+       "label": "Skills and certificates",
+       "type": "text",
+       "role": "Applicant",
+       "required": false,
+       "max": 2000
+      },
+      {
+       "label": "CV or résumé",
+       "type": "file (PDF or picture)",
+       "role": "Applicant",
+       "required": true,
+       "help": "A PDF or a picture (PNG or JPEG). It is kept exactly as you upload it."
+      },
+      {
+       "label": "Cover letter",
+       "type": "file (PDF or picture)",
+       "role": "Applicant",
+       "required": false,
+       "help": "A PDF or a picture (PNG or JPEG). It is kept exactly as you upload it."
+      }
+     ]
+    },
+    {
+     "heading": "References",
+     "fields": [
+      {
+       "label": "Reference one",
+       "type": "text",
+       "role": "Applicant",
+       "required": true,
+       "max": 200
+      },
+      {
+       "label": "Reference two",
+       "type": "text",
+       "role": "Applicant",
+       "required": false,
+       "max": 200
+      },
+      {
+       "label": "The employer may contact my references if I am shortlisted.",
+       "type": "tick box",
+       "role": "Applicant",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "Adjustments",
+     "fields": [
+      {
+       "label": "Adjustments",
+       "type": "text",
+       "role": "Applicant",
+       "required": false,
+       "max": 2000
+      },
+      {
+       "label": "The information I have given is true and complete to the best of my knowledge.",
+       "type": "tick box",
+       "role": "Applicant",
+       "required": true
+      },
+      {
+       "label": "I understand that what I enter here is stored by the organization that published this form and used only for the purpose",
+       "type": "tick box",
+       "role": "Applicant",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "Signature",
+     "fields": [
+      {
+       "label": "Applicant signature",
+       "type": "signature",
+       "role": "Applicant",
+       "required": true
+      },
+      {
+       "label": "Applicant date signed",
+       "type": "date signed",
+       "role": "Applicant",
+       "required": true
+      }
+     ]
+    }
+   ],
+   "consent": [
+    "The employer may contact my references if I am shortlisted.",
+    "The information I have given is true and complete to the best of my knowledge.",
+    "I understand that what I enter here is stored by the organization that published this form and used only for the purpose described above."
+   ],
+   "fieldCount": 27,
+   "counterFields": 0,
+   "required": 17,
+   "minutes": 7
+  },
+  {
+   "slug": "new-hire-information",
+   "title": "New hire information",
+   "use": "people",
+   "summary": "A new team member's contact details, preferred name, emergency contact, uniform and equipment needs and first-day questions.",
+   "who": "An employer collecting a new team member's practical details before their first day.",
+   "purpose": "Have everything practical ready for day one, without paper.",
+   "intro": "Welcome to the team. Please fill in these details so we can get everything ready for your first day. We do not ask for bank or tax details here; we collect those separately and securely.",
+   "roles": [
+    "New team member"
+   ],
+   "counterSign": false,
+   "publish": {
+    "verifyEmail": true,
+    "fillAgain": false,
+    "notifyOwner": true,
+    "confirmRespondent": true,
+    "thankYou": "Thank you. We look forward to welcoming you."
+   },
+   "sections": [
+    {
+     "heading": "About you",
+     "fields": [
+      {
+       "label": "Full name",
+       "type": "text",
+       "role": "New team member",
+       "required": true,
+       "max": 120
+      },
+      {
+       "label": "Email",
+       "type": "email",
+       "role": "New team member",
+       "required": true
+      },
+      {
+       "label": "Phone",
+       "type": "phone",
+       "role": "New team member",
+       "required": false,
+       "help": "Optional. Used only to reach you about this form."
+      },
+      {
+       "label": "Street address",
+       "type": "text",
+       "role": "New team member",
+       "required": true,
+       "max": 200
+      },
+      {
+       "label": "City",
+       "type": "text",
+       "role": "New team member",
+       "required": true,
+       "max": 80
+      },
+      {
+       "label": "State or region",
+       "type": "text",
+       "role": "New team member",
+       "required": true,
+       "max": 80
+      },
+      {
+       "label": "ZIP or postal code",
+       "type": "postal code",
+       "role": "New team member",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "About you at work",
+     "fields": [
+      {
+       "label": "Preferred name",
+       "type": "text",
+       "role": "New team member",
+       "required": false,
+       "max": 80
+      },
+      {
+       "label": "Pronouns",
+       "type": "text",
+       "role": "New team member",
+       "required": false,
+       "help": "Optional.",
+       "max": 40
+      },
+      {
+       "label": "Start date",
+       "type": "text",
+       "role": "New team member",
+       "required": true
+      },
+      {
+       "label": "Role",
+       "type": "text",
+       "role": "New team member",
+       "required": true,
+       "max": 120
+      },
+      {
+       "label": "Manager",
+       "type": "text",
+       "role": "New team member",
+       "required": false,
+       "max": 120
+      }
+     ]
+    },
+    {
+     "heading": "Emergency contact",
+     "fields": [
+      {
+       "label": "Emergency contact name",
+       "type": "text",
+       "role": "New team member",
+       "required": true,
+       "max": 120
+      },
+      {
+       "label": "Relationship",
+       "type": "text",
+       "role": "New team member",
+       "required": true,
+       "max": 60
+      },
+      {
+       "label": "Emergency contact phone",
+       "type": "phone",
+       "role": "New team member",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "Getting ready",
+     "fields": [
+      {
+       "label": "Size",
+       "type": "choice",
+       "role": "New team member",
+       "required": false,
+       "options": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL",
+        "Not needed"
+       ]
+      },
+      {
+       "label": "Equipment",
+       "type": "choose any",
+       "role": "New team member",
+       "required": false,
+       "options": [
+        "Laptop",
+        "Phone",
+        "Keys or access card",
+        "Tools",
+        "Safety gear",
+        "None"
+       ]
+      },
+      {
+       "label": "Dietary needs",
+       "type": "text",
+       "role": "New team member",
+       "required": false,
+       "max": 160
+      },
+      {
+       "label": "Anything that would help",
+       "type": "text",
+       "role": "New team member",
+       "required": false,
+       "max": 2000
+      },
+      {
+       "label": "Photo",
+       "type": "file (PDF or picture)",
+       "role": "New team member",
+       "required": false,
+       "help": "A clear head-and-shoulders picture (PNG or JPEG)."
+      },
+      {
+       "label": "The information I have given is true and complete to the best of my knowledge.",
+       "type": "tick box",
+       "role": "New team member",
+       "required": true
+      },
+      {
+       "label": "I understand that what I enter here is stored by the organization that published this form and used only for the purpose",
+       "type": "tick box",
+       "role": "New team member",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "Signature",
+     "fields": [
+      {
+       "label": "New team member signature",
+       "type": "signature",
+       "role": "New team member",
+       "required": true
+      },
+      {
+       "label": "New team member date signed",
+       "type": "date signed",
+       "role": "New team member",
+       "required": true
+      }
+     ]
+    }
+   ],
+   "consent": [
+    "The information I have given is true and complete to the best of my knowledge.",
+    "I understand that what I enter here is stored by the organization that published this form and used only for the purpose described above."
+   ],
+   "fieldCount": 24,
+   "counterFields": 0,
+   "required": 15,
+   "minutes": 6
+  },
+  {
+   "slug": "emergency-contact",
+   "title": "Emergency contact",
+   "use": "people",
+   "summary": "Who to call in an emergency: two contacts, how they are related and the best way to reach them.",
+   "who": "Any organization that keeps emergency contacts for members, staff, students or participants.",
+   "purpose": "Keep up-to-date emergency contacts, confirmed by the person they belong to.",
+   "intro": "Please tell us who to contact if something happens to you while you are with us. We use these details only in an emergency.",
+   "roles": [
+    "Person"
+   ],
+   "counterSign": false,
+   "publish": {
+    "verifyEmail": true,
+    "fillAgain": false,
+    "notifyOwner": true,
+    "confirmRespondent": true,
+    "thankYou": "Thank you. Your emergency contacts are recorded."
+   },
+   "sections": [
+    {
+     "heading": "About you",
+     "fields": [
+      {
+       "label": "Full name",
+       "type": "text",
+       "role": "Person",
+       "required": true,
+       "max": 120
+      },
+      {
+       "label": "Email",
+       "type": "email",
+       "role": "Person",
+       "required": true
+      },
+      {
+       "label": "Phone",
+       "type": "phone",
+       "role": "Person",
+       "required": false,
+       "help": "Optional. Used only to reach you about this form."
+      }
+     ]
+    },
+    {
+     "heading": "First contact",
+     "fields": [
+      {
+       "label": "First contact name",
+       "type": "text",
+       "role": "Person",
+       "required": true,
+       "max": 120
+      },
+      {
+       "label": "Relationship",
+       "type": "text",
+       "role": "Person",
+       "required": true,
+       "max": 60
+      },
+      {
+       "label": "Mobile phone",
+       "type": "phone",
+       "role": "Person",
+       "required": true
+      },
+      {
+       "label": "Other phone",
+       "type": "phone",
+       "role": "Person",
+       "required": false
+      },
+      {
+       "label": "Email",
+       "type": "email",
+       "role": "Person",
+       "required": false
+      }
+     ]
+    },
+    {
+     "heading": "Second contact",
+     "fields": [
+      {
+       "label": "Second contact name",
+       "type": "text",
+       "role": "Person",
+       "required": false,
+       "max": 120
+      },
+      {
+       "label": "Relationship",
+       "type": "text",
+       "role": "Person",
+       "required": false,
+       "max": 60
+      },
+      {
+       "label": "Phone",
+       "type": "phone",
+       "role": "Person",
+       "required": false
+      }
+     ]
+    },
+    {
+     "heading": "Anything else",
+     "fields": [
+      {
+       "label": "Preferred language",
+       "type": "text",
+       "role": "Person",
+       "required": false,
+       "max": 60
+      },
+      {
+       "label": "Note",
+       "type": "text",
+       "role": "Person",
+       "required": false,
+       "help": "Optional. For example a condition first responders should know about. Do not include medical records.",
+       "max": 2000
+      },
+      {
+       "label": "My contacts know that I have given their details for this purpose.",
+       "type": "tick box",
+       "role": "Person",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "Signature",
+     "fields": [
+      {
+       "label": "Person signature",
+       "type": "signature",
+       "role": "Person",
+       "required": true
+      },
+      {
+       "label": "Person date signed",
+       "type": "date signed",
+       "role": "Person",
+       "required": true
+      }
+     ]
+    }
+   ],
+   "consent": [
+    "My contacts know that I have given their details for this purpose."
+   ],
+   "fieldCount": 16,
+   "counterFields": 0,
+   "required": 8,
+   "minutes": 4
+  },
+  {
+   "slug": "customer-feedback-survey",
+   "title": "Customer feedback survey",
+   "use": "general",
+   "summary": "Rate the experience, say what went well and what did not, and choose whether to be contacted.",
+   "who": "A business or organization asking customers how it went and what to improve.",
+   "purpose": "Hear from customers in their own words, with ratings you can compare.",
+   "intro": "Your honest feedback helps us improve. It takes about two minutes.",
+   "roles": [
+    "Customer"
+   ],
+   "counterSign": false,
+   "publish": {
+    "verifyEmail": false,
+    "fillAgain": true,
+    "notifyOwner": false,
+    "confirmRespondent": false,
+    "thankYou": "Thank you for your feedback."
+   },
+   "sections": [
+    {
+     "heading": "About you",
+     "fields": [
+      {
+       "label": "Name",
+       "type": "text",
+       "role": "Customer",
+       "required": true,
+       "max": 120
+      },
+      {
+       "label": "Email",
+       "type": "email",
+       "role": "Customer",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "Your experience",
+     "fields": [
+      {
+       "label": "Date",
+       "type": "text",
+       "role": "Customer",
+       "required": false
+      },
+      {
+       "label": "Overall satisfaction",
+       "type": "choice",
+       "role": "Customer",
+       "required": true,
+       "help": "Think of the whole experience, not one moment.",
+       "options": [
+        "Very satisfied",
+        "Satisfied",
+        "Neither",
+        "Dissatisfied",
+        "Very dissatisfied"
+       ]
+      },
+      {
+       "label": "Likely to recommend",
+       "type": "choice",
+       "role": "Customer",
+       "required": true,
+       "help": "0 is not at all likely, 10 is extremely likely.",
+       "options": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10"
+       ]
+      },
+      {
+       "label": "What went well",
+       "type": "text",
+       "role": "Customer",
+       "required": false,
+       "max": 2000
+      },
+      {
+       "label": "What could be better",
+       "type": "text",
+       "role": "Customer",
+       "required": false,
+       "help": "One specific thing helps most.",
+       "max": 2000
+      },
+      {
+       "label": "Parts used",
+       "type": "choose any",
+       "role": "Customer",
+       "required": false,
+       "options": [
+        "In person",
+        "Online",
+        "By phone",
+        "Delivery",
+        "Support"
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Permissions",
+     "fields": [
+      {
+       "label": "You may contact me about my feedback.",
+       "type": "tick box",
+       "role": "Customer",
+       "required": false
+      },
+      {
+       "label": "You may quote my comments, without my name, in your own materials.",
+       "type": "tick box",
+       "role": "Customer",
+       "required": false
+      }
+     ]
+    },
+    {
+     "heading": "Signature",
+     "fields": [
+      {
+       "label": "Customer signature",
+       "type": "signature",
+       "role": "Customer",
+       "required": true
+      },
+      {
+       "label": "Customer date signed",
+       "type": "date signed",
+       "role": "Customer",
+       "required": true
+      }
+     ]
+    }
+   ],
+   "consent": [
+    "You may contact me about my feedback.",
+    "You may quote my comments, without my name, in your own materials."
+   ],
+   "fieldCount": 12,
+   "counterFields": 0,
+   "required": 6,
+   "minutes": 3
+  },
+  {
+   "slug": "order-form",
+   "title": "Order form",
+   "use": "money",
+   "summary": "Place an order: items and quantities, delivery or collection, and agreement to the terms. No payment details are collected.",
+   "who": "A small business taking orders for goods or services to be invoiced or paid separately.",
+   "purpose": "Take clear, signed orders that you can confirm and invoice.",
+   "intro": "Use this form to place an order. We will confirm the total and how to pay before anything is charged. Do not enter card or bank details here.",
+   "roles": [
+    "Customer",
+    "Seller"
+   ],
+   "counterSign": true,
+   "publish": {
+    "verifyEmail": true,
+    "fillAgain": true,
+    "notifyOwner": true,
+    "confirmRespondent": true,
+    "counterSign": true,
+    "thankYou": "Thank you. We will confirm your order and how to pay."
+   },
+   "sections": [
+    {
+     "heading": "About you",
+     "fields": [
+      {
+       "label": "Full name",
+       "type": "text",
+       "role": "Customer",
+       "required": true,
+       "max": 120
+      },
+      {
+       "label": "Email",
+       "type": "email",
+       "role": "Customer",
+       "required": true
+      },
+      {
+       "label": "Phone",
+       "type": "phone",
+       "role": "Customer",
+       "required": false,
+       "help": "Optional. Used only to reach you about this form."
+      },
+      {
+       "label": "Street address",
+       "type": "text",
+       "role": "Customer",
+       "required": true,
+       "max": 200
+      },
+      {
+       "label": "City",
+       "type": "text",
+       "role": "Customer",
+       "required": true,
+       "max": 80
+      },
+      {
+       "label": "State or region",
+       "type": "text",
+       "role": "Customer",
+       "required": true,
+       "max": 80
+      },
+      {
+       "label": "ZIP or postal code",
+       "type": "postal code",
+       "role": "Customer",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "Your order",
+     "fields": [
+      {
+       "label": "Item 1",
+       "type": "text",
+       "role": "Customer",
+       "required": true,
+       "max": 160
+      },
+      {
+       "label": "Quantity 1",
+       "type": "text",
+       "role": "Customer",
+       "required": true
+      },
+      {
+       "label": "Item 2",
+       "type": "text",
+       "role": "Customer",
+       "required": false,
+       "max": 160
+      },
+      {
+       "label": "Quantity 2",
+       "type": "text",
+       "role": "Customer",
+       "required": false
+      },
+      {
+       "label": "Item 3",
+       "type": "text",
+       "role": "Customer",
+       "required": false,
+       "max": 160
+      },
+      {
+       "label": "Quantity 3",
+       "type": "text",
+       "role": "Customer",
+       "required": false
+      },
+      {
+       "label": "Order notes",
+       "type": "text",
+       "role": "Customer",
+       "required": false,
+       "help": "Sizes, colors, customization or anything else we should know.",
+       "max": 2000
+      }
+     ]
+    },
+    {
+     "heading": "Delivery",
+     "fields": [
+      {
+       "label": "Delivery or collection",
+       "type": "choice",
+       "role": "Customer",
+       "required": true,
+       "options": [
+        "Deliver to my address",
+        "Deliver to another address",
+        "I will collect"
+       ]
+      },
+      {
+       "label": "Delivery address",
+       "type": "text",
+       "role": "Customer",
+       "required": false,
+       "max": 240
+      },
+      {
+       "label": "Needed by",
+       "type": "text",
+       "role": "Customer",
+       "required": false
+      },
+      {
+       "label": "I agree to the seller's terms of sale, and I understand the order is confirmed only when the seller confirms it and the ",
+       "type": "tick box",
+       "role": "Customer",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "Signature",
+     "fields": [
+      {
+       "label": "Customer signature",
+       "type": "signature",
+       "role": "Customer",
+       "required": true
+      },
+      {
+       "label": "Customer date signed",
+       "type": "date signed",
+       "role": "Customer",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "For seller use",
+     "fields": [
+      {
+       "label": "Decision",
+       "type": "choice",
+       "role": "Seller",
+       "required": true,
+       "options": [
+        "Confirmed",
+        "Confirmed with changes",
+        "Cannot fulfil"
+       ]
+      },
+      {
+       "label": "Note",
+       "type": "text",
+       "role": "Seller",
+       "required": false,
+       "help": "Optional. Shown on the signed copy.",
+       "max": 2000
+      },
+      {
+       "label": "Seller signature",
+       "type": "signature",
+       "role": "Seller",
+       "required": true
+      },
+      {
+       "label": "Seller date signed",
+       "type": "date signed",
+       "role": "Seller",
+       "required": true
+      }
+     ]
+    }
+   ],
+   "consent": [
+    "I agree to the seller's terms of sale, and I understand the order is confirmed only when the seller confirms it and the total."
+   ],
+   "fieldCount": 20,
+   "counterFields": 4,
+   "required": 12,
+   "minutes": 5
+  },
+  {
+   "slug": "change-of-contact-details",
+   "title": "Change of contact details",
+   "use": "general",
+   "summary": "Update a name, email, phone or address, with the date the change takes effect.",
+   "who": "Any organization that keeps records for members, customers, clients or staff.",
+   "purpose": "Keep records current, with a signed request for every change.",
+   "intro": "Use this form to tell us your new details. Fill in only what has changed.",
+   "roles": [
+    "Person"
+   ],
+   "counterSign": false,
+   "publish": {
+    "verifyEmail": true,
+    "fillAgain": false,
+    "notifyOwner": true,
+    "confirmRespondent": true,
+    "thankYou": "Thank you. We will update our records."
+   },
+   "sections": [
+    {
+     "heading": "Who you are",
+     "fields": [
+      {
+       "label": "Name on our records",
+       "type": "text",
+       "role": "Person",
+       "required": true,
+       "max": 120
+      },
+      {
+       "label": "Email on our records",
+       "type": "email",
+       "role": "Person",
+       "required": true
+      },
+      {
+       "label": "Reference number",
+       "type": "text",
+       "role": "Person",
+       "required": false,
+       "help": "If you have one.",
+       "max": 60
+      }
+     ]
+    },
+    {
+     "heading": "Your new details",
+     "fields": [
+      {
+       "label": "New name",
+       "type": "text",
+       "role": "Person",
+       "required": false,
+       "max": 120
+      },
+      {
+       "label": "New email",
+       "type": "email",
+       "role": "Person",
+       "required": false,
+       "help": "We will write to the new address to confirm the change."
+      },
+      {
+       "label": "New phone",
+       "type": "phone",
+       "role": "Person",
+       "required": false
+      },
+      {
+       "label": "New street address",
+       "type": "text",
+       "role": "Person",
+       "required": false,
+       "max": 200
+      },
+      {
+       "label": "City",
+       "type": "text",
+       "role": "Person",
+       "required": false,
+       "max": 80
+      },
+      {
+       "label": "ZIP or postal code",
+       "type": "postal code",
+       "role": "Person",
+       "required": false
+      },
+      {
+       "label": "Effective date",
+       "type": "text",
+       "role": "Person",
+       "required": true,
+       "help": "Today, or the day you move."
+      }
+     ]
+    },
+    {
+     "heading": "Confirm",
+     "fields": [
+      {
+       "label": "These are my own details, and I am asking for my record to be changed.",
+       "type": "tick box",
+       "role": "Person",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "Signature",
+     "fields": [
+      {
+       "label": "Person signature",
+       "type": "signature",
+       "role": "Person",
+       "required": true
+      },
+      {
+       "label": "Person date signed",
+       "type": "date signed",
+       "role": "Person",
+       "required": true
+      }
+     ]
+    }
+   ],
+   "consent": [
+    "These are my own details, and I am asking for my record to be changed."
+   ],
+   "fieldCount": 13,
+   "counterFields": 0,
+   "required": 6,
+   "minutes": 3
+  },
+  {
+   "slug": "appointment-request",
+   "title": "Appointment request",
+   "use": "general",
+   "summary": "Request an appointment: the service, preferred dates and times, how to reach you and anything to prepare.",
+   "who": "A service that books appointments and wants requests with preferred times before confirming.",
+   "purpose": "Collect appointment requests with real choices, then confirm a time.",
+   "intro": "Ask for an appointment here. This is a request: we will confirm the time with you.",
+   "roles": [
+    "Visitor"
+   ],
+   "counterSign": false,
+   "publish": {
+    "verifyEmail": false,
+    "fillAgain": true,
+    "notifyOwner": true,
+    "confirmRespondent": true,
+    "thankYou": "Thank you. We will confirm a time with you."
+   },
+   "sections": [
+    {
+     "heading": "About you",
+     "fields": [
+      {
+       "label": "Full name",
+       "type": "text",
+       "role": "Visitor",
+       "required": true,
+       "max": 120
+      },
+      {
+       "label": "Email",
+       "type": "email",
+       "role": "Visitor",
+       "required": true
+      },
+      {
+       "label": "Phone",
+       "type": "phone",
+       "role": "Visitor",
+       "required": false,
+       "help": "Optional. Used only to reach you about this form."
+      }
+     ]
+    },
+    {
+     "heading": "Your appointment",
+     "fields": [
+      {
+       "label": "Service or reason",
+       "type": "text",
+       "role": "Visitor",
+       "required": true,
+       "max": 160
+      },
+      {
+       "label": "First choice of date",
+       "type": "text",
+       "role": "Visitor",
+       "required": true,
+       "help": "We will offer the nearest free time if this day is full."
+      },
+      {
+       "label": "Second choice of date",
+       "type": "text",
+       "role": "Visitor",
+       "required": false
+      },
+      {
+       "label": "Preferred time",
+       "type": "choice",
+       "role": "Visitor",
+       "required": true,
+       "options": [
+        "Morning",
+        "Midday",
+        "Afternoon",
+        "Evening",
+        "Any time"
+       ]
+      },
+      {
+       "label": "In person or online",
+       "type": "choice",
+       "role": "Visitor",
+       "required": true,
+       "options": [
+        "In person",
+        "Online",
+        "Either"
+       ]
+      },
+      {
+       "label": "Notes",
+       "type": "text",
+       "role": "Visitor",
+       "required": false,
+       "help": "For example access needs, or what you would like to cover.",
+       "max": 2000
+      }
+     ]
+    },
+    {
+     "heading": "Before your visit",
+     "fields": [
+      {
+       "label": "I will let you know as soon as I can if I need to change or cancel.",
+       "type": "tick box",
+       "role": "Visitor",
+       "required": true
+      },
+      {
+       "label": "I understand that what I enter here is stored by the organization that published this form and used only for the purpose",
+       "type": "tick box",
+       "role": "Visitor",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "Signature",
+     "fields": [
+      {
+       "label": "Visitor signature",
+       "type": "signature",
+       "role": "Visitor",
+       "required": true
+      },
+      {
+       "label": "Visitor date signed",
+       "type": "date signed",
+       "role": "Visitor",
+       "required": true
+      }
+     ]
+    }
+   ],
+   "consent": [
+    "I will let you know as soon as I can if I need to change or cancel.",
+    "I understand that what I enter here is stored by the organization that published this form and used only for the purpose described above."
+   ],
+   "fieldCount": 13,
+   "counterFields": 0,
+   "required": 10,
+   "minutes": 3
+  },
+  {
+   "slug": "facility-booking-request",
+   "title": "Room or facility booking request",
+   "use": "property",
+   "summary": "Request a room or facility: date and times, the purpose, the number of people, the layout and equipment, and agreement to the house rules.",
+   "who": "A venue, school, office or community space that lets people request a room or facility.",
+   "purpose": "Receive complete booking requests and approve them with a signature.",
+   "intro": "Use this form to ask to book a space. The booking is confirmed only when we approve it.",
+   "roles": [
+    "Requester",
+    "Facilities"
+   ],
+   "counterSign": true,
+   "publish": {
+    "verifyEmail": true,
+    "fillAgain": true,
+    "notifyOwner": true,
+    "confirmRespondent": true,
+    "counterSign": true,
+    "thankYou": "Thank you. Your request is with us; you will hear once it is approved."
+   },
+   "sections": [
+    {
+     "heading": "About you",
+     "fields": [
+      {
+       "label": "Full name",
+       "type": "text",
+       "role": "Requester",
+       "required": true,
+       "max": 120
+      },
+      {
+       "label": "Email",
+       "type": "email",
+       "role": "Requester",
+       "required": true
+      },
+      {
+       "label": "Phone",
+       "type": "phone",
+       "role": "Requester",
+       "required": false,
+       "help": "Optional. Used only to reach you about this form."
+      }
+     ]
+    },
+    {
+     "heading": "The booking",
+     "fields": [
+      {
+       "label": "Organization or group",
+       "type": "text",
+       "role": "Requester",
+       "required": false,
+       "max": 120
+      },
+      {
+       "label": "Room or facility",
+       "type": "text",
+       "role": "Requester",
+       "required": true,
+       "max": 120
+      },
+      {
+       "label": "Date",
+       "type": "text",
+       "role": "Requester",
+       "required": true
+      },
+      {
+       "label": "Start time",
+       "type": "text",
+       "role": "Requester",
+       "required": true,
+       "max": 20
+      },
+      {
+       "label": "End time",
+       "type": "text",
+       "role": "Requester",
+       "required": true,
+       "max": 20
+      },
+      {
+       "label": "Repeat",
+       "type": "choice",
+       "role": "Requester",
+       "required": true,
+       "options": [
+        "Just once",
+        "Every week",
+        "Every two weeks",
+        "Every month"
+       ]
+      },
+      {
+       "label": "Purpose",
+       "type": "text",
+       "role": "Requester",
+       "required": true,
+       "max": 2000
+      },
+      {
+       "label": "Number of people",
+       "type": "text",
+       "role": "Requester",
+       "required": true
+      },
+      {
+       "label": "Layout",
+       "type": "choice",
+       "role": "Requester",
+       "required": false,
+       "options": [
+        "Rows",
+        "Boardroom",
+        "Classroom",
+        "Small groups",
+        "Open floor",
+        "No preference"
+       ]
+      },
+      {
+       "label": "Equipment",
+       "type": "choose any",
+       "role": "Requester",
+       "required": false,
+       "options": [
+        "Screen or projector",
+        "Microphone",
+        "Whiteboard",
+        "Tables and chairs",
+        "Kitchen",
+        "None"
+       ]
+      },
+      {
+       "label": "I will follow the house rules, leave the space as I found it, and pay for any damage my group causes.",
+       "type": "tick box",
+       "role": "Requester",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "Signature",
+     "fields": [
+      {
+       "label": "Requester signature",
+       "type": "signature",
+       "role": "Requester",
+       "required": true
+      },
+      {
+       "label": "Requester date signed",
+       "type": "date signed",
+       "role": "Requester",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "For facilities use",
+     "fields": [
+      {
+       "label": "Decision",
+       "type": "choice",
+       "role": "Facilities",
+       "required": true,
+       "options": [
+        "Approved",
+        "Approved with changes",
+        "Not available"
+       ]
+      },
+      {
+       "label": "Note",
+       "type": "text",
+       "role": "Facilities",
+       "required": false,
+       "help": "Optional. Shown on the signed copy.",
+       "max": 2000
+      },
+      {
+       "label": "Facilities signature",
+       "type": "signature",
+       "role": "Facilities",
+       "required": true
+      },
+      {
+       "label": "Facilities date signed",
+       "type": "date signed",
+       "role": "Facilities",
+       "required": true
+      }
+     ]
+    }
+   ],
+   "consent": [
+    "I will follow the house rules, leave the space as I found it, and pay for any damage my group causes."
+   ],
+   "fieldCount": 16,
+   "counterFields": 4,
+   "required": 12,
+   "minutes": 4
+  },
+  {
+   "slug": "suggestions-and-ideas",
+   "title": "Suggestions and ideas",
+   "use": "general",
+   "summary": "Share an idea: what it is, the problem it solves, who it helps and whether you would like to help make it happen.",
+   "who": "A team, school, club or business that invites suggestions from staff, members or the public.",
+   "purpose": "Collect ideas with enough detail to act on them.",
+   "intro": "Every idea is read. Tell us what you would change and why.",
+   "roles": [
+    "Contributor"
+   ],
+   "counterSign": false,
+   "publish": {
+    "verifyEmail": false,
+    "fillAgain": true,
+    "notifyOwner": true,
+    "confirmRespondent": false,
+    "thankYou": "Thank you for your idea."
+   },
+   "sections": [
+    {
+     "heading": "About you",
+     "fields": [
+      {
+       "label": "Name",
+       "type": "text",
+       "role": "Contributor",
+       "required": true,
+       "max": 120
+      },
+      {
+       "label": "Email",
+       "type": "email",
+       "role": "Contributor",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "Your idea",
+     "fields": [
+      {
+       "label": "Title",
+       "type": "text",
+       "role": "Contributor",
+       "required": true,
+       "max": 120
+      },
+      {
+       "label": "The idea",
+       "type": "text",
+       "role": "Contributor",
+       "required": true,
+       "help": "Describe it as if to someone who has never heard of it.",
+       "max": 2000
+      },
+      {
+       "label": "The problem",
+       "type": "text",
+       "role": "Contributor",
+       "required": false,
+       "help": "What happens today that this would fix.",
+       "max": 2000
+      },
+      {
+       "label": "Who it helps",
+       "type": "choose any",
+       "role": "Contributor",
+       "required": false,
+       "options": [
+        "Customers or visitors",
+        "Staff or volunteers",
+        "Members",
+        "The community",
+        "Everyone"
+       ]
+      },
+      {
+       "label": "Effort",
+       "type": "choice",
+       "role": "Contributor",
+       "required": false,
+       "options": [
+        "Small",
+        "Medium",
+        "Large",
+        "Not sure"
+       ]
+      },
+      {
+       "label": "Supporting file",
+       "type": "file (PDF or picture)",
+       "role": "Contributor",
+       "required": false,
+       "help": "A PDF or a picture (PNG or JPEG). It is kept exactly as you upload it."
+      }
+     ]
+    },
+    {
+     "heading": "Next steps",
+     "fields": [
+      {
+       "label": "I would like to help make this happen.",
+       "type": "tick box",
+       "role": "Contributor",
+       "required": false
+      },
+      {
+       "label": "The organization may use, change and share this idea without paying me.",
+       "type": "tick box",
+       "role": "Contributor",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "Signature",
+     "fields": [
+      {
+       "label": "Contributor signature",
+       "type": "signature",
+       "role": "Contributor",
+       "required": true
+      },
+      {
+       "label": "Contributor date signed",
+       "type": "date signed",
+       "role": "Contributor",
+       "required": true
+      }
+     ]
+    }
+   ],
+   "consent": [
+    "I would like to help make this happen.",
+    "The organization may use, change and share this idea without paying me."
+   ],
+   "fieldCount": 12,
+   "counterFields": 0,
+   "required": 7,
+   "minutes": 3
+  },
+  {
+   "slug": "vehicle-inspection-checklist",
+   "title": "Vehicle inspection checklist",
+   "use": "operations",
+   "summary": "A pre- or post-use check of a vehicle: mileage, fuel, lights, tires, fluids, damage, with photos and a supervisor's sign-off.",
+   "who": "A business, club or fleet that checks a vehicle before or after use.",
+   "purpose": "Record each check the same way, with evidence, before a vehicle goes out.",
+   "intro": "Complete this check before (or after) using the vehicle. Report anything that is not right; do not drive a vehicle that is unsafe.",
+   "roles": [
+    "Driver",
+    "Supervisor"
+   ],
+   "counterSign": true,
+   "publish": {
+    "verifyEmail": false,
+    "fillAgain": true,
+    "notifyOwner": false,
+    "confirmRespondent": true,
+    "counterSign": true,
+    "thankYou": "Inspection recorded."
+   },
+   "sections": [
+    {
+     "heading": "The vehicle and driver",
+     "fields": [
+      {
+       "label": "Driver's name",
+       "type": "text",
+       "role": "Driver",
+       "required": true,
+       "max": 120
+      },
+      {
+       "label": "Email",
+       "type": "email",
+       "role": "Driver",
+       "required": true
+      },
+      {
+       "label": "Vehicle",
+       "type": "text",
+       "role": "Driver",
+       "required": true,
+       "max": 40
+      },
+      {
+       "label": "Check type",
+       "type": "choice",
+       "role": "Driver",
+       "required": true,
+       "options": [
+        "Before use",
+        "After use",
+        "Weekly check"
+       ]
+      },
+      {
+       "label": "Odometer reading",
+       "type": "text",
+       "role": "Driver",
+       "required": true
+      },
+      {
+       "label": "Fuel or charge",
+       "type": "choice",
+       "role": "Driver",
+       "required": true,
+       "options": [
+        "Full",
+        "Three quarters",
+        "Half",
+        "Quarter",
+        "Low"
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "The check",
+     "fields": [
+      {
+       "label": "Lights",
+       "type": "choice",
+       "role": "Driver",
+       "required": true,
+       "options": [
+        "OK",
+        "Needs attention"
+       ]
+      },
+      {
+       "label": "Tires",
+       "type": "choice",
+       "role": "Driver",
+       "required": true,
+       "options": [
+        "OK",
+        "Needs attention"
+       ]
+      },
+      {
+       "label": "Brakes",
+       "type": "choice",
+       "role": "Driver",
+       "required": true,
+       "options": [
+        "OK",
+        "Needs attention"
+       ]
+      },
+      {
+       "label": "Mirrors and windows",
+       "type": "choice",
+       "role": "Driver",
+       "required": true,
+       "options": [
+        "OK",
+        "Needs attention"
+       ]
+      },
+      {
+       "label": "Fluids and warning lights",
+       "type": "choice",
+       "role": "Driver",
+       "required": true,
+       "options": [
+        "OK",
+        "Needs attention"
+       ]
+      },
+      {
+       "label": "Seat belts",
+       "type": "choice",
+       "role": "Driver",
+       "required": true,
+       "options": [
+        "OK",
+        "Needs attention"
+       ]
+      },
+      {
+       "label": "Safety kit",
+       "type": "choice",
+       "role": "Driver",
+       "required": true,
+       "options": [
+        "Yes",
+        "Something missing"
+       ]
+      },
+      {
+       "label": "Damage or problems",
+       "type": "text",
+       "role": "Driver",
+       "required": false,
+       "help": "Where and what. Leave empty if there is none.",
+       "max": 2000
+      },
+      {
+       "label": "Photos",
+       "type": "file (PDF or picture)",
+       "role": "Driver",
+       "required": false,
+       "help": "A PDF or a picture (PNG or JPEG). It is kept exactly as you upload it."
+      },
+      {
+       "label": "To the best of my knowledge the answers above are correct, and I have reported every problem I found.",
+       "type": "tick box",
+       "role": "Driver",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "Signature",
+     "fields": [
+      {
+       "label": "Driver signature",
+       "type": "signature",
+       "role": "Driver",
+       "required": true
+      },
+      {
+       "label": "Driver date signed",
+       "type": "date signed",
+       "role": "Driver",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "For supervisor use",
+     "fields": [
+      {
+       "label": "Decision",
+       "type": "choice",
+       "role": "Supervisor",
+       "required": true,
+       "options": [
+        "Fit to drive",
+        "Fit to drive after repair",
+        "Not fit to drive"
+       ]
+      },
+      {
+       "label": "Note",
+       "type": "text",
+       "role": "Supervisor",
+       "required": false,
+       "help": "Optional. Shown on the signed copy.",
+       "max": 2000
+      },
+      {
+       "label": "Supervisor signature",
+       "type": "signature",
+       "role": "Supervisor",
+       "required": true
+      },
+      {
+       "label": "Supervisor date signed",
+       "type": "date signed",
+       "role": "Supervisor",
+       "required": true
+      }
+     ]
+    }
+   ],
+   "consent": [
+    "To the best of my knowledge the answers above are correct, and I have reported every problem I found."
+   ],
+   "fieldCount": 18,
+   "counterFields": 4,
+   "required": 16,
+   "minutes": 5
+  },
+  {
+   "slug": "incident-report",
+   "title": "Incident report",
+   "use": "operations",
+   "summary": "What happened, when and where, who was involved, any injury or damage, what was done straight away, with witnesses and photos, reviewed by a supervisor.",
+   "who": "Any workplace, venue, school or club that records accidents, near misses and incidents.",
+   "purpose": "Capture the facts while they are fresh, the same way every time, so they can be reviewed.",
+   "intro": "Report what happened as soon as you can, in plain words. Stick to what you saw and heard. In an emergency, call the emergency services first.",
+   "roles": [
+    "Reporter",
+    "Supervisor"
+   ],
+   "counterSign": true,
+   "publish": {
+    "verifyEmail": false,
+    "fillAgain": true,
+    "notifyOwner": true,
+    "confirmRespondent": true,
+    "counterSign": true,
+    "thankYou": "Thank you. The report has been sent for review."
+   },
+   "sections": [
+    {
+     "heading": "About you",
+     "fields": [
+      {
+       "label": "Full name",
+       "type": "text",
+       "role": "Reporter",
+       "required": true,
+       "max": 120
+      },
+      {
+       "label": "Email",
+       "type": "email",
+       "role": "Reporter",
+       "required": true
+      },
+      {
+       "label": "Phone",
+       "type": "phone",
+       "role": "Reporter",
+       "required": false,
+       "help": "Optional. Used only to reach you about this form."
+      }
+     ]
+    },
+    {
+     "heading": "What happened",
+     "fields": [
+      {
+       "label": "Date",
+       "type": "text",
+       "role": "Reporter",
+       "required": true
+      },
+      {
+       "label": "Time",
+       "type": "text",
+       "role": "Reporter",
+       "required": true,
+       "max": 20
+      },
+      {
+       "label": "Location",
+       "type": "text",
+       "role": "Reporter",
+       "required": true,
+       "max": 200
+      },
+      {
+       "label": "Type",
+       "type": "choice",
+       "role": "Reporter",
+       "required": true,
+       "options": [
+        "Injury",
+        "Near miss",
+        "Damage to property",
+        "Security or safety concern",
+        "Behavior",
+        "Other"
+       ]
+      },
+      {
+       "label": "Description",
+       "type": "text",
+       "role": "Reporter",
+       "required": true,
+       "max": 2000
+      },
+      {
+       "label": "People involved",
+       "type": "text",
+       "role": "Reporter",
+       "required": false,
+       "help": "Names and roles, if known.",
+       "max": 2000
+      }
+     ]
+    },
+    {
+     "heading": "Injury or damage",
+     "fields": [
+      {
+       "label": "Anyone hurt",
+       "type": "choice",
+       "role": "Reporter",
+       "required": true,
+       "options": [
+        "Yes",
+        "No"
+       ]
+      },
+      {
+       "label": "Help given",
+       "type": "text",
+       "role": "Reporter",
+       "required": false,
+       "help": "Describe what was done. Do not attach medical records.",
+       "max": 2000
+      },
+      {
+       "label": "Damage",
+       "type": "text",
+       "role": "Reporter",
+       "required": false,
+       "max": 2000
+      }
+     ]
+    },
+    {
+     "heading": "Afterwards",
+     "fields": [
+      {
+       "label": "Immediate action",
+       "type": "text",
+       "role": "Reporter",
+       "required": false,
+       "max": 2000
+      },
+      {
+       "label": "Witnesses",
+       "type": "text",
+       "role": "Reporter",
+       "required": false,
+       "max": 2000
+      },
+      {
+       "label": "Photos or documents",
+       "type": "file (PDF or picture)",
+       "role": "Reporter",
+       "required": false,
+       "help": "A PDF or a picture (PNG or JPEG). It is kept exactly as you upload it."
+      },
+      {
+       "label": "Prevention",
+       "type": "text",
+       "role": "Reporter",
+       "required": false,
+       "max": 2000
+      },
+      {
+       "label": "The information I have given is true and complete to the best of my knowledge.",
+       "type": "tick box",
+       "role": "Reporter",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "Signature",
+     "fields": [
+      {
+       "label": "Reporter signature",
+       "type": "signature",
+       "role": "Reporter",
+       "required": true
+      },
+      {
+       "label": "Reporter date signed",
+       "type": "date signed",
+       "role": "Reporter",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "For supervisor use",
+     "fields": [
+      {
+       "label": "Decision",
+       "type": "choice",
+       "role": "Supervisor",
+       "required": true,
+       "options": [
+        "Reviewed",
+        "no further action",
+        "Reviewed",
+        "action taken",
+        "Escalated"
+       ]
+      },
+      {
+       "label": "Note",
+       "type": "text",
+       "role": "Supervisor",
+       "required": false,
+       "help": "Optional. Shown on the signed copy.",
+       "max": 2000
+      },
+      {
+       "label": "Supervisor signature",
+       "type": "signature",
+       "role": "Supervisor",
+       "required": true
+      },
+      {
+       "label": "Supervisor date signed",
+       "type": "date signed",
+       "role": "Supervisor",
+       "required": true
+      }
+     ]
+    }
+   ],
+   "consent": [
+    "The information I have given is true and complete to the best of my knowledge."
+   ],
+   "fieldCount": 19,
+   "counterFields": 4,
+   "required": 11,
+   "minutes": 5
+  },
+  {
+   "slug": "time-off-request",
+   "title": "Time-off request",
+   "use": "people",
+   "summary": "Request time off: type of leave, dates, hours, cover arrangements, approved by a manager.",
+   "who": "A team that asks staff to request leave in writing and have it approved.",
+   "purpose": "Every leave request in one place, with a signed approval.",
+   "intro": "Request your time off here. Your manager will approve or reply.",
+   "roles": [
+    "Employee",
+    "Manager"
+   ],
+   "counterSign": true,
+   "publish": {
+    "verifyEmail": false,
+    "fillAgain": true,
+    "notifyOwner": true,
+    "confirmRespondent": true,
+    "counterSign": true,
+    "thankYou": "Your request has been sent to your manager."
+   },
+   "sections": [
+    {
+     "heading": "About you",
+     "fields": [
+      {
+       "label": "Full name",
+       "type": "text",
+       "role": "Employee",
+       "required": true,
+       "max": 120
+      },
+      {
+       "label": "Email",
+       "type": "email",
+       "role": "Employee",
+       "required": true
+      },
+      {
+       "label": "Team",
+       "type": "text",
+       "role": "Employee",
+       "required": false,
+       "max": 120
+      }
+     ]
+    },
+    {
+     "heading": "The time off",
+     "fields": [
+      {
+       "label": "Type of leave",
+       "type": "choice",
+       "role": "Employee",
+       "required": true,
+       "options": [
+        "Vacation",
+        "Sick leave",
+        "Personal",
+        "Family",
+        "Unpaid",
+        "Other"
+       ]
+      },
+      {
+       "label": "First day",
+       "type": "text",
+       "role": "Employee",
+       "required": true
+      },
+      {
+       "label": "Last day",
+       "type": "text",
+       "role": "Employee",
+       "required": true
+      },
+      {
+       "label": "Part days",
+       "type": "text",
+       "role": "Employee",
+       "required": false,
+       "max": 120
+      },
+      {
+       "label": "Total days",
+       "type": "text",
+       "role": "Employee",
+       "required": true,
+       "help": "Working days only, for example 3.5."
+      },
+      {
+       "label": "Cover",
+       "type": "text",
+       "role": "Employee",
+       "required": false,
+       "max": 160
+      },
+      {
+       "label": "Note",
+       "type": "text",
+       "role": "Employee",
+       "required": false,
+       "help": "You do not need to give a medical reason.",
+       "max": 2000
+      },
+      {
+       "label": "I will hand over or finish urgent work before I go.",
+       "type": "tick box",
+       "role": "Employee",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "Signature",
+     "fields": [
+      {
+       "label": "Employee signature",
+       "type": "signature",
+       "role": "Employee",
+       "required": true
+      },
+      {
+       "label": "Employee date signed",
+       "type": "date signed",
+       "role": "Employee",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "For manager use",
+     "fields": [
+      {
+       "label": "Decision",
+       "type": "choice",
+       "role": "Manager",
+       "required": true,
+       "options": [
+        "Approved",
+        "Approved with changes",
+        "Not approved"
+       ]
+      },
+      {
+       "label": "Note",
+       "type": "text",
+       "role": "Manager",
+       "required": false,
+       "help": "Optional. Shown on the signed copy.",
+       "max": 2000
+      },
+      {
+       "label": "Manager signature",
+       "type": "signature",
+       "role": "Manager",
+       "required": true
+      },
+      {
+       "label": "Manager date signed",
+       "type": "date signed",
+       "role": "Manager",
+       "required": true
+      }
+     ]
+    }
+   ],
+   "consent": [
+    "I will hand over or finish urgent work before I go."
+   ],
+   "fieldCount": 13,
+   "counterFields": 4,
+   "required": 9,
+   "minutes": 3
+  },
+  {
+   "slug": "expense-reimbursement",
+   "title": "Expense reimbursement",
+   "use": "money",
+   "summary": "Claim back expenses: each item, date, amount and purpose, with receipts attached, approved by a manager. No bank details are collected.",
+   "who": "An organization that pays back staff or volunteers for approved expenses.",
+   "purpose": "Receive complete claims with receipts, approved before payment.",
+   "intro": "Claim expenses you paid for on the organization's behalf. Attach a receipt for each item. Approved claims are paid the way you are normally paid; do not enter bank details here.",
+   "roles": [
+    "Claimant",
+    "Approver"
+   ],
+   "counterSign": true,
+   "publish": {
+    "verifyEmail": false,
+    "fillAgain": true,
+    "notifyOwner": true,
+    "confirmRespondent": true,
+    "counterSign": true,
+    "thankYou": "Your claim has been sent for approval."
+   },
+   "sections": [
+    {
+     "heading": "About you",
+     "fields": [
+      {
+       "label": "Full name",
+       "type": "text",
+       "role": "Claimant",
+       "required": true,
+       "max": 120
+      },
+      {
+       "label": "Email",
+       "type": "email",
+       "role": "Claimant",
+       "required": true
+      },
+      {
+       "label": "Team or budget",
+       "type": "text",
+       "role": "Claimant",
+       "required": false,
+       "max": 120
+      }
+     ]
+    },
+    {
+     "heading": "Items",
+     "fields": [
+      {
+       "label": "Item 1",
+       "type": "text",
+       "role": "Claimant",
+       "required": true,
+       "max": 200
+      },
+      {
+       "label": "Item 1 date",
+       "type": "text",
+       "role": "Claimant",
+       "required": true
+      },
+      {
+       "label": "Item 1 amount",
+       "type": "text",
+       "role": "Claimant",
+       "required": true,
+       "help": "In your normal currency, for example 42.50."
+      },
+      {
+       "label": "Item 2",
+       "type": "text",
+       "role": "Claimant",
+       "required": false,
+       "max": 200
+      },
+      {
+       "label": "Item 2 date",
+       "type": "text",
+       "role": "Claimant",
+       "required": false
+      },
+      {
+       "label": "Item 2 amount",
+       "type": "text",
+       "role": "Claimant",
+       "required": false
+      },
+      {
+       "label": "Item 3",
+       "type": "text",
+       "role": "Claimant",
+       "required": false,
+       "max": 200
+      },
+      {
+       "label": "Item 3 date",
+       "type": "text",
+       "role": "Claimant",
+       "required": false
+      },
+      {
+       "label": "Item 3 amount",
+       "type": "text",
+       "role": "Claimant",
+       "required": false
+      },
+      {
+       "label": "Total",
+       "type": "text",
+       "role": "Claimant",
+       "required": true
+      },
+      {
+       "label": "Receipts",
+       "type": "file (PDF or picture)",
+       "role": "Claimant",
+       "required": true,
+       "help": "One PDF or picture with all receipts, or the receipt for the largest item."
+      },
+      {
+       "label": "More receipts",
+       "type": "file (PDF or picture)",
+       "role": "Claimant",
+       "required": false,
+       "help": "A PDF or a picture (PNG or JPEG). It is kept exactly as you upload it."
+      },
+      {
+       "label": "These expenses were paid by me for the organization's purposes, have not been claimed before and are not being paid back",
+       "type": "tick box",
+       "role": "Claimant",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "Signature",
+     "fields": [
+      {
+       "label": "Claimant signature",
+       "type": "signature",
+       "role": "Claimant",
+       "required": true
+      },
+      {
+       "label": "Claimant date signed",
+       "type": "date signed",
+       "role": "Claimant",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "For approver use",
+     "fields": [
+      {
+       "label": "Decision",
+       "type": "choice",
+       "role": "Approver",
+       "required": true,
+       "options": [
+        "Approved",
+        "Approved in part",
+        "Not approved"
+       ]
+      },
+      {
+       "label": "Note",
+       "type": "text",
+       "role": "Approver",
+       "required": false,
+       "help": "Optional. Shown on the signed copy.",
+       "max": 2000
+      },
+      {
+       "label": "Approver signature",
+       "type": "signature",
+       "role": "Approver",
+       "required": true
+      },
+      {
+       "label": "Approver date signed",
+       "type": "date signed",
+       "role": "Approver",
+       "required": true
+      }
+     ]
+    }
+   ],
+   "consent": [
+    "These expenses were paid by me for the organization's purposes, have not been claimed before and are not being paid back from anywhere else."
+   ],
+   "fieldCount": 18,
+   "counterFields": 4,
+   "required": 10,
+   "minutes": 5
+  },
+  {
+   "slug": "purchase-request",
+   "title": "Purchase request",
+   "use": "money",
+   "summary": "Ask to buy something: what, from whom, why, how much and by when, with a quote attached and an approver's signature.",
+   "who": "A team that needs approval before buying goods or services.",
+   "purpose": "Approve spending before it happens, with the reason recorded.",
+   "intro": "Request approval to buy something. Please attach a quote if you have one.",
+   "roles": [
+    "Requester",
+    "Approver"
+   ],
+   "counterSign": true,
+   "publish": {
+    "verifyEmail": false,
+    "fillAgain": true,
+    "notifyOwner": true,
+    "confirmRespondent": true,
+    "counterSign": true,
+    "thankYou": "Your request has been sent for approval."
+   },
+   "sections": [
+    {
+     "heading": "About you",
+     "fields": [
+      {
+       "label": "Full name",
+       "type": "text",
+       "role": "Requester",
+       "required": true,
+       "max": 120
+      },
+      {
+       "label": "Email",
+       "type": "email",
+       "role": "Requester",
+       "required": true
+      },
+      {
+       "label": "Team or budget",
+       "type": "text",
+       "role": "Requester",
+       "required": true,
+       "max": 120
+      }
+     ]
+    },
+    {
+     "heading": "What you want to buy",
+     "fields": [
+      {
+       "label": "Item or service",
+       "type": "text",
+       "role": "Requester",
+       "required": true,
+       "max": 200
+      },
+      {
+       "label": "Supplier",
+       "type": "text",
+       "role": "Requester",
+       "required": false,
+       "max": 160
+      },
+      {
+       "label": "Quantity",
+       "type": "text",
+       "role": "Requester",
+       "required": true
+      },
+      {
+       "label": "Estimated total",
+       "type": "text",
+       "role": "Requester",
+       "required": true,
+       "help": "Including tax and delivery, in your normal currency."
+      },
+      {
+       "label": "Needed by",
+       "type": "text",
+       "role": "Requester",
+       "required": false
+      },
+      {
+       "label": "Reason",
+       "type": "text",
+       "role": "Requester",
+       "required": true,
+       "max": 2000
+      },
+      {
+       "label": "Alternatives",
+       "type": "text",
+       "role": "Requester",
+       "required": false,
+       "max": 2000
+      },
+      {
+       "label": "Quote",
+       "type": "file (PDF or picture)",
+       "role": "Requester",
+       "required": false,
+       "help": "A PDF or a picture (PNG or JPEG). It is kept exactly as you upload it."
+      },
+      {
+       "label": "I will not order until this request is approved.",
+       "type": "tick box",
+       "role": "Requester",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "Signature",
+     "fields": [
+      {
+       "label": "Requester signature",
+       "type": "signature",
+       "role": "Requester",
+       "required": true
+      },
+      {
+       "label": "Requester date signed",
+       "type": "date signed",
+       "role": "Requester",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "For approver use",
+     "fields": [
+      {
+       "label": "Decision",
+       "type": "choice",
+       "role": "Approver",
+       "required": true,
+       "options": [
+        "Approved",
+        "Approved with changes",
+        "Not approved"
+       ]
+      },
+      {
+       "label": "Note",
+       "type": "text",
+       "role": "Approver",
+       "required": false,
+       "help": "Optional. Shown on the signed copy.",
+       "max": 2000
+      },
+      {
+       "label": "Approver signature",
+       "type": "signature",
+       "role": "Approver",
+       "required": true
+      },
+      {
+       "label": "Approver date signed",
+       "type": "date signed",
+       "role": "Approver",
+       "required": true
+      }
+     ]
+    }
+   ],
+   "consent": [
+    "I will not order until this request is approved."
+   ],
+   "fieldCount": 14,
+   "counterFields": 4,
+   "required": 10,
+   "minutes": 4
+  },
+  {
+   "slug": "vendor-information",
+   "title": "Vendor information",
+   "use": "money",
+   "summary": "A supplier's business name, contacts, what it supplies, insurance and certifications, with documents attached. No bank or tax numbers are collected.",
+   "who": "A business setting up a new supplier and collecting its contact and service details.",
+   "purpose": "Set up suppliers with complete, signed details.",
+   "intro": "Please tell us about your business so we can set you up as a supplier. We collect payment and tax details separately and securely; do not enter them here.",
+   "roles": [
+    "Vendor"
+   ],
+   "counterSign": false,
+   "publish": {
+    "verifyEmail": true,
+    "fillAgain": false,
+    "notifyOwner": true,
+    "confirmRespondent": true,
+    "thankYou": "Thank you. We will be in touch to complete set-up."
+   },
+   "sections": [
+    {
+     "heading": "Your business",
+     "fields": [
+      {
+       "label": "Business name",
+       "type": "text",
+       "role": "Vendor",
+       "required": true,
+       "max": 160
+      },
+      {
+       "label": "Trading name",
+       "type": "text",
+       "role": "Vendor",
+       "required": false,
+       "max": 160
+      },
+      {
+       "label": "Website",
+       "type": "text",
+       "role": "Vendor",
+       "required": false,
+       "max": 200
+      },
+      {
+       "label": "Business address",
+       "type": "text",
+       "role": "Vendor",
+       "required": true,
+       "max": 240
+      },
+      {
+       "label": "Type of business",
+       "type": "choice",
+       "role": "Vendor",
+       "required": true,
+       "options": [
+        "Sole trader",
+        "Partnership",
+        "Company",
+        "Non-profit",
+        "Other"
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "Contacts",
+     "fields": [
+      {
+       "label": "Main contact",
+       "type": "text",
+       "role": "Vendor",
+       "required": true,
+       "max": 120
+      },
+      {
+       "label": "Email",
+       "type": "email",
+       "role": "Vendor",
+       "required": true
+      },
+      {
+       "label": "Phone",
+       "type": "phone",
+       "role": "Vendor",
+       "required": true
+      },
+      {
+       "label": "Billing email",
+       "type": "email",
+       "role": "Vendor",
+       "required": false
+      }
+     ]
+    },
+    {
+     "heading": "What you supply",
+     "fields": [
+      {
+       "label": "Goods or services",
+       "type": "text",
+       "role": "Vendor",
+       "required": true,
+       "max": 2000
+      },
+      {
+       "label": "Lead time",
+       "type": "text",
+       "role": "Vendor",
+       "required": false,
+       "max": 80
+      },
+      {
+       "label": "Insurance",
+       "type": "choose any",
+       "role": "Vendor",
+       "required": false,
+       "options": [
+        "General liability",
+        "Professional liability",
+        "Employer's liability",
+        "Product liability",
+        "None"
+       ]
+      },
+      {
+       "label": "Certificates",
+       "type": "file (PDF or picture)",
+       "role": "Vendor",
+       "required": false,
+       "help": "A PDF or a picture (PNG or JPEG). It is kept exactly as you upload it."
+      },
+      {
+       "label": "The information I have given is true and complete to the best of my knowledge.",
+       "type": "tick box",
+       "role": "Vendor",
+       "required": true
+      },
+      {
+       "label": "I am authorized to give this information on behalf of the business.",
+       "type": "tick box",
+       "role": "Vendor",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "Signature",
+     "fields": [
+      {
+       "label": "Vendor signature",
+       "type": "signature",
+       "role": "Vendor",
+       "required": true
+      },
+      {
+       "label": "Vendor date signed",
+       "type": "date signed",
+       "role": "Vendor",
+       "required": true
+      }
+     ]
+    }
+   ],
+   "consent": [
+    "The information I have given is true and complete to the best of my knowledge.",
+    "I am authorized to give this information on behalf of the business."
+   ],
+   "fieldCount": 17,
+   "counterFields": 0,
+   "required": 11,
+   "minutes": 4
+  },
+  {
+   "slug": "membership-application",
+   "title": "Membership application",
+   "use": "general",
+   "summary": "Apply to join: contact details, membership type, interests, how you heard about us and agreement to the rules, approved by the membership secretary.",
+   "who": "A club, association, community group or co-operative accepting new members.",
+   "purpose": "Receive complete applications and approve them with a signature.",
+   "intro": "Welcome. Please fill in this application to join. Membership starts when your application is accepted and any fee is paid.",
+   "roles": [
+    "Applicant",
+    "Membership secretary"
+   ],
+   "counterSign": true,
+   "publish": {
+    "verifyEmail": true,
+    "fillAgain": false,
+    "notifyOwner": true,
+    "confirmRespondent": true,
+    "counterSign": true,
+    "thankYou": "Thank you for applying. We will let you know."
+   },
+   "sections": [
+    {
+     "heading": "About you",
+     "fields": [
+      {
+       "label": "Full name",
+       "type": "text",
+       "role": "Applicant",
+       "required": true,
+       "max": 120
+      },
+      {
+       "label": "Email",
+       "type": "email",
+       "role": "Applicant",
+       "required": true
+      },
+      {
+       "label": "Phone",
+       "type": "phone",
+       "role": "Applicant",
+       "required": false,
+       "help": "Optional. Used only to reach you about this form."
+      },
+      {
+       "label": "Street address",
+       "type": "text",
+       "role": "Applicant",
+       "required": true,
+       "max": 200
+      },
+      {
+       "label": "City",
+       "type": "text",
+       "role": "Applicant",
+       "required": true,
+       "max": 80
+      },
+      {
+       "label": "State or region",
+       "type": "text",
+       "role": "Applicant",
+       "required": true,
+       "max": 80
+      },
+      {
+       "label": "ZIP or postal code",
+       "type": "postal code",
+       "role": "Applicant",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "Membership",
+     "fields": [
+      {
+       "label": "Membership type",
+       "type": "choice",
+       "role": "Applicant",
+       "required": true,
+       "options": [
+        "Individual",
+        "Family or household",
+        "Student",
+        "Concession",
+        "Organization"
+       ]
+      },
+      {
+       "label": "Date of birth",
+       "type": "text",
+       "role": "Applicant",
+       "required": false,
+       "help": "Only if your membership type depends on age."
+      },
+      {
+       "label": "Interests",
+       "type": "choose any",
+       "role": "Applicant",
+       "required": false,
+       "options": [
+        "Events",
+        "Volunteering",
+        "Newsletters",
+        "Committees",
+        "Social activities"
+       ]
+      },
+      {
+       "label": "How you heard",
+       "type": "choice",
+       "role": "Applicant",
+       "required": false,
+       "options": [
+        "A friend or member",
+        "Online",
+        "An event",
+        "Local press",
+        "Other"
+       ]
+      },
+      {
+       "label": "I have read the club's rules and code of conduct and agree to follow them.",
+       "type": "tick box",
+       "role": "Applicant",
+       "required": true
+      },
+      {
+       "label": "Please send me news and event invitations by email.",
+       "type": "tick box",
+       "role": "Applicant",
+       "required": false
+      },
+      {
+       "label": "I understand that what I enter here is stored by the organization that published this form and used only for the purpose",
+       "type": "tick box",
+       "role": "Applicant",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "Signature",
+     "fields": [
+      {
+       "label": "Applicant signature",
+       "type": "signature",
+       "role": "Applicant",
+       "required": true
+      },
+      {
+       "label": "Applicant date signed",
+       "type": "date signed",
+       "role": "Applicant",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "For membership secretary use",
+     "fields": [
+      {
+       "label": "Decision",
+       "type": "choice",
+       "role": "Membership secretary",
+       "required": true,
+       "options": [
+        "Accepted",
+        "Accepted once the fee is paid",
+        "Not accepted"
+       ]
+      },
+      {
+       "label": "Note",
+       "type": "text",
+       "role": "Membership secretary",
+       "required": false,
+       "help": "Optional. Shown on the signed copy.",
+       "max": 2000
+      },
+      {
+       "label": "Membership secretary signature",
+       "type": "signature",
+       "role": "Membership secretary",
+       "required": true
+      },
+      {
+       "label": "Membership secretary date signed",
+       "type": "date signed",
+       "role": "Membership secretary",
+       "required": true
+      }
+     ]
+    }
+   ],
+   "consent": [
+    "I have read the club's rules and code of conduct and agree to follow them.",
+    "Please send me news and event invitations by email.",
+    "I understand that what I enter here is stored by the organization that published this form and used only for the purpose described above."
+   ],
+   "fieldCount": 16,
+   "counterFields": 4,
+   "required": 11,
+   "minutes": 4
+  },
+  {
+   "slug": "donation-pledge",
+   "title": "Donation pledge",
+   "use": "money",
+   "summary": "Pledge a gift: the amount, how often, when, how to be thanked and whether the gift may be named. No card or bank details are collected.",
+   "who": "A charity, school or community group asking supporters to pledge a gift to be paid later.",
+   "purpose": "Record pledges clearly, so you can follow up and thank donors as they wish.",
+   "intro": "Thank you for choosing to support us. A pledge is a promise you can change or cancel at any time by telling us. We will contact you about how to pay; do not enter card or bank details here.",
+   "roles": [
+    "Donor"
+   ],
+   "counterSign": false,
+   "publish": {
+    "verifyEmail": true,
+    "fillAgain": false,
+    "notifyOwner": true,
+    "confirmRespondent": true,
+    "thankYou": "Thank you for your generosity. We will be in touch about how to give."
+   },
+   "sections": [
+    {
+     "heading": "About you",
+     "fields": [
+      {
+       "label": "Full name",
+       "type": "text",
+       "role": "Donor",
+       "required": true,
+       "max": 120
+      },
+      {
+       "label": "Email",
+       "type": "email",
+       "role": "Donor",
+       "required": true
+      },
+      {
+       "label": "Phone",
+       "type": "phone",
+       "role": "Donor",
+       "required": false,
+       "help": "Optional. Used only to reach you about this form."
+      },
+      {
+       "label": "Street address",
+       "type": "text",
+       "role": "Donor",
+       "required": true,
+       "max": 200
+      },
+      {
+       "label": "City",
+       "type": "text",
+       "role": "Donor",
+       "required": true,
+       "max": 80
+      },
+      {
+       "label": "State or region",
+       "type": "text",
+       "role": "Donor",
+       "required": true,
+       "max": 80
+      },
+      {
+       "label": "ZIP or postal code",
+       "type": "postal code",
+       "role": "Donor",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "Your pledge",
+     "fields": [
+      {
+       "label": "Amount",
+       "type": "text",
+       "role": "Donor",
+       "required": true,
+       "help": "In your normal currency."
+      },
+      {
+       "label": "How often",
+       "type": "choice",
+       "role": "Donor",
+       "required": true,
+       "options": [
+        "Once",
+        "Every month",
+        "Every quarter",
+        "Every year"
+       ]
+      },
+      {
+       "label": "Starting",
+       "type": "text",
+       "role": "Donor",
+       "required": true
+      },
+      {
+       "label": "For how long",
+       "type": "choice",
+       "role": "Donor",
+       "required": true,
+       "options": [
+        "Just once",
+        "One year",
+        "Two years",
+        "Three years",
+        "Until I tell you to stop"
+       ]
+      },
+      {
+       "label": "Purpose",
+       "type": "text",
+       "role": "Donor",
+       "required": false,
+       "max": 160
+      }
+     ]
+    },
+    {
+     "heading": "Thanks and recognition",
+     "fields": [
+      {
+       "label": "How to thank you",
+       "type": "choice",
+       "role": "Donor",
+       "required": true,
+       "options": [
+        "By email",
+        "By post",
+        "Please do not send thanks"
+       ]
+      },
+      {
+       "label": "Name to show",
+       "type": "text",
+       "role": "Donor",
+       "required": false,
+       "max": 120
+      },
+      {
+       "label": "Please keep my gift anonymous.",
+       "type": "tick box",
+       "role": "Donor",
+       "required": false
+      },
+      {
+       "label": "I understand that this pledge is not a binding contract and that I can change or cancel it at any time.",
+       "type": "tick box",
+       "role": "Donor",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "Signature",
+     "fields": [
+      {
+       "label": "Donor signature",
+       "type": "signature",
+       "role": "Donor",
+       "required": true
+      },
+      {
+       "label": "Donor date signed",
+       "type": "date signed",
+       "role": "Donor",
+       "required": true
+      }
+     ]
+    }
+   ],
+   "consent": [
+    "Please keep my gift anonymous.",
+    "I understand that this pledge is not a binding contract and that I can change or cancel it at any time."
+   ],
+   "fieldCount": 18,
+   "counterFields": 0,
+   "required": 14,
+   "minutes": 5
+  },
+  {
+   "slug": "service-request-work-order",
+   "title": "Service request or work order",
+   "use": "operations",
+   "summary": "Request work: what needs doing, where, how urgent, access arrangements, photos, and the technician's sign-off on completion.",
+   "who": "A trade, facilities team or service business taking job requests from customers or colleagues.",
+   "purpose": "Turn every request into a clear job sheet that is signed off when done.",
+   "intro": "Tell us what needs doing. We will confirm the timing and any cost before we start.",
+   "roles": [
+    "Customer",
+    "Technician"
+   ],
+   "counterSign": true,
+   "publish": {
+    "verifyEmail": false,
+    "fillAgain": true,
+    "notifyOwner": true,
+    "confirmRespondent": true,
+    "counterSign": true,
+    "thankYou": "Your request is logged. We will contact you to arrange the work."
+   },
+   "sections": [
+    {
+     "heading": "About you",
+     "fields": [
+      {
+       "label": "Full name",
+       "type": "text",
+       "role": "Customer",
+       "required": true,
+       "max": 120
+      },
+      {
+       "label": "Email",
+       "type": "email",
+       "role": "Customer",
+       "required": true
+      },
+      {
+       "label": "Phone",
+       "type": "phone",
+       "role": "Customer",
+       "required": false,
+       "help": "Optional. Used only to reach you about this form."
+      },
+      {
+       "label": "Street address",
+       "type": "text",
+       "role": "Customer",
+       "required": true,
+       "max": 200
+      },
+      {
+       "label": "City",
+       "type": "text",
+       "role": "Customer",
+       "required": true,
+       "max": 80
+      },
+      {
+       "label": "State or region",
+       "type": "text",
+       "role": "Customer",
+       "required": true,
+       "max": 80
+      },
+      {
+       "label": "ZIP or postal code",
+       "type": "postal code",
+       "role": "Customer",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "The work",
+     "fields": [
+      {
+       "label": "Description of the work",
+       "type": "text",
+       "role": "Customer",
+       "required": true,
+       "max": 2000
+      },
+      {
+       "label": "Location",
+       "type": "text",
+       "role": "Customer",
+       "required": true,
+       "help": "The room, floor or area.",
+       "max": 200
+      },
+      {
+       "label": "Urgency",
+       "type": "choice",
+       "role": "Customer",
+       "required": true,
+       "options": [
+        "Emergency",
+        "Within 24 hours",
+        "This week",
+        "When convenient"
+       ]
+      },
+      {
+       "label": "Preferred times",
+       "type": "text",
+       "role": "Customer",
+       "required": false,
+       "max": 160
+      },
+      {
+       "label": "Access",
+       "type": "text",
+       "role": "Customer",
+       "required": false,
+       "help": "Who will let us in, keys, parking, pets.",
+       "max": 200
+      },
+      {
+       "label": "Photos",
+       "type": "file (PDF or picture)",
+       "role": "Customer",
+       "required": false,
+       "help": "A PDF or a picture (PNG or JPEG). It is kept exactly as you upload it."
+      },
+      {
+       "label": "I am authorized to request this work, and I understand any cost will be agreed with me before work starts.",
+       "type": "tick box",
+       "role": "Customer",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "Signature",
+     "fields": [
+      {
+       "label": "Customer signature",
+       "type": "signature",
+       "role": "Customer",
+       "required": true
+      },
+      {
+       "label": "Customer date signed",
+       "type": "date signed",
+       "role": "Customer",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "For technician use",
+     "fields": [
+      {
+       "label": "Decision",
+       "type": "choice",
+       "role": "Technician",
+       "required": true,
+       "options": [
+        "Work completed",
+        "Part completed",
+        "return visit needed",
+        "Not completed"
+       ]
+      },
+      {
+       "label": "Note",
+       "type": "text",
+       "role": "Technician",
+       "required": false,
+       "help": "Optional. Shown on the signed copy.",
+       "max": 2000
+      },
+      {
+       "label": "Technician signature",
+       "type": "signature",
+       "role": "Technician",
+       "required": true
+      },
+      {
+       "label": "Technician date signed",
+       "type": "date signed",
+       "role": "Technician",
+       "required": true
+      }
+     ]
+    }
+   ],
+   "consent": [
+    "I am authorized to request this work, and I understand any cost will be agreed with me before work starts."
+   ],
+   "fieldCount": 16,
+   "counterFields": 4,
+   "required": 12,
+   "minutes": 4
+  },
+  {
+   "slug": "return-and-refund-request",
+   "title": "Return and refund request",
+   "use": "money",
+   "summary": "Ask to return an item: the order, the item, the reason, the outcome wanted and photos, approved by the seller. No card details are collected.",
+   "who": "A shop or business handling returns, exchanges and refunds.",
+   "purpose": "Handle every return in the same way, with evidence and a signed decision.",
+   "intro": "Please tell us about the item you want to return. A refund goes back to the way you paid; do not enter card details here.",
+   "roles": [
+    "Customer",
+    "Seller"
+   ],
+   "counterSign": true,
+   "publish": {
+    "verifyEmail": true,
+    "fillAgain": true,
+    "notifyOwner": true,
+    "confirmRespondent": true,
+    "counterSign": true,
+    "thankYou": "Your return request is with us. We will reply with next steps."
+   },
+   "sections": [
+    {
+     "heading": "About you",
+     "fields": [
+      {
+       "label": "Full name",
+       "type": "text",
+       "role": "Customer",
+       "required": true,
+       "max": 120
+      },
+      {
+       "label": "Email",
+       "type": "email",
+       "role": "Customer",
+       "required": true
+      },
+      {
+       "label": "Phone",
+       "type": "phone",
+       "role": "Customer",
+       "required": false,
+       "help": "Optional. Used only to reach you about this form."
+      }
+     ]
+    },
+    {
+     "heading": "Your order",
+     "fields": [
+      {
+       "label": "Order number",
+       "type": "text",
+       "role": "Customer",
+       "required": true,
+       "max": 60
+      },
+      {
+       "label": "Purchase date",
+       "type": "text",
+       "role": "Customer",
+       "required": true
+      },
+      {
+       "label": "Item",
+       "type": "text",
+       "role": "Customer",
+       "required": true,
+       "max": 200
+      },
+      {
+       "label": "Quantity",
+       "type": "text",
+       "role": "Customer",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "The return",
+     "fields": [
+      {
+       "label": "Reason",
+       "type": "choice",
+       "role": "Customer",
+       "required": true,
+       "options": [
+        "Faulty or damaged",
+        "Wrong item",
+        "Not as described",
+        "Changed my mind",
+        "Other"
+       ]
+      },
+      {
+       "label": "Details",
+       "type": "text",
+       "role": "Customer",
+       "required": false,
+       "max": 2000
+      },
+      {
+       "label": "Outcome wanted",
+       "type": "choice",
+       "role": "Customer",
+       "required": true,
+       "options": [
+        "A refund",
+        "An exchange",
+        "A repair",
+        "Store credit"
+       ]
+      },
+      {
+       "label": "Photos",
+       "type": "file (PDF or picture)",
+       "role": "Customer",
+       "required": false,
+       "help": "Helpful for faulty or damaged items."
+      },
+      {
+       "label": "The item is in the condition described, and I will return it as instructed.",
+       "type": "tick box",
+       "role": "Customer",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "Signature",
+     "fields": [
+      {
+       "label": "Customer signature",
+       "type": "signature",
+       "role": "Customer",
+       "required": true
+      },
+      {
+       "label": "Customer date signed",
+       "type": "date signed",
+       "role": "Customer",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "For seller use",
+     "fields": [
+      {
+       "label": "Decision",
+       "type": "choice",
+       "role": "Seller",
+       "required": true,
+       "options": [
+        "Approved",
+        "Approved in part",
+        "Not approved"
+       ]
+      },
+      {
+       "label": "Note",
+       "type": "text",
+       "role": "Seller",
+       "required": false,
+       "help": "Optional. Shown on the signed copy.",
+       "max": 2000
+      },
+      {
+       "label": "Seller signature",
+       "type": "signature",
+       "role": "Seller",
+       "required": true
+      },
+      {
+       "label": "Seller date signed",
+       "type": "date signed",
+       "role": "Seller",
+       "required": true
+      }
+     ]
+    }
+   ],
+   "consent": [
+    "The item is in the condition described, and I will return it as instructed."
+   ],
+   "fieldCount": 14,
+   "counterFields": 4,
+   "required": 11,
+   "minutes": 4
+  },
+  {
+   "slug": "maintenance-request",
+   "title": "Maintenance request",
+   "use": "property",
+   "summary": "Report a repair: what and where, how urgent, permission to enter, photos, and sign-off when fixed.",
+   "who": "A landlord, property manager, school or building team taking repair requests from occupants.",
+   "purpose": "Log every repair request with permission to enter and a signed completion.",
+   "intro": "Report something that needs repairing. For a gas leak, fire or flood, call the emergency number first.",
+   "roles": [
+    "Occupant",
+    "Maintenance"
+   ],
+   "counterSign": true,
+   "publish": {
+    "verifyEmail": false,
+    "fillAgain": true,
+    "notifyOwner": true,
+    "confirmRespondent": true,
+    "counterSign": true,
+    "thankYou": "Your request is logged. We will contact you about a visit."
+   },
+   "sections": [
+    {
+     "heading": "About you",
+     "fields": [
+      {
+       "label": "Full name",
+       "type": "text",
+       "role": "Occupant",
+       "required": true,
+       "max": 120
+      },
+      {
+       "label": "Email",
+       "type": "email",
+       "role": "Occupant",
+       "required": true
+      },
+      {
+       "label": "Phone",
+       "type": "phone",
+       "role": "Occupant",
+       "required": false,
+       "help": "Optional. Used only to reach you about this form."
+      },
+      {
+       "label": "Street address",
+       "type": "text",
+       "role": "Occupant",
+       "required": true,
+       "max": 200
+      },
+      {
+       "label": "City",
+       "type": "text",
+       "role": "Occupant",
+       "required": true,
+       "max": 80
+      },
+      {
+       "label": "State or region",
+       "type": "text",
+       "role": "Occupant",
+       "required": true,
+       "max": 80
+      },
+      {
+       "label": "ZIP or postal code",
+       "type": "postal code",
+       "role": "Occupant",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "The problem",
+     "fields": [
+      {
+       "label": "Unit or room",
+       "type": "text",
+       "role": "Occupant",
+       "required": true,
+       "max": 120
+      },
+      {
+       "label": "Description",
+       "type": "text",
+       "role": "Occupant",
+       "required": true,
+       "max": 2000
+      },
+      {
+       "label": "Category",
+       "type": "choice",
+       "role": "Occupant",
+       "required": true,
+       "options": [
+        "Plumbing",
+        "Electrical",
+        "Heating or cooling",
+        "Appliance",
+        "Doors",
+        "windows or locks",
+        "Pests",
+        "Other"
+       ]
+      },
+      {
+       "label": "Urgency",
+       "type": "choice",
+       "role": "Occupant",
+       "required": true,
+       "options": [
+        "Urgent: it is unsafe or unusable",
+        "Soon",
+        "Not urgent"
+       ]
+      },
+      {
+       "label": "Started",
+       "type": "text",
+       "role": "Occupant",
+       "required": false
+      },
+      {
+       "label": "Photos",
+       "type": "file (PDF or picture)",
+       "role": "Occupant",
+       "required": false,
+       "help": "A PDF or a picture (PNG or JPEG). It is kept exactly as you upload it."
+      }
+     ]
+    },
+    {
+     "heading": "Access",
+     "fields": [
+      {
+       "label": "Maintenance staff may enter to fix this if I am not at home.",
+       "type": "tick box",
+       "role": "Occupant",
+       "required": false
+      },
+      {
+       "label": "Access note",
+       "type": "text",
+       "role": "Occupant",
+       "required": false,
+       "max": 200
+      }
+     ]
+    },
+    {
+     "heading": "Signature",
+     "fields": [
+      {
+       "label": "Occupant signature",
+       "type": "signature",
+       "role": "Occupant",
+       "required": true
+      },
+      {
+       "label": "Occupant date signed",
+       "type": "date signed",
+       "role": "Occupant",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "For maintenance use",
+     "fields": [
+      {
+       "label": "Decision",
+       "type": "choice",
+       "role": "Maintenance",
+       "required": true,
+       "options": [
+        "Fixed",
+        "Part fixed",
+        "follow-up booked",
+        "Could not fix"
+       ]
+      },
+      {
+       "label": "Note",
+       "type": "text",
+       "role": "Maintenance",
+       "required": false,
+       "help": "Optional. Shown on the signed copy.",
+       "max": 2000
+      },
+      {
+       "label": "Maintenance signature",
+       "type": "signature",
+       "role": "Maintenance",
+       "required": true
+      },
+      {
+       "label": "Maintenance date signed",
+       "type": "date signed",
+       "role": "Maintenance",
+       "required": true
+      }
+     ]
+    }
+   ],
+   "consent": [
+    "Maintenance staff may enter to fix this if I am not at home."
+   ],
+   "fieldCount": 17,
+   "counterFields": 4,
+   "required": 12,
+   "minutes": 4
+  },
+  {
+   "slug": "move-in-move-out-checklist",
+   "title": "Move-in and move-out condition checklist",
+   "use": "property",
+   "summary": "Room-by-room condition at move-in or move-out, meter readings, keys handed over and photos, signed by the occupant and the property manager.",
+   "who": "A landlord, property manager or host recording the condition of a property at the start or end of a stay.",
+   "purpose": "Agree the condition of a property in writing, with photos, at both ends of a tenancy.",
+   "intro": "Go through each room and record its condition. Be specific and add photos. Both of you sign, and each keeps a copy.",
+   "roles": [
+    "Occupant",
+    "Property manager"
+   ],
+   "counterSign": true,
+   "publish": {
+    "verifyEmail": true,
+    "fillAgain": false,
+    "notifyOwner": true,
+    "confirmRespondent": true,
+    "counterSign": true,
+    "thankYou": "Thank you. The checklist has been sent to the property manager to sign."
+   },
+   "sections": [
+    {
+     "heading": "About you",
+     "fields": [
+      {
+       "label": "Full name",
+       "type": "text",
+       "role": "Occupant",
+       "required": true,
+       "max": 120
+      },
+      {
+       "label": "Email",
+       "type": "email",
+       "role": "Occupant",
+       "required": true
+      },
+      {
+       "label": "Phone",
+       "type": "phone",
+       "role": "Occupant",
+       "required": false,
+       "help": "Optional. Used only to reach you about this form."
+      }
+     ]
+    },
+    {
+     "heading": "The property",
+     "fields": [
+      {
+       "label": "Property address",
+       "type": "text",
+       "role": "Occupant",
+       "required": true,
+       "max": 240
+      },
+      {
+       "label": "Checklist for",
+       "type": "choice",
+       "role": "Occupant",
+       "required": true,
+       "options": [
+        "Moving in",
+        "Moving out"
+       ]
+      },
+      {
+       "label": "Inspection date",
+       "type": "text",
+       "role": "Occupant",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "Condition by room",
+     "fields": [
+      {
+       "label": "Entrance and hallways: condition",
+       "type": "choice",
+       "role": "Occupant",
+       "required": true,
+       "options": [
+        "Good",
+        "Fair",
+        "Poor",
+        "Not applicable"
+       ]
+      },
+      {
+       "label": "Entrance and hallways: notes",
+       "type": "text",
+       "role": "Occupant",
+       "required": false,
+       "max": 300
+      },
+      {
+       "label": "Living areas: condition",
+       "type": "choice",
+       "role": "Occupant",
+       "required": true,
+       "options": [
+        "Good",
+        "Fair",
+        "Poor",
+        "Not applicable"
+       ]
+      },
+      {
+       "label": "Living areas: notes",
+       "type": "text",
+       "role": "Occupant",
+       "required": false,
+       "max": 300
+      },
+      {
+       "label": "Kitchen: condition",
+       "type": "choice",
+       "role": "Occupant",
+       "required": true,
+       "options": [
+        "Good",
+        "Fair",
+        "Poor",
+        "Not applicable"
+       ]
+      },
+      {
+       "label": "Kitchen: notes",
+       "type": "text",
+       "role": "Occupant",
+       "required": false,
+       "max": 300
+      },
+      {
+       "label": "Bathrooms: condition",
+       "type": "choice",
+       "role": "Occupant",
+       "required": true,
+       "options": [
+        "Good",
+        "Fair",
+        "Poor",
+        "Not applicable"
+       ]
+      },
+      {
+       "label": "Bathrooms: notes",
+       "type": "text",
+       "role": "Occupant",
+       "required": false,
+       "max": 300
+      },
+      {
+       "label": "Bedrooms: condition",
+       "type": "choice",
+       "role": "Occupant",
+       "required": true,
+       "options": [
+        "Good",
+        "Fair",
+        "Poor",
+        "Not applicable"
+       ]
+      },
+      {
+       "label": "Bedrooms: notes",
+       "type": "text",
+       "role": "Occupant",
+       "required": false,
+       "max": 300
+      },
+      {
+       "label": "Outside areas: condition",
+       "type": "choice",
+       "role": "Occupant",
+       "required": true,
+       "options": [
+        "Good",
+        "Fair",
+        "Poor",
+        "Not applicable"
+       ]
+      },
+      {
+       "label": "Outside areas: notes",
+       "type": "text",
+       "role": "Occupant",
+       "required": false,
+       "max": 300
+      },
+      {
+       "label": "Photos",
+       "type": "file (PDF or picture)",
+       "role": "Occupant",
+       "required": true,
+       "help": "Photos of each room, or of anything that is damaged."
+      },
+      {
+       "label": "More photos",
+       "type": "file (PDF or picture)",
+       "role": "Occupant",
+       "required": false,
+       "help": "A PDF or a picture (PNG or JPEG). It is kept exactly as you upload it."
+      }
+     ]
+    },
+    {
+     "heading": "Meters and keys",
+     "fields": [
+      {
+       "label": "Electricity reading",
+       "type": "text",
+       "role": "Occupant",
+       "required": false,
+       "max": 40
+      },
+      {
+       "label": "Gas or water reading",
+       "type": "text",
+       "role": "Occupant",
+       "required": false,
+       "max": 40
+      },
+      {
+       "label": "Keys handed over",
+       "type": "text",
+       "role": "Occupant",
+       "required": true,
+       "max": 160
+      },
+      {
+       "label": "This checklist is a fair record of the property's condition on the date above.",
+       "type": "tick box",
+       "role": "Occupant",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "Signature",
+     "fields": [
+      {
+       "label": "Occupant signature",
+       "type": "signature",
+       "role": "Occupant",
+       "required": true
+      },
+      {
+       "label": "Occupant date signed",
+       "type": "date signed",
+       "role": "Occupant",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "For property manager use",
+     "fields": [
+      {
+       "label": "Decision",
+       "type": "choice",
+       "role": "Property manager",
+       "required": true,
+       "options": [
+        "Agreed",
+        "Agreed with notes",
+        "Disputed"
+       ]
+      },
+      {
+       "label": "Note",
+       "type": "text",
+       "role": "Property manager",
+       "required": false,
+       "help": "Optional. Shown on the signed copy.",
+       "max": 2000
+      },
+      {
+       "label": "Property manager signature",
+       "type": "signature",
+       "role": "Property manager",
+       "required": true
+      },
+      {
+       "label": "Property manager date signed",
+       "type": "date signed",
+       "role": "Property manager",
+       "required": true
+      }
+     ]
+    }
+   ],
+   "consent": [
+    "This checklist is a fair record of the property's condition on the date above."
+   ],
+   "fieldCount": 26,
+   "counterFields": 4,
+   "required": 16,
+   "minutes": 7
+  },
+  {
+   "slug": "class-or-course-registration",
+   "title": "Class or course registration",
+   "use": "education",
+   "summary": "Enroll in a class: the course and session, experience level, learning needs, emergency contact and the terms of the course.",
+   "who": "A school, studio, trainer or community program enrolling people in classes or courses.",
+   "purpose": "Enroll students with everything you need before the first class.",
+   "intro": "Enroll in a class or course here. If the participant is under 18, a parent or guardian should fill in this form.",
+   "roles": [
+    "Student"
+   ],
+   "counterSign": false,
+   "publish": {
+    "verifyEmail": true,
+    "fillAgain": true,
+    "notifyOwner": true,
+    "confirmRespondent": true,
+    "thankYou": "You are enrolled. We will send the details before the first class."
+   },
+   "sections": [
+    {
+     "heading": "About you",
+     "fields": [
+      {
+       "label": "Full name",
+       "type": "text",
+       "role": "Student",
+       "required": true,
+       "max": 120
+      },
+      {
+       "label": "Email",
+       "type": "email",
+       "role": "Student",
+       "required": true
+      },
+      {
+       "label": "Phone",
+       "type": "phone",
+       "role": "Student",
+       "required": false,
+       "help": "Optional. Used only to reach you about this form."
+      }
+     ]
+    },
+    {
+     "heading": "The course",
+     "fields": [
+      {
+       "label": "Course",
+       "type": "text",
+       "role": "Student",
+       "required": true,
+       "max": 160
+      },
+      {
+       "label": "Start date",
+       "type": "text",
+       "role": "Student",
+       "required": true
+      },
+      {
+       "label": "Day and time",
+       "type": "text",
+       "role": "Student",
+       "required": false,
+       "max": 80
+      },
+      {
+       "label": "Experience",
+       "type": "choice",
+       "role": "Student",
+       "required": true,
+       "options": [
+        "Beginner",
+        "Some experience",
+        "Experienced"
+       ]
+      },
+      {
+       "label": "Goals",
+       "type": "text",
+       "role": "Student",
+       "required": false,
+       "max": 2000
+      }
+     ]
+    },
+    {
+     "heading": "Participant",
+     "fields": [
+      {
+       "label": "Participant's name",
+       "type": "text",
+       "role": "Student",
+       "required": false,
+       "max": 120
+      },
+      {
+       "label": "Age group",
+       "type": "choice",
+       "role": "Student",
+       "required": true,
+       "options": [
+        "Under 12",
+        "12 to 17",
+        "18 or over"
+       ]
+      },
+      {
+       "label": "Needs",
+       "type": "text",
+       "role": "Student",
+       "required": false,
+       "max": 2000
+      },
+      {
+       "label": "Emergency contact",
+       "type": "text",
+       "role": "Student",
+       "required": true,
+       "max": 160
+      },
+      {
+       "label": "I have read the course terms, including attendance, cancellations and refunds.",
+       "type": "tick box",
+       "role": "Student",
+       "required": true
+      },
+      {
+       "label": "If the participant is under 18, I am their parent or guardian and I agree for them to take part.",
+       "type": "tick box",
+       "role": "Student",
+       "required": false
+      },
+      {
+       "label": "I understand that what I enter here is stored by the organization that published this form and used only for the purpose",
+       "type": "tick box",
+       "role": "Student",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "Signature",
+     "fields": [
+      {
+       "label": "Student signature",
+       "type": "signature",
+       "role": "Student",
+       "required": true
+      },
+      {
+       "label": "Student date signed",
+       "type": "date signed",
+       "role": "Student",
+       "required": true
+      }
+     ]
+    }
+   ],
+   "consent": [
+    "I have read the course terms, including attendance, cancellations and refunds.",
+    "If the participant is under 18, I am their parent or guardian and I agree for them to take part.",
+    "I understand that what I enter here is stored by the organization that published this form and used only for the purpose described above."
+   ],
+   "fieldCount": 17,
+   "counterFields": 0,
+   "required": 11,
+   "minutes": 4
+  },
+  {
+   "slug": "reference-check",
+   "title": "Reference check",
+   "use": "people",
+   "summary": "A referee confirms how they know the candidate, the dates, the role, and gives an honest view of strengths, areas to develop and suitability.",
+   "who": "An employer or organization asking a referee about a candidate.",
+   "purpose": "Get references in writing, in the same shape for every candidate.",
+   "intro": "You have been named as a referee. Please answer honestly; the candidate has agreed to us asking you. Your answers are kept confidential to the people deciding.",
+   "roles": [
+    "Referee"
+   ],
+   "counterSign": false,
+   "publish": {
+    "verifyEmail": true,
+    "fillAgain": false,
+    "notifyOwner": true,
+    "confirmRespondent": true,
+    "thankYou": "Thank you for taking the time to give a reference."
+   },
+   "sections": [
+    {
+     "heading": "About you",
+     "fields": [
+      {
+       "label": "Your name",
+       "type": "text",
+       "role": "Referee",
+       "required": true,
+       "max": 120
+      },
+      {
+       "label": "Email",
+       "type": "email",
+       "role": "Referee",
+       "required": true
+      },
+      {
+       "label": "Job title and organization",
+       "type": "text",
+       "role": "Referee",
+       "required": true,
+       "max": 200
+      }
+     ]
+    },
+    {
+     "heading": "About the candidate",
+     "fields": [
+      {
+       "label": "Candidate's name",
+       "type": "text",
+       "role": "Referee",
+       "required": true,
+       "max": 120
+      },
+      {
+       "label": "Relationship",
+       "type": "choice",
+       "role": "Referee",
+       "required": true,
+       "options": [
+        "I managed them",
+        "We worked together",
+        "I taught or supervised them",
+        "Personal reference",
+        "Other"
+       ]
+      },
+      {
+       "label": "From",
+       "type": "text",
+       "role": "Referee",
+       "required": false
+      },
+      {
+       "label": "To",
+       "type": "text",
+       "role": "Referee",
+       "required": false
+      },
+      {
+       "label": "Their role",
+       "type": "text",
+       "role": "Referee",
+       "required": false,
+       "max": 160
+      }
+     ]
+    },
+    {
+     "heading": "Your view",
+     "fields": [
+      {
+       "label": "Strengths",
+       "type": "text",
+       "role": "Referee",
+       "required": true,
+       "help": "An example of each helps the most.",
+       "max": 2000
+      },
+      {
+       "label": "Areas to develop",
+       "type": "text",
+       "role": "Referee",
+       "required": false,
+       "max": 2000
+      },
+      {
+       "label": "Reliability",
+       "type": "choice",
+       "role": "Referee",
+       "required": true,
+       "help": "Choose “Cannot say” if you did not see it.",
+       "options": [
+        "Excellent",
+        "Good",
+        "Satisfactory",
+        "Poor",
+        "Cannot say"
+       ]
+      },
+      {
+       "label": "Working with others",
+       "type": "choice",
+       "role": "Referee",
+       "required": true,
+       "options": [
+        "Excellent",
+        "Good",
+        "Satisfactory",
+        "Poor",
+        "Cannot say"
+       ]
+      },
+      {
+       "label": "Again",
+       "type": "choice",
+       "role": "Referee",
+       "required": true,
+       "options": [
+        "Yes",
+        "Yes",
+        "with reservations",
+        "No",
+        "Cannot say"
+       ]
+      },
+      {
+       "label": "Anything else",
+       "type": "text",
+       "role": "Referee",
+       "required": false,
+       "help": "Only what is relevant to the role.",
+       "max": 2000
+      },
+      {
+       "label": "This reference is accurate and given in good faith.",
+       "type": "tick box",
+       "role": "Referee",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "Signature",
+     "fields": [
+      {
+       "label": "Referee signature",
+       "type": "signature",
+       "role": "Referee",
+       "required": true
+      },
+      {
+       "label": "Referee date signed",
+       "type": "date signed",
+       "role": "Referee",
+       "required": true
+      }
+     ]
+    }
+   ],
+   "consent": [
+    "This reference is accurate and given in good faith."
+   ],
+   "fieldCount": 17,
+   "counterFields": 0,
+   "required": 12,
+   "minutes": 4
+  },
+  {
+   "slug": "exit-interview",
+   "title": "Exit interview",
+   "use": "people",
+   "summary": "A leaving team member's reasons, what worked, what could be better, and whether they would return, kept confidential.",
+   "who": "An organization that asks people who are leaving about their experience.",
+   "purpose": "Learn from people who leave, in their own words.",
+   "intro": "Thank you for your time with us. Your answers help us improve. They are read by the people responsible for team experience and are not added to any reference.",
+   "roles": [
+    "Leaver"
+   ],
+   "counterSign": false,
+   "publish": {
+    "verifyEmail": false,
+    "fillAgain": false,
+    "notifyOwner": true,
+    "confirmRespondent": true,
+    "thankYou": "Thank you for your honest feedback, and all the best."
+   },
+   "sections": [
+    {
+     "heading": "About you",
+     "fields": [
+      {
+       "label": "Full name",
+       "type": "text",
+       "role": "Leaver",
+       "required": true,
+       "max": 120
+      },
+      {
+       "label": "Email",
+       "type": "email",
+       "role": "Leaver",
+       "required": true
+      },
+      {
+       "label": "Role and team",
+       "type": "text",
+       "role": "Leaver",
+       "required": false,
+       "max": 160
+      },
+      {
+       "label": "Last day",
+       "type": "text",
+       "role": "Leaver",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "Leaving",
+     "fields": [
+      {
+       "label": "Main reason",
+       "type": "choice",
+       "role": "Leaver",
+       "required": true,
+       "options": [
+        "A new opportunity",
+        "Pay or benefits",
+        "Work-life balance",
+        "Management",
+        "Career growth",
+        "Relocation",
+        "Personal reasons",
+        "Other"
+       ]
+      },
+      {
+       "label": "More about the reason",
+       "type": "text",
+       "role": "Leaver",
+       "required": false,
+       "help": "Optional. Share only what you are comfortable with.",
+       "max": 2000
+      }
+     ]
+    },
+    {
+     "heading": "Your experience",
+     "fields": [
+      {
+       "label": "What you valued",
+       "type": "text",
+       "role": "Leaver",
+       "required": false,
+       "max": 2000
+      },
+      {
+       "label": "What could be better",
+       "type": "text",
+       "role": "Leaver",
+       "required": false,
+       "help": "Specific examples help us change things.",
+       "max": 2000
+      },
+      {
+       "label": "Support",
+       "type": "choice",
+       "role": "Leaver",
+       "required": true,
+       "help": "Over your time here, not only recently.",
+       "options": [
+        "Very supported",
+        "Supported",
+        "Neutral",
+        "Unsupported",
+        "Very unsupported"
+       ]
+      },
+      {
+       "label": "Recommend",
+       "type": "choice",
+       "role": "Leaver",
+       "required": true,
+       "options": [
+        "Yes",
+        "Maybe",
+        "No"
+       ]
+      },
+      {
+       "label": "Come back",
+       "type": "choice",
+       "role": "Leaver",
+       "required": true,
+       "options": [
+        "Yes",
+        "Maybe",
+        "No"
+       ]
+      },
+      {
+       "label": "My comments may be shared, without my name, to help improve the organization.",
+       "type": "tick box",
+       "role": "Leaver",
+       "required": false
+      }
+     ]
+    },
+    {
+     "heading": "Signature",
+     "fields": [
+      {
+       "label": "Leaver signature",
+       "type": "signature",
+       "role": "Leaver",
+       "required": true
+      },
+      {
+       "label": "Leaver date signed",
+       "type": "date signed",
+       "role": "Leaver",
+       "required": true
+      }
+     ]
+    }
+   ],
+   "consent": [
+    "My comments may be shared, without my name, to help improve the organization."
+   ],
+   "fieldCount": 14,
+   "counterFields": 0,
+   "required": 9,
+   "minutes": 4
+  },
+  {
+   "slug": "visitor-sign-in",
+   "title": "Visitor sign-in",
+   "use": "operations",
+   "summary": "A visitor's name, organization, who they are seeing, arrival time, vehicle and agreement to the site rules.",
+   "who": "An office, school, site or venue that signs visitors in at the door.",
+   "purpose": "Know who is on site and that every visitor agreed to the rules.",
+   "intro": "Welcome. Please sign in. Keep your visitor badge visible and sign out when you leave.",
+   "roles": [
+    "Visitor"
+   ],
+   "counterSign": false,
+   "publish": {
+    "verifyEmail": false,
+    "fillAgain": true,
+    "notifyOwner": false,
+    "confirmRespondent": false,
+    "thankYou": "You are signed in. Welcome."
+   },
+   "sections": [
+    {
+     "heading": "About you",
+     "fields": [
+      {
+       "label": "Full name",
+       "type": "text",
+       "role": "Visitor",
+       "required": true,
+       "max": 120
+      },
+      {
+       "label": "Email",
+       "type": "email",
+       "role": "Visitor",
+       "required": true
+      },
+      {
+       "label": "Organization",
+       "type": "text",
+       "role": "Visitor",
+       "required": false,
+       "max": 120
+      },
+      {
+       "label": "Phone",
+       "type": "phone",
+       "role": "Visitor",
+       "required": false
+      }
+     ]
+    },
+    {
+     "heading": "Your visit",
+     "fields": [
+      {
+       "label": "Person you are visiting",
+       "type": "text",
+       "role": "Visitor",
+       "required": true,
+       "help": "We will let them know you have arrived.",
+       "max": 120
+      },
+      {
+       "label": "Reason",
+       "type": "choice",
+       "role": "Visitor",
+       "required": true,
+       "options": [
+        "Meeting",
+        "Delivery",
+        "Contractor or maintenance",
+        "Interview",
+        "Event",
+        "Other"
+       ]
+      },
+      {
+       "label": "Date",
+       "type": "text",
+       "role": "Visitor",
+       "required": true
+      },
+      {
+       "label": "Arrival time",
+       "type": "text",
+       "role": "Visitor",
+       "required": true,
+       "max": 20
+      },
+      {
+       "label": "Vehicle",
+       "type": "text",
+       "role": "Visitor",
+       "required": false,
+       "help": "Only if you parked on site.",
+       "max": 20
+      },
+      {
+       "label": "Badge number",
+       "type": "text",
+       "role": "Visitor",
+       "required": false,
+       "help": "Written on your visitor badge, if you were given one.",
+       "max": 20
+      }
+     ]
+    },
+    {
+     "heading": "Site rules",
+     "fields": [
+      {
+       "label": "I will follow the site's safety and security rules, stay with my host where asked, and sign out when I leave.",
+       "type": "tick box",
+       "role": "Visitor",
+       "required": true
+      },
+      {
+       "label": "In an emergency I will follow staff instructions and go to the assembly point.",
+       "type": "tick box",
+       "role": "Visitor",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "Signature",
+     "fields": [
+      {
+       "label": "Visitor signature",
+       "type": "signature",
+       "role": "Visitor",
+       "required": true
+      },
+      {
+       "label": "Visitor date signed",
+       "type": "date signed",
+       "role": "Visitor",
+       "required": true
+      }
+     ]
+    }
+   ],
+   "consent": [
+    "I will follow the site's safety and security rules, stay with my host where asked, and sign out when I leave.",
+    "In an emergency I will follow staff instructions and go to the assembly point."
+   ],
+   "fieldCount": 14,
+   "counterFields": 0,
+   "required": 10,
+   "minutes": 4
+  },
+  {
+   "slug": "policy-acknowledgement",
+   "title": "Policy acknowledgement",
+   "use": "people",
+   "summary": "Confirm you have read a named policy and version, understood it, had the chance to ask questions and will follow it.",
+   "who": "Any organization that needs people to confirm they have read and understood a policy.",
+   "purpose": "A signed record that each person read the current version of a policy.",
+   "intro": "Please read the policy named below before you sign. If anything is unclear, ask before you sign.",
+   "roles": [
+    "Reader"
+   ],
+   "counterSign": false,
+   "publish": {
+    "verifyEmail": true,
+    "fillAgain": false,
+    "notifyOwner": true,
+    "confirmRespondent": true,
+    "thankYou": "Thank you. Your acknowledgement is recorded."
+   },
+   "sections": [
+    {
+     "heading": "About you",
+     "fields": [
+      {
+       "label": "Full name",
+       "type": "text",
+       "role": "Reader",
+       "required": true,
+       "max": 120
+      },
+      {
+       "label": "Email",
+       "type": "email",
+       "role": "Reader",
+       "required": true
+      },
+      {
+       "label": "Team or role",
+       "type": "text",
+       "role": "Reader",
+       "required": false,
+       "max": 120
+      }
+     ]
+    },
+    {
+     "heading": "The policy",
+     "fields": [
+      {
+       "label": "Policy name",
+       "type": "text",
+       "role": "Reader",
+       "required": true,
+       "max": 160
+      },
+      {
+       "label": "Version",
+       "type": "text",
+       "role": "Reader",
+       "required": true,
+       "help": "As printed on the policy.",
+       "max": 60
+      },
+      {
+       "label": "Questions",
+       "type": "text",
+       "role": "Reader",
+       "required": false,
+       "help": "Anything you would like explained. Ask before you sign if it changes your answer.",
+       "max": 2000
+      }
+     ]
+    },
+    {
+     "heading": "Your acknowledgement",
+     "fields": [
+      {
+       "label": "I have read the policy named above.",
+       "type": "tick box",
+       "role": "Reader",
+       "required": true
+      },
+      {
+       "label": "I understand it and have had the chance to ask questions about it.",
+       "type": "tick box",
+       "role": "Reader",
+       "required": true
+      },
+      {
+       "label": "I will follow it, and I understand that it may be updated and that I will be asked to read any new version.",
+       "type": "tick box",
+       "role": "Reader",
+       "required": true
+      }
+     ]
+    },
+    {
+     "heading": "Signature",
+     "fields": [
+      {
+       "label": "Reader signature",
+       "type": "signature",
+       "role": "Reader",
+       "required": true
+      },
+      {
+       "label": "Reader date signed",
+       "type": "date signed",
+       "role": "Reader",
+       "required": true
+      }
+     ]
+    }
+   ],
+   "consent": [
+    "I have read the policy named above.",
+    "I understand it and have had the chance to ask questions about it.",
+    "I will follow it, and I understand that it may be updated and that I will be asked to read any new version."
+   ],
+   "fieldCount": 11,
+   "counterFields": 0,
+   "required": 9,
+   "minutes": 3
+  }
+ ]
+}

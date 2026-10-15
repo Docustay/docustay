@@ -1,0 +1,42 @@
+{
+ "$captured": {
+  "route": "GET /api/reports/hub",
+  "rank": "coach",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "cards": [
+   {
+    "name": "money",
+    "question": "View money report",
+    "available": false
+   },
+   {
+    "name": "people",
+    "question": "View people report",
+    "available": false
+   },
+   {
+    "name": "sessions",
+    "question": "View sessions report",
+    "available": false
+   },
+   {
+    "name": "found",
+    "question": "View found report",
+    "available": false
+   },
+   {
+    "name": "coaches",
+    "question": "View coaches report",
+    "available": false
+   }
+  ],
+  "sent_automatically": {
+   "accountant_email": null,
+   "weekly_digest": null
+  },
+  "enough_data": false
+ }
+}

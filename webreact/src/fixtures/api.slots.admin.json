@@ -1,0 +1,15 @@
+{
+ "$captured": {
+  "route": "GET /api/engagements/slots",
+  "rank": "admin",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "date": "2026-09-26",
+  "timeZone": "America/Denver",
+  "hostId": "00000000-0000-4000-8000-000000000003",
+  "slots": [],
+  "zone_detail": "Slots are local wall-clock times in America/Denver, the practice's own zone."
+ }
+}

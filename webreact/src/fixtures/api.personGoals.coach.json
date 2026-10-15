@@ -1,0 +1,16 @@
+{
+ "$captured": {
+  "route": "GET /api/people/:world.adult/goals",
+  "rank": "coach",
+  "status": 403,
+  "world": true
+ },
+ "body": {
+  "error": {
+   "kind": "forbidden",
+   "message": "not permitted to view this person's goals",
+   "requestId": "00000000-0000-4000-8000-000000000399",
+   "retryable": false
+  }
+ }
+}

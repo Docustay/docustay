@@ -1,0 +1,122 @@
+{
+ "$captured": {
+  "route": "GET /api/list/people/team",
+  "rank": "owner",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/people/team",
+  "title": "Team",
+  "columns": [
+   {
+    "field": "display_name",
+    "label": "Name",
+    "format": "text"
+   },
+   {
+    "field": "email",
+    "label": "Email",
+    "format": "text"
+   },
+   {
+    "field": "staff_role",
+    "label": "Rank",
+    "format": "enum"
+   }
+  ],
+  "recordType": "person",
+  "empty": "Coaches, admins and anyone else who signs in. You are the only one here so far.",
+  "canWrite": null,
+  "noWriteNotice": null,
+  "summary": null,
+  "emptyState": {
+   "kind": "first-run",
+   "icon": "IconUsersGroup",
+   "headline": "Invite your first colleague",
+   "line": "Coaches, admins and anyone else who signs in. You are the only one here so far.",
+   "action": {
+    "label": "Invite",
+    "href": "/people/team?invite=1"
+   },
+   "blockedAction": null,
+   "blockedLine": null,
+   "errorWhenEmpty": false,
+   "noWrite": null,
+   "firstRun": null
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [
+   {
+    "id": "00000000-0000-4000-8000-000000000003",
+    "display_name": "Reference admin",
+    "last_name": null,
+    "email": "Reference-admin-signin@example.invalid",
+    "mobile_phone": null,
+    "role": "staff",
+    "staff_role": "admin",
+    "lifecycle_status": "lead",
+    "firebase_uid": "Reference-admin",
+    "caseload_count": 1,
+    "sessions_this_year": 0,
+    "where_they_work": null,
+    "away": null
+   },
+   {
+    "id": "00000000-0000-4000-8000-000000000004",
+    "display_name": "Reference coach",
+    "last_name": null,
+    "email": "Reference-coach-signin@example.invalid",
+    "mobile_phone": null,
+    "role": "staff",
+    "staff_role": "coach",
+    "lifecycle_status": "lead",
+    "firebase_uid": "Reference-coach",
+    "caseload_count": 1,
+    "sessions_this_year": 0,
+    "where_they_work": null,
+    "away": null
+   },
+   {
+    "id": "00000000-0000-4000-8000-000000000014",
+    "display_name": "Reference Coach",
+    "last_name": null,
+    "email": "Reference-coach@example.invalid",
+    "mobile_phone": null,
+    "role": "staff",
+    "staff_role": "coach",
+    "lifecycle_status": "lead",
+    "firebase_uid": null,
+    "caseload_count": 1,
+    "sessions_this_year": 0,
+    "where_they_work": null,
+    "away": null
+   },
+   {
+    "id": "00000000-0000-4000-8000-000000000002",
+    "display_name": "Reference owner",
+    "last_name": null,
+    "email": "Reference-owner-signin@example.invalid",
+    "mobile_phone": null,
+    "role": "staff",
+    "staff_role": "owner",
+    "lifecycle_status": "lead",
+    "firebase_uid": "Reference-owner",
+    "caseload_count": 1,
+    "sessions_this_year": 0,
+    "where_they_work": null,
+    "away": null
+   }
+  ],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 4
+  }
+ }
+}

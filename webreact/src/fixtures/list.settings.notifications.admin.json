@@ -1,0 +1,16 @@
+{
+ "$captured": {
+  "route": "GET /api/list/settings/notifications",
+  "rank": "admin",
+  "status": 404,
+  "world": true
+ },
+ "body": {
+  "error": {
+   "kind": "not_found",
+   "message": "no list view for \"/settings/notifications\"",
+   "requestId": "00000000-0000-4000-8000-000000000244",
+   "retryable": false
+  }
+ }
+}

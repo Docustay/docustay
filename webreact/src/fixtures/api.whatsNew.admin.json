@@ -1,0 +1,45 @@
+{
+ "$captured": {
+  "route": "GET /api/whats-new",
+  "rank": "admin",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "notes": [
+   {
+    "date": "2026-09-25",
+    "title": "Dashboard improvements",
+    "body": "Performance improvements to the home screen and better handling of large coaching practices. The onboarding checklist now displays faster and more reliably across all practice sizes.",
+    "tags": [
+     "change"
+    ]
+   },
+   {
+    "date": "2026-09-18",
+    "title": "Two-step sign-in for staff",
+    "body": "Staff members can now enable two-factor authentication on their accounts. Navigate to Settings > Security to set up two-step verification via TOTP authenticators.",
+    "tags": [
+     "feature"
+    ]
+   },
+   {
+    "date": "2026-09-10",
+    "title": "Client invitations redesigned",
+    "body": "The client invitation flow is now simpler and faster. Bulk invitations are now supported from the People list.",
+    "tags": [
+     "change"
+    ]
+   },
+   {
+    "date": "2026-08-30",
+    "title": "Stripe payment sync improvements",
+    "body": "Fixed an issue where payment disputes were not being synchronized to the local database immediately. The sync now completes within 30 seconds of Stripe processing the payment.",
+    "tags": [
+     "fix"
+    ]
+   }
+  ],
+  "latestDate": "2026-09-25"
+ }
+}

@@ -1,0 +1,60 @@
+# Docustay on Fly.io — one app, three process groups (web, app, worker). Postgres and file storage come from Fly:
+#   fly launch --no-deploy --copy-config --dockerfile ../Dockerfile       (or the Deploy button in the README)
+#   fly postgres create --name docustay-db && fly postgres attach docustay-db   → KEYSTONE_DB_SUPERUSER_URL (set it from DATABASE_URL)
+#   fly storage create                      (Tigris, S3-compatible)             → KEYSTONE_S3_* from the values it prints
+#   fly secrets set KEYSTONE_TOKEN_PEPPER=$(openssl rand -hex 24) KEYSTONE_LOCAL_AUTH_SECRET=$(openssl rand -hex 24) KEYSTONE_MASTER_KEY=$(openssl rand -hex 32) KEYSTONE_SETUP_TOKEN=$(openssl rand -hex 12) KEYSTONE_GOTENBERG_URL=http://docustay-gotenberg.internal:3000
+#   fly deploy
+# The web process talks to the API over Fly's private network; only the web process is public. Run a second small app from the gotenberg/gotenberg:8 image for the PDF converter.
+app = "docustay"
+primary_region = "iad"
+
+[build]
+  dockerfile = "../Dockerfile"
+
+[env]
+  KEYSTONE_SELF_HOST = "1"
+  KEYSTONE_LOCAL_AUTH = "1"
+  KEYSTONE_DB_SSL = "off"
+  KEYSTONE_TRUSTED_PROXY_HOPS = "1"
+  ADDRESS_HEADER = "Fly-Client-IP"   # the web process reads the visitor's address from the header Fly's own proxy sets (Fly docs: "the client's IP address as seen by Fly Proxy"); without it every visitor looks like Fly's edge. If another proxy sits in front of Fly, remove this and use X-Forwarded-For.
+  KEYSTONE_S3_BUCKET = "docustay"
+  KEYSTONE_PUBLIC_URL = "https://docustay.fly.dev"
+  DOCUSTAY_API_URL = "http://docustay.internal:8080"
+
+[processes]
+  app = "node docustay/entrypoint.mjs app"
+  worker = "node docustay/entrypoint.mjs worker"
+  web = "node build"
+
+[[services]]
+  processes = ["web"]
+  internal_port = 3000
+  protocol = "tcp"
+  [[services.ports]]
+    port = 443
+    handlers = ["tls", "http"]
+  [[services.ports]]
+    port = 80
+    handlers = ["http"]
+    force_https = true
+  [[services.http_checks]]
+    interval = "30s"
+    timeout = "5s"
+    grace_period = "20s"
+    method = "get"
+    path = "/"
+
+[[services]]
+  processes = ["app"]
+  internal_port = 8080
+  protocol = "tcp"
+  [[services.http_checks]]
+    interval = "30s"
+    timeout = "5s"
+    grace_period = "30s"
+    method = "get"
+    path = "/healthz"
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "1gb"

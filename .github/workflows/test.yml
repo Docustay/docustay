@@ -1,0 +1,19 @@
+name: tests
+on: [push, pull_request]
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 25 }
+      - run: npm ci
+      - run: npm ci --prefix docustay/web
+      - run: node --test test/docustay_*.test.mjs test/b10_api_contract.test.mjs test/s7_capability_vocabulary.test.mjs
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Scan the source and its dependencies with Trivy
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25  # v0.36.0, pinned by commit
+        with: { scan-type: fs, severity: "HIGH,CRITICAL", ignore-unfixed: true, exit-code: "1", scanners: "vuln,secret" }

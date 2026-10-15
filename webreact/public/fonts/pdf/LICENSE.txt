@@ -1,0 +1,8 @@
+Inter font files in this directory are from the @fontsource/inter npm package
+(https://www.npmjs.com/package/@fontsource/inter), redistributing Inter under the
+SIL Open Font License 1.1 (https://openfontlicense.org/).
+
+Used here, as plain WOFF (not WOFF2), specifically for server- and browser-side PDF
+generation via @react-pdf/renderer — see src/money/invoicePdf.mjs's own header comment
+and FINDINGS-OPEN.md F860 for why WOFF2 is not usable for this purpose (a real fontkit
+subsetting bug reproduced directly, not assumed).

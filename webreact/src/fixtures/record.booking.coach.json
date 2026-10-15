@@ -1,0 +1,16 @@
+{
+ "$captured": {
+  "route": "GET /api/records/booking/:world.booking",
+  "rank": "coach",
+  "status": 404,
+  "world": true
+ },
+ "body": {
+  "error": {
+   "kind": "not_found",
+   "message": "No such session. This session is not in your practice, or you may not see it. A cancelled session still has a record; a missing one was never yours.",
+   "requestId": "00000000-0000-4000-8000-000000000389",
+   "retryable": false
+  }
+ }
+}

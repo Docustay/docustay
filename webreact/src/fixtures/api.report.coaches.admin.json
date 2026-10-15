@@ -1,0 +1,29 @@
+{
+ "$captured": {
+  "route": "GET /api/reports/coaches",
+  "rank": "admin",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "rows": [
+   {
+    "coach_id": "00000000-0000-4000-8000-000000000014",
+    "no_shows": 0,
+    "sessions": 0,
+    "display_name": "Reference Coach",
+    "earned_minor": 0,
+    "hours_booked": 0,
+    "available_hours": 8,
+    "utilisation_pct": 0
+   }
+  ],
+  "range": "[2026-09-01,2026-10-01)",
+  "compare": "[2026-08-01,2026-09-01)",
+  "enough_data": {
+   "enough": false,
+   "payments": 0,
+   "days_going": 0
+  }
+ }
+}

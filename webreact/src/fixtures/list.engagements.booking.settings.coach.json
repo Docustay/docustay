@@ -1,0 +1,83 @@
+{
+ "$captured": {
+  "route": "GET /api/list/engagements/booking/settings",
+  "rank": "coach",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/engagements/booking/settings",
+  "title": "Booking settings",
+  "columns": [
+   {
+    "field": "service_name",
+    "label": "Service",
+    "format": "text"
+   },
+   {
+    "field": "buffer",
+    "label": "Buffers",
+    "format": "text"
+   },
+   {
+    "field": "minimum_notice_minutes",
+    "label": "Min notice (min)",
+    "format": "number"
+   },
+   {
+    "field": "booking_window_days",
+    "label": "Window (days)",
+    "format": "number"
+   },
+   {
+    "field": "cancellation_notice_minutes",
+    "label": "Cancel notice (min)",
+    "format": "number"
+   }
+  ],
+  "recordType": null,
+  "empty": "A booking policy decides notice, buffers and cancellation for one service.",
+  "canWrite": null,
+  "noWriteNotice": null,
+  "summary": null,
+  "emptyState": {
+   "kind": "blocked",
+   "icon": "IconSettings",
+   "headline": "No services are bookable yet",
+   "line": "A booking policy decides notice, buffers and cancellation for one service.",
+   "action": {
+    "label": "Add policy",
+    "href": "/engagements/booking/settings?new=1"
+   },
+   "blockedAction": {
+    "label": "Add service",
+    "href": "/items/services?new=1"
+   },
+   "blockedLine": "Nothing is bookable yet: a service needs a price before a client can book it.",
+   "errorWhenEmpty": false,
+   "noWrite": null,
+   "firstRun": null
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [
+   {
+    "id": "00000000-0000-4000-8000-000000000044",
+    "minimum_notice_minutes": 120,
+    "booking_window_days": 60,
+    "cancellation_notice_minutes": 1440,
+    "service_name": "Reference Weekly coaching",
+    "buffer": "0 before / 0 after"
+   }
+  ],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 1
+  }
+ }
+}

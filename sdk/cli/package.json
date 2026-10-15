@@ -1,0 +1,41 @@
+{
+  "name": "docustay",
+  "version": "0.1.2",
+  "description": "The Docustay command line: sign in with an API key, send a test document, forward webhooks to your laptop, check a webhook signature. No install needed: npx docustay",
+  "type": "module",
+  "license": "MIT",
+  "bin": {
+    "docustay": "./dist/docustay.mjs"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "esbuild bin/docustay.mjs --bundle --platform=node --format=esm --outfile=dist/docustay.mjs",
+    "test": "node --test test/*.test.mjs"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.10"
+  },
+  "homepage": "https://docustay.app/developers",
+  "keywords": [
+    "docustay",
+    "e-signature",
+    "esignature",
+    "documents",
+    "signing"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/docustay/docustay.git",
+    "directory": "sdk/cli"
+  },
+  "bugs": {
+    "url": "https://github.com/docustay/docustay/issues"
+  }
+}

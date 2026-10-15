@@ -1,0 +1,44 @@
+# Docustay
+
+> Docustay sends documents for signature. REST API, SDKs for JavaScript/TypeScript and Python, embedded signing, webhooks, an MCP server and agent skills.
+
+## Documentation
+
+- [Docustay developer documentation](https://docs.docustay.app/docs/index.md): Send documents for signature from your own software: REST API, SDKs, embedded signing, webhooks, an MCP server and agent skills.
+- [Quickstart](https://docs.docustay.app/docs/quickstart.md): Send a document for signature and follow it, with curl, JavaScript or Python, in about ten minutes.
+- [Authentication](https://docs.docustay.app/docs/authentication.md): API keys, the thirteen scopes, test keys and how to keep a key safe.
+- [Templates and text tags](https://docs.docustay.app/docs/templates-and-text-tags.md): Make a template from HTML or from a PDF file by writing text tags where fields go.
+- [Embedded signing](https://docs.docustay.app/docs/embedding.md): Show a Docustay signing form inside your own website or app, with a web component and React, Vue and Angular wrappers.
+- [Field detection](https://docs.docustay.app/docs/field-detection.md): Press Find fields on a PDF and have the signature, date, initials, text and tick-box fields found for you, with the right people on each.
+- [Documents from words and people](https://docs.docustay.app/docs/documents-from-words.md): Make a document from written words and the people who sign it, answer a template's questions, let an assistant draft or change it, collect a payment at signing, and send it, all from the API, the SDKs or MCP.
+- [Webhooks](https://docs.docustay.app/docs/webhooks.md): Get a signed HTTP call when a document is sent, viewed, signed, declined or expires, and verify it.
+- [Test mode](https://docs.docustay.app/docs/test-mode.md): Practice runs that email only you, carry a TEST watermark and are never counted or billed.
+- [Errors, retries and limits](https://docs.docustay.app/docs/errors-and-limits.md): The error shape, idempotency, rate limits and upload limits.
+- [Email setup](https://docs.docustay.app/docs/email-setup.md): Make email from your own domain arrive: SPF, DKIM and DMARC records, how to verify them in Docustay, how to test, and the self-host settings.
+- [SDKs](https://docs.docustay.app/docs/sdks.md): Official clients for JavaScript/TypeScript and Python.
+- [MCP server and agent skills](https://docs.docustay.app/docs/mcp-and-skills.md): Let an AI assistant send documents, follow them and save signed copies, with previews and your own key.
+- [Connect ChatGPT, Claude or any assistant](https://docs.docustay.app/docs/connector.md): A hosted connector with sign-in: an assistant works on drafts in your workspace and a person approves every send.
+- [Licensing](https://docs.docustay.app/docs/licensing.md): Which licence covers which part of Docustay, what the AGPL-3.0 asks of you, which pieces are MIT, and when you need a commercial licence.
+- [API reference](https://docs.docustay.app/docs/api-reference.md): Every operation of the Docustay API, generated from the OpenAPI file.
+- [Languages](https://docs.docustay.app/docs/languages.md): Fourteen languages for the signing page, the signing emails and the Certificate of Completion, with right-to-left Arabic.
+- [Scribe in your own app](https://docs.docustay.app/docs/scribe-embed.md): Show Scribe, the drafting assistant, inside your own page with a draft-only session.
+- [Email templates](https://docs.docustay.app/docs/email-templates.md): Change the wording of the eight emails Docustay sends about your documents, with variables, languages, a live preview and a test send.
+- [Email API](https://docs.docustay.app/docs/email-api.md): Control the email of a document from your code, edit the templates, read the email log and get a webhook when a message is delivered or bounces.
+- [Settings reference](https://docs.docustay.app/docs/settings-reference.md): Every setting a self-hosted Docustay reads, with its default and whether it is required.
+- [Upgrade a self-hosted install](https://docs.docustay.app/docs/self-host-upgrade.md): How to move a self-hosted Docustay to a newer version safely, check that it worked, and go back if it did not.
+- [Back up and restore](https://docs.docustay.app/docs/self-host-backup.md): What to back up on a self-hosted Docustay, a script that does it, and how to restore it on a new machine.
+- [Harden a self-hosted install](https://docs.docustay.app/docs/self-host-hardening.md): A checklist for running Docustay on your own servers when the documents are sensitive. What to switch on, what to keep private, and what to check.
+- [Put Docustay behind your own address](https://docs.docustay.app/docs/self-host-reverse-proxy.md): Serve a self-hosted Docustay on your own domain with HTTPS, using Caddy, nginx or Traefik, and set the address that goes into emails.
+- [Pro licence keys](https://docs.docustay.app/docs/self-host-licence.md): How a self-hosted Docustay Pro licence works from purchase to renewal, where the key goes, and what happens when it ends.
+- ["Tutorial: e-signatures in a Next.js app"](https://docs.docustay.app/docs/tutorial-nextjs.md): Send a document from a Next.js route, show the signing form inside your page, and check the webhook that says it was signed.
+- ["Tutorial: send a document from Python"](https://docs.docustay.app/docs/tutorial-python.md): Send a document from Python, show the signing form on your own page, and verify the webhook, using the Docustay SDK and the standard library.
+- ["Tutorial: let an AI agent draft contracts, with a person approving"](https://docs.docustay.app/docs/tutorial-agent.md): Give an AI agent a draft-only key so it can prepare documents but cannot send one until a person approves it in the app.
+- [Single sign-on with OpenID Connect](https://docs.docustay.app/docs/self-host-sso.md): Let people sign in to a self-hosted Docustay with your own identity provider, such as Keycloak, Authentik, Entra or Okta.
+- [Search, contracts, payments and automations](https://docs.docustay.app/docs/contracts-payments-playbooks.md): Search the workspace, read signed contracts and their key dates, list and refund payments, and switch automations on or off.
+- [The template library](https://docs.docustay.app/docs/template-library.md): The 54 built-in Document and Form templates, how to send from one or customize it, and how skills, playbooks and automations fit around them.
+
+## Machine-readable
+
+- [OpenAPI 3.1](https://docs.docustay.app/api/openapi.json)
+- [Postman collection](https://docs.docustay.app/api/docustay.postman_collection.json)
+- [All documentation in one file](https://docs.docustay.app/llms-full.txt)

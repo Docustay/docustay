@@ -1,0 +1,36 @@
+{
+ "$captured": {
+  "route": "GET /api/reports/people",
+  "rank": "admin",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "range": {
+   "lower": "2026-09-01",
+   "upper": "2026-10-01"
+  },
+  "compare": {
+   "lower": "2026-08-01",
+   "upper": "2026-09-01"
+  },
+  "sources": [],
+  "stopped": [],
+  "frequency": {
+   "once": 0,
+   "weekly": 0,
+   "irregular": 0,
+   "fortnightly": 0
+  },
+  "clients_now": 0,
+  "enough_data": {
+   "enough": false,
+   "payments": 0,
+   "days_going": 0
+  },
+  "clients_gained": 0,
+  "avg_tenure_months": 0,
+  "clients_lost_silent": 0,
+  "source_missing_count": 0
+ }
+}

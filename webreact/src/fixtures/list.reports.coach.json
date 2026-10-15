@@ -1,0 +1,83 @@
+{
+ "$captured": {
+  "route": "GET /api/list/reports",
+  "rank": "coach",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/reports",
+  "title": "Reports",
+  "columns": [
+   {
+    "field": "label",
+    "label": "Report",
+    "format": "text"
+   },
+   {
+    "field": "question",
+    "label": "Answers",
+    "format": "text"
+   },
+   {
+    "field": "rows",
+    "label": "Rows",
+    "format": "number"
+   }
+  ],
+  "recordType": null,
+  "empty": "Each report answers one question in plain words. They need a few weeks of sessions and invoices behind them first.",
+  "canWrite": null,
+  "noWriteNotice": null,
+  "summary": null,
+  "emptyState": {
+   "kind": "period",
+   "icon": "IconChartBar",
+   "headline": "Reports appear as your data grows",
+   "line": "Each report answers one question in plain words. They need a few weeks of sessions and invoices behind them first.",
+   "action": null,
+   "blockedAction": null,
+   "blockedLine": null,
+   "errorWhenEmpty": false,
+   "noWrite": null,
+   "firstRun": null
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [
+   {
+    "id": "documents",
+    "label": "Documents waiting",
+    "question": "Not available to your role",
+    "rows": null
+   },
+   {
+    "id": "revenue",
+    "label": "Revenue by month",
+    "question": "Not available to your role",
+    "rows": null
+   },
+   {
+    "id": "run",
+    "label": "Run metrics by month",
+    "question": "Not available to your role",
+    "rows": null
+   },
+   {
+    "id": "sessions",
+    "label": "Sessions by coach",
+    "question": "Not available to your role",
+    "rows": null
+   }
+  ],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 4
+  }
+ }
+}

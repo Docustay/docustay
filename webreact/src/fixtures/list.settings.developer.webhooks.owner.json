@@ -1,0 +1,81 @@
+{
+ "$captured": {
+  "route": "GET /api/list/settings/developer/webhooks",
+  "rank": "owner",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/settings/developer/webhooks",
+  "title": "Webhooks",
+  "columns": [
+   {
+    "field": "name",
+    "label": "Endpoint",
+    "format": "text"
+   },
+   {
+    "field": "url",
+    "label": "URL",
+    "format": "text"
+   },
+   {
+    "field": "status",
+    "label": "Status",
+    "format": "enum"
+   },
+   {
+    "field": "events",
+    "label": "Events",
+    "format": "number"
+   },
+   {
+    "field": "delivered",
+    "label": "Delivered",
+    "format": "number"
+   },
+   {
+    "field": "failing",
+    "label": "Failing",
+    "format": "number"
+   },
+   {
+    "field": "detail",
+    "label": "Detail",
+    "format": "text"
+   }
+  ],
+  "recordType": null,
+  "empty": "Send events to another system as they happen — n8n, Zapier, or your own.",
+  "canWrite": null,
+  "noWriteNotice": null,
+  "summary": null,
+  "emptyState": {
+   "kind": "first-run",
+   "icon": "IconWebhook",
+   "headline": "No endpoints yet",
+   "line": "Send events to another system as they happen — n8n, Zapier, or your own.",
+   "action": {
+    "label": "Add endpoint",
+    "href": "/settings/developer/webhooks?new=1"
+   },
+   "blockedAction": null,
+   "blockedLine": null,
+   "errorWhenEmpty": false,
+   "noWrite": null,
+   "firstRun": null
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 0
+  }
+ }
+}

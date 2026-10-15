@@ -1,0 +1,11 @@
+{
+ "$captured": {
+  "route": "GET /api/notifications/unread-count",
+  "rank": "admin",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "unread": 1
+ }
+}

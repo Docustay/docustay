@@ -1,0 +1,1 @@
+export const USE_LABEL = { contracts: "Contracts", ndas: "NDAs", "waivers-and-consent": "Waivers and consent", "hr-and-onboarding": "HR and onboarding", "real-estate": "Real estate", "healthcare-intake": "Healthcare intake", education: "Education", agencies: "Agencies" };

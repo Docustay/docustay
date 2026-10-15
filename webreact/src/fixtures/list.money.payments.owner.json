@@ -1,0 +1,69 @@
+{
+ "$captured": {
+  "route": "GET /api/list/money/payments",
+  "rank": "owner",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/money/payments",
+  "title": "Payments",
+  "columns": [
+   {
+    "field": "payer",
+    "label": "Payer",
+    "format": "text"
+   },
+   {
+    "field": "amount_minor",
+    "label": "Amount",
+    "format": "money",
+    "currency": "currency"
+   },
+   {
+    "field": "status",
+    "label": "Status",
+    "format": "enum"
+   },
+   {
+    "field": "created_at",
+    "label": "Taken",
+    "format": "datetime"
+   },
+   {
+    "field": "card_on_file",
+    "label": "Card on file",
+    "format": "text"
+   }
+  ],
+  "recordType": null,
+  "empty": "Everything taken, with its status. A payment appears here automatically once an invoice is paid.",
+  "canWrite": null,
+  "noWriteNotice": null,
+  "summary": null,
+  "emptyState": {
+   "kind": "first-run",
+   "icon": "IconCreditCard",
+   "headline": "No payments yet",
+   "line": "Everything taken, with its status. A payment appears here automatically once an invoice is paid.",
+   "action": null,
+   "blockedAction": null,
+   "blockedLine": null,
+   "errorWhenEmpty": false,
+   "noWrite": null,
+   "firstRun": null
+  },
+  "totalColumn": "amount_minor",
+  "total": 0,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 0
+  }
+ }
+}

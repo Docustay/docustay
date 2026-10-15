@@ -1,0 +1,768 @@
+0	0 allega il PDF firmato all’e-mail, come prima. Un numero di giorni sostituisce l’allegato con un link che smette di funzionare dopo quel periodo; il mittente può inviarne uno nuovo.
+1	0 significa che non scade mai. La scadenza viene fissata al momento dell’invio.
+2	1. Sul tuo server, richiedi una sessione
+3	2. Sulla tua pagina, mostrala
+4	<b>Cosa fa Collega Stripe:</b> crea un <em>nuovo</em> account Stripe per la tua attività tramite la pagina di registrazione di Stripe. Se hai già un accesso a Stripe puoi usarlo, e Stripe può proporre di riutilizzare i dati verificati della tua attività, ma il nuovo account è separato: la cronologia di un account esistente non vi viene trasferita. Scollegando, Docustay smette di usare l’account. Docustay non lo elimina mai; resta nel tuo accesso a Stripe.
+5	Un PDF, un file Word, Excel o una foto
+6	Un link di pagamento Stripe
+7	Un prezzo Stripe
+8	Una clausola è una sezione riutilizzabile che scrivi una sola volta. Aggiungendola finisce in fondo a questo modello (il modello viene prima salvato).
+9	Un codice è impostato — digita per cambiarlo
+10	Il nome di un campo personalizzato inizia con una lettera, ad esempio “costo del progetto”.
+11	Un valore personalizzato
+12	Un importo fisso
+13	Una formula basata su altri campi
+14	Una chiave permette al tuo software di usare Docustay. Dai a ciascuna solo ciò che serve. L’API completa è descritta in <spec>/api/v1/openapi.json</spec> e nella <dev>documentazione per sviluppatori</dev>.
+15	Una riga di testo alla fine del documento, prima delle firme.
+16	Una password è impostata — digita per sostituirla
+17	Un provider in grigio non è ancora configurato su questo server.
+18	Un firmatario può indicare un’altra persona; l’invito passa a lei, il link della prima persona smette di funzionare e il certificato mostra entrambe.
+19	Un firmatario che ha finito può riaprire la propria parte e firmare di nuovo finché tutti gli altri non hanno firmato. Ogni riapertura viene registrata.
+20	Un colore a sei cifre come #1f2937. Usato per titoli e linee.
+21	Un colore a sei cifre come #4f46e5 per la riga di intestazione della pagina di firma e i pulsanti nell’e-mail di firma. Lascia vuoto per usare il colore standard.
+22	Un modello è un documento che prepari una volta — le sue pagine, dove si firma, chi firma — e invii quante volte vuoi. Spunta “Salva come modello” nel passaggio Invia per crearne uno.
+23	Un’e-mail di prova sta arrivando.
+24	Un’e-mail di prova è in arrivo.
+25	Chiavi API
+26	Colore principale
+27	Accetta tutti i {n} suggerimenti
+28	Codice di accesso
+29	Aggiungi
+30	Aggiungi una pagina di certificato a ogni copia firmata: chi ha firmato, quando, da dove e l’impronta del documento.
+31	Aggiungi un file
+32	Aggiungi un riquadro di pagamento a un documento e il firmatario paga sulla pagina sicura di Stripe prima di terminare. Il denaro va direttamente a <b>un account Stripe a tuo nome</b>, che gestisci nella normale dashboard di Stripe.
+33	Aggiungi dominio
+34	Aggiungi endpoint
+35	Aggiungi persona
+36	Aggiungi team
+37	Aggiungi al modello
+38	Aggiunto. Aggiungi i record qui sotto presso il tuo host DNS.
+39	Aggiungere colleghi fa parte di Docustay Pro. Passa a un piano superiore in Fatturazione per invitare colleghi.
+40	Aggiunta di {name}…
+41	Indirizzo
+42	Amministratore — tutto
+43	Dopo la firma, il browser del firmatario può conservare la sua firma per compilarla la volta successiva. Resta sul suo dispositivo e non viene mai inviata a noi.
+44	Dopo la password o il codice via e-mail, inserisci anche un codice a sei cifre da un’app di autenticazione sul telefono.
+45	Tutti
+46	Tutti i documenti
+47	Tutti i team
+48	Tutte le {n} righe sembrano corrette.
+49	Consenti firme digitate
+50	Autorizzato a
+51	Hai già un account? <in>Accedi</in>
+52	Importo
+53	Importo ({currency})
+54	Prima che il documento si apra viene richiesto un codice via e-mail o un codice di accesso.
+55	Qualsiasi cosa
+56	Aspetto
+57	Approva i modelli caricati prima che possano essere inviati
+58	Approvato
+59	Approva
+60	Come la copia firmata
+61	Come lo vedranno
+62	Come {name}
+63	Chiedi a ogni firmatario perché firma
+64	Chiedi un motivo quando qualcuno rifiuta
+65	Chiedi un codice via e-mail prima di un download
+66	Almeno 4 caratteri
+67	Registro di controllo
+68	Registro di controllo (CSV)
+69	Indietro
+70	Torna ai documenti
+71	Torna all’accesso
+72	Appartiene a
+73	Fatturazione
+74	Bacheca
+75	Dimensione del testo del corpo, da 8 a 14.
+76	Grassetto
+77	Per mittente
+78	Per team
+79	Per modello
+80	File CSV
+81	Annulla il documento
+82	Annulla questo documento
+83	Annullato
+84	Annullato.
+85	Annullato: {reason}
+86	Certificato di completamento
+87	Cambia
+88	Controlla di nuovo
+89	Controlla
+90	Controlla l’elenco
+91	Controlla ora i record
+92	Controlla chi firma
+93	Casella di controllo
+94	Controllato.
+95	Controllo del file…
+96	Controllo…
+97	Lista di controllo
+98	Scelte (una per riga)
+99	Scegli una clausola…
+100	Scegli una nuova password
+101	Scegli una password di almeno 6 caratteri.
+102	Scegli un firmatario…
+103	Scegli…
+104	Clausola
+105	Clausola aggiunta in fondo.
+106	Nome della clausola
+107	Nome della clausola (ad es. Riservatezza)
+108	Clausola salvata nella tua libreria.
+109	Riepilogo della clausola
+110	Testo della clausola
+111	Clausole
+112	Cancella i filtri
+113	Fai clic su un campo per aggiungerlo (campi di testo di questa persona)
+114	Fai clic su una pagina per posizionarlo. Esc per annullare.
+115	Chiudi
+116	Riga finale
+117	Dichiarazione finale
+118	Codice
+119	Codice dalla tua app
+120	Completato
+121	Tasso di completamento
+122	Collega Stripe
+123	Collega di nuovo
+124	Collega il tuo account Google o Microsoft. Le e-mail partono a tuo nome, compaiono nella cartella Posta inviata e le risposte arrivano nella tua casella. Possiamo solo inviare; non possiamo leggere la tua posta.
+125	Collega {provider}
+126	Collegato
+127	Collegato come {email} ({provider})
+128	La connessione non è partita.
+129	La connessione non è ancora attivata su questo server. Chiedi alla persona che lo gestisce.
+130	Continua
+131	Continua su Stripe
+132	Copiato
+133	Copia
+134	Copialo ora — non verrà mostrato di nuovo.
+135	Copia nella pagina
+136	Impossibile creare l’account.
+137	Impossibile creare lo spazio di lavoro.
+138	Impossibile caricare il tuo piano.
+139	Impossibile aprire la schermata di firma.
+140	Impossibile inviare l’e-mail. Riprova.
+141	Impossibile impostare la nuova password.
+142	Crea un documento
+143	Crea un documento da “{name}”
+144	Crea account
+145	Crea un account
+146	Crea documento
+147	Crea chiave
+148	Crea il documento
+149	Crea il tuo account Docustay
+150	Crea il tuo account
+151	Creazione…
+152	Codice attuale
+153	Nome del campo personalizzato
+154	Data
+155	Data di firma
+156	Giorni dopo l’invio per sollecitare chi non ha firmato. I solleciti automatici fanno parte di Docustay Pro; nel piano Free puoi comunque sollecitare qualcuno a mano.
+157	Rifiutato
+158	Elimina
+159	Elimina team
+160	Eliminare il team “{name}”? I suoi documenti e modelli vengono conservati e restano senza assegnazione.
+161	Registro di consegna
+162	Impossibile caricare le impostazioni sviluppatore.
+163	Sviluppatori
+164	Scarta la bozza
+165	Scartare questa bozza? Il file caricato viene rimosso.
+166	Scollega
+167	Scollegato
+168	Scollegato. Le e-mail partono dall’indirizzo della piattaforma.
+169	Scollegato. Il tuo account Stripe non è stato toccato — è ancora tuo.
+170	Documento
+171	ID del documento su ogni pagina
+172	Titolo del documento
+173	Documenti
+174	Documenti inviati e completati ogni giorno
+175	Commissione Docustay: 2% con Free, 0% con Pro, più le commissioni di Stripe. Il pagamento va all’account Stripe collegato in Impostazioni → Pagamenti.
+176	Docustay non ha più accesso a un account Stripe. I documenti con un riquadro di pagamento non possono essere pagati finché non colleghi di nuovo Stripe.
+177	Fatto
+178	Scarica CSV
+179	Link di download
+180	Scarica la copia firmata
+181	Scarica il report di utilizzo
+182	Bozza
+183	Bozze
+184	Trascina qui un file o fai clic per sceglierne uno
+185	Menu a tendina
+186	Duplica
+187	Ogni giorno
+188	Ogni firma sulla copia firmata riporta un breve ID che corrisponde al certificato e al registro di controllo.
+189	Modifica
+190	E-mail
+191	E-mail rimbalzata
+192	Codice via e-mail
+193	Inviami invece un codice di accesso via e-mail
+194	E-mail della persona {n}
+195	Invio e-mail
+196	Impossibile caricare le impostazioni e-mail.
+197	Oggetto dell’e-mail
+198	Invia la copia firmata a tutti via e-mail
+199	Le e-mail NON partono dal mittente che hai scelto.
+200	Incorporamento
+201	Inserisci il codice a sei cifre della tua app di autenticazione, oppure uno dei tuoi codici di backup.
+202	Inserisci prima il tuo indirizzo e-mail.
+203	Evento
+204	Tutti insieme
+205	Tutti ricevono subito l’e-mail.
+206	Pacchetto di prove (zip)
+207	Scaduto
+208	Scade dopo (giorni)
+209	Scade dopo giorni
+210	Scade il {date}
+211	File aggiuntivi
+212	Il campo appartiene a
+213	Etichetta del campo
+214	Impostazioni del campo
+215	Strumenti campo
+216	I campi sono per
+217	File che le persone possono leggere insieme al documento — un listino prezzi, condizioni. Fino a 25 MB ciascuno.
+218	Compila i dati
+219	Terminato
+220	Correggi l’e-mail
+221	Carattere
+222	Testo del piè di pagina
+223	Per
+224	Per il tuo dominio o SMTP: l’indirizzo da cui parte l’e-mail, come contratti@tuodominio.it. Con il tuo dominio deve appartenere al dominio che hai verificato.
+225	Password dimenticata?
+226	Formato
+227	Formattazione
+228	Formula
+229	Formula (numeri, campi, + − × ÷ e parentesi)
+230	Da
+231	Indirizzo mittente
+232	Nome mittente
+233	Dai tuoi contatti
+234	Riceve una copia
+235	Buon pomeriggio
+236	Buonasera
+237	Buongiorno
+238	Raggruppa le tue persone, poi inserisci documenti e modelli in un team. I report si possono filtrare per team.
+239	Ha il link
+240	Testo dell’intestazione
+241	Titolo
+242	Aiuta {name}
+243	Nascondi registro
+244	Per quanto tempo un documento inviato resta aperto alla firma. 0 significa che non scade mai. La scadenza viene fissata quando il documento viene inviato.
+245	Quanti mesi prima che un accordo firmato richieda una nuova firma. Lascia vuoto e nulla scade.
+246	Come viene definito l’importo
+247	Accetto i <terms>Termini di servizio</terms>, l’<privacy>Informativa sulla privacy</privacy> e l’<dpa>Addendum sul trattamento dei dati</dpa>.
+248	L’ho copiato
+249	Li ho salvati
+250	Se quell’indirizzo ha un account, un codice a sei cifre sta arrivando a <addr>{email}</addr>.
+251	Se quell’indirizzo ha un account, un’e-mail con un link sta arrivando. Il link funziona una volta e scade presto.
+252	Se questa installazione non riesce a raggiungere docustay.app (un server offline o isolato), scarica questo file e caricalo nella <host>pagina di self-hosting</host> appena puoi. Contiene cinque numeri interi — documenti inviati questo mese, documenti firmati, spazi di lavoro, persone, giorni di attività — un ID di installazione casuale e la versione. Non contiene documenti, nomi, e-mail né indirizzi, e puoi aprirlo in qualsiasi editor di testo per verificarlo.
+253	In corso
+254	Nell’editor, con i campi
+255	Includi ritirati
+256	Iniziali
+257	Inserisci un campo di unione
+258	Inserisci campo di unione…
+259	Invito inviato a {email}.
+260	Invita un collega
+261	Non è stato possibile caricarlo.
+262	Non è stato possibile inviarlo.
+263	Corsivo
+264	Solo io — firma ora su questo dispositivo
+265	Mantieni
+266	Conserva i documenti firmati per (anni)
+267	Conserva questo documento, i suoi punti di firma e i suoi posti per le persone per inviarlo di nuovo.
+268	Etichetta
+269	Lingua
+270	Caricamento massimo (MB)
+271	Consenti ai firmatari di rifiutare
+272	Consenti ai firmatari di passare il turno a qualcun altro
+273	Consenti ai firmatari di ritirare le proprie risposte
+274	Carta intestata
+275	Limita i documenti ai loro team
+276	Limita i documenti ai loro team (proprietari e amministratori vedono comunque tutto)
+277	Link
+278	Indirizzo del link (https://…) — vuoto lo rimuove
+279	Link scaduto
+280	Link per {name}, valido fino al {date}:
+281	Elenco
+282	Caricamento delle pagine…
+283	Caricamento…
+284	Principale
+285	Gestisci la fatturazione
+286	Io
+287	Membro — invia e monitora i documenti
+288	Menu
+289	I campi di unione funzionano: {a}, {b}, {c}, {d}.
+290	Messaggio
+291	Sposta giù
+292	Sposta su
+293	Selezione multipla
+294	Nome
+295	Nome di un nuovo modello
+296	Nome della persona {n}
+297	Indicane una sopra per iniziare.
+298	Servono più informazioni
+299	Nuova chiave API
+300	Nuova clausola
+301	Nuovo documento
+302	Nuovo endpoint
+303	Nuova chiave
+304	Nuova password
+305	E-mail della nuova persona
+306	Nome della nuova persona
+307	Nome del nuovo team
+308	Nome del nuovo modello
+309	Nuovo endpoint webhook
+310	Avanti
+311	Ancora nessun endpoint.
+312	Nessun controllo aggiuntivo
+313	Ancora nessun campo. Scegli uno strumento a sinistra oppure accetta i suggerimenti.
+314	Nessun modello di questo tipo — potrebbe essere stato ritirato.
+315	Nessun team
+316	Ancora nessun team.
+317	Ancora nessun modello
+318	Ancora nessun campo di testo per questa persona.
+319	Ancora nessun modello scritto
+320	Nessuno potrà più firmarlo. Spiega alle persone perché (facoltativo):
+321	Ancora nessuno. Aggiungi le persone che devono firmare.
+322	Non collegato
+323	Non necessario
+324	Non pronto: {reason}
+325	Non salvato
+326	Non ancora inviato
+327	Non inviato: {reason}.
+328	Non ancora configurato su questo server
+329	Non ancora attivo
+330	Nota sotto il titolo
+331	Ancora niente qui
+332	Nessun risultato.
+333	Nessun risultato.
+334	Niente è stato inviato in questo periodo.
+335	Ancora niente è stato inviato a questo indirizzo.
+336	Non è stato collegato nulla.
+337	Numero
+338	Proponi di ricordare una firma su questo dispositivo
+339	Proponi di salvare i caricamenti come modelli
+340	Attivo dal {date}.
+341	Attivo.
+342	Attivo: il certificato di completamento (il registro di controllo) sono le ultime pagine del PDF firmato. Disattivo: il PDF firmato contiene solo il documento e il certificato è un secondo PDF sigillato accanto.
+343	Uno dopo l’altro
+344	Una riga mostrata a ogni firmatario sotto il titolo del documento — ad esempio “Domande? Chiama lo 06 5550100.” Lascia vuoto per nessuna.
+345	Una riga sotto il nome dello studio, ad esempio un indirizzo e un numero di telefono.
+346	Un indirizzo di sito web per riga, ad esempio https://app.example.com. Solo questi siti possono inserire in un frame un modulo di firma Docustay, e il modulo comunica solo con loro. Vuoto significa incorporamento disattivato.
+347	Riepilogo in una riga
+348	Aperto il {date}
+349	Oppure invia tramite il tuo server di posta
+350	Ordine
+351	Inviato per la firma
+352	PDF, DOCX, XLSX, PPTX, JPG, PNG o ZIP · fino a 25 MB con Free, 100 MB con Pro
+353	Margine della pagina (punti)
+354	Numeri di pagina
+355	Pagina {n}
+356	Pagina {n} di {total}
+357	Parzialmente firmato
+358	Password
+359	Il ripristino della password via e-mail non è disponibile in questa installazione.
+360	Password salvata.
+361	Pagamenti
+362	I pagamenti non sono ancora configurati su questo server.
+363	Impossibile caricare le impostazioni dei pagamenti.
+364	In attesa
+365	Persone
+366	Persone e sicurezza
+367	Persone in questo documento
+368	Persona
+369	Telefono
+370	Scegli un campo, poi fai clic dove deve andare. Trascina per spostare; trascina un angolo per ridimensionare.
+371	Scegli un modello con un solo firmatario, aggiungi un foglio di calcolo (CSV) con le colonne <code>name</code> e <code>email</code>, controlla l’elenco, invia. Ogni riga diventa un documento a sé. L’invio di massa fa parte di Docustay Pro.
+372	Immagine
+373	Posiziona i campi
+374	Posizionare i campi richiede uno schermo più grande — modifica da computer. Puoi comunque guardare le pagine.
+375	Utilizzo del piano questo mese: {sent} documenti inviati (nessun limite). I documenti di prova non vengono mai conteggiati.
+376	Utilizzo del piano questo mese: {sent} di {limit} documenti inviati. I documenti di prova non vengono mai conteggiati.
+377	Accetta i Termini, l’Informativa sulla privacy e l’Addendum sul trattamento dei dati.
+378	CAP
+379	Precompilazione (campo di unione, facoltativo)
+380	Anteprima come
+381	Stampa “Pagina 2 di 5” nel piè di pagina.
+382	Stampa un ID di firma accanto a ogni firma
+383	Stampa l’indirizzo IP di ogni firmatario nel blocco firma. La pagina del certificato lo registra sempre.
+384	Stampa l’indirizzo e-mail di ogni firmatario nel blocco firma.
+385	Stampa l’ID univoco del documento nel piè di pagina così che ogni pagina sia riconducibile a esso.
+386	Privacy
+387	Inserisci il registro di controllo nel PDF firmato
+388	Metti il logo e il nome dello studio in cima alla prima pagina.
+389	Codice QR da scansionare con la tua app di autenticazione
+390	Firma di nuovo dopo (mesi)
+391	Lettura delle pagine…
+392	Pronto
+393	Modelli pronti ({n})
+394	Motivo
+395	Record
+396	Ripeti
+397	Respinto
+398	Sollecita ora
+399	Giorni di sollecito
+400	Sollecito inviato a {name}.
+401	Solleciti
+402	Solleciti attivi
+403	Rimuovi
+404	Rimuovi il piè di pagina di Docustay
+405	Rimuovi {name}
+406	Rinomina
+407	Si rinnova il {date}
+408	Ripeti su ogni pagina
+409	Indirizzo di risposta
+410	Report
+411	Richiedi un motivo di rifiuto
+412	Richiedilo a tutti
+413	Richiedi l’accesso in due passaggi a ogni membro del team
+414	Obbligatorio
+415	Reimposta la password
+416	Risultato
+417	Ritira
+418	Ritirare “{name}”? Non verrà più proposto; i documenti già inviati non sono interessati.
+419	Ritirato.
+420	Revoca
+421	Revocare “{name}”? Tutto ciò che lo usa smette di funzionare.
+422	Revocato.
+423	Al momento i firmatari vedono “{name} tramite {platform}” da {address}. Le risposte arrivano a te.
+424	Ruolo
+425	Riga {n}: {reason}
+426	Password SMTP
+427	Porta SMTP
+428	Sicurezza SMTP
+429	Server SMTP
+430	Nome utente SMTP
+431	Salva
+432	Salva come modello
+433	Salva come nuova versione
+434	Salva clausola
+435	Il salvataggio preliminare non è riuscito.
+436	Salva password
+437	Salvato
+438	Salvato come versione {n}.
+439	Salvato — è stato inviato un nuovo link.
+440	Salvato.
+441	Salvataggio…
+442	Scansiona questo con un’app di autenticazione, oppure inserisci la chiave <key>{secret}</key>. Poi digita il codice che mostra.
+443	Pianifica
+444	Cerca
+445	Cerca per nome o e-mail
+446	Cerca nei contatti
+447	Cerca nei documenti
+448	Cerca nei modelli
+449	Cerca nel registro
+450	Posto da incorporare
+451	Sicurezza
+452	Invia
+453	Invia di nuovo
+454	Invia alle
+455	Invia per la firma
+456	Invia da
+457	Invia dal tuo dominio
+458	Invia dalla tua casella di posta
+459	Invia invito
+460	Invia più tardi
+461	Inviami un link
+462	Inviami un’e-mail di prova
+463	Invia ora
+464	Invia prova
+465	Invia la copia firmata come link valido per (giorni)
+466	Invia la prova a
+467	Invia a un elenco
+468	Invia a {n}
+469	Invia una prova a te stesso
+470	Invio e solleciti
+471	Invio…
+472	Inviato
+473	Inviato di nuovo — il tuo indirizzo lo ha accettato{code}.
+474	Inviato di nuovo, ma il tuo indirizzo non lo ha accettato{code}. Verrà ritentato secondo la pianificazione abituale.
+475	{sent} inviati, {failed} non riusciti.
+476	{sent} inviati.
+477	Configuralo prima per te stesso.
+478	Configura
+479	Configura e invia
+480	Configura i due passaggi
+481	Preparazione di “{title}”…
+482	Configurazione…
+483	Impostazioni
+484	Sezioni delle impostazioni
+485	Condividi un link di download
+486	Mostra il mio logo nella pagina di firma
+487	Mostra l’indirizzo IP del firmatario sotto la firma
+488	Mostra l’e-mail del firmatario sotto la firma
+489	Mostra il modulo di firma all’interno del tuo sito web o della tua app. Solo i siti elencati qui sotto possono incorporarlo, e il modulo comunica solo con loro. L’incorporamento è incluso in tutti i piani.
+490	Mostra il logo della tua organizzazione in cima alla pagina su cui una persona firma.
+491	Accedi
+492	Accedi a Docustay
+493	Firma ora
+494	Esci
+495	Esci da tutti gli altri dispositivi
+496	L’accesso con codice non è disponibile al momento.
+497	Accesso non riuscito. Riprova.
+498	L’accesso non è disponibile al momento.
+499	Firma
+500	La richiesta di firma scade dopo (giorni)
+501	Stile della firma
+502	Firmato
+503	Copia firmata
+504	I documenti firmati vengono conservati almeno per questo periodo. Lascia vuoto per conservarli a tempo indeterminato.
+505	Firmato o concluso
+506	I firmatari devono scrivere un breve motivo o la qualifica (per esempio “come amministratore di Acme S.r.l.”) prima di poter firmare. Viene conservato con la firma e stampato sul certificato.
+507	I firmatari vedono così un nome che conoscono. Aggiungi alcuni record presso l’host DNS del tuo dominio; noi li verifichiamo.
+508	Firma
+509	Accesso in corso…
+510	Ordine di firma
+511	Personalizzazione della pagina di firma
+512	Regole di firma
+513	Segreto di firma (mostrato una sola volta): {secret}
+514	Firma
+515	Testo piccolo in fondo a ogni pagina.
+516	Testo piccolo in cima a ogni pagina dopo la prima. Lascia vuoto per mostrare il titolo del documento.
+517	Generatore di snippet
+518	Qualcosa è andato storto.
+519	Spazio attorno al testo, da 36 a 90. 72 punti sono un pollice.
+520	Timbro
+521	Parti da uno che hai salvato
+522	Inizia qualcosa
+523	Stato
+524	Passaggio
+525	Passaggi
+526	Impossibile raggiungere Stripe. Riprova.
+527	Stripe è collegato e può accettare pagamenti.
+528	Stripe ha bisogno di altre informazioni prima che i pagamenti possano iniziare. Continua su Stripe per completare.
+529	Link di pagamento Stripe
+530	ID prezzo Stripe
+531	Le commissioni di Stripe sono addebitate sul tuo account Stripe come sempre.
+532	Suggerito
+533	Incassa pagamenti mentre le persone firmano
+534	Toglie la piccola riga “Inviato con Docustay” dalla pagina di firma, dalle e-mail di firma e da ogni copia firmata. Fa parte del piano Pro.
+535	Team
+536	Nome del team
+537	Team
+538	I team fanno parte di Docustay Pro. Passa a un piano superiore in Fatturazione per usarli.
+539	Impossibile caricare i team.
+540	Avvisami quando un documento è
+541	Comunica il codice in un altro modo — per telefono o messaggio, non in questa e-mail.
+542	Modello
+543	Modelli
+544	Impossibile caricare i modelli.
+545	Termini
+546	Prova
+547	Modalità di prova
+548	La modalità di prova è disattivata.
+549	La modalità di prova è attiva
+550	La modalità di prova è attiva. I documenti vanno solo a te e sono timbrati TEST.
+551	La modalità di prova è attiva: i documenti che invii ora vanno solo a te, sono timbrati TEST e non vengono conteggiati.
+552	Modalità di prova attiva
+553	Testo
+554	Dimensione del testo (punti)
+555	Impossibile aggiungere quella clausola.
+556	Impossibile salvare quella clausola.
+557	Quel codice non è stato accettato.
+558	Quel tentativo di connessione è scaduto. Ricomincia.
+559	Impossibile modificarlo.
+560	Impossibile riprodurlo di nuovo.
+561	Impossibile salvarlo.
+562	Non è cambiato nulla.
+563	Il caricamento non è riuscito. Riprova.
+564	Non ha funzionato.
+565	Non ha funzionato. Riprova.
+566	Impossibile caricare quel documento.
+567	Quel documento non esiste.
+568	Quell’e-mail ha già un account e la password non corrisponde.
+569	Impossibile creare un account con quell’e-mail e quella password.
+570	Quell’e-mail e quella password non sono state accettate.
+571	Impossibile aggiungere quel file.
+572	Impossibile leggere quel file come foglio di calcolo (CSV).
+573	Quel file non ha righe.
+574	Quel link è scaduto o è già stato usato. Chiedine uno nuovo.
+575	Quel modello di partenza non è stato trovato. Sceglierne uno qui sotto.
+576	Impossibile creare quel modello.
+577	Impossibile aprire quel modello.
+578	Impossibile configurare quel modello.
+579	Impossibile usare quel modello.
+580	Non è stato accettato.
+581	Il registro di controllo è riservato a proprietari e amministratori.
+582	Il file più grande che si può caricare per l’invio alla firma. Il massimo accettato da questo sistema è 100 MB; un piano Free ospitato è limitato a 25 MB qualunque valore sia impostato qui.
+583	Il testo della clausola
+584	Impossibile completare la connessione. Riprova.
+585	La connessione non è stata completata. Ricomincia, oppure faccelo sapere se continua a succedere.
+586	La connessione è stata annullata sulla pagina di Stripe. Non è stato collegato nulla.
+587	La connessione è stata annullata. Non è cambiato nulla.
+588	Impossibile caricare il registro di consegna.
+589	Impossibile creare il documento.
+590	Impossibile leggere il documento.
+591	Impossibile caricare i documenti.
+592	Impossibile aggiungere l’endpoint.
+593	La guida completa, con gli eventi e i wrapper per React, Vue e Angular, è nella <dev>documentazione per sviluppatori</dev>.
+594	Il nome host del tuo server di posta, ad esempio smtp.tuoprovider.com.
+595	Impossibile inviare l’invito.
+596	Impossibile creare la chiave.
+597	La lingua della pagina di firma, dell’e-mail che racchiude il tuo messaggio e del certificato. Il tuo messaggio viene inviato come l’hai scritto.
+598	La frase legale stampata in fondo al certificato.
+599	Impossibile creare il link.
+600	Impossibile caricare il registro.
+601	Il nome utente del tuo server di posta. La password viene salvata separatamente e non viene mai più mostrata.
+602	La persona successiva riceve un’e-mail quando quella prima ha firmato.
+603	Impossibile mostrare le pagine {error}. Ricarica per riprovare.
+604	La password è conservata sigillata e non viene mai più mostrata.
+605	Impossibile generare il report.
+606	Impossibile caricare le impostazioni.
+607	La scadenza iniziale nel passaggio Invia per un documento caricato; il mittente può cambiarla a ogni invio. 0 significa che non scade mai.
+608	Il sistema
+609	Impossibile caricare il team.
+610	Il modello è stato salvato, ma non è stato possibile avviare un documento da esso.
+611	Impossibile inviare la prova.
+612	Impossibile avviare il caricamento.
+613	Le parole dell’e-mail, sopra il pulsante.
+614	Tema: {mode, select, light {chiaro} dark {scuro} other {automatico}}
+615	Tema: {mode, select, light {chiaro} dark {scuro} other {automatico}}. Premi per cambiare.
+616	Questa è una bozza. Non è stato inviato nulla a nessuno.
+617	Questo link è incompleto. <ask>Chiedine uno nuovo</ask>.
+618	Questo server è nella <b>modalità di prova</b> di Stripe: nessuna carta reale viene addebitata e nulla qui sposta denaro reale.
+619	Questa traduzione è una bozza scritta da una macchina (Beta) che un madrelingua non ha ancora letto. Il tuo messaggio e le formulazioni proprie della tua organizzazione non vengono mai tradotti.
+620	Spunta “Salva come modello” per impostazione predefinita nel passaggio Invia, così lo stesso documento e i suoi campi possono essere inviati di nuovo.
+621	Cronologia
+622	A
+623	Troppi tentativi per quell’indirizzo. Riprova tra qualche minuto.
+624	Troppi tentativi. Attendi qualche minuto e riprova.
+625	Prova
+626	Prova con un esempio
+627	Disattiva
+628	Disattiva
+629	Attiva
+630	I due passaggi sono attivi. Salva subito questi codici di backup — ognuno funziona una sola volta e non vengono mostrati di nuovo.
+631	Accesso in due passaggi
+632	Tipo
+633	Tempo tipico per completare
+634	Annulla
+635	Dispositivo sconosciuto
+636	Aggiorna
+637	Aggiornato
+638	Passa a Pro — {price}/mese
+639	Carica un PDF, posiziona i campi e invialo per la firma. Tutto ciò che invii compare qui.
+640	Carica un documento
+641	Carica un documento, invialo, fallo firmare e sigillare. Iniziare è gratis.
+642	Carica un file
+643	Carica un file, posiziona i campi e spunta “Salva come modello” nel passaggio Invia.
+644	Carica il file che le persone firmeranno. Un PDF funziona meglio; Word, Excel, PowerPoint e foto vengono convertiti, e uno ZIP con più file diventa un unico pacchetto. Preferisci posizionare i campi scrivendoli? Digita un tag di testo nel file, come <code>{tag}</code>, e noi mettiamo il campo lì.
+645	Carica il tuo primo documento
+646	I documenti caricati scadono dopo (giorni)
+647	Modelli da file caricati
+648	Caricamento…
+649	Report di utilizzo
+650	Usa
+651	Usa un modello
+652	Usa invece la mia password
+653	Usa l’indirizzo esatto del tuo sito, a partire da https:// (senza percorso).
+654	Usa questo modello
+655	Di solito 587 (STARTTLS) o 465 (TLS).
+656	Valore
+657	Verifica
+658	Versione
+659	Visualizza
+660	Visualizzato
+661	Solo visualizzazione
+662	Annullato
+663	In attesa
+664	In attesa di qualcuno
+665	In attesa adesso
+666	Chiamiamo il tuo indirizzo quando succede qualcosa, con una firma per verificare che siamo noi. Apri un endpoint per vedere cosa è stato inviato e per reinviarne una parte.
+667	Abbiamo trovato {n} punti di firma in questo file, quindi probabilmente servono {n} persone.
+668	Webhook
+669	Siti web che possono mostrare un modulo di firma
+670	A cosa serve (ad esempio, il mio sito web)
+671	Cosa mostra il certificato
+672	Cosa fanno {name}
+673	Quando
+674	Quando un documento caricato è firmato da tutti, invia il PDF sigillato via e-mail a ogni persona coinvolta e al mittente.
+675	Se disattivo, i firmatari devono disegnare la firma; l’opzione del nome digitato è nascosta. (La pagina indica cosa ha scelto il firmatario; chi usa un proprio software potrebbe dichiarare altro, quindi è una regola per firmatari onesti, non un controllo di sicurezza.)
+676	Se disattivo, il pulsante Rifiuta viene rimosso e il server rifiuta un rifiuto. Il mittente può comunque annullare un documento.
+677	Se attivo, un nuovo modello da documento caricato — o una sua nuova versione — non può essere inviato finché un proprietario o amministratore non lo approva. Cambiarlo non influisce sui modelli già esistenti.
+678	Se attivo, un membro del team che non è proprietario né amministratore vede solo i documenti e i modelli dei propri team, quelli che ha creato e quelli che non appartengono ad alcun team. Proprietari e amministratori vedono sempre tutto. I team fanno parte di Pro.
+679	Se attivo, nessuno del tuo team può usare lo spazio di lavoro finché non ha configurato l’accesso in due passaggi.
+680	Quando inviare
+681	Dove vanno le risposte. Sempre usato quando invii dall’indirizzo della piattaforma.
+682	Dove hai effettuato l’accesso
+683	In quali giorni dopo l’invio sollecitare chi non ha firmato — da 1 a 3 valori, in ordine crescente.
+684	Quali dati stampare: ip, device, timeline, hashes, consent.
+685	Finché è attivo, ogni documento che invii è una prova: tutte le e-mail vanno solo a te (il mittente), il PDF firmato porta una filigrana TEST e nulla viene conteggiato per il tuo piano, la fatturazione o i report. Disattivalo per inviare davvero. I documenti inviati con una chiave API di prova sono sempre prove.
+686	Per chi è?
+687	Chi firma
+688	Da chi arriva l’e-mail, ad esempio il nome del tuo studio. Lascia vuoto per usare il nome della tua organizzazione.
+689	Chi aiutano
+690	Da chi arrivano le tue e-mail
+691	Chiunque apra un link di download deve prima inserire un codice inviato al proprio indirizzo e-mail. I link sono legati a una persona.
+692	Spazio di lavoro
+693	Scrivi un modello
+694	Scrivi un accordo una sola volta con titoli, elenchi e campi di unione (nome del firmatario, data, nome dello spazio di lavoro, i tuoi campi). Crea un documento da esso ogni volta che serve, posiziona i campi di firma e invia.
+695	Scrivine uno
+696	Modelli scritti
+697	Prima ti serve un modello salvato con esattamente un firmatario.
+698	Il tuo account Stripe
+699	Il tuo account è pronto. Questo server non ha ancora aperto i pagamenti, quindi un riquadro di pagamento lo segnalerà quando qualcuno proverà a pagare.
+700	Il tuo documento ti aspetta. Crea un account e si apre pronto per i campi.
+701	I tuoi documenti stanno arrivando.
+702	Il tuo dominio
+703	L’ultimo pagamento non è andato a buon fine. Aggiorna il tuo metodo di pagamento.
+704	La tua casella di posta è collegata. Ora le e-mail partono da lì.
+705	Il tuo nome o la tua organizzazione
+706	Un tuo campo
+707	La tua password è stata cambiata.
+708	Impossibile verificare il tuo accesso. Riprova.
+709	Il tuo sito web
+710	Il tuo spazio di lavoro è stato creato, ma la configurazione non è stata completata. Accedi e riprova.
+711	approva
+712	fatturato {interval, select, month {mensilmente} year {annualmente} other {a ogni periodo}}
+713	both mostra la firma disegnata quando c’è e il nome digitato con un carattere di firma quando non c’è. drawn mostra solo le firme disegnate. typed usa sempre il nome digitato.
+714	completati
+715	ognuno diventa un tuo modello, con i campi già posizionati
+716	e-mail
+717	compila i dati
+718	prezzo dei fondatori
+719	riceve una copia
+720	helvetica è il carattere semplice senza grazie, times è quello con le grazie, inter è un carattere moderno che copre anche le lettere accentate.
+721	non è stato possibile riprodurlo di nuovo
+722	ultimo utilizzo il {date}
+723	deve essere ricollegato
+724	mai usata
+725	non accettato
+726	su questo dispositivo
+727	il nostro indirizzo
+728	platform: inviato dall’indirizzo della piattaforma a tuo nome, le risposte arrivano a te. domain: inviato dal tuo dominio (verificalo qui sotto). smtp: inviato tramite il tuo server di posta. mailbox: inviato tramite la tua casella Google o Microsoft (collegala qui sotto).
+729	ritirato
+730	revocata
+731	inviati
+732	accesso il {date}
+733	firma
+734	firma su questo dispositivo
+735	starttls per la porta 587, tls per la porta 465, none solo per un server interno affidabile.
+736	loro
+737	questo dispositivo
+738	usata il {date}
+739	versione {n}
+740	visualizzano
+741	la tua organizzazione
+742	un tuo indirizzo
+743	{date}: {n} completati
+744	{date}: {n} inviati
+745	{from} a {to}
+746	{mode, select, light {chiaro} dark {scuro} other {automatico}}
+747	{mode, select, smtp {Le e-mail partono da {address} tramite il tuo server di posta.} mailbox {Le e-mail partono da {address} tramite la tua casella {provider}.} other {Le e-mail partono da {address} tramite il tuo dominio.}}
+748	{n, plural, one {# giorno} many {# di giorni} other {# giorni}}
+749	{n, plural, one {# e-mail è partita dall’indirizzo della piattaforma invece che dal mittente scelto — l’ultima il {date}: {reason}} many {# di e-mail sono partite dall’indirizzo della piattaforma invece che dal mittente scelto — l’ultima il {date}: {reason}} other {# e-mail sono partite dall’indirizzo della piattaforma invece che dal mittente scelto — l’ultima il {date}: {reason}}}
+750	{n, plural, one {# evento} many {# di eventi} other {# eventi}}
+751	{n, plural, one {# campo posizionato. Selezionalo per modificarlo.} many {# di campi posizionati. Selezionane uno per modificarlo.} other {# campi posizionati. Selezionane uno per modificarlo.}}
+752	{n, plural, one {# campo} many {# di campi} other {# campi}}
+753	{n, plural, one {# ora} many {# di ore} other {# ore}}
+754	{n, plural, one {# riga da correggere:} many {# di righe da correggere:} other {# righe da correggere:}}
+755	{n, plural, one {# riga} many {# di righe} other {# righe}}
+756	{people, plural, one {# persona} many {# di persone} other {# persone}} · {docs, plural, one {# documento} many {# di documenti} other {# documenti}} · {tpls, plural, one {# modello} many {# di modelli} other {# modelli}}
+757	Piano {plan}
+758	{price}/anno
+759	{sent} documenti inviati questo mese (nessun limite).
+760	{sent} documenti inviati su {limit} questo mese.
+761	{sent} e-mail inviate su {limit} oggi.
+762	{sent} di {total}
+763	{signed} di {total} firmati
+764	{title} — firma, per favore
+765	{waiting} in attesa di qualcuno, {signed} firmati.
+766	← Tutti i documenti
+767	← Modelli scritti

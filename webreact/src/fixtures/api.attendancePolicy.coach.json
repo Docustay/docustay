@@ -1,0 +1,12 @@
+{
+ "$captured": {
+  "route": "GET /api/engagements/attendance-policy",
+  "rank": "coach",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "percent": 50,
+  "source": "ruling_default"
+ }
+}

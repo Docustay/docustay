@@ -1,0 +1,124 @@
+/* ARK UI PARTS, ONE LOOK (report §13.4B). Ark (MIT) gives every part data-scope / data-part / data-state; styling them here means each wrapper in lib/ui stays a few lines and every menu, dialog and tab looks the same.
+   Entry and exit use the motion kit's keyframes (lib/styles/motion.css), 160 ms in, 90 ms out. */
+
+/* surfaces that float */
+:is([data-scope="menu"], [data-scope="popover"], [data-scope="hover-card"], [data-scope="tooltip"], [data-scope="select"], [data-scope="combobox"])[data-part="content"] { background: var(--panel); color: var(--ink); border: 1px solid var(--line-strong); border-radius: .75rem; box-shadow: var(--shadow), 0 12px 40px -12px rgb(0 0 0 / .35); z-index: 60; outline: none; }
+:is([data-scope="menu"], [data-scope="popover"], [data-scope="hover-card"], [data-scope="tooltip"], [data-scope="select"], [data-scope="combobox"])[data-part="content"][data-state="open"] { animation: ds-scale-up-fade var(--dur-fast) var(--ease-out); }
+:is([data-scope="menu"], [data-scope="popover"], [data-scope="hover-card"], [data-scope="tooltip"], [data-scope="select"], [data-scope="combobox"])[data-part="content"][data-state="closed"] { animation: ds-scale-down-fade var(--dur-instant) var(--ease-out) forwards; }
+
+/* menus */
+[data-scope="menu"][data-part="content"] { min-width: 12rem; padding: .3rem; }
+[data-scope="menu"] :is([data-part="item"], [data-part="radio-item"], [data-part="checkbox-item"], [data-part="trigger-item"]) { display: flex; align-items: center; gap: .6rem; padding: .5rem .65rem; border-radius: .5rem; font-size: .9rem; cursor: pointer; color: var(--text-2); }
+[data-scope="menu"] :is([data-part="item"], [data-part="radio-item"], [data-part="checkbox-item"])[data-highlighted] { background: var(--tint); color: var(--ink); }
+[data-scope="menu"] [data-part="item"][data-danger] { color: var(--bad); }
+[data-scope="menu"] [data-part="item-group-label"] { padding: .4rem .65rem .2rem; font: 500 .7rem var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--faint); }
+[data-scope="menu"] [data-part="separator"] { height: 1px; margin: .3rem .2rem; background: var(--line); border: 0; }
+[data-scope="menu"] [data-part="item-indicator"] { margin-left: auto; color: var(--brand); display: inline-flex; }
+
+/* tooltips and hover cards */
+[data-scope="tooltip"][data-part="content"] { background: var(--ink); color: var(--paper); border: 0; padding: .3rem .6rem; font-size: .78rem; font-weight: 500; border-radius: .5rem; }
+[data-scope="hover-card"][data-part="content"], [data-scope="popover"][data-part="content"] { padding: .9rem; max-width: 22rem; }
+
+/* dialogs and drawers */
+[data-scope="dialog"][data-part="backdrop"] { position: fixed; inset: 0; background: rgb(0 0 0 / .45); backdrop-filter: blur(2px); z-index: 70; }
+[data-scope="dialog"][data-part="backdrop"][data-state="open"] { animation: ds-fade-in var(--dur-base) var(--ease-out); }
+[data-scope="dialog"][data-part="backdrop"][data-state="closed"] { animation: ds-fade-out var(--dur-fast) var(--ease-out) forwards; }
+[data-scope="dialog"][data-part="positioner"] { position: fixed; inset: 0; display: grid; place-items: start center; padding: 1rem; z-index: 71; overflow-y: auto; }   /* margin-block:auto on the content centres it and, when it is taller than the screen, lets it start at the top and scroll (place-items:center clipped the title and Close off the top: Run 10, R10-11) */
+[data-scope="dialog"][data-part="content"] { margin-block: auto; width: min(32rem, 100%); background: var(--panel); color: var(--ink); border: 1px solid var(--line-strong); border-radius: 1rem; box-shadow: var(--shadow), 0 24px 70px -20px rgb(0 0 0 / .5); padding: 1.4rem; outline: none; }
+[data-scope="dialog"][data-part="content"][data-state="open"] { animation: ds-scale-up-fade var(--dur-base) var(--ease-out); }
+[data-scope="dialog"][data-part="content"][data-state="closed"] { animation: ds-scale-down-fade var(--dur-fast) var(--ease-out) forwards; }
+[data-scope="dialog"][data-part="title"] { font-size: 1.15rem; font-weight: 650; letter-spacing: -.01em; }
+[data-scope="dialog"][data-part="description"] { margin-top: .35rem; color: var(--mute); font-size: .92rem; }
+
+/* tabs: pills with a sliding indicator */
+[data-scope="tabs"][data-part="list"] { position: relative; display: inline-flex; gap: .15rem; padding: .2rem; border: 1px solid var(--line); border-radius: .75rem; background: var(--tint); max-width: 100%; overflow-x: auto; }
+[data-scope="tabs"][data-part="trigger"] { position: relative; z-index: 1; padding: .4rem .85rem; border-radius: .55rem; font-size: .88rem; font-weight: 550; color: var(--mute); cursor: pointer; white-space: nowrap; transition: color var(--dur-fast); }
+[data-scope="tabs"][data-part="trigger"][data-selected] { color: var(--ink); }
+[data-scope="tabs"][data-part="indicator"] { background: var(--card); border: 1px solid var(--line); border-radius: .55rem; box-shadow: 0 1px 2px rgb(0 0 0 / .08); width: var(--width); height: var(--height); left: var(--left); top: var(--top); transition: left var(--dur-base) var(--ease-out), width var(--dur-base) var(--ease-out); }
+[data-scope="tabs"][data-part="content"] { padding-top: 1rem; }
+/* Run 8 (S8): a panel reached by Tab shows where focus is, like every other stop (WCAG 2.4.7) — this used to be `outline: none` */
+[data-scope="tabs"][data-part="content"]:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+[data-scope="tabs"][data-part="content"][data-state="open"] { animation: ds-fade-in var(--dur-base) var(--ease-out); }
+
+/* segment group: the same pill idea, tighter */
+[data-scope="segment-group"][data-part="root"] { position: relative; display: inline-flex; padding: .2rem; border: 1px solid var(--line); border-radius: .7rem; background: var(--tint); }
+[data-scope="segment-group"][data-part="item"] { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: .4rem; padding: .35rem .8rem; border-radius: .5rem; font-size: .88rem; font-weight: 550; color: var(--mute); cursor: pointer; transition: color var(--dur-fast); }
+[data-scope="segment-group"][data-part="item"][data-state="checked"] { color: var(--ink); }
+[data-scope="segment-group"][data-part="item"][data-focus-visible] { outline: 3px solid var(--accent); outline-offset: 1px; }
+[data-scope="segment-group"][data-part="indicator"] { background: var(--card); border: 1px solid var(--line); border-radius: .5rem; box-shadow: 0 1px 2px rgb(0 0 0 / .08); width: var(--width); height: var(--height); left: var(--left); top: var(--top); transition: left var(--dur-base) var(--ease-out), width var(--dur-base) var(--ease-out); }
+
+/* switch */
+[data-scope="switch"][data-part="root"] { display: inline-flex; align-items: center; gap: .65rem; cursor: pointer; }
+[data-scope="switch"][data-part="control"] { position: relative; width: 2.35rem; height: 1.4rem; border-radius: 9999px; background: var(--line-strong); transition: background var(--dur-fast); flex: none; }
+[data-scope="switch"][data-part="control"][data-state="checked"] { background: var(--brand); }
+[data-scope="switch"][data-part="thumb"] { position: absolute; top: .15rem; left: .15rem; width: 1.1rem; height: 1.1rem; border-radius: 9999px; background: #fff; box-shadow: 0 1px 3px rgb(0 0 0 / .3); transition: transform var(--dur-fast) var(--ease-out); }
+[data-scope="switch"][data-part="thumb"][data-state="checked"] { transform: translateX(.95rem); }
+[data-scope="switch"][data-part="control"][data-focus-visible] { outline: 3px solid var(--accent); outline-offset: 2px; }
+[data-scope="switch"][data-part="root"][data-disabled] { opacity: .55; cursor: default; }
+
+/* progress (the Meter) */
+[data-scope="progress"][data-part="track"] { height: .45rem; border-radius: 9999px; background: var(--tint); overflow: hidden; border: 1px solid var(--line); }
+[data-scope="progress"][data-part="range"] { position: relative; overflow: hidden; height: 100%; border-radius: inherit; background: var(--brand); transition: width 900ms var(--ease-out); }
+/* Run 8 (motion board Ask 6, usage calmly): the bar fills slowly and a soft sheen passes over it twice; no red until the limit is really reached (Meter: amber from 80%, red only at 100%) */
+[data-scope="progress"][data-part="range"]::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgb(255 255 255 / .45), transparent); transform: translateX(-100%); animation: meter-sheen 2.4s ease-in-out 400ms 2; }
+@keyframes meter-sheen { to { transform: translateX(100%); } }
+@media (prefers-reduced-motion: reduce) { [data-scope="progress"][data-part="range"] { transition: none; } [data-scope="progress"][data-part="range"]::after { animation: none; display: none; } }
+html[data-lite] [data-scope="progress"][data-part="range"]::after { display: none; }
+[data-scope="progress"][data-part="range"][data-tone="warn"] { background: var(--warn); } [data-scope="progress"][data-part="range"][data-tone="bad"] { background: var(--bad); } [data-scope="progress"][data-part="range"][data-tone="ok"] { background: var(--ok); }
+
+/* slider (the Range) */
+[data-scope="slider"][data-part="control"] { position: relative; display: flex; align-items: center; height: 1.5rem; touch-action: none; }
+[data-scope="slider"][data-part="track"] { flex: 1; height: .35rem; border-radius: 9999px; background: var(--tint); border: 1px solid var(--line); }
+[data-scope="slider"][data-part="range"] { height: 100%; background: var(--brand); border-radius: inherit; }
+[data-scope="slider"][data-part="thumb"] { width: 1.15rem; height: 1.15rem; border-radius: 9999px; background: var(--card); border: 2px solid var(--brand); box-shadow: var(--shadow); outline: none; }
+[data-scope="slider"][data-part="thumb"][data-focus-visible] { outline: 3px solid var(--accent); outline-offset: 2px; }
+[data-scope="slider"][data-part="marker"] { width: 1px; height: .5rem; background: var(--line-strong); }
+
+/* pin input */
+[data-scope="pin-input"][data-part="control"] { display: inline-flex; gap: .5rem; }
+[data-scope="pin-input"][data-part="input"] { width: 2.6rem; height: 3.1rem; text-align: center; font: 600 1.35rem var(--font-mono); border: 1px solid var(--line-strong); border-radius: .6rem; background: var(--card); color: var(--ink); outline: none; transition: border-color var(--dur-fast), box-shadow var(--dur-fast); }
+[data-scope="pin-input"][data-part="input"]:focus { border-color: var(--brand); box-shadow: 0 0 0 3px var(--accent-soft); }
+[data-scope="pin-input"][data-part="input"][data-invalid] { border-color: var(--bad); }
+
+/* combobox / select lists */
+[data-scope="combobox"][data-part="item"], [data-scope="select"][data-part="item"] { display: flex; align-items: center; gap: .5rem; padding: .5rem .65rem; border-radius: .5rem; font-size: .9rem; cursor: pointer; }
+[data-scope="combobox"][data-part="item"][data-highlighted], [data-scope="select"][data-part="item"][data-highlighted] { background: var(--tint); }
+
+/* chips (ChipInput, ChoiceMulti) and the line list (ListEditor): techy, hairline, accent on focus, red when wrong; tokens only so light and dark both work */
+.chips, .choicemulti { display: grid; gap: .35rem; }
+.chips-control { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem; min-height: 2.75rem; padding: .3rem .45rem; border: 1px solid var(--line-strong); border-radius: .5rem; background: var(--card); color: var(--ink); cursor: text; }
+.chips-control:focus-within { outline: 3px solid var(--accent); outline-offset: 0; border-color: var(--brand); }
+.chips-control .chip { padding: 0; gap: 0; border: 0; border-radius: 0; font-size: inherit; font-weight: inherit; }   /* D-006: the status-pill .chip in app.css padded every tag (46 px chips) */
+.chips-input { flex: 1 1 3.5rem; min-width: 3.5rem; min-height: 2rem; border: 0; outline: 0; background: transparent; color: inherit; font: inherit; font-size: .85rem; padding: 0 .25rem; }
+.chips-input.mono { font-family: var(--font-mono); }
+.chips-input::placeholder { color: var(--mute); opacity: 1; }
+.chips-control .chip, .chips-control .chip[data-invalid], .chips-control .chip[data-highlighted] { display: inline-flex; flex: 0 0 auto; max-width: 100%; outline: 0; box-shadow: none; background: transparent; }
+.chip[data-highlighted] .chip-body { border-color: var(--brand); }
+.chip-body { display: inline-flex; align-items: center; gap: .15rem; max-width: 100%; min-height: 1.9rem; padding: 0 .15rem 0 .55rem; border: 1px solid var(--line-strong); border-radius: .375rem; background: var(--tint); font-size: .8rem; overflow-wrap: anywhere; }
+.chip .mono, .chip-body .mono { font-family: var(--font-mono); font-size: .78rem; }
+.chip.bad .chip-body { border-color: var(--bad-line, var(--bad)); background: var(--bad-bg, transparent); color: var(--bad); }
+.chip-x { display: inline-grid; place-items: center; width: 1.75rem; height: 1.75rem; border: 0; border-radius: .3rem; background: transparent; color: var(--mute); cursor: pointer; }
+.chip-x:hover:not(:disabled) { background: var(--line); color: var(--ink); }
+.chip-x:disabled { opacity: .35; cursor: default; }
+.chip-x:focus-visible { outline: 2px solid var(--brand); }
+.chips-foot { display: flex; gap: .75rem; justify-content: space-between; font-size: .75rem; color: var(--mute); }
+.chips-count.bad { color: var(--bad); }
+.chips-problem { font-size: .78rem; color: var(--bad); margin: 0; }
+.listed-row { display: flex; align-items: center; gap: .35rem; }
+.listed-n { width: 1.25rem; text-align: right; color: var(--mute); font-size: .75rem; }
+@media (pointer: coarse), (max-width: 640px) {
+  .chips-control { min-height: 2.75rem; }
+  .chip-x, .listed-btn { width: 2.75rem; height: 2.75rem; }
+  .chip-body { min-height: 2.75rem; padding-left: .75rem; }
+  .chips-input { min-height: 2.75rem; }
+}
+/* a long row of tabs (the API panel's eight languages) scrolls sideways instead of clipping */
+[data-scope="tabs"][data-part="list"] { overflow-x: auto; scrollbar-width: none; max-width: 100%; }
+[data-scope="tabs"][data-part="list"]::-webkit-scrollbar { display: none; }
+
+.filter-pill .pick-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* On a phone every tab stays in view: the strip wraps onto a second line instead of scrolling sideways behind the edge (Payments and AI drafting used to be hidden). */
+@media (max-width: 640px) {
+  [data-scope="tabs"][data-part="list"] { flex-wrap: wrap; overflow: visible; }
+}

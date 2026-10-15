@@ -1,0 +1,245 @@
+{
+ "$captured": {
+  "route": "GET /api/documents/variables",
+  "rank": "coach",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "data": {
+   "fields": [
+    {
+     "name": "person.first_name",
+     "label": "Client first name",
+     "sample": "Dana",
+     "why": "first name of the person — app_user.first_name",
+     "domain": "person"
+    },
+    {
+     "name": "person.name",
+     "label": "Client name",
+     "sample": "Dana Whitfield",
+     "why": "full name of the person — app_user.display_name",
+     "domain": "person"
+    },
+    {
+     "name": "person.email",
+     "label": "Client email",
+     "sample": "dana@example.com",
+     "why": "the person's email — app_user.email",
+     "domain": "person"
+    },
+    {
+     "name": "person.phone",
+     "label": "Client phone",
+     "sample": "(555) 123-4567",
+     "why": "the person's phone number — app_user.phone",
+     "domain": "person"
+    },
+    {
+     "name": "person.role",
+     "label": "Client role",
+     "sample": "client",
+     "why": "the person's role in the system — app_user.role",
+     "domain": "person"
+    },
+    {
+     "name": "person.guardian_name",
+     "label": "Guardian name",
+     "sample": "Jane Whitfield",
+     "why": "name of the person's legal guardian — guardian.display_name",
+     "domain": "person"
+    },
+    {
+     "name": "person.payer_name",
+     "label": "Payer name",
+     "sample": "John Whitfield",
+     "why": "name of the person's account payer — payer.display_name",
+     "domain": "person"
+    },
+    {
+     "name": "person.portal_status",
+     "label": "Portal status",
+     "sample": "active",
+     "why": "the person's portal account status — app_user.portal_status",
+     "domain": "person"
+    },
+    {
+     "name": "person.stage",
+     "label": "Client stage",
+     "sample": "active",
+     "why": "the person's current stage in the system — app_user.stage",
+     "domain": "person"
+    },
+    {
+     "name": "booking.next.date",
+     "label": "Next appointment date",
+     "sample": "September 28, 2026",
+     "why": "date of the next scheduled booking — booking.starts_at (formatted in tenant timezone)",
+     "domain": "booking"
+    },
+    {
+     "name": "booking.next.time",
+     "label": "Next appointment time",
+     "sample": "2:00 PM Pacific",
+     "why": "time of the next scheduled booking with timezone — booking.starts_at AT TIME ZONE (formatted)",
+     "domain": "booking"
+    },
+    {
+     "name": "booking.next.service",
+     "label": "Next service",
+     "sample": "Coaching Session",
+     "why": "name of the service for the next booking — service.name",
+     "domain": "booking"
+    },
+    {
+     "name": "booking.next.coach_first_name",
+     "label": "Coach name",
+     "sample": "Sarah",
+     "why": "first name of the coach for the next booking — coach.first_name",
+     "domain": "booking"
+    },
+    {
+     "name": "booking.next.location",
+     "label": "Location",
+     "sample": "Bright Path, Suite 200",
+     "why": "location of the next booking — location.address (primary location, 0381)",
+     "domain": "booking"
+    },
+    {
+     "name": "booking.last.date",
+     "label": "Last appointment date",
+     "sample": "September 21, 2026",
+     "why": "date of the most recent completed booking — booking.completed_at",
+     "domain": "booking"
+    },
+    {
+     "name": "booking.capacity_left",
+     "label": "Appointments available",
+     "sample": "3",
+     "why": "number of remaining appointments in the active package — package_credits remaining count",
+     "domain": "booking"
+    },
+    {
+     "name": "booking.waitlist_position",
+     "label": "Waitlist position",
+     "sample": "2",
+     "why": "position on the waitlist for the next available slot — booking_waitlist position",
+     "domain": "booking"
+    },
+    {
+     "name": "document.title",
+     "label": "Document title",
+     "sample": "Coaching Agreement",
+     "why": "the document's title — document_instance.title",
+     "domain": "document"
+    },
+    {
+     "name": "document.date",
+     "label": "Date issued",
+     "sample": "15 September 2026",
+     "why": "the moment of send, formatted in the tenant's own timezone — document_instance.sent_at",
+     "domain": "document"
+    },
+    {
+     "name": "document.version",
+     "label": "Document version",
+     "sample": "2",
+     "why": "version number of the document — document_instance.version",
+     "domain": "document"
+    },
+    {
+     "name": "document.signer_name",
+     "label": "Signer name",
+     "sample": "Dana Whitfield",
+     "why": "name of the person who signed the document — signature.signer_name",
+     "domain": "document"
+    },
+    {
+     "name": "document.certificate_ref",
+     "label": "Certificate reference",
+     "sample": "CERT-abc123def456",
+     "why": "reference code for the document's certificate — document_instance.certificate_ref",
+     "domain": "document"
+    },
+    {
+     "name": "practice.name",
+     "label": "Practice name",
+     "sample": "Bright Path Coaching",
+     "why": "the tenant's practice name — tenant.name",
+     "domain": "practice"
+    },
+    {
+     "name": "practice.address",
+     "label": "Practice address",
+     "sample": "123 Main St, Suite 200, Oakland, CA 94608",
+     "why": "primary location address — location.address (0381 primary location)",
+     "domain": "practice"
+    },
+    {
+     "name": "practice.phone",
+     "label": "Practice phone",
+     "sample": "(510) 555-0100",
+     "why": "tenant setting practice.support_phone — one value, read wherever it is quoted",
+     "domain": "practice"
+    },
+    {
+     "name": "practice.hours",
+     "label": "Practice hours",
+     "sample": "Monday–Friday, 9 AM–6 PM",
+     "why": "practice business hours — tenant_setting practice.hours",
+     "domain": "practice"
+    },
+    {
+     "name": "practice.booking_link",
+     "label": "Booking link",
+     "sample": "https://app.example.com/book",
+     "why": "client booking portal URL — tenant booking link (from tenant routing, portal URL)",
+     "domain": "practice"
+    },
+    {
+     "name": "practice.logo",
+     "label": "Practice logo",
+     "sample": "https://cdn.example.com/logo.png",
+     "why": "practice branding logo URL — tenant_setting practice.logo (0323 branding pointer)",
+     "domain": "practice"
+    },
+    {
+     "name": "subscription.plan",
+     "label": "Subscription plan",
+     "sample": "Premium Coaching",
+     "why": "name of the person's subscription plan — subscription.plan_name",
+     "domain": "subscription"
+    },
+    {
+     "name": "subscription.price",
+     "label": "Subscription price",
+     "sample": "$199.99/month",
+     "why": "price of the subscription — subscription.amount_minor and interval (never computed)",
+     "domain": "subscription"
+    },
+    {
+     "name": "subscription.renews_on",
+     "label": "Subscription renews",
+     "sample": "October 15, 2026",
+     "why": "next renewal date for the subscription — subscription.current_period_end (0475 mirror)",
+     "domain": "subscription"
+    },
+    {
+     "name": "client.name",
+     "label": "Client name",
+     "sample": "Dana Whitfield",
+     "why": "full name of the person — app_user.display_name",
+     "domain": "person"
+    },
+    {
+     "name": "client.email",
+     "label": "Client email",
+     "sample": "dana@example.com",
+     "why": "the person's email — app_user.email",
+     "domain": "person"
+    }
+   ]
+  }
+ }
+}

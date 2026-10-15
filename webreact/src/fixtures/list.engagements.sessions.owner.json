@@ -1,0 +1,93 @@
+{
+ "$captured": {
+  "route": "GET /api/list/engagements/sessions",
+  "rank": "owner",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/engagements/sessions",
+  "title": "Sessions",
+  "columns": [
+   {
+    "field": "starts_at",
+    "label": "When",
+    "format": "datetime"
+   },
+   {
+    "field": "who",
+    "label": "Who",
+    "format": "text"
+   },
+   {
+    "field": "service_name",
+    "label": "What",
+    "format": "text"
+   },
+   {
+    "field": "host_name",
+    "label": "With",
+    "format": "text"
+   },
+   {
+    "field": "where_label",
+    "label": "Where",
+    "format": "text"
+   },
+   {
+    "field": "state_label",
+    "label": "State",
+    "format": "enum"
+   }
+  ],
+  "recordType": "booking",
+  "empty": "Every past and upcoming session, with its state and its notes.",
+  "canWrite": null,
+  "noWriteNotice": null,
+  "summary": {
+   "thisWeek": 1,
+   "noShows": 0,
+   "unsignedConsent": 0
+  },
+  "emptyState": {
+   "kind": "first-run",
+   "icon": "IconClock",
+   "headline": "No sessions yet",
+   "line": "Every past and upcoming session, with its state and its notes.",
+   "action": {
+    "label": "Book session",
+    "href": "/engagements/sessions?book=1"
+   },
+   "blockedAction": null,
+   "blockedLine": null,
+   "errorWhenEmpty": false,
+   "noWrite": null,
+   "firstRun": null
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [
+   {
+    "id": "00000000-0000-4000-8000-000000000030",
+    "starts_at": "2026-10-01T15:00:00.000Z",
+    "state": "confirmed",
+    "service_name": "Reference Weekly coaching",
+    "host_name": "Reference Coach",
+    "who": "Reference Adult",
+    "where_label": null,
+    "capacity": 1,
+    "taken": "1",
+    "state_label": "Confirmed"
+   }
+  ],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 1
+  }
+ }
+}

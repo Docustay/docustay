@@ -1,0 +1,66 @@
+{
+ "$captured": {
+  "route": "GET /api/list/engagements/booking",
+  "rank": "coach",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/engagements/booking",
+  "title": "Online booking",
+  "columns": [
+   {
+    "field": "host_name",
+    "label": "Coach",
+    "format": "text"
+   },
+   {
+    "field": "day",
+    "label": "Day",
+    "format": "text"
+   },
+   {
+    "field": "window",
+    "label": "Hours",
+    "format": "text"
+   },
+   {
+    "field": "effective_from",
+    "label": "From",
+    "format": "date"
+   }
+  ],
+  "recordType": null,
+  "empty": "Clients cannot book online until a coach has hours. Add a weekly rule to open the diary.",
+  "canWrite": null,
+  "noWriteNotice": null,
+  "summary": null,
+  "emptyState": {
+   "kind": "first-run",
+   "icon": "IconCalendarPlus",
+   "headline": "Set your availability",
+   "line": "Clients cannot book online until a coach has hours. Add a weekly rule to open the diary.",
+   "action": {
+    "label": "Set hours",
+    "href": "/engagements/booking?new=1"
+   },
+   "blockedAction": null,
+   "blockedLine": null,
+   "errorWhenEmpty": false,
+   "noWrite": null,
+   "firstRun": null
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 0
+  }
+ }
+}

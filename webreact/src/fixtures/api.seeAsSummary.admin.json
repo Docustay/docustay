@@ -1,0 +1,61 @@
+{
+ "$captured": {
+  "route": "GET /api/people/team/:world.coach/see-as-summary",
+  "rank": "admin",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "person": {
+   "id": "00000000-0000-4000-8000-000000000014",
+   "displayName": "Reference Coach",
+   "staffRole": "member",
+   "roleLabel": "Coach"
+  },
+  "can": [
+   {
+    "label": "Their own clients",
+    "detail": "0 of your 3",
+    "count": 0
+   },
+   {
+    "label": "Their own calendar",
+    "detail": "And the team calendar, read only"
+   },
+   {
+    "label": "Services and prices",
+    "detail": "So they can tell people what things cost"
+   },
+   {
+    "label": "Documents",
+    "detail": "They can send one, and see whether it's signed"
+   },
+   {
+    "label": "How you're found",
+    "detail": "Referral sources and partners"
+   }
+  ],
+  "cannot": [
+   {
+    "label": "Other coaches' clients",
+    "detail": "3 of your 3"
+   },
+   {
+    "label": "Their notes",
+    "detail": "Not visible on this role"
+   },
+   {
+    "label": "Money, anywhere",
+    "detail": "No invoices, no payments, no reports with money in them"
+   },
+   {
+    "label": "Settings",
+    "detail": "Except their own profile and notifications"
+   },
+   {
+    "label": "The team's tasks",
+    "detail": "Only their own"
+   }
+  ]
+ }
+}

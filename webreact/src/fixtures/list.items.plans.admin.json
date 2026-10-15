@@ -1,0 +1,86 @@
+{
+ "$captured": {
+  "route": "GET /api/list/items/plans",
+  "rank": "admin",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/items/plans",
+  "title": "Plans",
+  "columns": [
+   {
+    "field": "name",
+    "label": "Plan",
+    "format": "text"
+   },
+   {
+    "field": "price_amount_minor",
+    "label": "Price",
+    "format": "money",
+    "currency": "price_currency"
+   },
+   {
+    "field": "interval",
+    "label": "Interval",
+    "format": "enum"
+   },
+   {
+    "field": "sellable",
+    "label": "Sellable",
+    "format": "text"
+   },
+   {
+    "field": "live_subscriptions",
+    "label": "Subscribers",
+    "format": "number"
+   }
+  ],
+  "recordType": "plan",
+  "empty": "Bills on a repeating interval instead of per session.",
+  "canWrite": null,
+  "noWriteNotice": null,
+  "summary": null,
+  "emptyState": {
+   "kind": "blocked",
+   "icon": "IconRepeat",
+   "headline": "No plans yet",
+   "line": "Bills on a repeating interval instead of per session.",
+   "action": {
+    "label": "Add plan",
+    "href": "/items/plans?new=1"
+   },
+   "blockedAction": {
+    "label": "Add service",
+    "href": "/items/services?new=1"
+   },
+   "blockedLine": "A plan prices a service on a repeating interval, and none of yours has an active price yet.",
+   "errorWhenEmpty": false,
+   "noWrite": null,
+   "firstRun": null
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [
+   {
+    "id": "00000000-0000-4000-8000-000000000053",
+    "name": "Reference Monthly plan",
+    "interval": "month",
+    "active": true,
+    "price_amount_minor": 25000,
+    "price_currency": "USD",
+    "live_subscriptions": "1",
+    "sellable": "Yes"
+   }
+  ],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 1
+  }
+ }
+}

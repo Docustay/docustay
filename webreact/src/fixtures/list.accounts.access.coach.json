@@ -1,0 +1,81 @@
+{
+ "$captured": {
+  "route": "GET /api/list/accounts/access",
+  "rank": "coach",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/accounts/access",
+  "title": "Access",
+  "columns": [
+   {
+    "field": "account",
+    "label": "Account",
+    "format": "text"
+   },
+   {
+    "field": "service",
+    "label": "Service",
+    "format": "enum"
+   },
+   {
+    "field": "access",
+    "label": "Access",
+    "format": "enum"
+   },
+   {
+    "field": "property",
+    "label": "Property",
+    "format": "text"
+   },
+   {
+    "field": "granted",
+    "label": "Granted",
+    "format": "datetime"
+   },
+   {
+    "field": "next_action",
+    "label": "Next step",
+    "format": "text"
+   },
+   {
+    "field": "authority",
+    "label": "What the connection grants",
+    "format": "text"
+   }
+  ],
+  "recordType": null,
+  "empty": "What each account has let us reach, service by service.",
+  "canWrite": null,
+  "noWriteNotice": null,
+  "summary": null,
+  "emptyState": {
+   "kind": "blocked",
+   "icon": "IconKey",
+   "headline": "No access granted yet",
+   "line": "What each account has let us reach, service by service.",
+   "action": null,
+   "blockedAction": {
+    "label": "Add account",
+    "href": "/accounts?new=1"
+   },
+   "blockedLine": "You have no accounts yet, so there is no access to show.",
+   "errorWhenEmpty": false,
+   "noWrite": null,
+   "firstRun": null
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 0
+  }
+ }
+}

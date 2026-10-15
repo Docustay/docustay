@@ -1,0 +1,13 @@
+{
+ "$captured": {
+  "route": "GET /api/settings/practice/slug-available",
+  "rank": "admin",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "available": false,
+  "slug": "",
+  "reason": "a subdomain is required"
+ }
+}

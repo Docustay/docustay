@@ -1,0 +1,12 @@
+{
+ "$captured": {
+  "route": "GET /api/run/gtm",
+  "rank": "admin",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "containerId": null,
+  "snippets": null
+ }
+}

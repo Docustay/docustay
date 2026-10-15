@@ -1,0 +1,68 @@
+{
+ "$captured": {
+  "route": "GET /api/list/network/referrals",
+  "rank": "admin",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/network/referrals",
+  "title": "Referrals",
+  "columns": [
+   {
+    "field": "date",
+    "label": "Date",
+    "format": "date"
+   },
+   {
+    "field": "person",
+    "label": "Person",
+    "format": "text"
+   },
+   {
+    "field": "practice",
+    "label": "Practice",
+    "format": "text"
+   },
+   {
+    "field": "direction",
+    "label": "Direction",
+    "format": "enum"
+   },
+   {
+    "field": "outcome",
+    "label": "Outcome",
+    "format": "enum"
+   }
+  ],
+  "recordType": null,
+  "empty": "When you refer someone, or a practice sends someone to you, it shows here.",
+  "canWrite": null,
+  "noWriteNotice": null,
+  "summary": null,
+  "emptyState": {
+   "kind": "first-run",
+   "icon": null,
+   "headline": "No referrals yet",
+   "line": "When you refer someone, or a practice sends someone to you, it shows here.",
+   "action": null,
+   "blockedAction": null,
+   "blockedLine": null,
+   "errorWhenEmpty": false,
+   "noWrite": null,
+   "firstRun": null
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 0
+  }
+ }
+}

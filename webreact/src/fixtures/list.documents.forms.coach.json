@@ -1,0 +1,16 @@
+{
+ "$captured": {
+  "route": "GET /api/list/documents/forms",
+  "rank": "coach",
+  "status": 404,
+  "world": true
+ },
+ "body": {
+  "error": {
+   "kind": "not_found",
+   "message": "no list view for \"/documents/forms\"",
+   "requestId": "00000000-0000-4000-8000-000000000079",
+   "retryable": false
+  }
+ }
+}

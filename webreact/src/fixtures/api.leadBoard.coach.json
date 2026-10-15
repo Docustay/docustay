@@ -1,0 +1,17 @@
+{
+ "$captured": {
+  "route": "GET /api/people/lead-board",
+  "rank": "coach",
+  "status": 200,
+  "world": true
+ },
+ "body": [
+  {
+   "id": "00000000-0000-4000-8000-000000000004",
+   "display_name": "Reference coach",
+   "lead_stage": null,
+   "lead_next_step": null,
+   "owner_user_id": "00000000-0000-4000-8000-000000000004"
+  }
+ ]
+}

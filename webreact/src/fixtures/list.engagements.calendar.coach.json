@@ -1,0 +1,88 @@
+{
+ "$captured": {
+  "route": "GET /api/list/engagements/calendar",
+  "rank": "coach",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/engagements/calendar",
+  "title": "Calendar",
+  "columns": [
+   {
+    "field": "starts_at",
+    "label": "Starts",
+    "format": "datetime"
+   },
+   {
+    "field": "service_name",
+    "label": "Service",
+    "format": "text"
+   },
+   {
+    "field": "host_name",
+    "label": "Coach",
+    "format": "text"
+   },
+   {
+    "field": "attendees",
+    "label": "With",
+    "format": "text"
+   },
+   {
+    "field": "state",
+    "label": "State",
+    "format": "enum"
+   },
+   {
+    "field": "capacity",
+    "label": "Capacity",
+    "format": "number"
+   },
+   {
+    "field": "taken",
+    "label": "Taken",
+    "format": "number"
+   }
+  ],
+  "recordType": "booking",
+  "empty": "Move to another week, or book a session into this one.",
+  "canWrite": null,
+  "noWriteNotice": null,
+  "summary": null,
+  "emptyState": {
+   "kind": "period",
+   "icon": "IconCalendar",
+   "headline": "Nothing booked this week",
+   "line": "Move to another week, or book a session into this one.",
+   "action": {
+    "label": "Book session",
+    "href": "/engagements/calendar?book=1"
+   },
+   "blockedAction": null,
+   "blockedLine": null,
+   "errorWhenEmpty": false,
+   "noWrite": null,
+   "firstRun": {
+    "headline": "Set your working hours",
+    "line": "Clients and your team can only book inside these hours. You can still book yourself outside them.",
+    "action": {
+     "label": "Set your hours",
+     "href": "/engagements/booking"
+    }
+   }
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 0
+  }
+ }
+}

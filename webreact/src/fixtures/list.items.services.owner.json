@@ -1,0 +1,98 @@
+{
+ "$captured": {
+  "route": "GET /api/list/items/services",
+  "rank": "owner",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/items/services",
+  "title": "Services",
+  "columns": [
+   {
+    "field": "name",
+    "label": "Service",
+    "format": "text"
+   },
+   {
+    "field": "price_amount_minor",
+    "label": "Price",
+    "format": "money",
+    "currency": "price_currency",
+    "requires": "invoice.view"
+   },
+   {
+    "field": "duration_minutes",
+    "label": "Minutes",
+    "format": "number"
+   },
+   {
+    "field": "bookable",
+    "label": "Bookable",
+    "format": "boolean"
+   },
+   {
+    "field": "sellable",
+    "label": "Sellable",
+    "format": "text"
+   },
+   {
+    "field": "contracted",
+    "label": "Contracted rates",
+    "format": "number"
+   }
+  ],
+  "recordType": "service",
+  "empty": "Services are the sessions, packages and memberships clients book and pay for. Nothing can be booked or invoiced until one exists.",
+  "canWrite": true,
+  "noWriteNotice": "You can view services. Adding or editing them is done by the practice owner or an admin.",
+  "summary": null,
+  "emptyState": {
+   "kind": "first-run",
+   "icon": "IconTag",
+   "headline": "Add what you sell",
+   "line": "Services are the sessions, packages and memberships clients book and pay for. Nothing can be booked or invoiced until one exists.",
+   "action": {
+    "label": "Create a service",
+    "href": "/items/services?new=1"
+   },
+   "blockedAction": null,
+   "blockedLine": null,
+   "errorWhenEmpty": false,
+   "noWrite": {
+    "headline": "No services yet",
+    "line": "The practice owner adds the services you can book. Once they do, they'll show here.",
+    "action": null,
+    "notice": "You can view services. Adding or editing them is done by the practice owner or an admin."
+   },
+   "firstRun": null
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [
+   {
+    "id": "00000000-0000-4000-8000-000000000051",
+    "name": "Reference Weekly coaching",
+    "duration_minutes": 50,
+    "bookable": true,
+    "active": true,
+    "price_amount_minor": 12500,
+    "price_currency": "USD",
+    "contracted": "1",
+    "sellable": "Yes",
+    "category_name": null,
+    "status": "Available",
+    "booked_this_year": "1"
+   }
+  ],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 1
+  }
+ }
+}

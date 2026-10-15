@@ -1,0 +1,82 @@
+{
+ "$captured": {
+  "route": "GET /api/list/people/parents",
+  "rank": "admin",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/people/parents",
+  "title": "Parents and payers",
+  "columns": [
+   {
+    "field": "display_name",
+    "label": "Name",
+    "format": "text"
+   },
+   {
+    "field": "who_pays",
+    "label": "Who pays",
+    "format": "text"
+   },
+   {
+    "field": "state",
+    "label": "State",
+    "format": "enum"
+   }
+  ],
+  "recordType": "person",
+  "empty": "A parent appears here once linked to an adolescent client.",
+  "canWrite": true,
+  "noWriteNotice": "You can view parents. Adding or editing them is done by the practice owner.",
+  "summary": {
+   "count": 1
+  },
+  "emptyState": {
+   "kind": "first-run",
+   "icon": "IconUsers",
+   "headline": "No parents or guardians yet",
+   "line": "A parent appears here once linked to an adolescent client.",
+   "action": {
+    "label": "Add person",
+    "href": "/people/parents?new=1"
+   },
+   "blockedAction": null,
+   "blockedLine": null,
+   "errorWhenEmpty": false,
+   "noWrite": {
+    "action": null,
+    "notice": "You can view parents. Adding or editing them is done by the practice owner."
+   },
+   "firstRun": null
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [
+   {
+    "id": "00000000-0000-4000-8000-000000000012",
+    "display_name": "Reference Parent",
+    "last_name": null,
+    "email": "Reference-parent@example.invalid",
+    "mobile_phone": null,
+    "role": "parent",
+    "staff_role": null,
+    "lifecycle_status": "lead",
+    "children": null,
+    "child_links": [],
+    "who_pays": "Pays for 0",
+    "state": "paid_up",
+    "portal_status": "never_signed_in"
+   }
+  ],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 1
+  }
+ }
+}

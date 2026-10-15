@@ -1,0 +1,87 @@
+{
+ "$captured": {
+  "route": "GET /api/list/documents/forms/templates",
+  "rank": "coach",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/documents/forms/templates",
+  "title": "Form templates",
+  "columns": [
+   {
+    "field": "name",
+    "label": "Template",
+    "format": "text"
+   },
+   {
+    "field": "version",
+    "label": "Version",
+    "format": "number"
+   },
+   {
+    "field": "instances",
+    "label": "In use",
+    "format": "number"
+   },
+   {
+    "field": "active",
+    "label": "Active",
+    "format": "boolean"
+   }
+  ],
+  "recordType": null,
+  "empty": "The questions a form asks. Nothing can be sent to be completed until one exists.",
+  "canWrite": null,
+  "noWriteNotice": null,
+  "summary": null,
+  "emptyState": {
+   "kind": "first-run",
+   "icon": "IconTemplate",
+   "headline": "Create your first form template",
+   "line": "The questions a form asks. Nothing can be sent to be completed until one exists.",
+   "action": {
+    "label": "Create template",
+    "href": "/documents/forms/templates?new=1"
+   },
+   "blockedAction": null,
+   "blockedLine": null,
+   "errorWhenEmpty": false,
+   "noWrite": null,
+   "firstRun": null
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [
+   {
+    "id": "00000000-0000-4000-8000-000000000080",
+    "name": "Reference Intake form",
+    "version": 1,
+    "active": true,
+    "updated_at": "2026-09-26T17:56:06.216Z",
+    "body": {
+     "kind": "form",
+     "fields": [
+      {
+       "key": "fixture_question",
+       "type": "text",
+       "label": "A fixture question"
+      }
+     ],
+     "schema_version": 1
+    },
+    "instances": "0",
+    "sent_instances": "0"
+   }
+  ],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 1
+  }
+ }
+}

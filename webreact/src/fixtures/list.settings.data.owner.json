@@ -1,0 +1,95 @@
+{
+ "$captured": {
+  "route": "GET /api/list/settings/data",
+  "rank": "owner",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/settings/data",
+  "title": "Data and audit",
+  "columns": [
+   {
+    "field": "object",
+    "label": "Object",
+    "format": "text"
+   },
+   {
+    "field": "held",
+    "label": "Visible to you",
+    "format": "number"
+   },
+   {
+    "field": "newest",
+    "label": "Most recent",
+    "format": "datetime"
+   }
+  ],
+  "recordType": null,
+  "empty": "Every object in your practice and when it last changed. This fills as you use the product.",
+  "canWrite": null,
+  "noWriteNotice": null,
+  "summary": null,
+  "emptyState": {
+   "kind": "first-run",
+   "icon": "IconDatabase",
+   "headline": "Nothing recorded yet",
+   "line": "Every object in your practice and when it last changed. This fills as you use the product.",
+   "action": null,
+   "blockedAction": null,
+   "blockedLine": null,
+   "errorWhenEmpty": false,
+   "noWrite": null,
+   "firstRun": null
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [
+   {
+    "id": "Audit events",
+    "object": "Audit events",
+    "held": 35,
+    "newest": "2026-09-26T17:56:06.324Z"
+   },
+   {
+    "id": "People",
+    "object": "People",
+    "held": 7,
+    "newest": "2026-09-26T17:56:06.144Z"
+   },
+   {
+    "id": "Documents",
+    "object": "Documents",
+    "held": 2,
+    "newest": "2026-09-26T17:56:06.248Z"
+   },
+   {
+    "id": "Accounts",
+    "object": "Accounts",
+    "held": 1,
+    "newest": "2026-09-26T17:56:06.150Z"
+   },
+   {
+    "id": "Invoices",
+    "object": "Invoices",
+    "held": 1,
+    "newest": "2026-09-26T17:56:06.296Z"
+   },
+   {
+    "id": "Sessions",
+    "object": "Sessions",
+    "held": 1,
+    "newest": "2026-09-26T17:56:06.280Z"
+   }
+  ],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 6
+  }
+ }
+}

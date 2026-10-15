@@ -1,0 +1,96 @@
+{
+ "$captured": {
+  "route": "GET /api/list/people/clients",
+  "rank": "owner",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/people/clients",
+  "title": "Clients",
+  "columns": [
+   {
+    "field": "display_name",
+    "label": "Name",
+    "format": "text"
+   },
+   {
+    "field": "type",
+    "label": "Type",
+    "format": "enum"
+   },
+   {
+    "field": "who_pays",
+    "label": "Who pays",
+    "format": "text"
+   },
+   {
+    "field": "sessions",
+    "label": "Sessions",
+    "format": "number"
+   },
+   {
+    "field": "owes_minor",
+    "label": "Owes",
+    "format": "money",
+    "currency": "owes_currency",
+    "requires": "invoice.view"
+   },
+   {
+    "field": "status",
+    "label": "Status",
+    "format": "enum"
+   }
+  ],
+  "recordType": "person",
+  "empty": "The people you coach. Each one gets a record, a private portal sign-in and their own document and payment history.",
+  "canWrite": null,
+  "noWriteNotice": null,
+  "summary": null,
+  "emptyState": {
+   "kind": "first-run",
+   "icon": "IconUserHeart",
+   "headline": "Add your first client",
+   "line": "The people you coach. Each one gets a record, a private portal sign-in and their own document and payment history.",
+   "action": {
+    "label": "Add client",
+    "href": "/people/clients?new=1"
+   },
+   "blockedAction": null,
+   "blockedLine": null,
+   "errorWhenEmpty": false,
+   "noWrite": null,
+   "firstRun": null
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [
+   {
+    "id": "00000000-0000-4000-8000-000000000011",
+    "display_name": "Reference Adult",
+    "last_name": null,
+    "email": "Reference-adult@example.invalid",
+    "mobile_phone": null,
+    "role": "adult_client",
+    "staff_role": null,
+    "lifecycle_status": "lead",
+    "type": "lead",
+    "who_pays": "Pays for themselves",
+    "sessions": 0,
+    "owes_minor": "12500",
+    "owes_currency": "USD",
+    "status": "lead",
+    "portal_status": "never_signed_in"
+   }
+  ],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 1
+  }
+ }
+}

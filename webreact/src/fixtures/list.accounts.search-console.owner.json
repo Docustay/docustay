@@ -1,0 +1,104 @@
+{
+ "$captured": {
+  "route": "GET /api/list/accounts/search-console",
+  "rank": "owner",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/accounts/search-console",
+  "title": "Search Console",
+  "columns": [
+   {
+    "field": "account",
+    "label": "Account",
+    "format": "text"
+   },
+   {
+    "field": "item",
+    "label": "Item",
+    "format": "enum"
+   },
+   {
+    "field": "connection",
+    "label": "Connection",
+    "format": "enum"
+   },
+   {
+    "field": "delivery",
+    "label": "Delivery",
+    "format": "enum"
+   },
+   {
+    "field": "rows_read",
+    "label": "Rows read",
+    "format": "number"
+   },
+   {
+    "field": "last_read",
+    "label": "Last read",
+    "format": "datetime"
+   },
+   {
+    "field": "age",
+    "label": "Age",
+    "format": "text"
+   },
+   {
+    "field": "next_action",
+    "label": "Next step",
+    "format": "text"
+   },
+   {
+    "field": "sampling",
+    "label": "Sampling",
+    "format": "text"
+   }
+  ],
+  "recordType": null,
+  "empty": "Every account appears here whether or not it has connected — connecting changes the Connection column, not whether the row exists.",
+  "canWrite": null,
+  "noWriteNotice": null,
+  "summary": null,
+  "emptyState": {
+   "kind": "blocked",
+   "icon": "IconSearch",
+   "headline": "No accounts to read Search Console for",
+   "line": "Every account appears here whether or not it has connected — connecting changes the Connection column, not whether the row exists.",
+   "action": null,
+   "blockedAction": {
+    "label": "Add account",
+    "href": "/accounts?new=1"
+   },
+   "blockedLine": "You have no accounts yet, so there is nothing to read Search Console for.",
+   "errorWhenEmpty": false,
+   "noWrite": null,
+   "firstRun": null
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [
+   {
+    "id": "00000000-0000-4000-8000-000000000019:-",
+    "account": "Reference Account",
+    "item": "not_scheduled",
+    "connection": "never_granted",
+    "delivery": "not_scheduled",
+    "rows_read": null,
+    "last_read": null,
+    "age": "never read successfully",
+    "next_action": "Ask the client to connect this account",
+    "sampling": null
+   }
+  ],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 1
+  }
+ }
+}

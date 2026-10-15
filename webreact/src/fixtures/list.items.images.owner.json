@@ -1,0 +1,71 @@
+{
+ "$captured": {
+  "route": "GET /api/list/items/images",
+  "rank": "owner",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/items/images",
+  "title": "Images",
+  "columns": [
+   {
+    "field": "name",
+    "label": "Image",
+    "format": "text"
+   },
+   {
+    "field": "used_count",
+    "label": "Used",
+    "format": "number"
+   },
+   {
+    "field": "content_type",
+    "label": "Type",
+    "format": "text"
+   },
+   {
+    "field": "bytes",
+    "label": "Size",
+    "format": "number"
+   },
+   {
+    "field": "created_at",
+    "label": "Uploaded",
+    "format": "date"
+   }
+  ],
+  "recordType": null,
+  "empty": "Drop images here. They'll be everywhere you can use one — services, your booking page, posts.",
+  "canWrite": null,
+  "noWriteNotice": null,
+  "summary": null,
+  "emptyState": {
+   "kind": "first-run",
+   "icon": "IconPhoto",
+   "headline": "No images yet",
+   "line": "Drop images here. They'll be everywhere you can use one — services, your booking page, posts.",
+   "action": {
+    "label": "Upload",
+    "href": "/items/images?new=1"
+   },
+   "blockedAction": null,
+   "blockedLine": null,
+   "errorWhenEmpty": false,
+   "noWrite": null,
+   "firstRun": null
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 0
+  }
+ }
+}

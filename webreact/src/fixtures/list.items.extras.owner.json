@@ -1,0 +1,16 @@
+{
+ "$captured": {
+  "route": "GET /api/list/items/extras",
+  "rank": "owner",
+  "status": 404,
+  "world": true
+ },
+ "body": {
+  "error": {
+   "kind": "not_found",
+   "message": "no list view for \"/items/extras\"",
+   "requestId": "00000000-0000-4000-8000-000000000060",
+   "retryable": false
+  }
+ }
+}

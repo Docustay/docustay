@@ -1,0 +1,85 @@
+/* THE MOTION KIT (report §13.5 and §17.4). Durations come from the tokens in app.css: 90 instant · 160 small · 280 panels · 520 reveals · 900 hero.
+   Rules: only transform and opacity move; at most two things at a time; every effect has a finished state for no script and for reduced motion (one switch at the bottom). */
+
+/* ── page-to-page: the View Transition SvelteKit starts in onNavigate (lib/ui/transitions.js) ─────────────────────────────────────────────────────────── */
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: var(--dur-fast); animation-timing-function: var(--ease-out); }
+.vt-keep { view-transition-name: chrome; }
+::view-transition-group(chrome) { animation: none; }
+
+/* ── overlays: menus, popovers, dialogs, tooltips, drawers (Ark sets data-state) ──────────────────────────────────────────────────────────────────── */
+@keyframes ds-scale-up-fade { from { opacity: 0; transform: translateY(4px) scale(.97); } to { opacity: 1; transform: none; } }
+@keyframes ds-scale-down-fade { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(4px) scale(.97); } }
+@keyframes ds-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes ds-fade-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes ds-slide-in-right { from { transform: translateX(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes ds-slide-out-right { from { transform: none; opacity: 1; } to { transform: translateX(24px); opacity: 0; } }
+.ds-overlay[data-state="open"] { animation: ds-scale-up-fade var(--dur-fast) var(--ease-out); }
+.ds-overlay[data-state="closed"] { animation: ds-scale-down-fade var(--dur-instant) var(--ease-out) forwards; }
+.ds-backdrop[data-state="open"] { animation: ds-fade-in var(--dur-base) var(--ease-out); }
+.ds-backdrop[data-state="closed"] { animation: ds-fade-out var(--dur-fast) var(--ease-out) forwards; }
+.ds-drawer[data-state="open"] { animation: ds-slide-in-right var(--dur-base) var(--ease-out); }
+.ds-drawer[data-state="closed"] { animation: ds-slide-out-right var(--dur-fast) var(--ease-out) forwards; }
+
+/* ── thinking, loading, live ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────── */
+@keyframes ds-shimmer { from { background-position: 150% 0; } to { background-position: -50% 0; } }
+.shimmer-text { color: transparent; background-image: linear-gradient(100deg, var(--mute) 35%, var(--ink) 50%, var(--mute) 65%); background-size: 250% 100%; background-clip: text; -webkit-background-clip: text; animation: ds-shimmer 1.8s linear infinite; }
+.skel { background: linear-gradient(100deg, var(--tint) 30%, var(--line) 50%, var(--tint) 70%); background-size: 250% 100%; animation: ds-shimmer 1.6s linear infinite; border-radius: .5rem; }
+@keyframes ds-ping { 0% { transform: scale(1); opacity: .6; } 80%, 100% { transform: scale(2.4); opacity: 0; } }
+.ping { position: relative; display: inline-block; width: .5rem; height: .5rem; border-radius: 9999px; background: currentColor; }
+.ping::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: currentColor; animation: ds-ping 1.6s var(--ease-out) infinite; }
+@keyframes ds-spin { to { transform: rotate(360deg); } }
+.spin { animation: ds-spin .9s linear infinite; }
+@keyframes ds-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+.float { animation: ds-float 6s ease-in-out infinite; }
+@keyframes ds-march { to { background-position: 16px 0; } }
+.march { background-image: linear-gradient(90deg, var(--line-strong) 50%, transparent 0); background-size: 8px 1px; background-repeat: repeat-x; animation: ds-march 1s linear infinite; }
+@property --ds-angle { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+@keyframes ds-rotate { to { --ds-angle: 360deg; } }
+.rainbow-pill { position: relative; border-radius: 9999px; isolation: isolate; }
+.rainbow-pill::before { content: ""; position: absolute; inset: -1px; border-radius: inherit; padding: 1px; background: conic-gradient(from var(--ds-angle), #9a8cff, #6ee7a8, #f5d37a, #ff9c8a, #9a8cff); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; animation: ds-rotate 30s linear infinite; z-index: -1; }
+@keyframes ds-pop { 0% { transform: scale(.6); opacity: 0; } 70% { transform: scale(1.08); opacity: 1; } 100% { transform: scale(1); } }
+.draw2 { transform-origin: right center; animation: ds-draw2 500ms var(--ease-out) both; }
+@keyframes ds-draw2 { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.pinger { animation: ds-ping 1.8s var(--ease-out) infinite; opacity: .35; }
+.pop { animation: ds-pop var(--dur-base) var(--ease-out) both; animation-delay: calc(var(--i, 0) * 80ms); }
+@keyframes ds-row-in { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+.row-in { animation: ds-row-in var(--dur-base) var(--ease-out) both; }
+@keyframes ds-grow-x { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.grow-x { transform-origin: left center; animation: ds-grow-x var(--dur-slow) var(--ease-out) both; animation-delay: calc(var(--i, 0) * 40ms); }
+@keyframes ds-grow-y { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+.grow-y { transform-origin: center bottom; animation: ds-grow-y var(--dur-slow) var(--ease-out) both; animation-delay: calc(var(--i, 0) * 40ms); }
+@keyframes ds-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+.draw { stroke-dasharray: 1; stroke-dashoffset: 0; animation: ds-draw var(--dur-hero) var(--ease-out) both; }
+@keyframes ds-fill-in { from { fill-opacity: 0; } }
+.fill-in { animation: ds-fill-in var(--dur-slow) var(--ease-out) both; }
+@keyframes ds-fade-up { from { opacity: 0; transform: translateY(var(--rise)); } to { opacity: 1; transform: none; } }
+.fade-up { animation: ds-fade-up var(--dur-slow) var(--ease-out) both; animation-delay: calc(var(--i, 0) * var(--stagger)); }
+
+/* ── icon motion: all CSS, the finished icon shows without script ─────────────────────────────────────────────────────────────────────────────── */
+@keyframes ds-draw-icon { from { stroke-dashoffset: 60; } to { stroke-dashoffset: 0; } }
+.js .icon-draw:not([data-play]) :is(path, circle, line, polyline, rect) { stroke-dasharray: 60; stroke-dashoffset: 60; }
+.icon-draw[data-play] :is(path, circle, line, polyline, rect) { stroke-dasharray: 60; animation: ds-draw-icon var(--dur-slow) var(--ease-out) both; }
+@media (prefers-reduced-motion: reduce) { .js .icon-draw :is(path, circle, line, polyline, rect) { stroke-dasharray: none !important; stroke-dashoffset: 0 !important; animation: none !important; } }
+.icon-swap { transition: transform var(--dur-fast) var(--ease-out), opacity var(--dur-fast) var(--ease-out); }
+.icon-swap[data-open="true"] { transform: rotate(90deg); }
+.icon-glow { transition: border-color var(--dur-fast), box-shadow var(--dur-fast); }
+.icon-glow:hover { border-color: var(--accent-line); box-shadow: 0 0 0 3px var(--accent-soft); }
+
+/* ── surfaces: hover, press ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── */
+.press { transition: transform var(--dur-instant) var(--ease-out); } .press:active { transform: scale(.98); }
+.glow-hover { transition: border-color var(--dur-fast), box-shadow var(--dur-fast); }
+.glow-hover:hover { border-color: var(--accent-line); box-shadow: 0 0 0 1px var(--accent-line), 0 8px 30px -12px var(--accent); }
+.dot-grid { background-image: radial-gradient(var(--grid-line) 1px, transparent 1px); background-size: 20px 20px; }
+.line-grid { background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px); background-size: 40px 40px; }
+
+/* ── the assistant dock pushes the page over ──────────────────────────────────────────────────────────────────────────────────────────────────── */
+.dock-push { transition: margin-right var(--dur-base) var(--ease-out); }
+
+/* ── reduced motion: ONE switch. Finished states, no movement. ────────────────────────────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .shimmer-text { animation: none; color: var(--mute); background: none; -webkit-background-clip: border-box; background-clip: border-box; }
+  .skel, .ping::after, .spin, .float, .march, .rainbow-pill::before, .pop, .draw2, .pinger, .row-in, .grow-x, .grow-y, .draw, .fade-up, .fill-in, .ds-overlay, .ds-backdrop, .ds-drawer { animation: none !important; }
+  .ping::after { display: none; }
+  .press:active { transform: none; }
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+}

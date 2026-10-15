@@ -1,0 +1,252 @@
+{
+ "$captured": {
+  "route": "GET /api/records/account/:world.account",
+  "rank": "owner",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "shell": {
+   "type": "account",
+   "label": "Account",
+   "fields": {
+    "email": null,
+    "name": "Reference Account",
+    "archived_at": null
+   },
+   "readOnly": false,
+   "archived": false,
+   "header": {
+    "title": "Reference Account",
+    "status": "active"
+   },
+   "highlights": [
+    {
+     "key": "name",
+     "label": "Name",
+     "from": "account.name",
+     "empty": "Unnamed",
+     "format": "text",
+     "value": "Reference Account",
+     "present": true
+    },
+    {
+     "key": "status",
+     "label": "Status",
+     "from": "account.status",
+     "empty": "Unknown",
+     "format": "enum",
+     "value": "active",
+     "present": true
+    },
+    {
+     "key": "seats_used",
+     "label": "Seats used",
+     "from": "derived:seat_counts",
+     "empty": "No seats",
+     "format": "text",
+     "value": "0 seats — 0 staff, 0 adult, 0 adolescent, 0 parent",
+     "present": true
+    },
+    {
+     "key": "pipelines",
+     "label": "Pipelines",
+     "from": "derived:pipeline_states",
+     "empty": "None running",
+     "format": "text",
+     "value": "provision: active",
+     "present": true
+    }
+   ],
+   "panels": [
+    {
+     "key": "basics",
+     "label": "Basics",
+     "fields": [
+      {
+       "field": "name",
+       "label": "Name",
+       "format": "text",
+       "value": "Reference Account",
+       "currency": null
+      },
+      {
+       "field": "status",
+       "label": "Status",
+       "format": "enum",
+       "value": "active",
+       "currency": null
+      },
+      {
+       "field": "account_number",
+       "label": "Account number",
+       "format": "text",
+       "value": null,
+       "currency": null
+      },
+      {
+       "field": "account_type",
+       "label": "Type",
+       "format": "enum",
+       "value": null,
+       "currency": null
+      },
+      {
+       "field": "industry",
+       "label": "Industry",
+       "format": "text",
+       "value": null,
+       "currency": null
+      },
+      {
+       "field": "employee_count",
+       "label": "Employees",
+       "format": "number",
+       "value": null,
+       "currency": null
+      },
+      {
+       "field": "source",
+       "label": "Source",
+       "format": "text",
+       "value": null,
+       "currency": null
+      },
+      {
+       "field": "description",
+       "label": "About",
+       "format": "text",
+       "value": null,
+       "currency": null
+      }
+     ]
+    },
+    {
+     "key": "reach",
+     "label": "Contact",
+     "fields": [
+      {
+       "field": "phone",
+       "label": "Phone",
+       "format": "text",
+       "value": null,
+       "currency": null
+      },
+      {
+       "field": "email",
+       "label": "Email",
+       "format": "text",
+       "value": null,
+       "currency": null
+      },
+      {
+       "field": "website",
+       "label": "Website",
+       "format": "text",
+       "value": null,
+       "currency": null
+      },
+      {
+       "field": "primary_contact",
+       "label": "Primary contact",
+       "format": "text",
+       "value": null,
+       "currency": null
+      }
+     ]
+    },
+    {
+     "key": "billing",
+     "label": "Billing address",
+     "fields": [
+      {
+       "field": "billing_line1",
+       "label": "Line 1",
+       "format": "text",
+       "value": null,
+       "currency": null
+      },
+      {
+       "field": "billing_line2",
+       "label": "Line 2",
+       "format": "text",
+       "value": null,
+       "currency": null
+      },
+      {
+       "field": "billing_city",
+       "label": "City",
+       "format": "text",
+       "value": null,
+       "currency": null
+      },
+      {
+       "field": "billing_state_region",
+       "label": "State",
+       "format": "text",
+       "value": null,
+       "currency": null
+      },
+      {
+       "field": "billing_postcode",
+       "label": "Postcode",
+       "format": "text",
+       "value": null,
+       "currency": null
+      },
+      {
+       "field": "billing_country",
+       "label": "Country",
+       "format": "text",
+       "value": null,
+       "currency": null
+      }
+     ]
+    }
+   ],
+   "related": [
+    {
+     "key": "seats",
+     "kind": "count",
+     "label": "Seats",
+     "source": "account_seat_counts"
+    },
+    {
+     "key": "pipelines",
+     "kind": "list",
+     "label": "Pipelines",
+     "of": "account_pipeline"
+    }
+   ],
+   "activity": {
+    "key": "activity",
+    "label": "Activity",
+    "kind": "list",
+    "of": "event"
+   }
+  },
+  "activity": [
+   {
+    "id": "00000000-0000-4000-8000-000000000395",
+    "topic": "accounts.account.created",
+    "emitted_by": "accounts",
+    "status": "pending",
+    "created_at": "2026-09-26T17:56:06.150Z",
+    "reason": null
+   }
+  ],
+  "relatedCounts": {
+   "seats": 0
+  },
+  "relatedRows": {
+   "pipelines": [
+    {
+     "id": "00000000-0000-4000-8000-000000000396",
+     "label": "provision",
+     "sub": null
+    }
+   ]
+  },
+  "whatKeepsWorking": {}
+ }
+}

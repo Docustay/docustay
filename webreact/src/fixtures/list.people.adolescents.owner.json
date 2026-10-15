@@ -1,0 +1,94 @@
+{
+ "$captured": {
+  "route": "GET /api/list/people/adolescents",
+  "rank": "owner",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/people/adolescents",
+  "title": "Adolescents",
+  "columns": [
+   {
+    "field": "display_name",
+    "label": "Name",
+    "format": "text"
+   },
+   {
+    "field": "age",
+    "label": "Age",
+    "format": "number"
+   },
+   {
+    "field": "who_pays",
+    "label": "Who pays",
+    "format": "text"
+   },
+   {
+    "field": "sessions",
+    "label": "Sessions",
+    "format": "number"
+   },
+   {
+    "field": "last_came",
+    "label": "Last came",
+    "format": "date"
+   },
+   {
+    "field": "status",
+    "label": "State",
+    "format": "enum"
+   }
+  ],
+  "recordType": "person",
+  "empty": "Clients under 18. Each needs a parent or guardian linked before they can be booked.",
+  "canWrite": null,
+  "noWriteNotice": null,
+  "summary": {
+   "count": 1
+  },
+  "emptyState": {
+   "kind": "first-run",
+   "icon": "IconUserHeart",
+   "headline": "No adolescent clients yet",
+   "line": "Clients under 18. Each needs a parent or guardian linked before they can be booked.",
+   "action": {
+    "label": "Add client",
+    "href": "/people/adolescents?new=1"
+   },
+   "blockedAction": null,
+   "blockedLine": null,
+   "errorWhenEmpty": false,
+   "noWrite": null,
+   "firstRun": null
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [
+   {
+    "id": "00000000-0000-4000-8000-000000000013",
+    "display_name": "Reference Teen",
+    "last_name": null,
+    "email": "Reference-teen@example.invalid",
+    "mobile_phone": null,
+    "role": "adolescent_client",
+    "staff_role": null,
+    "lifecycle_status": "lead",
+    "age": null,
+    "who_pays": "Pays for themselves",
+    "sessions": 0,
+    "last_came": null,
+    "status": "lead"
+   }
+  ],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 1
+  }
+ }
+}

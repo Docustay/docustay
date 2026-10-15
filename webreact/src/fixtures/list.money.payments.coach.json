@@ -1,0 +1,16 @@
+{
+ "$captured": {
+  "route": "GET /api/list/money/payments",
+  "rank": "coach",
+  "status": 403,
+  "world": true
+ },
+ "body": {
+  "error": {
+   "kind": "forbidden",
+   "message": "Your role can't see payments. An owner or admin can change that in Settings › Roles.",
+   "requestId": "00000000-0000-4000-8000-000000000091",
+   "retryable": false
+  }
+ }
+}

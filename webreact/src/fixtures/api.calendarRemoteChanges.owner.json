@@ -1,0 +1,9 @@
+{
+ "$captured": {
+  "route": "GET /api/engagements/calendar/remote-changes",
+  "rank": "owner",
+  "status": 200,
+  "world": true
+ },
+ "body": []
+}

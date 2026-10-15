@@ -1,0 +1,16 @@
+{
+ "$captured": {
+  "route": "GET /api/list/items/loyalty",
+  "rank": "admin",
+  "status": 404,
+  "world": true
+ },
+ "body": {
+  "error": {
+   "kind": "not_found",
+   "message": "no list view for \"/items/loyalty\"",
+   "requestId": "00000000-0000-4000-8000-000000000064",
+   "retryable": false
+  }
+ }
+}

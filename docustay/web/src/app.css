@@ -1,0 +1,331 @@
+@import "tailwindcss";
+@import "./lib/styles/motion.css";
+@import "./lib/styles/ark.css";
+@custom-variant wide (@media (min-width: 1100px));   /* the portal shows a labelled sidebar from here up (§13.4D); below it, the icon rail */
+
+/* Docustay design system, 7 Oct 2026 (specs/FINAL-PUSH-7OCT.md §13 and §17). One token layer, four value sets:
+     :root                      the portal, LIGHT (the default): §17.1 values
+     :root[data-theme="dark"]   the portal, DARK: the drawn values of §13.2
+     [data-surface="site"]      the marketing website: always dark, no switch (same values as dark)
+     [data-surface="signing"]   the signing page and emails: light and friendly, whatever the account picked
+   The server writes data-theme (from the cookie) and data-surface (from the route) on <html> before paint; "System" is resolved by the inline script in app.html.
+   Screens use the token utilities (text-ink, bg-card, border-line, text-brand ...) and never a raw colour. Every text pair is proved by scripts/contrast-gate.mjs (AA, 4.5:1). */
+/* Run 9 Part 3.8 (the Rulebook): the portal's light values are ink #16161d, violet #5a3ac1, light violet #8585fd (shapes, never text), lavender #f1efff, near-white #f7f6fc; lines are violet-tinted hairlines */
+:root {
+  color-scheme: light;
+  --paper: #f7f6fc; --card: #ffffff; --tint: #f1efff; --panel: #ffffff; --sidebar: #f3f2f9; --line: rgb(24 20 60 / .08); --line-strong: rgb(24 20 60 / .17);
+  --ink: #16161d; --text-2: #3a3a46; --mute: #5d5d6b; --faint: #646472;
+  --brand: #5a3ac1; --brand-hover: #4a2fa6; --brand-ink: #ffffff; --accent: #5a3ac1; --brand-soft: rgb(90 58 193 / .1); --accent-soft: rgb(90 58 193 / .1); --accent-line: rgb(90 58 193 / .4);
+  --ok: #0b6a40; --ok-bg: rgb(15 122 75 / .09); --ok-line: rgb(15 122 75 / .32);
+  --warn: #8a5600; --warn-bg: rgb(176 112 0 / .1); --warn-line: rgb(176 112 0 / .35);
+  --bad: #b42318; --bad-bg: rgb(180 35 24 / .08); --bad-line: rgb(180 35 24 / .3);
+  --info: #3f2899; --info-bg: rgb(90 58 193 / .09); --info-line: rgb(90 58 193 / .3);
+  --shadow: 0 1px 2px rgb(24 20 60 / .04), 0 8px 28px rgb(24 20 60 / .06);
+  --paper-doc: #ffffff; --ink-doc: #15171c; --grid-line: rgb(0 0 0 / .045);
+  --font-display: var(--font-sans); --w-display: 600;
+}
+:root[data-theme="dark"], :root[data-surface="site"] {
+  color-scheme: dark;
+  --paper: #08090c; --card: #0e1016; --tint: #151821; --panel: #0e1016; --sidebar: #0b0d11; --line: rgb(255 255 255 / .09); --line-strong: rgb(255 255 255 / .16);
+  --ink: #e6e9ef; --text-2: #c9cfdc; --mute: #9aa2b3; --faint: #7c8497;
+  --brand: #9a8cff; --brand-hover: #b0a5ff; --brand-ink: #08090c; --accent: #9a8cff; --brand-soft: rgb(154 140 255 / .14); --accent-soft: rgb(154 140 255 / .14); --accent-line: rgb(154 140 255 / .4);
+  --ok: #9cf0c6; --ok-bg: rgb(156 240 198 / .1); --ok-line: rgb(156 240 198 / .35);
+  --warn: #f5d37a; --warn-bg: rgb(245 211 122 / .1); --warn-line: rgb(245 211 122 / .35);
+  --bad: #ff9c8a; --bad-bg: rgb(255 156 138 / .1); --bad-line: rgb(255 156 138 / .35);
+  --info: #b5b1ff; --info-bg: rgb(154 140 255 / .12); --info-line: rgb(154 140 255 / .35);
+  --shadow: 0 1px 2px rgb(0 0 0 / .5), 0 8px 24px rgb(0 0 0 / .35);
+  --grid-line: #141922;
+}
+:root[data-surface="site"] { --font-display: var(--font-serif); --w-display: 400; }
+:root[data-surface="signing"] {
+  color-scheme: light;
+  --paper: #f1efe9; --card: #ffffff; --tint: #e8e5dd; --panel: #ffffff; --sidebar: #ebe8e0; --line: #ddd8cc; --line-strong: #cbc5b6;
+  --ink: #15171c; --text-2: #34373e; --mute: #5a5e66; --faint: #646870;
+  --brand: #5b4bd6; --brand-hover: #4a3cb8; --brand-ink: #ffffff; --accent: #5b4bd6; --brand-soft: rgb(91 75 214 / .1); --accent-soft: rgb(91 75 214 / .1); --accent-line: rgb(91 75 214 / .4);
+  --ok: #0b6a40; --ok-bg: rgb(15 122 75 / .09); --ok-line: rgb(15 122 75 / .32);
+  --warn: #8a5600; --warn-bg: rgb(176 112 0 / .1); --warn-line: rgb(176 112 0 / .35);
+  --bad: #b42318; --bad-bg: rgb(180 35 24 / .08); --bad-line: rgb(180 35 24 / .3);
+  --info: #4b3db8; --info-bg: rgb(91 75 214 / .09); --info-line: rgb(91 75 214 / .32);
+  --shadow: 0 1px 2px rgb(27 26 23 / .06), 0 4px 14px rgb(27 26 23 / .05);
+  --grid-line: rgb(0 0 0 / .04); --font-display: var(--font-sans); --w-display: 600;
+}
+
+/* ── Design system v2 (specs/DOCUSTAY-DESIGN-SYSTEM-V2.md) ─────────────────────────────────────────────────────────────────────────────────────────────── */
+@font-face { font-family: "Geist Variable"; src: url("/fonts/geist-latin-wght-normal.woff2") format("woff2"); font-weight: 100 900; font-style: normal; font-display: swap; }
+@font-face { font-family: "JetBrains Mono Variable"; src: url("/fonts/jetbrains-mono-latin-wght-normal.woff2") format("woff2"); font-weight: 100 800; font-style: normal; font-display: swap; }
+@font-face { font-family: "Instrument Serif"; src: url("/fonts/instrument-serif-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Instrument Serif"; src: url("/fonts/instrument-serif-latin-400-italic.woff2") format("woff2"); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: "Geist Fallback"; src: local("Arial"); size-adjust: 104%; ascent-override: 92%; descent-override: 24%; line-gap-override: 0%; }
+@font-face { font-family: "Instrument Serif Fallback"; src: local("Georgia"); size-adjust: 92%; ascent-override: 98%; descent-override: 26%; line-gap-override: 0%; }
+:root {
+  --black-section: #14121b; --black-ink: #f4efe6; --black-mute: #b3acc2; --black-line: rgb(244 239 230 / .16);
+  --scrim: linear-gradient(180deg, rgb(12 10 20 / .64) 0%, rgb(12 10 20 / .63) 35%, rgb(12 10 20 / .64) 60%, rgb(12 10 20 / .76) 100%);
+  --violet: #5a3ac1; --periwinkle: #7f7bf6; --lilac: #cfcaf8; --lilac-soft: #ece9fb; --ink-line: #1b1a17;
+  /* type scale (fluid) */
+  --t-xxl: clamp(4.5rem, 3rem + 9vw, 9.5rem); --t-xl: clamp(3rem, 2rem + 5vw, 6rem); --t-h1: clamp(2.5rem, 1.7rem + 3.4vw, 4.25rem); --t-h2: clamp(1.85rem, 1.4rem + 1.8vw, 2.75rem); --t-h3: clamp(1.3rem, 1.15rem + .6vw, 1.6rem);
+  /* space, radius, shadow */
+  --s-1: .25rem; --s-2: .5rem; --s-3: .75rem; --s-4: 1rem; --s-5: 1.5rem; --s-6: 2rem; --s-7: 3rem; --s-8: 4rem; --s-9: 6rem; --s-10: 8rem; --section-pad: clamp(4rem, 10vw, 9rem);
+  --r-1: .5rem; --r-2: .75rem; --r-3: 1rem; --r-4: 1.5rem; --r-5: 2.5rem;
+  --sh-1: 0 1px 2px rgb(27 26 23 / .08); --sh-2: var(--shadow); --sh-3: 0 8px 40px rgb(20 10 50 / .18);
+  /* motion */
+  --dur-instant: 90ms; --dur-fast: 160ms; --dur-base: 280ms; --dur-slow: 520ms; --dur-hero: 900ms;
+  --ease-out: cubic-bezier(.2, .8, .2, 1); --ease-inout: cubic-bezier(.65, 0, .35, 1); --stagger: 60ms; --rise: 16px;
+  /* THE RULEBOOK (Run 9 board "Less box, more page"): hierarchy from type and space, one soft surface. Type 26 / 15 / 13; space 4 · 8 · 12 · 16 · 24 · 32 (= --s-1 … --s-6);
+     corners 10 / 14 / 18; hairlines inside lists; ONE soft shadow per surface; never a border inside a border. Screens read these, never their own values. */
+  --t-title: 1.625rem; --t-body: .9375rem; --t-meta: .8125rem;
+  --rad-s: 10px; --rad-m: 14px; --rad-l: 18px;
+  --page: #f6f6f9; --hair: rgb(24 20 60 / .07);
+  --surface-shadow: 0 1px 2px rgb(24 20 60 / .04), 0 8px 28px rgb(24 20 60 / .06);
+  --surface-shadow-lift: 0 2px 4px rgb(24 20 60 / .06), 0 18px 44px rgb(24 20 60 / .12);
+  --persp: 1100px;
+}
+:root[data-theme="dark"] { --page: #08090c; --hair: rgb(255 255 255 / .07); --surface-shadow: 0 1px 2px rgb(0 0 0 / .5), 0 8px 28px rgb(0 0 0 / .35); --surface-shadow-lift: 0 2px 4px rgb(0 0 0 / .5), 0 18px 44px rgb(0 0 0 / .5); }
+/* Reduced motion: every duration and distance is zero in ONE place, so no component has to remember. */
+@media (prefers-reduced-motion: reduce) { :root { --dur-instant: 0ms; --dur-fast: 0ms; --dur-base: 0ms; --dur-slow: 0ms; --dur-hero: 0ms; --stagger: 0ms; --rise: 0px; } }
+
+@theme inline {
+  --color-paper: var(--paper); --color-card: var(--card); --color-tint: var(--tint); --color-line: var(--line); --color-line-strong: var(--line-strong);
+  --color-ink: var(--ink); --color-mute: var(--mute);
+  --color-brand: var(--brand); --color-brand-hover: var(--brand-hover); --color-brand-ink: var(--brand-ink); --color-accent: var(--accent); --color-brand-soft: var(--brand-soft);
+  --color-ok: var(--ok); --color-ok-bg: var(--ok-bg); --color-ok-line: var(--ok-line);
+  --color-warn: var(--warn); --color-warn-bg: var(--warn-bg); --color-warn-line: var(--warn-line);
+  --color-bad: var(--bad); --color-bad-bg: var(--bad-bg); --color-bad-line: var(--bad-line);
+  --color-info: var(--info); --color-info-bg: var(--info-bg); --color-info-line: var(--info-line);
+  --font-sans: "Geist Variable", "Geist Fallback", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --font-serif: "Instrument Serif", "Instrument Serif Fallback", Georgia, "Iowan Old Style", "Times New Roman", serif;
+  --color-text-2: var(--text-2); --color-faint: var(--faint); --color-panel: var(--panel); --color-sidebar: var(--sidebar); --color-accent-soft: var(--accent-soft); --color-accent-line: var(--accent-line);
+  --shadow-card: var(--shadow);
+  --radius-lg: 10px; --radius-xl: 14px; --radius-2xl: 18px;   /* the Rulebook's corners: small things, panels, the page's main surface */
+}
+
+@layer base {
+body { background: var(--paper); color: var(--ink); font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
+h1, h2, h3 { font-family: var(--font-sans); letter-spacing: -.01em; overflow-wrap: anywhere; }
+.serif { font-family: var(--font-serif); font-weight: 400; letter-spacing: -.01em; }
+code, kbd, pre, samp, .mono { font-family: var(--font-mono); }
+/* the marketing site sets its H1 in the display serif; the portal and docs keep Geist */
+[data-surface="site"] h1 { font-family: var(--font-serif); font-weight: 400; letter-spacing: -.02em; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+/* R8-31: a focused preview iframe shows no :focus-visible ring (and its clipped wrapper would hide one), so the WRAPPER draws it while focus is inside */
+.frame-ring:focus-within { outline: 3px solid var(--accent); outline-offset: 2px; }
+/* R8-32 (WCAG 2.2 · 2.4.11 focus not obscured): the app's Ask bar is sticky at the bottom; a control reached by Tab is scrolled to stop ABOVE it, never under it */
+:root:has([data-testid="ask-bar"]) { scroll-padding-bottom: 5.5rem; }
+/* R8-34: the same for the website's cookie card, which is fixed at the bottom until a choice is made (its height is measured, it changes with the width) */
+:root:has([data-testid="consent"]) { scroll-padding-bottom: calc(var(--consent-h, 10rem) + 2rem); }
+/* R8-75 (2.4.11): at the very end of a page there is nothing left to scroll, so the footer's last controls sat wholly under the card. While the card is up the page gains room under
+   its last line, and the docs' sticky Ask bar rides above the card instead of under it. */
+:root:has([data-testid="consent"]) body { padding-bottom: calc(var(--consent-h, 10rem) + 1rem); }
+/* … and with the Ask bar raised above the card, a link scrolled into view must stop above BOTH (the bar is about 3rem tall, 1rem above the card) */
+:root:has([data-testid="consent"]):has(.askdock) { scroll-padding-bottom: calc(var(--consent-h, 10rem) + 5.5rem); }
+/* R8-75: the site's sticky header is 73px; a control reached by Tab stops BELOW it (Contact's mail links were scrolled to the very top, under it) */
+:root[data-surface="site"] { scroll-padding-top: 5.5rem; }
+@media (prefers-reduced-motion: reduce) { *, ::before, ::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } }
+}
+
+/* a placeholder is text a person must be able to read: full opacity everywhere; on the light-violet field boxes drawn over a PDF page it is a shade darker (measured 5 Oct 2026: 3.2:1 before, 5.7:1 after) */
+::placeholder { opacity: 1; }
+.on-paper ::placeholder { color: #5f636b; opacity: 1; }
+
+/* a PDF page is always white paper, so everything drawn on it uses the light tokens even in dark mode */
+.on-paper { --ink: #15171c; --mute: #5f636b; --line: #e3e0d8; --line-strong: #cfcabd; --card: #ffffff; --tint: #f4f2ec; --brand: #5b4bd6; --accent: #6c5ce0; background: #fff; color: #15171c; }
+
+/* Run 8 (S2/S8, 390 px): `truncate` never truncated inside a flex row — a flex item's min-width is its content, so a long document title pushed the whole page sideways
+   (Documents list 330 px, Workspace → Security's access log 195 px). Every truncated line may now shrink to fit. (No element pairs truncate with a non-zero min-w-*: this rule comes later in the same layer and would win.) */
+@layer utilities { .truncate { min-width: 0; }
+  /* R8-75 (2.4.11): the docs Ask bar rides ABOVE the cookie card. It must live in this layer: in base, Tailwind's own bottom-4 (a utility) wins whatever the specificity, and the bar stayed under the card mid-page */
+  :root:has([data-testid="consent"]) .askdock { bottom: calc(var(--consent-h, 10rem) + 1rem); }
+}
+@layer components {
+/* buttons — at least 40px tall everywhere, 44px on a touch screen */
+.btn { max-width: 100%; overflow-wrap: anywhere; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; min-height: 2.5rem; padding: .5rem 1.1rem; border-radius: var(--rad-s); font-weight: 600; font-size: .95rem; border: 1px solid var(--line-strong); background: var(--card); color: var(--ink); cursor: pointer; text-decoration: none; transition: background .15s, border-color .15s; }
+.btn:hover { background: var(--tint); }
+.btn.primary { background: var(--brand); border-color: var(--brand); color: var(--brand-ink); }
+.btn.primary:hover { background: var(--brand-hover); border-color: var(--brand-hover); }
+.btn.quiet { border-color: transparent; background: transparent; }
+.btn.quiet:hover { background: var(--tint); }
+.btn.danger { border-color: var(--bad-line); color: var(--bad); background: var(--card); }
+.btn.danger:hover { background: var(--bad-bg); }
+.btn:disabled, .btn[aria-disabled="true"] { opacity: .55; cursor: default; pointer-events: none; }
+@media (pointer: coarse) { .btn { min-height: 2.75rem; } }
+
+.field { display: block; width: 100%; min-height: 2.5rem; padding: .55rem .8rem; border: 1px solid var(--line-strong); border-radius: var(--rad-s); font: inherit; background: var(--card); color: var(--ink); }
+.field::placeholder { color: var(--mute); opacity: 1; }
+.field:focus { outline: 3px solid var(--accent); outline-offset: 0; border-color: var(--brand); }
+.label { display: block; font-size: .85rem; font-weight: 600; margin-bottom: .35rem; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: var(--rad-m); box-shadow: var(--shadow); }
+
+/* status chips: one colour family each, so a state reads the same on every screen */
+button.chip, a.chip { min-height: 1.5rem; }
+.chip { display: inline-flex; align-items: center; gap: .3rem; border-radius: 999px; padding: .15rem .6rem; font-size: .75rem; font-weight: 600; border: 1px solid transparent; white-space: nowrap; }
+.chip.mute { background: var(--tint); color: var(--mute); }
+.chip.info { background: var(--info-bg); color: var(--info); border-color: var(--info-line); }
+.chip.ok { background: var(--ok-bg); color: var(--ok); border-color: var(--ok-line); }
+.chip.warn { background: var(--warn-bg); color: var(--warn); border-color: var(--warn-line); }
+.chip.bad { background: var(--bad-bg); color: var(--bad); border-color: var(--bad-line); }
+/* Run 9 (the Rulebook): a STATUS is a dot and coloured words, never a box — the same colour family, no pill */
+.chip.status { background: transparent; border-color: transparent; padding: 0; gap: .4rem; font-size: var(--t-meta); font-weight: 500; }
+
+.notice { border-radius: .5rem; border: 1px solid var(--line); padding: .6rem .9rem; font-size: .9rem; background: var(--card); }
+.notice.warn { background: var(--warn-bg); color: var(--warn); border-color: var(--warn-line); }
+.notice.bad { background: var(--bad-bg); color: var(--bad); border-color: var(--bad-line); }
+.notice.ok { background: var(--ok-bg); color: var(--ok); border-color: var(--ok-line); }
+.notice.info { background: var(--info-bg); color: var(--info); border-color: var(--info-line); }
+
+/* the board: three lanes, scroll-snapped on a phone */
+.board { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(280px, 1fr); gap: 1rem; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: .5rem; }
+@media (min-width: 1024px) { .board { grid-auto-flow: row; grid-template-columns: repeat(3, minmax(0, 1fr)); overflow: visible; } }
+.lane { scroll-snap-align: start; background: var(--tint); border-radius: .5rem; padding: .75rem; min-height: 12rem; }
+}
+
+.prose-legal h2 { font-size: 1.25rem; font-weight: 650; margin: 2rem 0 .6rem; } .prose-legal p, .prose-legal li { color: var(--ink); opacity: .88; line-height: 1.7; margin: .6rem 0; } .prose-legal ul { padding-left: 1.25rem; list-style: disc; } .prose-legal a { color: var(--brand); text-decoration: underline; }
+
+.prose-docs h1 { font-size: 2rem; font-weight: 600; margin: 0 0 1rem; } .prose-docs h2 { font-size: 1.4rem; font-weight: 600; margin: 2rem 0 .6rem; } .prose-docs h3 { font-size: 1.1rem; font-weight: 600; margin: 1.5rem 0 .4rem; }
+.prose-docs p, .prose-docs li { line-height: 1.7; margin: .6rem 0; } .prose-docs ul { list-style: disc; padding-left: 1.25rem; } .prose-docs ol { list-style: decimal; padding-left: 1.25rem; }
+.prose-docs a { color: var(--brand); text-decoration: underline; } .prose-docs code { background: var(--tint); padding: .1rem .3rem; border-radius: .25rem; font-size: .9em; }
+.prose-docs pre { background: var(--tint); padding: 1rem; border-radius: .5rem; overflow-x: auto; font-size: .85rem; } .prose-docs pre code { background: none; padding: 0; }
+.prose-docs table { width: 100%; border-collapse: collapse; font-size: .9rem; display: block; overflow-x: auto; } .prose-docs th, .prose-docs td { border-bottom: 1px solid var(--line); padding: .4rem .6rem; text-align: left; vertical-align: top; }
+
+/* ── Doodles (hand-inked illustrations; specs/DOCUSTAY-DESIGN-SYSTEM-V2.md) ─────────────────────────────────────────────────────────────────────────── */
+:root { --dc-a: #5a3ac1; --dc-b: #7f7bf6; --dc-c: #cfcaf8; }
+:root[data-theme="dark"], :root[data-surface="site"] { --dc-a: #9a8cff; --dc-b: #6b67e0; --dc-c: #3a3670; }
+.doodle { display: inline-block; width: 8rem; height: auto; overflow: visible; color: var(--ink); }
+.doodle path { fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; }
+.doodle .ink { stroke-width: 2.8; } .doodle .ink2 { stroke-width: 1.2; opacity: .85; }
+.doodle .dot { fill: currentColor; stroke-width: 1; }
+.doodle .blk { stroke: none; transform-box: fill-box; transform-origin: center; }
+.doodle .c-a { fill: var(--dc-a); } .doodle .c-b { fill: var(--dc-b); } .doodle .c-c { fill: var(--dc-c); }
+.on-black .doodle { color: var(--black-ink); }
+/* draw-in: only when script is on and motion is allowed; otherwise the finished picture shows */
+@keyframes d-draw { to { stroke-dashoffset: 0; } }
+@keyframes d-pop { from { opacity: 0; transform: scale(.9); } to { opacity: 1; transform: none; } }
+.js .doodle:not([data-shown]) .ink, .js .doodle:not([data-shown]) .ink2 { stroke-dasharray: 1; stroke-dashoffset: 1; }
+.js .doodle:not([data-shown]) .blk, .js .doodle:not([data-shown]) .dot { opacity: 0; }
+.js .doodle[data-shown] .ink, .js .doodle[data-shown] .ink2 { stroke-dasharray: 1; stroke-dashoffset: 1; animation: d-draw calc(var(--dur-slow) * 1.5) var(--ease-out) forwards; animation-delay: calc(var(--k, 0) * var(--stagger) * 1.6); }
+.js .doodle[data-shown] .blk, .js .doodle[data-shown] .dot { animation: d-pop var(--dur-slow) var(--ease-out) both; animation-delay: calc(var(--k, 0) * var(--stagger)); }
+@media (prefers-reduced-motion: reduce) { .js .doodle .ink, .js .doodle .ink2 { stroke-dasharray: none !important; stroke-dashoffset: 0 !important; animation: none !important; } .js .doodle .blk, .js .doodle .dot { opacity: 1 !important; animation: none !important; } }
+
+/* ── Layout, type and reveal utilities for the redesigned public site ───────────────────────────────────────────────────────────────────────────────── */
+.wrap { width: 100%; max-width: 72rem; margin-inline: auto; padding-inline: clamp(1rem, 4vw, 2rem); }
+.wrap-wide { width: 100%; max-width: 90rem; margin-inline: auto; padding-inline: clamp(1rem, 4vw, 2.5rem); }
+.section { padding-block: var(--section-pad); }
+.on-black { background: var(--black-section); color: var(--black-ink); --line: var(--black-line); --mute: var(--black-mute); }
+.t-xxl { font-family: var(--font-display); font-size: var(--t-xxl); line-height: .95; letter-spacing: -.03em; font-weight: var(--w-display); font-variant-numeric: tabular-nums; }
+.t-xl { font-family: var(--font-display); font-size: var(--t-xl); line-height: 1; letter-spacing: -.025em; font-weight: var(--w-display); }
+.t-h1 { font-family: var(--font-display); font-size: var(--t-h1); line-height: 1.04; letter-spacing: -.02em; font-weight: var(--w-display); }
+.t-h2 { font-family: var(--font-sans); font-size: var(--t-h2); line-height: 1.1; letter-spacing: -.02em; font-weight: 600; }
+.t-h3 { font-family: var(--font-sans); font-size: var(--t-h3); line-height: 1.2; letter-spacing: -.01em; font-weight: 600; }
+.eyebrow { font-family: var(--font-mono); font-size: .74rem; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--brand); }
+.on-black .eyebrow, .on-film .eyebrow { color: var(--lilac); }
+.lede { font-size: clamp(1.1rem, 1rem + .5vw, 1.35rem); line-height: 1.55; color: var(--mute); max-width: 40rem; }
+/* scroll reveal: hidden only when script is on and motion is allowed */
+.reveal { transition: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out); transition-delay: calc(var(--i, 0) * var(--stagger)); }
+.js .reveal[data-pending]:not([data-shown]) { opacity: 0; transform: translateY(var(--rise)); }
+/* words, one after another */
+[data-words] .w { display: inline-block; transition: opacity var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out); transition-delay: calc(var(--i, 0) * 55ms); }
+.js [data-words]:not([data-shown]) .w { opacity: 0; transform: translateY(.5em); }
+/* counters */
+.js [data-count]:not([data-armed]) { opacity: 0; }
+[data-count] { transition: opacity var(--dur-fast); font-variant-numeric: tabular-nums; }
+/* buttons on a film or on black */
+.btn.on-film { background: #fff; color: #1b1a17; border-color: #fff; }
+.btn.on-film:hover { background: var(--lilac-soft); }
+.btn.ghost-film { background: rgb(255 255 255 / .12); color: #fff; border-color: rgb(255 255 255 / .55); backdrop-filter: blur(6px); }
+.btn.ghost-film:hover { background: rgb(255 255 255 / .22); }
+/* tiles */
+.tile { position: relative; overflow: hidden; border-radius: var(--r-4); background: var(--tint); }
+.tile img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.tile-doodle { display: grid; place-items: center; border-radius: var(--r-4); background: var(--lilac-soft); }
+.lift { transition: transform var(--dur-base) var(--ease-out), box-shadow var(--dur-base) var(--ease-out); }
+.lift:hover { transform: translateY(-3px); box-shadow: var(--sh-3); }
+/* native-feeling smooth scroll (Lenis, public site only): the library asks for these */
+html.lenis, html.lenis body { height: auto; }
+.lenis:not(.lenis-autoToggle).lenis-stopped { overflow: clip; }
+.lenis [data-lenis-prevent] { overscroll-behavior: contain; }
+@media (prefers-reduced-motion: reduce) { .lift:hover { transform: none; } }
+
+/* the header floating clear over a film: white on the picture, then solid after the first screen */
+.is-clear { color: #fff; border-bottom: 1px solid transparent; }
+.is-clear .text-mute { color: rgb(255 255 255 / .88); }
+.is-clear a:not(.btn), .is-clear button:not(.btn.primary) { color: inherit; }
+.is-clear a:not(.btn):hover, .is-clear button:hover:not(.btn.primary) { background: rgb(255 255 255 / .14); }
+.is-clear .btn.quiet { color: #fff; }
+.is-clear .field { background: rgb(255 255 255 / .16); color: #fff; border-color: rgb(255 255 255 / .45); }
+.is-clear .field option { color: #1b1a17; }
+/* the dropdown panels are paper-coloured cards: their own text stays dark even while the header above them is clear (white on white was a blank menu) */
+.is-clear .card, .is-clear .card a:not(.btn), .is-clear .card button:not(.btn.primary) { color: var(--ink); }
+.is-clear .card .text-mute { color: var(--mute); }
+.is-clear .card a:not(.btn):hover { background: var(--tint); }
+.is-clear #site-menu, .is-clear #site-menu a:not(.btn) { color: var(--ink); }
+.is-clear #site-menu .text-mute { color: var(--mute); }
+.is-clear #site-menu a:not(.btn):hover { background: var(--tint); }
+
+.dropfilm { background: rgb(255 255 255 / .93) !important; border-color: var(--brand) !important; color: #1b1a17; box-shadow: var(--sh-3); }
+.dropfilm .text-mute { color: #5b564c; }
+
+/* a band that breaks out of the centred page column to the full width of the screen */
+.full-bleed { margin-inline: calc(50% - 50vw); width: 100vw; }
+
+/* ── Website v2 (frames, 8 Oct 2026): site-surface buttons and bits ─────────────────────────────────────────────────────────────── */
+[data-surface="site"] .btn { border-radius: 10px; padding: .55rem .95rem; font-size: 13.5px; font-weight: 500; background: var(--tint); border: 1px solid var(--line-strong); color: var(--ink); }
+[data-surface="site"] .btn:hover { border-color: var(--accent-line); background: var(--tint); }
+[data-surface="site"] .btn.primary { background: #e6e9ef; border-color: #e6e9ef; color: #08090c; }
+[data-surface="site"] .btn.primary:hover { background: #fff; border-color: #fff; }
+[data-surface="site"] .btn.on-film { background: #e6e9ef; color: #08090c; border-color: #e6e9ef; }
+[data-surface="site"] .btn.ghost-film { background: var(--tint); color: var(--ink); border-color: var(--line-strong); backdrop-filter: none; }
+[data-surface="site"] .card { border-radius: 16px; }
+[data-surface="site"] .on-black { background: transparent; color: var(--ink); --line: rgb(255 255 255 / .09); --mute: #9aa2b3; }
+[data-surface="site"] .eyebrow { font-family: var(--font-mono); color: var(--faint); }
+[data-surface="site"] .lede { color: var(--mute); }
+[data-surface="site"] .t-h1, [data-surface="site"] .t-xl { font-family: var(--font-sans); font-weight: 500; letter-spacing: -.02em; }
+[data-surface="site"] .t-h2, [data-surface="site"] .t-h3 { font-family: var(--font-sans); font-weight: 500; }
+.grad { background: linear-gradient(180deg, var(--ink), var(--mute)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.ev-eyebrow { display: inline-flex; align-items: center; gap: .5rem; font-size: 13px; color: var(--mute); }
+.ev-eyebrow svg { color: var(--accent); }
+/* the older page styles still read the Stage-1 palette (lilac, violet, black section); on the site they now resolve to the frame's dark tokens */
+:root[data-surface="site"] { --lilac-soft: var(--tint); --lilac: rgb(154 140 255 / .22); --violet: #2d2778; --periwinkle: var(--accent); --black-section: var(--card); --black-ink: var(--ink); --black-mute: var(--mute); --black-line: var(--line); --r-5: 1.5rem; --r-4: 1.25rem; --ink-line: var(--line); }
+/* Shiki (build-time highlighting): both themes are in the markup as CSS variables; the page's resolved theme picks one. */
+.shiki, .shiki span { color: var(--shiki-light); background: transparent; }
+:root[data-theme="dark"] .shiki, :root[data-theme="dark"] .shiki span, :root[data-surface="site"] .shiki, :root[data-surface="site"] .shiki span { color: var(--shiki-dark); }
+.shiki { margin: 0; padding: 0; font-family: var(--font-mono); font-size: .82rem; line-height: 1.7; overflow-x: auto; }
+.prose-docs .shiki { background: var(--code, var(--tint)); border-radius: 12px; padding: 1rem; }
+
+/* A plain table on a phone becomes a list of small cards (the cardTable action puts each column's name on its cells). */
+@media (max-width: 640px) {
+  table.card-table { display: block; min-width: 0 !important; width: 100%; }
+  table.card-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  table.card-table tbody { display: block; }
+  table.card-table tr { display: block; padding: 0.6rem 0.9rem; border-bottom: 1px solid var(--line); }
+  table.card-table tbody tr:last-child { border-bottom: 0; }
+  table.card-table td { display: flex; justify-content: space-between; align-items: baseline; gap: 0.75rem; padding: 0.2rem 0 !important; text-align: left !important; overflow-wrap: anywhere; }
+  table.card-table td::before { content: attr(data-label); flex: none; max-width: 40%; font-family: ui-monospace, monospace; font-size: 0.7rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--faint); }
+  table.card-table td[data-label=""]::before, table.card-table td:first-child::before { display: none; }
+  table.card-table td:first-child { font-weight: 500; }
+  table.card-table td:last-child:not(:first-child) { flex-wrap: wrap; justify-content: flex-end; }
+}
+
+/* D-076: a toast never grows past a few lines (the long ones scroll) so it can not cover the form */
+.ds-toast { max-height: 7.5rem; overflow-y: auto; overflow-wrap: anywhere; }
+
+/* an SSN, an ID or a bank number a form asks for: shown while it is being typed, hidden on screen once the person moves on (the box is still what gets signed) */
+.fieldinput.masked:not(:focus) { -webkit-text-security: disc; text-security: disc; }
+
+/* Run 8 (the maintainer): while Scribe is docked beside the page and the page has grown narrow, its card grids fold to two across instead of squeezing three or four.
+   `main[data-fold]` is set by ChatAssistant from a ResizeObserver on <main> (container queries would trap the fixed-position dialogs inside). */
+main[data-fold] :is(.sm\:grid-cols-3, .sm\:grid-cols-4, .md\:grid-cols-3, .md\:grid-cols-4, .lg\:grid-cols-3, .lg\:grid-cols-4, .xl\:grid-cols-3, .xl\:grid-cols-4) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+/* ── THE RULEBOOK on the portal (Run 9 Part 3.8, board "Less box, more page") ──────────────────────────────────────────────────────────────────────────────────
+   Unlayered on purpose: it must win over a screen's own border utilities. Only the portal (no data-surface); the site and the signing page keep their looks.
+   1. A surface is lifted by ONE soft shadow and draws no border (light). In dark a shadow does not show, so it keeps a hairline.
+   2. Never a border inside a border: a surface inside a surface is flat — no shadow, no border, a lavender wash.
+   3. Lists keep hairlines between rows (the lighter --line above).
+   4. Titles 26, body 15, meta 13 (--t-title / --t-body / --t-meta). */
+:root:not([data-surface]):not([data-theme="dark"]) :is(.card, .bg-card.border.rounded-xl, .bg-card.border.rounded-2xl) { border-color: transparent; box-shadow: var(--surface-shadow); }
+:root:not([data-surface])[data-theme="dark"] :is(.card, .bg-card.border.rounded-xl, .bg-card.border.rounded-2xl) { border-color: var(--hair); }
+:root:not([data-surface]) :is(.card, .bg-card.border.rounded-xl, .bg-card.border.rounded-2xl) :is(.card, .bg-card.border.rounded-xl, .bg-card.border.rounded-2xl) { box-shadow: none; border-color: transparent; background: var(--tint); }
+:root:not([data-surface]) main h1 { letter-spacing: -.01em; }
+
+/* R10-58: a checkbox or radio is picked by clicking its label, so the label is the target: at least 24 px tall (WCAG 2.5.8) */
+label:has(> input[type="checkbox"]), label:has(> input[type="radio"]) { min-height: 24px; }

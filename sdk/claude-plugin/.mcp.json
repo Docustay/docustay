@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "docustay": {
+      "command": "npx",
+      "args": ["-y", "@docustay2026/mcp"],
+      "env": { "DOCUSTAY_API_KEY": "${DOCUSTAY_API_KEY}", "DOCUSTAY_READ_ONLY": "${DOCUSTAY_READ_ONLY:-0}" }
+    }
+  }
+}

@@ -1,0 +1,2 @@
+-- People on a document come back "ORDER BY position, created_at". Parallel signers all sit at position 1, and now() is the same instant for every row a transaction inserts, so their order was undefined (MEASURED 7 Oct: a draft's first person came back second). clock_timestamp() differs per statement, so insertion order is kept. Additive: existing rows are untouched.
+ALTER TABLE keystone.document_party ALTER COLUMN created_at SET DEFAULT clock_timestamp();

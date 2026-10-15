@@ -1,0 +1,12 @@
+{
+ "$captured": {
+  "route": "GET /api/notifications",
+  "rank": "coach",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "notifications": [],
+  "unread": 0
+ }
+}

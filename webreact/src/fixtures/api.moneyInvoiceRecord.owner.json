@@ -1,0 +1,38 @@
+{
+ "$captured": {
+  "route": "GET /api/money/invoices/:world.invoice",
+  "rank": "owner",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "id": "00000000-0000-4000-8000-000000000084",
+  "invoiceNumber": "2026-0001",
+  "payer": "Reference Adult",
+  "payerId": "00000000-0000-4000-8000-000000000011",
+  "amount": 12500,
+  "currency": "USD",
+  "status": "open",
+  "periodStart": null,
+  "periodEnd": null,
+  "dueAt": "2026-10-10T17:56:06.296Z",
+  "issuedAt": "2026-09-26T17:56:06.296Z",
+  "createdAt": "2026-09-26T17:56:06.296Z",
+  "updatedAt": "2026-09-26T17:56:06.296Z",
+  "title": null,
+  "message": null,
+  "viewCount": 0,
+  "tipMinor": 0,
+  "paidMinor": 0,
+  "timeline": [
+   {
+    "type": "sent",
+    "timestamp": "2026-09-26T17:56:06.296Z",
+    "detail": null
+   }
+  ],
+  "cardOnFile": false,
+  "planOffered": false,
+  "mirrorAsOf": "2026-09-26T17:56:06.296Z"
+ }
+}

@@ -1,0 +1,768 @@
+0	0 hängt das signierte PDF wie bisher an die E-Mail an. Eine Anzahl Tage ersetzt den Anhang durch einen Link, der nach dieser Zeit nicht mehr funktioniert; der Absender kann einen neuen senden.
+1	0 bedeutet, dass es nie abläuft. Die Frist wird beim Senden festgelegt.
+2	1. Fordern Sie auf Ihrem Server eine Sitzung an
+3	2. Zeigen Sie sie auf Ihrer Seite an
+4	<b>Was „Stripe verbinden“ bewirkt:</b> Es erstellt über die Anmeldeseite von Stripe ein <em>neues</em> Stripe-Konto für Ihr Unternehmen. Wenn Sie bereits ein Stripe-Login haben, können Sie sich damit anmelden, und Stripe bietet möglicherweise an, Ihre verifizierten Unternehmensdaten wiederzuverwenden, aber das neue Konto ist getrennt: Die Historie eines bestehenden Kontos wird nicht übernommen. Beim Trennen nutzt Docustay das Konto nicht mehr. Docustay löscht es nie; es bleibt in Ihrem Stripe-Login erhalten.
+5	Ein PDF, Word, Excel oder ein Foto
+6	Ein Stripe-Zahlungslink
+7	Ein Stripe-Preis
+8	Eine Klausel ist ein wiederverwendbarer Abschnitt, den Sie einmal schreiben. Wenn Sie eine hinzufügen, steht sie am Ende dieser Vorlage (die Vorlage wird zuerst gespeichert).
+9	Ein Code ist festgelegt — zum Ändern eingeben
+10	Der Name eines benutzerdefinierten Felds beginnt mit einem Buchstaben, z. B. „Projektgebühr“.
+11	Ein benutzerdefinierter Wert
+12	Ein fester Betrag
+13	Eine Formel aus anderen Feldern
+14	Mit einem Schlüssel kann Ihre eigene Software Docustay nutzen. Geben Sie jedem nur das, was er braucht. Die vollständige API ist unter <spec>/api/v1/openapi.json</spec> und in der <dev>Entwicklerdokumentation</dev> beschrieben.
+15	Eine Textzeile am Ende des Dokuments, vor den Unterschriften.
+16	Ein Passwort ist festgelegt — zum Ersetzen eingeben
+17	Ein ausgegrauter Anbieter ist auf diesem Server noch nicht eingerichtet.
+18	Ein Unterzeichner kann eine andere Person benennen; die Einladung geht an sie über, der Link der ersten Person funktioniert nicht mehr, und das Zertifikat zeigt beide.
+19	Wer fertig ist, kann seinen Teil erneut öffnen und noch einmal unterschreiben, bis alle anderen unterschrieben haben. Jedes erneute Öffnen wird protokolliert.
+20	Eine sechsstellige Farbe wie #1f2937. Wird für Überschriften und Linien verwendet.
+21	Eine sechsstellige Farbe wie #4f46e5 für die Kopfzeile der Unterschriftsseite und die Schaltflächen in der Signatur-E-Mail. Leer lassen für die Standardfarbe.
+22	Eine Vorlage ist ein Dokument, das Sie einmal einrichten — Seiten, Unterschriftsstellen, Unterzeichner — und beliebig oft senden. Aktivieren Sie im Schritt „Senden“ „Als Vorlage speichern“, um eine zu erstellen.
+23	Eine Test-E-Mail ist unterwegs zu Ihnen.
+24	Eine Test-E-Mail ist unterwegs.
+25	API-Schlüssel
+26	Akzentfarbe
+27	Alle {n} Vorschläge übernehmen
+28	Zugangscode
+29	Hinzufügen
+30	Fügt jeder signierten Kopie eine Zertifikatsseite hinzu: wer wann von wo unterschrieben hat und den Fingerabdruck des Dokuments.
+31	Datei hinzufügen
+32	Fügen Sie einem Dokument ein Zahlungsfeld hinzu, und der Unterzeichner zahlt vor dem Abschluss auf der sicheren Seite von Stripe. Das Geld geht direkt an <b>ein Stripe-Konto auf Ihren Namen</b>, das Sie im normalen Stripe-Dashboard verwalten.
+33	Domain hinzufügen
+34	Endpunkt hinzufügen
+35	Person hinzufügen
+36	Team hinzufügen
+37	Zur Vorlage hinzufügen
+38	Hinzugefügt. Tragen Sie die folgenden Einträge bei Ihrem DNS-Anbieter ein.
+39	Das Hinzufügen von Teammitgliedern gehört zu Docustay Pro. Wechseln Sie unter Abrechnung auf einen höheren Tarif, um Kollegen einzuladen.
+40	{name} wird hinzugefügt…
+41	Adresszeile
+42	Admin — alles
+43	Nach dem Unterschreiben kann der Browser des Unterzeichners dessen Unterschrift speichern, um sie beim nächsten Mal auszufüllen. Sie bleibt auf seinem Gerät und wird nie an uns gesendet.
+44	Nach Ihrem Passwort oder E-Mail-Code geben Sie zusätzlich einen sechsstelligen Code aus einer Authenticator-App auf Ihrem Smartphone ein.
+45	Alle
+46	Alle Dokumente
+47	Alle Teams
+48	Alle {n} Zeilen sehen richtig aus.
+49	Getippte Unterschriften zulassen
+50	Darf
+51	Sie haben bereits ein Konto? <in>Anmelden</in>
+52	Betrag
+53	Betrag ({currency})
+54	Vor dem Öffnen des Dokuments wird ein E-Mail-Code oder Zugangscode abgefragt.
+55	Beliebig
+56	Darstellung
+57	Hochgeladene Vorlagen vor dem Senden genehmigen lassen
+58	Genehmigt
+59	Genehmigt
+60	Wie die signierte Kopie
+61	So sehen sie es
+62	Als {name}
+63	Jeden Unterzeichner fragen, warum er unterschreibt
+64	Bei einer Ablehnung nach einem Grund fragen
+65	Vor einem Download einen E-Mail-Code verlangen
+66	Mindestens 4 Zeichen
+67	Prüfprotokoll
+68	Prüfprotokoll (CSV)
+69	Zurück
+70	Zurück zu den Dokumenten
+71	Zurück zur Anmeldung
+72	Gehört zu
+73	Abrechnung
+74	Board
+75	Schriftgröße des Fließtexts, 8 bis 14.
+76	Fett
+77	Nach Absender
+78	Nach Team
+79	Nach Vorlage
+80	CSV-Datei
+81	Dokument stornieren
+82	Dieses Dokument stornieren
+83	Storniert
+84	Storniert.
+85	Storniert: {reason}
+86	Abschlusszertifikat
+87	Ändern
+88	Erneut prüfen
+89	Prüfen
+90	Liste prüfen
+91	Einträge jetzt prüfen
+92	Prüfen, wer unterschreibt
+93	Kontrollkästchen
+94	Geprüft.
+95	Datei wird geprüft…
+96	Wird geprüft…
+97	Checkliste
+98	Auswahlmöglichkeiten (eine pro Zeile)
+99	Klausel auswählen…
+100	Neues Passwort wählen
+101	Wählen Sie ein Passwort mit mindestens 6 Zeichen.
+102	Unterzeichner auswählen…
+103	Auswählen…
+104	Klausel
+105	Klausel am Ende hinzugefügt.
+106	Name der Klausel
+107	Name der Klausel (z. B. Vertraulichkeit)
+108	Klausel in Ihrer Bibliothek gespeichert.
+109	Zusammenfassung der Klausel
+110	Text der Klausel
+111	Klauseln
+112	Filter zurücksetzen
+113	Klicken Sie auf ein Feld, um es hinzuzufügen (Textfelder dieser Person)
+114	Klicken Sie auf eine Seite, um es zu platzieren. Esc zum Abbrechen.
+115	Schließen
+116	Schlusszeile
+117	Schlusserklärung
+118	Code
+119	Code aus Ihrer App
+120	Abgeschlossen
+121	Abschlussquote
+122	Stripe verbinden
+123	Erneut verbinden
+124	Verbinden Sie Ihr Google- oder Microsoft-Konto. E-Mails werden in Ihrem Namen gesendet, erscheinen in Ihrem Ordner „Gesendet“, und Antworten landen in Ihrem Posteingang. Wir können nur senden; Ihre E-Mails können wir nicht lesen.
+125	{provider} verbinden
+126	Verbunden
+127	Verbunden als {email} ({provider})
+128	Die Verbindung wurde nicht gestartet.
+129	Die Verbindung ist auf diesem Server noch nicht aktiviert. Fragen Sie die Person, die ihn betreibt.
+130	Weiter
+131	Weiter bei Stripe
+132	Kopiert
+133	Kopieren
+134	Kopieren Sie das jetzt — es wird nicht erneut angezeigt.
+135	Auf die Seite kopieren
+136	Das Konto konnte nicht erstellt werden.
+137	Der Arbeitsbereich konnte nicht erstellt werden.
+138	Ihr Tarif konnte nicht geladen werden.
+139	Der Unterschriftsbildschirm konnte nicht geöffnet werden.
+140	Die E-Mail konnte nicht gesendet werden. Versuchen Sie es erneut.
+141	Das neue Passwort konnte nicht festgelegt werden.
+142	Dokument erstellen
+143	Dokument aus „{name}“ erstellen
+144	Konto erstellen
+145	Konto erstellen
+146	Dokument erstellen
+147	Schlüssel erstellen
+148	Das Dokument erstellen
+149	Erstellen Sie Ihr Docustay-Konto
+150	Erstellen Sie Ihr Konto
+151	Wird erstellt…
+152	Aktueller Code
+153	Name des benutzerdefinierten Felds
+154	Datum
+155	Unterschriftsdatum
+156	Tage nach dem Senden, nach denen Personen erinnert werden, die noch nicht unterschrieben haben. Automatische Erinnerungen gehören zu Docustay Pro; im Tarif Free können Sie weiterhin manuell erinnern.
+157	Abgelehnt
+158	Löschen
+159	Team löschen
+160	Das Team „{name}“ löschen? Seine Dokumente und Vorlagen bleiben erhalten und sind dann keinem Team zugeordnet.
+161	Zustellprotokoll
+162	Die Entwicklereinstellungen konnten nicht geladen werden.
+163	Entwickler
+164	Entwurf verwerfen
+165	Diesen Entwurf verwerfen? Die hochgeladene Datei wird entfernt.
+166	Trennen
+167	Getrennt
+168	Getrennt. E-Mails werden von der Plattformadresse gesendet.
+169	Getrennt. Ihr Stripe-Konto selbst bleibt unberührt — es gehört weiterhin Ihnen.
+170	Dokument
+171	Dokument-ID auf jeder Seite
+172	Dokumenttitel
+173	Dokumente
+174	Täglich gesendete und abgeschlossene Dokumente
+175	Docustay-Gebühr: 2 % bei Free, 0 % bei Pro, zuzüglich der Gebühren von Stripe. Die Zahlung geht an das unter Einstellungen → Zahlungen verbundene Stripe-Konto.
+176	Docustay hat keinen Zugriff mehr auf ein Stripe-Konto. Dokumente mit Zahlungsfeld können nicht bezahlt werden, bis Sie Stripe erneut verbinden.
+177	Fertig
+178	CSV herunterladen
+179	Download-Links
+180	Signierte Kopie herunterladen
+181	Nutzungsbericht herunterladen
+182	Entwurf
+183	Entwürfe
+184	Datei hier ablegen oder zum Auswählen klicken
+185	Dropdown
+186	Duplizieren
+187	Täglich
+188	Jede Unterschrift auf der signierten Kopie trägt eine kurze ID, die zu Zertifikat und Prüfprotokoll passt.
+189	Bearbeiten
+190	E-Mail
+191	E-Mail nicht zugestellt
+192	E-Mail-Code
+193	Stattdessen einen Anmeldecode per E-Mail senden
+194	E-Mail von Person {n}
+195	E-Mail-Versand
+196	Die E-Mail-Einstellungen konnten nicht geladen werden.
+197	E-Mail-Betreff
+198	Die signierte Kopie an alle per E-Mail senden
+199	E-Mails werden NICHT vom gewählten Absender gesendet.
+200	Einbettung
+201	Geben Sie den sechsstelligen Code aus Ihrer Authenticator-App oder einen Ihrer Backup-Codes ein.
+202	Geben Sie zuerst Ihre E-Mail-Adresse ein.
+203	Ereignis
+204	Alle gleichzeitig
+205	Alle erhalten sofort eine E-Mail.
+206	Nachweispaket (ZIP)
+207	Abgelaufen
+208	Läuft ab nach (Tagen)
+209	Läuft ab nach Tagen
+210	Läuft am {date} ab
+211	Zusätzliche Dateien
+212	Feld gehört zu
+213	Feldbezeichnung
+214	Feldeinstellungen
+215	Feldwerkzeuge
+216	Felder sind für
+217	Dateien, die man neben dem Dokument lesen kann — eine Preisliste, Bedingungen. Bis zu 25 MB pro Datei.
+218	Füllt Angaben aus
+219	Abgeschlossen
+220	E-Mail korrigieren
+221	Schrift
+222	Fußzeilentext
+223	Für
+224	Für Ihre eigene Domain oder SMTP: die Adresse, von der die E-Mail kommt, etwa vertraege@ihredomain.de. Bei Ihrer eigenen Domain muss sie zur verifizierten Domain gehören.
+225	Passwort vergessen?
+226	Format
+227	Formatierung
+228	Formel
+229	Formel (Zahlen, Felder, + − × ÷ und Klammern)
+230	Von
+231	Absenderadresse
+232	Absendername
+233	Aus Ihren Kontakten
+234	Erhält eine Kopie
+235	Guten Tag
+236	Guten Abend
+237	Guten Morgen
+238	Gruppieren Sie Ihre Personen und legen Sie dann Dokumente und Vorlagen in einem Team ab. Berichte lassen sich nach Team filtern.
+239	Hat den Link
+240	Kopfzeilentext
+241	Überschrift
+242	Hilft {name}
+243	Protokoll ausblenden
+244	Wie lange ein gesendetes Dokument zum Unterschreiben offen bleibt. 0 bedeutet, dass es nie abläuft. Die Frist wird beim Senden des Dokuments festgelegt.
+245	Wie viele Monate, bevor ein unterzeichnetes Abkommen eine neue Unterschrift braucht. Leer lassen, dann läuft nichts ab.
+246	Wie der Betrag festgelegt wird
+247	Ich stimme den <terms>Nutzungsbedingungen</terms>, der <privacy>Datenschutzerklärung</privacy> und dem <dpa>Auftragsverarbeitungsvertrag</dpa> zu.
+248	Ich habe es kopiert
+249	Ich habe sie gespeichert
+250	Wenn zu dieser Adresse ein Konto existiert, ist ein sechsstelliger Code unterwegs an <addr>{email}</addr>.
+251	Wenn zu dieser Adresse ein Konto existiert, ist eine E-Mail mit einem Link unterwegs. Der Link funktioniert nur einmal und läuft bald ab.
+252	Wenn diese Installation docustay.app nicht erreichen kann (ein Offline- oder abgeschotteter Server), laden Sie diese Datei herunter und laden Sie sie bei Gelegenheit auf der <host>Self-Hosting-Seite</host> hoch. Sie enthält fünf ganze Zahlen — in diesem Monat gesendete Dokumente, signierte Dokumente, Arbeitsbereiche, Personen, Betriebstage — eine zufällige Installations-ID und die Version. Es sind weder Dokument noch Name, E-Mail oder Adresse darin, und Sie können sie zur Kontrolle in jedem Texteditor öffnen.
+253	In Bearbeitung
+254	Im Editor, mit Feldern
+255	Außer Dienst gestellte einbeziehen
+256	Initialen
+257	Seriendruckfeld einfügen
+258	Seriendruckfeld einfügen…
+259	Einladung an {email} gesendet.
+260	Teammitglied einladen
+261	Es konnte nicht geladen werden.
+262	Es konnte nicht gesendet werden.
+263	Kursiv
+264	Nur ich — jetzt auf diesem Gerät unterschreiben
+265	Behalten
+266	Signierte Dokumente aufbewahren für (Jahre)
+267	Dieses Dokument, seine Unterschriftsstellen und seine Personenplätze zum erneuten Senden behalten.
+268	Bezeichnung
+269	Sprache
+270	Größter Upload (MB)
+271	Unterzeichnern das Ablehnen erlauben
+272	Unterzeichnern erlauben, ihre Reihe an jemand anderen abzugeben
+273	Unterzeichnern erlauben, ihre Antworten zurückzunehmen
+274	Briefkopf
+275	Dokumente auf ihre Teams beschränken
+276	Dokumente auf ihre Teams beschränken (Inhaber und Admins sehen weiterhin alles)
+277	Link
+278	Link-Adresse (https://…) — leer entfernt ihn
+279	Link abgelaufen
+280	Link für {name}, gültig bis {date}:
+281	Liste
+282	Seiten werden geladen…
+283	Wird geladen…
+284	Haupt
+285	Abrechnung verwalten
+286	Ich
+287	Mitglied — Dokumente senden und verfolgen
+288	Menü
+289	Seriendruckfelder funktionieren: {a}, {b}, {c}, {d}.
+290	Nachricht
+291	Nach unten
+292	Nach oben
+293	Mehrfachauswahl
+294	Name
+295	Name einer neuen Vorlage
+296	Name von Person {n}
+297	Nennen Sie oben eine Person, um zu beginnen.
+298	Benötigt weitere Angaben
+299	Neuer API-Schlüssel
+300	Neue Klausel
+301	Neues Dokument
+302	Neuer Endpunkt
+303	Neuer Schlüssel
+304	Neues Passwort
+305	E-Mail der neuen Person
+306	Name der neuen Person
+307	Name des neuen Teams
+308	Name der neuen Vorlage
+309	Neuer Webhook-Endpunkt
+310	Weiter
+311	Noch keine Endpunkte.
+312	Keine zusätzliche Prüfung
+313	Noch keine Felder. Wählen Sie links ein Werkzeug oder übernehmen Sie die Vorschläge.
+314	Diese Vorlage gibt es nicht — sie wurde möglicherweise außer Dienst gestellt.
+315	Kein Team
+316	Noch keine Teams.
+317	Noch keine Vorlagen
+318	Noch keine Textfelder für diese Person.
+319	Noch keine geschriebenen Vorlagen
+320	Niemand kann es mehr unterschreiben. Sagen Sie den Leuten, warum (optional):
+321	Noch niemand. Fügen Sie die Personen hinzu, die unterschreiben müssen.
+322	Nicht verbunden
+323	Nicht erforderlich
+324	Nicht bereit: {reason}
+325	Nicht gespeichert
+326	Noch nicht gesendet
+327	Nicht gesendet: {reason}.
+328	Auf diesem Server noch nicht eingerichtet
+329	Noch nicht online
+330	Hinweis unter dem Titel
+331	Noch nichts vorhanden
+332	Dazu gibt es keine Treffer.
+333	Keine Treffer.
+334	In diesem Zeitraum wurde nichts gesendet.
+335	An diese Adresse wurde noch nichts gesendet.
+336	Es wurde nichts verbunden.
+337	Zahl
+338	Anbieten, eine Unterschrift auf diesem Gerät zu merken
+339	Anbieten, Uploads als Vorlagen zu speichern
+340	Aktiv seit {date}.
+341	Aktiv.
+342	An: Das Abschlusszertifikat (das Prüfprotokoll) bildet die letzten Seiten des signierten PDFs. Aus: Das signierte PDF enthält nur das Dokument, und das Zertifikat ist ein zweites versiegeltes PDF daneben.
+343	Nacheinander
+344	Eine Zeile, die jedem Unterzeichner unter dem Titel des Dokuments angezeigt wird — zum Beispiel „Fragen? Rufen Sie 0123 456789 an.“ Leer lassen für keine.
+345	Eine Zeile unter dem Praxisnamen, zum Beispiel Straße und Telefonnummer.
+346	Eine Website-Adresse pro Zeile, zum Beispiel https://app.example.com. Nur diese Seiten dürfen ein Docustay-Unterschriftsformular in einen Frame einbetten, und das Formular kommuniziert nur mit ihnen. Leer bedeutet: Einbettung aus.
+347	Zusammenfassung in einer Zeile
+348	Geöffnet am {date}
+349	Oder über Ihren eigenen Mailserver senden
+350	Reihenfolge
+351	Zur Unterschrift ausgesendet
+352	PDF, DOCX, XLSX, PPTX, JPG, PNG oder ZIP · bis 25 MB bei Free, 100 MB bei Pro
+353	Seitenrand (Punkt)
+354	Seitenzahlen
+355	Seite {n}
+356	Seite {n} von {total}
+357	Teilweise unterschrieben
+358	Passwort
+359	Das Zurücksetzen des Passworts per E-Mail ist in dieser Bereitstellung nicht verfügbar.
+360	Passwort gespeichert.
+361	Zahlungen
+362	Zahlungen sind auf diesem Server noch nicht eingerichtet.
+363	Die Zahlungseinstellungen konnten nicht geladen werden.
+364	Ausstehend
+365	Personen
+366	Personen und Sicherheit
+367	Personen in diesem Dokument
+368	Person
+369	Telefon
+370	Wählen Sie ein Feld und klicken Sie dann auf die gewünschte Stelle. Zum Verschieben ziehen; an einer Ecke ziehen, um die Größe zu ändern.
+371	Wählen Sie eine Vorlage mit einem Unterzeichner, fügen Sie eine Tabelle (CSV) mit den Spalten <code>name</code> und <code>email</code> hinzu, prüfen Sie die Liste und senden Sie. Jede Zeile wird zu einem eigenen Dokument. Der Serienversand gehört zu Docustay Pro.
+372	Bild
+373	Felder platzieren
+374	Zum Platzieren von Feldern ist ein größerer Bildschirm nötig — bearbeiten Sie am Desktop. Die Seiten können Sie trotzdem ansehen.
+375	Tarifnutzung in diesem Monat: {sent} Dokumente gesendet (kein Limit). Testdokumente werden nie gezählt.
+376	Tarifnutzung in diesem Monat: {sent} von {limit} Dokumenten gesendet. Testdokumente werden nie gezählt.
+377	Bitte stimmen Sie den Nutzungsbedingungen, der Datenschutzerklärung und dem Auftragsverarbeitungsvertrag zu.
+378	Postleitzahl
+379	Vorausfüllen (Seriendruckfeld, optional)
+380	Vorschau als
+381	„Seite 2 von 5“ in der Fußzeile drucken.
+382	Neben jeder Unterschrift eine Unterschrifts-ID drucken
+383	Die IP-Adresse jedes Unterzeichners im Unterschriftsblock drucken. Die Zertifikatsseite erfasst sie immer.
+384	Die E-Mail-Adresse jedes Unterzeichners im Unterschriftsblock drucken.
+385	Die eindeutige Dokument-ID in der Fußzeile drucken, damit jede Seite dem Dokument zugeordnet werden kann.
+386	Datenschutz
+387	Das Prüfprotokoll in das signierte PDF aufnehmen
+388	Logo und Namen der Praxis oben auf der ersten Seite platzieren.
+389	QR-Code zum Scannen mit Ihrer Authenticator-App
+390	Neu unterschreiben nach (Monaten)
+391	Seiten werden gelesen…
+392	Bereit
+393	Fertige Vorlagen ({n})
+394	Grund
+395	Einträge
+396	Wiederholen
+397	Abgelehnt
+398	Jetzt erinnern
+399	Erinnerungstage
+400	Erinnerung an {name} gesendet.
+401	Erinnerungen
+402	Erinnerungen an
+403	Entfernen
+404	Docustay-Fußzeile entfernen
+405	{name} entfernen
+406	Umbenennen
+407	Verlängert sich am {date}
+408	Auf jeder Seite wiederholen
+409	Antwortadresse
+410	Berichte
+411	Ablehnungsgrund verlangen
+412	Für alle verlangen
+413	Zweistufige Anmeldung für jedes Teammitglied verlangen
+414	Erforderlich
+415	Passwort zurücksetzen
+416	Ergebnis
+417	Außer Dienst stellen
+418	„{name}“ außer Dienst stellen? Es wird nicht mehr angeboten; bereits gesendete Dokumente sind nicht betroffen.
+419	Außer Dienst gestellt.
+420	Widerrufen
+421	„{name}“ widerrufen? Alles, was ihn verwendet, funktioniert nicht mehr.
+422	Widerrufen.
+423	Derzeit sehen Unterzeichner „{name} über {platform}“ von {address}. Antworten gehen an Sie.
+424	Rolle
+425	Zeile {n}: {reason}
+426	SMTP-Passwort
+427	SMTP-Port
+428	SMTP-Sicherheit
+429	SMTP-Server
+430	SMTP-Benutzername
+431	Speichern
+432	Als Vorlage speichern
+433	Als neue Version speichern
+434	Klausel speichern
+435	Das vorherige Speichern ist fehlgeschlagen.
+436	Passwort speichern
+437	Gespeichert
+438	Als Version {n} gespeichert.
+439	Gespeichert — ein neuer Link wurde gesendet.
+440	Gespeichert.
+441	Wird gespeichert…
+442	Scannen Sie dies mit einer Authenticator-App oder geben Sie den Schlüssel <key>{secret}</key> ein. Geben Sie dann den angezeigten Code ein.
+443	Planen
+444	Suchen
+445	Nach Name oder E-Mail suchen
+446	Kontakte durchsuchen
+447	Dokumente durchsuchen
+448	Vorlagen durchsuchen
+449	Protokoll durchsuchen
+450	Platz zum Einbetten
+451	Sicherheit
+452	Senden
+453	Erneut senden
+454	Senden um
+455	Zur Unterschrift senden
+456	Senden von
+457	Von Ihrer eigenen Domain senden
+458	Von Ihrem eigenen Postfach senden
+459	Einladung senden
+460	Später senden
+461	Link an mich senden
+462	Test-E-Mail an mich senden
+463	Jetzt senden
+464	Test senden
+465	Die signierte Kopie als Link senden, der funktioniert für (Tage)
+466	Den Test senden an
+467	An eine Liste senden
+468	An {n} senden
+469	Einen Test an sich selbst senden
+470	Versand und Erinnerungen
+471	Wird gesendet…
+472	Gesendet
+473	Erneut gesendet — Ihre Adresse hat es angenommen{code}.
+474	Erneut gesendet, aber Ihre Adresse hat es nicht angenommen{code}. Es wird nach dem üblichen Zeitplan erneut versucht.
+475	{sent} gesendet, {failed} fehlgeschlagen.
+476	{sent} gesendet.
+477	Richten Sie es zuerst für sich selbst ein.
+478	Einrichten
+479	Einrichten und senden
+480	Zweistufige Anmeldung einrichten
+481	„{title}“ wird eingerichtet…
+482	Wird eingerichtet…
+483	Einstellungen
+484	Einstellungsbereiche
+485	Download-Link teilen
+486	Mein Logo auf der Unterschriftsseite anzeigen
+487	IP-Adresse des Unterzeichners unter der Unterschrift anzeigen
+488	E-Mail des Unterzeichners unter der Unterschrift anzeigen
+489	Zeigen Sie das Unterschriftsformular in Ihrer eigenen Website oder App an. Nur die unten aufgeführten Websites können es einbetten, und das Formular kommuniziert nur mit ihnen. Die Einbettung ist in jedem Tarif enthalten.
+490	Zeigt das Logo Ihrer Organisation oben auf der Seite, auf der man unterschreibt.
+491	Anmelden
+492	Bei Docustay anmelden
+493	Jetzt unterschreiben
+494	Abmelden
+495	Überall sonst abmelden
+496	Die Anmeldung per Code ist derzeit nicht verfügbar.
+497	Anmeldung fehlgeschlagen. Versuchen Sie es erneut.
+498	Die Anmeldung ist derzeit nicht verfügbar.
+499	Unterschrift
+500	Unterschriftsanfrage läuft ab nach (Tagen)
+501	Unterschriftsstil
+502	Unterschrieben
+503	Signierte Kopie
+504	Signierte Dokumente werden mindestens so lange aufbewahrt. Leer lassen, um sie unbegrenzt aufzubewahren.
+505	Unterschrieben oder beendet
+506	Unterzeichner müssen einen kurzen Grund oder ihre Funktion angeben (zum Beispiel „als Geschäftsführer der Acme GmbH“), bevor sie unterschreiben können. Er wird mit ihrer Unterschrift gespeichert und auf dem Zertifikat gedruckt.
+507	Unterzeichner sehen dann einen Namen, den sie kennen. Sie tragen einige Einträge beim DNS-Anbieter Ihrer Domain ein; wir prüfen sie.
+508	Unterzeichnung
+509	Anmeldung läuft…
+510	Unterschriftsreihenfolge
+511	Gestaltung der Unterschriftsseite
+512	Unterschriftsregeln
+513	Signatur-Geheimnis (wird einmal angezeigt): {secret}
+514	Unterschreibt
+515	Kleiner Text am unteren Rand jeder Seite.
+516	Kleiner Text am oberen Rand jeder Seite nach der ersten. Leer lassen, um den Dokumenttitel anzuzeigen.
+517	Snippet-Builder
+518	Etwas ist schiefgelaufen.
+519	Abstand um den Text, 36 bis 90. 72 Punkt sind ein Zoll.
+520	Stempel
+521	Mit einer gespeicherten Vorlage beginnen
+522	Etwas beginnen
+523	Status
+524	Schritt
+525	Schritte
+526	Stripe war nicht erreichbar. Versuchen Sie es erneut.
+527	Stripe ist verbunden und kann Zahlungen annehmen.
+528	Stripe benötigt weitere Angaben, bevor Zahlungen beginnen können. Fahren Sie bei Stripe fort, um abzuschließen.
+529	Stripe-Zahlungslink
+530	Stripe-Preis-ID
+531	Die Gebühren von Stripe werden wie gewohnt Ihrem Stripe-Konto belastet.
+532	Vorgeschlagen
+533	Zahlungen annehmen, während Leute unterschreiben
+534	Entfernt die kleine Zeile „Gesendet mit Docustay“ von der Unterschriftsseite, aus den Signatur-E-Mails und von jeder signierten Kopie. Teil des Pro-Tarifs.
+535	Team
+536	Teamname
+537	Teams
+538	Teams gehören zu Docustay Pro. Wechseln Sie unter Abrechnung auf einen höheren Tarif, um sie zu nutzen.
+539	Die Teams konnten nicht geladen werden.
+540	Benachrichtigen Sie mich, wenn ein Dokument
+541	Teilen Sie den Code auf anderem Weg mit — per Telefon oder Nachricht, nicht in dieser E-Mail.
+542	Vorlage
+543	Vorlagen
+544	Die Vorlagen konnten nicht geladen werden.
+545	Bedingungen
+546	Test
+547	Testmodus
+548	Der Testmodus ist aus.
+549	Der Testmodus ist an
+550	Der Testmodus ist an. Dokumente gehen nur an Sie und werden mit TEST gestempelt.
+551	Der Testmodus ist an: Dokumente, die Sie jetzt senden, gehen nur an Sie, werden mit TEST gestempelt und nicht gezählt.
+552	Testmodus an
+553	Text
+554	Textgröße (Punkt)
+555	Diese Klausel konnte nicht hinzugefügt werden.
+556	Diese Klausel konnte nicht gespeichert werden.
+557	Dieser Code wurde nicht akzeptiert.
+558	Dieser Verbindungsversuch ist abgelaufen. Beginnen Sie von vorn.
+559	Das konnte nicht geändert werden.
+560	Das konnte nicht erneut abgespielt werden.
+561	Das konnte nicht gespeichert werden.
+562	Das hat sich nicht geändert.
+563	Der Upload ist fehlgeschlagen. Versuchen Sie es erneut.
+564	Das hat nicht funktioniert.
+565	Das hat nicht funktioniert. Versuchen Sie es erneut.
+566	Dieses Dokument konnte nicht geladen werden.
+567	Dieses Dokument existiert nicht.
+568	Zu dieser E-Mail-Adresse gibt es bereits ein Konto, und das Passwort stimmt nicht überein.
+569	Mit dieser E-Mail-Adresse und diesem Passwort konnte kein Konto erstellt werden.
+570	Diese E-Mail-Adresse und dieses Passwort wurden nicht akzeptiert.
+571	Diese Datei konnte nicht hinzugefügt werden.
+572	Diese Datei konnte nicht als Tabelle (CSV) gelesen werden.
+573	Diese Datei hat keine Zeilen.
+574	Dieser Link ist abgelaufen oder wurde bereits verwendet. Fordern Sie einen neuen an.
+575	Diese Starter-Vorlage wurde nicht gefunden. Wählen Sie unten eine aus.
+576	Diese Vorlage konnte nicht erstellt werden.
+577	Diese Vorlage konnte nicht geöffnet werden.
+578	Diese Vorlage konnte nicht eingerichtet werden.
+579	Diese Vorlage konnte nicht verwendet werden.
+580	Das wurde nicht akzeptiert.
+581	Das Prüfprotokoll ist für Inhaber und Admins.
+582	Die größte Datei, die zum Senden zur Unterschrift hochgeladen werden kann. Dieses System akzeptiert höchstens 100 MB; ein gehosteter Free-Tarif ist unabhängig von der Einstellung hier auf 25 MB begrenzt.
+583	Der Text der Klausel
+584	Die Verbindung konnte nicht hergestellt werden. Versuchen Sie es erneut.
+585	Die Verbindung wurde nicht abgeschlossen. Beginnen Sie von vorn oder sagen Sie uns Bescheid, wenn es weiter auftritt.
+586	Die Verbindung wurde auf der Seite von Stripe abgebrochen. Es wurde nichts verbunden.
+587	Die Verbindung wurde abgebrochen. Nichts hat sich geändert.
+588	Das Zustellprotokoll konnte nicht geladen werden.
+589	Das Dokument konnte nicht erstellt werden.
+590	Das Dokument konnte nicht gelesen werden.
+591	Die Dokumente konnten nicht geladen werden.
+592	Der Endpunkt konnte nicht hinzugefügt werden.
+593	Die vollständige Anleitung mit Ereignissen und den React-, Vue- und Angular-Wrappern finden Sie in der <dev>Entwicklerdokumentation</dev>.
+594	Der Hostname Ihres Mailservers, zum Beispiel smtp.ihranbieter.de.
+595	Die Einladung konnte nicht gesendet werden.
+596	Der Schlüssel konnte nicht erstellt werden.
+597	Die Sprache der Unterschriftsseite, der E-Mail um Ihre Nachricht herum und des Zertifikats. Ihre eigene Nachricht wird so gesendet, wie Sie sie geschrieben haben.
+598	Der juristische Satz am Ende des Zertifikats.
+599	Der Link konnte nicht erstellt werden.
+600	Das Protokoll konnte nicht geladen werden.
+601	Die Anmeldung für Ihren Mailserver. Das Passwort wird getrennt gespeichert und nie wieder angezeigt.
+602	Die nächste Person erhält eine E-Mail, wenn die vorherige unterschrieben hat.
+603	Die Seiten konnten nicht angezeigt werden {error}. Laden Sie neu, um es erneut zu versuchen.
+604	Das Passwort wird verschlüsselt gespeichert und nie wieder angezeigt.
+605	Der Bericht konnte nicht erstellt werden.
+606	Die Einstellungen konnten nicht geladen werden.
+607	Die Startfrist im Schritt „Senden“ für ein hochgeladenes Dokument; der Absender kann sie bei jedem Versand ändern. 0 bedeutet, dass es nie abläuft.
+608	Das System
+609	Das Team konnte nicht geladen werden.
+610	Die Vorlage wurde gespeichert, aber es konnte kein Dokument daraus gestartet werden.
+611	Der Test konnte nicht gesendet werden.
+612	Der Upload konnte nicht gestartet werden.
+613	Der Text der E-Mail, über der Schaltfläche.
+614	Design: {mode, select, light {hell} dark {dunkel} other {automatisch}}
+615	Design: {mode, select, light {hell} dark {dunkel} other {automatisch}}. Zum Ändern drücken.
+616	Dies ist ein Entwurf. Es wurde nichts an jemanden gesendet.
+617	Dieser Link ist unvollständig. <ask>Fordern Sie einen neuen an</ask>.
+618	Dieser Server befindet sich im <b>Testmodus</b> von Stripe: Es wird keine echte Karte belastet, und hier wird kein echtes Geld bewegt.
+619	Diese Übersetzung ist ein maschinell erstellter Entwurf (Beta), den noch keine Muttersprachlerin und kein Muttersprachler gelesen hat. Ihre eigene Nachricht und die eigenen Formulierungen Ihrer Organisation werden nie übersetzt.
+620	Im Schritt „Senden“ standardmäßig „Als Vorlage speichern“ aktivieren, damit dasselbe Dokument mit seinen Feldern erneut gesendet werden kann.
+621	Zeitverlauf
+622	An
+623	Zu viele Versuche für diese Adresse. Versuchen Sie es in einigen Minuten erneut.
+624	Zu viele Versuche. Warten Sie einige Minuten und versuchen Sie es erneut.
+625	Versuchen
+626	Mit einem Beispiel ausprobieren
+627	Ausschalten
+628	Ausschalten
+629	Einschalten
+630	Die zweistufige Anmeldung ist aktiv. Speichern Sie jetzt diese Backup-Codes — jeder funktioniert nur einmal und sie werden nicht erneut angezeigt.
+631	Zweistufige Anmeldung
+632	Typ
+633	Übliche Dauer bis zum Abschluss
+634	Rückgängig
+635	Unbekanntes Gerät
+636	Aktualisieren
+637	Aktualisiert
+638	Auf Pro upgraden — {price}/Monat
+639	Laden Sie ein PDF hoch, platzieren Sie die Felder und senden Sie es zur Unterschrift. Alles, was Sie senden, erscheint hier.
+640	Dokument hochladen
+641	Laden Sie ein Dokument hoch, senden Sie es, lassen Sie es unterschreiben und versiegeln. Der Einstieg ist kostenlos.
+642	Datei hochladen
+643	Laden Sie eine Datei hoch, platzieren Sie die Felder und aktivieren Sie im Schritt „Senden“ „Als Vorlage speichern“.
+644	Laden Sie die Datei hoch, die unterschrieben werden soll. Ein PDF funktioniert am besten; Word, Excel, PowerPoint und Fotos werden konvertiert, und ein ZIP mit mehreren Dateien wird zu einem Paket. Möchten Sie Felder lieber durch Schreiben platzieren? Geben Sie in Ihrer Datei ein Text-Tag wie <code>{tag}</code> ein, und wir setzen das Feld dorthin.
+645	Laden Sie Ihr erstes Dokument hoch
+646	Hochgeladene Dokumente laufen ab nach (Tagen)
+647	Vorlagen aus hochgeladenen Dateien
+648	Wird hochgeladen…
+649	Nutzungsbericht
+650	Verwenden
+651	Eine Vorlage verwenden
+652	Stattdessen mein Passwort verwenden
+653	Verwenden Sie die genaue Adresse Ihrer Website, beginnend mit https:// (ohne Pfad).
+654	Diese Vorlage verwenden
+655	Normalerweise 587 (STARTTLS) oder 465 (TLS).
+656	Wert
+657	Verifizierung
+658	Version
+659	Ansehen
+660	Angesehen
+661	Nur Ansicht
+662	Annulliert
+663	Wartend
+664	Wartet auf jemanden
+665	Wartet gerade
+666	Wir rufen Ihre Adresse auf, wenn etwas passiert, signiert, damit Sie prüfen können, dass wir es sind. Öffnen Sie einen Endpunkt, um zu sehen, was gesendet wurde, und um beliebiges davon erneut zu senden.
+667	Wir haben {n} Unterschriftsstellen in dieser Datei gefunden, also braucht es wahrscheinlich {n} Personen.
+668	Webhooks
+669	Websites, die ein Unterschriftsformular anzeigen dürfen
+670	Wofür es gedacht ist (zum Beispiel meine Website)
+671	Was das Zertifikat zeigt
+672	Was {name} tun
+673	Wann
+674	Wenn ein hochgeladenes Dokument vollständig unterschrieben ist, das versiegelte PDF per E-Mail an alle Beteiligten und den Absender senden.
+675	Wenn aus, müssen Unterzeichner ihre Unterschrift zeichnen; die Option mit getipptem Namen wird ausgeblendet. (Die Seite zeigt, was der Unterzeichner gewählt hat; wer eigene Software nutzt, könnte anderes behaupten, daher ist dies eine Regel für ehrliche Unterzeichner, keine Sicherheitskontrolle.)
+676	Wenn aus, wird die Schaltfläche „Ablehnen“ entfernt und der Server weist eine Ablehnung zurück. Der Absender kann ein Dokument weiterhin annullieren.
+677	Wenn an, kann eine neue Vorlage aus einem hochgeladenen Dokument — oder eine neue Version davon — erst gesendet werden, wenn ein Inhaber oder Admin sie genehmigt. Bereits vorhandene Vorlagen sind davon nicht betroffen.
+678	Wenn an, sieht ein Teammitglied, das weder Inhaber noch Admin ist, nur die Dokumente und Vorlagen seiner Teams, die selbst erstellten und die, die keinem Team gehören. Inhaber und Admins sehen immer alles. Teams gehören zu Pro.
+679	Wenn an, kann niemand in Ihrem Team den Arbeitsbereich nutzen, bevor die zweistufige Anmeldung eingerichtet ist.
+680	Wann gesendet wird
+681	Wohin Antworten gehen. Wird immer verwendet, wenn Sie von der Plattformadresse senden.
+682	Wo Sie angemeldet sind
+683	An welchen Tagen nach dem Senden Personen erinnert werden, die noch nicht unterschrieben haben — 1 bis 3 Werte, aufsteigend.
+684	Welche Angaben gedruckt werden: ip, device, timeline, hashes, consent.
+685	Solange dies an ist, ist jedes Dokument, das Sie senden, ein Probelauf: Alle E-Mails gehen nur an Sie (den Absender), das signierte PDF trägt ein TEST-Wasserzeichen, und nichts zählt für Ihren Tarif, die Abrechnung oder Berichte. Schalten Sie es aus, um echt zu senden. Mit einem Test-API-Schlüssel gesendete Dokumente sind immer Tests.
+686	Für wen ist das?
+687	Wer unterschreibt
+688	Von wem die E-Mail stammt, zum Beispiel Ihr Praxisname. Leer lassen, um den Namen Ihrer Organisation zu verwenden.
+689	Wem sie helfen
+690	Von wem Ihre E-Mails kommen
+691	Wer einen Download-Link öffnet, muss zuerst einen Code eingeben, der an die eigene E-Mail-Adresse gesendet wurde. Links sind an eine Person gebunden.
+692	Arbeitsbereich
+693	Eine Vorlage schreiben
+694	Schreiben Sie eine Vereinbarung einmal mit Überschriften, Listen und Seriendruckfeldern (Name des Unterzeichners, Datum, Name des Arbeitsbereichs, Ihre eigenen Felder). Erstellen Sie daraus ein Dokument, wann immer Sie eines brauchen, platzieren Sie die Unterschriftsfelder und senden Sie es.
+695	Eine schreiben
+696	Geschriebene Vorlagen
+697	Sie brauchen zuerst eine gespeicherte Vorlage mit genau einem Unterzeichner.
+698	Ihr Stripe-Konto
+699	Ihr Konto ist bereit. Dieser Server hat Zahlungen noch nicht freigegeben, daher weist ein Zahlungsfeld darauf hin, wenn jemand zu zahlen versucht.
+700	Ihr Dokument wartet. Erstellen Sie ein Konto, dann öffnet es sich bereit für Felder.
+701	Ihre Dokumente sind unterwegs.
+702	Ihre Domain
+703	Ihre letzte Zahlung ist nicht durchgegangen. Bitte aktualisieren Sie Ihre Zahlungsmethode.
+704	Ihr Postfach ist verbunden. E-Mails werden jetzt von dort gesendet.
+705	Ihr Name oder Ihre Organisation
+706	Ihr eigenes Feld
+707	Ihr Passwort wurde geändert.
+708	Ihre Anmeldung konnte nicht verifiziert werden. Versuchen Sie es erneut.
+709	Ihre Website
+710	Ihr Arbeitsbereich wurde erstellt, aber die Einrichtung wurde nicht abgeschlossen. Melden Sie sich an und versuchen Sie es erneut.
+711	genehmigt
+712	abgerechnet {interval, select, month {monatlich} year {jährlich} other {pro Zeitraum}}
+713	both zeigt die gezeichnete Unterschrift, wenn es eine gibt, und sonst den getippten Namen in einer Unterschriftsschrift. drawn zeigt nur gezeichnete Unterschriften. typed verwendet immer den getippten Namen.
+714	abgeschlossen
+715	jedes wird zu Ihrer eigenen Vorlage, mit bereits platzierten Feldern
+716	E-Mail
+717	füllt Angaben aus
+718	Gründerpreis
+719	erhält eine Kopie
+720	helvetica ist die schlichte Serifenlose, times die Serifenschrift, inter eine moderne Schrift, die auch Buchstaben mit Akzenten abdeckt.
+721	es konnte nicht erneut abgespielt werden
+722	zuletzt verwendet am {date}
+723	muss erneut verbunden werden
+724	nie verwendet
+725	nicht akzeptiert
+726	auf diesem Gerät
+727	unsere Adresse
+728	platform: wird in Ihrem Namen von der Plattformadresse gesendet, Antworten gehen an Sie. domain: wird von Ihrer eigenen Domain gesendet (unten verifizieren). smtp: wird über Ihren eigenen Mailserver gesendet. mailbox: wird über Ihr eigenes Google- oder Microsoft-Postfach gesendet (unten verbinden).
+729	außer Dienst gestellt
+730	widerrufen
+731	gesendet
+732	angemeldet am {date}
+733	unterschreibt
+734	unterschreibt auf diesem Gerät
+735	starttls für Port 587, tls für Port 465, none nur für einen vertrauenswürdigen internen Server.
+736	sie
+737	dieses Gerät
+738	verwendet am {date}
+739	Version {n}
+740	sieht
+741	Ihre Organisation
+742	Ihre eigene Adresse
+743	{date}: {n} abgeschlossen
+744	{date}: {n} gesendet
+745	{from} an {to}
+746	{mode, select, light {hell} dark {dunkel} other {automatisch}}
+747	{mode, select, smtp {E-Mails werden von {address} über Ihren eigenen Mailserver gesendet.} mailbox {E-Mails werden von {address} über Ihr {provider}-Postfach gesendet.} other {E-Mails werden von {address} über Ihre eigene Domain gesendet.}}
+748	{n, plural, one {# Tag} other {# Tage}}
+749	{n, plural, one {# E-Mail wurde von der Plattformadresse statt vom gewählten Absender gesendet — die letzte am {date}: {reason}} other {# E-Mails wurden von der Plattformadresse statt vom gewählten Absender gesendet — die letzte am {date}: {reason}}}
+750	{n, plural, one {# Ereignis} other {# Ereignisse}}
+751	{n, plural, one {# Feld platziert. Wählen Sie es aus, um es zu ändern.} other {# Felder platziert. Wählen Sie eines aus, um es zu ändern.}}
+752	{n, plural, one {# Feld} other {# Felder}}
+753	{n, plural, one {# Stunde} other {# Stunden}}
+754	{n, plural, one {# Zeile muss korrigiert werden:} other {# Zeilen müssen korrigiert werden:}}
+755	{n, plural, one {# Zeile} other {# Zeilen}}
+756	{people, plural, one {# Person} other {# Personen}} · {docs, plural, one {# Dokument} other {# Dokumente}} · {tpls, plural, one {# Vorlage} other {# Vorlagen}}
+757	Tarif {plan}
+758	{price}/Jahr
+759	{sent} Dokumente in diesem Monat gesendet (kein Limit).
+760	{sent} von {limit} Dokumenten in diesem Monat gesendet.
+761	{sent} von {limit} E-Mails heute gesendet.
+762	{sent} von {total}
+763	{signed} von {total} unterschrieben
+764	{title} — bitte unterschreiben
+765	{waiting} warten auf jemanden, {signed} unterschrieben.
+766	← Alle Dokumente
+767	← Geschriebene Vorlagen

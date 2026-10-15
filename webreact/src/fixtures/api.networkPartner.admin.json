@@ -1,0 +1,30 @@
+{
+ "$captured": {
+  "route": "GET /api/network/parties/:world.network",
+  "rank": "admin",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "party": {
+   "id": "00000000-0000-4000-8000-000000000023",
+   "name": "Reference Referrer",
+   "kind": "referral_partner",
+   "whatTheyDo": null,
+   "city": null,
+   "email": null,
+   "contact": null,
+   "since": "2026-09-26T17:56:06.164Z",
+   "archivedAt": null
+  },
+  "between": {
+   "theySent": 0,
+   "youSent": 0,
+   "becameClients": 0,
+   "spentMinor": 0,
+   "currency": null
+  },
+  "recent": [],
+  "showsTeamRow": false
+ }
+}

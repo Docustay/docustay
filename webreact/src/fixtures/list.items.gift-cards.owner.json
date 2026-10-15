@@ -1,0 +1,80 @@
+{
+ "$captured": {
+  "route": "GET /api/list/items/gift-cards",
+  "rank": "owner",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/items/gift-cards",
+  "title": "Gift cards",
+  "columns": [
+   {
+    "field": "number",
+    "label": "Number",
+    "format": "text"
+   },
+   {
+    "field": "holder",
+    "label": "Who has it",
+    "format": "text"
+   },
+   {
+    "field": "issued_minor",
+    "label": "Bought for",
+    "format": "money",
+    "currency": "currency",
+    "requires": "invoice.view"
+   },
+   {
+    "field": "remaining_minor",
+    "label": "Left",
+    "format": "money",
+    "currency": "currency",
+    "requires": "invoice.view"
+   },
+   {
+    "field": "created_at",
+    "label": "When",
+    "format": "date"
+   },
+   {
+    "field": "state",
+    "label": "State",
+    "format": "enum"
+   }
+  ],
+  "recordType": null,
+  "empty": "put the link on your site and in your email footer.",
+  "canWrite": null,
+  "noWriteNotice": null,
+  "summary": null,
+  "emptyState": {
+   "kind": "first-run",
+   "icon": "IconGift",
+   "headline": "No cards sold yet",
+   "line": "put the link on your site and in your email footer.",
+   "action": {
+    "label": "Issue a gift card",
+    "href": "/items/gift-cards?new=1"
+   },
+   "blockedAction": null,
+   "blockedLine": null,
+   "errorWhenEmpty": false,
+   "noWrite": null,
+   "firstRun": null
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 0
+  }
+ }
+}

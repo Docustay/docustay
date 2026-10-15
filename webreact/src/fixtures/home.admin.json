@@ -1,0 +1,219 @@
+{
+ "$captured": {
+  "route": "GET /api/home",
+  "rank": "admin",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "view": "owner",
+  "hero": {
+   "amountMinor": 0,
+   "deltaSentence": "▲ $0 on August",
+   "sinceStarted": false
+  },
+  "headline": {
+   "text": "one sessions this week.",
+   "strong": []
+  },
+  "prompts": {
+   "items": [
+    {
+     "kind": "analytics_snippet_missing",
+     "icon": "▢",
+     "tone": "warn",
+     "headline": "See where your traffic comes from",
+     "why": "Google Tag Manager shows you traffic sources and customer details when you paste the snippet.",
+     "action": {
+      "label": "Set up Google Tag Manager",
+      "href": "/settings/integrations"
+     },
+     "subjectId": null,
+     "dismissKey": "analytics_snippet_missing:"
+    }
+   ],
+   "moreCount": 0
+  },
+  "today": [],
+  "week": [
+   {
+    "day": "2026-09-26T07:00:00.000Z",
+    "date": "2026-09-26",
+    "n": 0
+   },
+   {
+    "day": "2026-09-27T07:00:00.000Z",
+    "date": "2026-09-27",
+    "n": 0
+   },
+   {
+    "day": "2026-09-28T07:00:00.000Z",
+    "date": "2026-09-28",
+    "n": 0
+   },
+   {
+    "day": "2026-09-29T07:00:00.000Z",
+    "date": "2026-09-29",
+    "n": 0
+   },
+   {
+    "day": "2026-09-30T07:00:00.000Z",
+    "date": "2026-09-30",
+    "n": 0
+   },
+   {
+    "day": "2026-10-01T07:00:00.000Z",
+    "date": "2026-10-01",
+    "n": 1
+   },
+   {
+    "day": "2026-10-02T07:00:00.000Z",
+    "date": "2026-10-02",
+    "n": 0
+   }
+  ],
+  "tiles": [
+   {
+    "key": "paid_this_month",
+    "label": "Paid this month",
+    "path": "/money/payments",
+    "count": 0,
+    "band": "money",
+    "money": true,
+    "currency": "USD"
+   },
+   {
+    "key": "outstanding_balance",
+    "label": "Outstanding",
+    "path": "/money/invoices",
+    "count": 0,
+    "band": "money",
+    "money": true,
+    "currency": "USD"
+   },
+   {
+    "key": "active_plans",
+    "label": "Active plans",
+    "path": "/money/subscriptions",
+    "count": 0,
+    "band": "money"
+   },
+   {
+    "key": "credits_outstanding",
+    "label": "Credits out",
+    "path": "/money/credits",
+    "count": 0,
+    "band": "money"
+   },
+   {
+    "key": "sessions_today",
+    "label": "Sessions today",
+    "path": "/engagements/calendar",
+    "count": 0,
+    "band": "work"
+   },
+   {
+    "key": "no_shows_this_week",
+    "label": "No-shows",
+    "path": "/engagements/calendar",
+    "count": 0,
+    "band": "work"
+   },
+   {
+    "key": "open_tasks",
+    "label": "Open tasks",
+    "path": "/tasks/mine",
+    "count": 0,
+    "band": "work"
+   },
+   {
+    "key": "documents_awaiting_signature",
+    "label": "Awaiting signature",
+    "path": "/documents/pipeline",
+    "count": 1,
+    "band": "work"
+   },
+   {
+    "key": "clients",
+    "label": "Clients",
+    "path": "/people/clients",
+    "count": 1,
+    "band": "people"
+   },
+   {
+    "key": "new_clients_this_month",
+    "label": "New this month",
+    "path": "/people/clients",
+    "count": 1,
+    "band": "people"
+   },
+   {
+    "key": "open_leads",
+    "label": "Open leads",
+    "path": "/people/leads",
+    "count": 1,
+    "band": "people"
+   },
+   {
+    "key": "adolescents_awaiting_consent",
+    "label": "Consent waiting",
+    "path": "/people/adolescents",
+    "count": 0,
+    "band": "people"
+   },
+   {
+    "key": "people",
+    "label": "People",
+    "path": "/people/all",
+    "count": 3,
+    "band": "people"
+   },
+   {
+    "key": "accounts",
+    "label": "Accounts",
+    "path": "/accounts",
+    "count": 1,
+    "band": "people"
+   },
+   {
+    "key": "sessions_this_week",
+    "label": "Sessions this week",
+    "path": "/engagements/calendar",
+    "count": 1,
+    "band": "people"
+   }
+  ],
+  "sampleBanner": {
+   "count": 0
+  },
+  "needsIntake": false,
+  "needsYou": [
+   {
+    "kind": "document",
+    "id": "00000000-0000-4000-8000-000000000007",
+    "at": "2026-09-26T17:56:06.221Z",
+    "what": "Reference Coaching agreement for Adult",
+    "who": "Reference Adult",
+    "href": "/record/document/00000000-0000-4000-8000-000000000007"
+   }
+  ],
+  "needsYouTotal": 1,
+  "hasServices": true,
+  "hasPackages": true,
+  "hasPlans": true,
+  "shape": "both",
+  "money": {
+   "owedMinor": 12500,
+   "lateMinor": 0,
+   "thisMonthMinor": 0,
+   "sessions": 0,
+   "drifting": 0,
+   "unsigned": 1
+  },
+  "people": {
+   "clients": 3,
+   "drifting": 2,
+   "notesToWrite": 1
+  }
+ }
+}

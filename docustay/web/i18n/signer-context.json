@@ -1,0 +1,13 @@
+{
+ "cert.originalFp": {
+  "glossarySkip": "upload",
+  "note": "the file as first uploaded, before any change"
+ },
+ "web.err.noReturn": {
+  "glossarySkip": [
+   "send"
+  ],
+  "note": "'send you back' (redirect after paying), not the send action"
+ },
+ "web.sp.sendThem": {}
+}

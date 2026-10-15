@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" />
+  <link rel="icon" href="/brand/favicon-32.png" sizes="32x32" type="image/png" />
+  <link rel="apple-touch-icon" href="/brand/apple-touch-icon.png" />
+  <link rel="preload" href="/fonts/geist-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
+  <script>// Runs before the first paint (a blocking, same-origin script, so the strict CSP allows it): marks the page as script-capable (the stylesheet hides reveal effects only then) and settles the Appearance. The server already wrote data-theme (light or dark) and data-surface; this resolves "System" and a preference the cookie did not carry. The marketing site (data-surface="site") and the signing page never change.
+document.documentElement.classList.add("js");
+(function () { try {
+  var r = document.documentElement;
+  if (!r.getAttribute("data-surface")) {
+    var p = null; try { p = localStorage.getItem("docustay-theme"); } catch (e) { /* storage blocked */ }
+    if (p !== "light" && p !== "dark" && p !== "system") { var m = /(?:^|;\s*)docustay-theme=(system|light|dark)\b/.exec(document.cookie); p = m ? m[1] : "light"; }
+    var mq = window.matchMedia("(prefers-color-scheme: dark)");
+    var set = function () { r.setAttribute("data-theme", p === "dark" || (p === "system" && mq.matches) ? "dark" : "light"); };
+    set(); if (p === "system") mq.addEventListener("change", set);
+  }
+} catch (e) { /* stay as the server wrote it */ } })();
+// R10-60: a signed-in screen starts asking the server for what every one of them needs (the menu, the plan, the settings) NOW, while the scripts download; api.js hands these answers to the app instead of asking again. Only the app's own routes, only plain reads, and an answer nobody took within 20 seconds is dropped.
+try { if (/^\/(documents|templates|forms|people|automations|plays|reports|billing|settings|console|create|contracts|payments|playbooks|upgrade)(\/|$)/.test(location.pathname)) { var pre = window.__pre = {}; ["/api/nav", "/api/product/docustay/status", "/api/documents/settings"].concat(location.pathname === "/documents" ? ["/api/list/documents"] : location.pathname === "/settings" && /[?&]tab=team(&|$)/.test(location.search) ? ["/api/list/people/team", "/api/documents/teams"] : []).forEach(function (u) { pre[u] = { at: Date.now(), p: fetch(u, { credentials: "same-origin", headers: { accept: "application/json" } }).catch(function () { return null; }) }; }); } } catch (e) { /* the app asks for itself */ }
+</script>
+  %sveltekit.head%
+</head>
+<body data-sveltekit-preload-data="hover">%sveltekit.body%</body>
+</html>

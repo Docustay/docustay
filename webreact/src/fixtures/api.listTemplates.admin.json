@@ -1,0 +1,282 @@
+{
+ "$captured": {
+  "route": "GET /api/growth/templates",
+  "rank": "admin",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "rows": [
+   {
+    "key": "document.ready_to_sign",
+    "family": "documents",
+    "name": "document ready to sign",
+    "activeVersion": null,
+    "versions": 0,
+    "origin": "Shipped",
+    "usedBy": "Automation"
+   },
+   {
+    "key": "booking.reminder",
+    "family": "bookings",
+    "name": "booking reminder",
+    "activeVersion": null,
+    "versions": 0,
+    "origin": "Shipped",
+    "usedBy": "Automation"
+   },
+   {
+    "key": "money.invoice_issued",
+    "family": "money",
+    "name": "money invoice issued",
+    "activeVersion": null,
+    "versions": 0,
+    "origin": "Shipped",
+    "usedBy": "Automation"
+   },
+   {
+    "key": "auth.invite",
+    "family": "auth",
+    "name": "auth invite",
+    "activeVersion": null,
+    "versions": 0,
+    "origin": "Shipped",
+    "usedBy": "Automation"
+   },
+   {
+    "key": "auth.email_code",
+    "family": "auth",
+    "name": "auth email code",
+    "activeVersion": null,
+    "versions": 0,
+    "origin": "Shipped",
+    "usedBy": "Automation"
+   },
+   {
+    "key": "auth.backup_codes_low",
+    "family": "auth",
+    "name": "auth backup codes low",
+    "activeVersion": null,
+    "versions": 0,
+    "origin": "Shipped",
+    "usedBy": "Automation"
+   },
+   {
+    "key": "auth.two_step_changed",
+    "family": "auth",
+    "name": "auth two step changed",
+    "activeVersion": null,
+    "versions": 0,
+    "origin": "Shipped",
+    "usedBy": "Automation"
+   },
+   {
+    "key": "booking.confirmed",
+    "family": "bookings",
+    "name": "booking confirmed",
+    "activeVersion": null,
+    "versions": 0,
+    "origin": "Shipped",
+    "usedBy": "Automation"
+   },
+   {
+    "key": "booking.moved",
+    "family": "bookings",
+    "name": "booking moved",
+    "activeVersion": null,
+    "versions": 0,
+    "origin": "Shipped",
+    "usedBy": "Automation"
+   },
+   {
+    "key": "booking.cancelled",
+    "family": "bookings",
+    "name": "booking cancelled",
+    "activeVersion": null,
+    "versions": 0,
+    "origin": "Shipped",
+    "usedBy": "Automation"
+   },
+   {
+    "key": "booking.waitlist_offer",
+    "family": "bookings",
+    "name": "booking waitlist offer",
+    "activeVersion": null,
+    "versions": 0,
+    "origin": "Shipped",
+    "usedBy": "Automation"
+   },
+   {
+    "key": "document.sign_link",
+    "family": "documents",
+    "name": "document sign link",
+    "activeVersion": null,
+    "versions": 0,
+    "origin": "Shipped",
+    "usedBy": "Automation"
+   },
+   {
+    "key": "document.sign_link_reminder",
+    "family": "documents",
+    "name": "document sign link reminder",
+    "activeVersion": null,
+    "versions": 0,
+    "origin": "Shipped",
+    "usedBy": "Automation"
+   },
+   {
+    "key": "money.invoice_reminder",
+    "family": "money",
+    "name": "money invoice reminder",
+    "activeVersion": null,
+    "versions": 0,
+    "origin": "Shipped",
+    "usedBy": "Automation"
+   },
+   {
+    "key": "money.receipt",
+    "family": "money",
+    "name": "money receipt",
+    "activeVersion": null,
+    "versions": 0,
+    "origin": "Shipped",
+    "usedBy": "Automation"
+   },
+   {
+    "key": "money.update_card",
+    "family": "money",
+    "name": "money update card",
+    "activeVersion": null,
+    "versions": 0,
+    "origin": "Shipped",
+    "usedBy": "Automation"
+   },
+   {
+    "key": "money.refund_notice",
+    "family": "money",
+    "name": "money refund notice",
+    "activeVersion": null,
+    "versions": 0,
+    "origin": "Shipped",
+    "usedBy": "Automation"
+   },
+   {
+    "key": "money.estimate",
+    "family": "money",
+    "name": "money estimate",
+    "activeVersion": null,
+    "versions": 0,
+    "origin": "Shipped",
+    "usedBy": "Automation"
+   },
+   {
+    "key": "money.estimate_expiring",
+    "family": "money",
+    "name": "money estimate expiring",
+    "activeVersion": null,
+    "versions": 0,
+    "origin": "Shipped",
+    "usedBy": "Automation"
+   },
+   {
+    "key": "money.invoice_raised",
+    "family": "money",
+    "name": "money invoice raised",
+    "activeVersion": null,
+    "versions": 0,
+    "origin": "Shipped",
+    "usedBy": "Automation"
+   },
+   {
+    "key": "money.payout_failed",
+    "family": "money",
+    "name": "money payout failed",
+    "activeVersion": null,
+    "versions": 0,
+    "origin": "Shipped",
+    "usedBy": "Automation"
+   },
+   {
+    "key": "money.dispute_opened",
+    "family": "money",
+    "name": "money dispute opened",
+    "activeVersion": null,
+    "versions": 0,
+    "origin": "Shipped",
+    "usedBy": "Automation"
+   },
+   {
+    "key": "growth.campaign",
+    "family": "growth",
+    "name": "growth campaign",
+    "activeVersion": null,
+    "versions": 0,
+    "origin": "Shipped",
+    "usedBy": "Automation"
+   },
+   {
+    "key": "automation.package_low",
+    "family": "automations",
+    "name": "automation package low",
+    "activeVersion": null,
+    "versions": 0,
+    "origin": "Shipped",
+    "usedBy": "Automation"
+   },
+   {
+    "key": "automation.invoice_chase",
+    "family": "automations",
+    "name": "automation invoice chase",
+    "activeVersion": null,
+    "versions": 0,
+    "origin": "Shipped",
+    "usedBy": "Automation"
+   },
+   {
+    "key": "automation.review_ask",
+    "family": "automations",
+    "name": "automation review ask",
+    "activeVersion": null,
+    "versions": 0,
+    "origin": "Shipped",
+    "usedBy": "Automation"
+   },
+   {
+    "key": "automation.win_back",
+    "family": "automations",
+    "name": "automation win back",
+    "activeVersion": null,
+    "versions": 0,
+    "origin": "Shipped",
+    "usedBy": "Automation"
+   },
+   {
+    "key": "reports.monthly_ready",
+    "family": "reports",
+    "name": "reports monthly ready",
+    "activeVersion": null,
+    "versions": 0,
+    "origin": "Shipped",
+    "usedBy": "Automation"
+   },
+   {
+    "key": "reports.accountant_pack",
+    "family": "reports",
+    "name": "reports accountant pack",
+    "activeVersion": null,
+    "versions": 0,
+    "origin": "Shipped",
+    "usedBy": "Automation"
+   },
+   {
+    "key": "support_access.requested",
+    "family": "support",
+    "name": "support access requested",
+    "activeVersion": null,
+    "versions": 0,
+    "origin": "Shipped",
+    "usedBy": "Automation"
+   }
+  ]
+ }
+}

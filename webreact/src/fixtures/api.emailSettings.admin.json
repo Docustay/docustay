@@ -1,0 +1,15 @@
+{
+ "$captured": {
+  "route": "GET /api/settings/email",
+  "rank": "admin",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/settings/email",
+  "title": "Email",
+  "mailbox": null,
+  "routing": {},
+  "lastChanged": null
+ }
+}

@@ -1,0 +1,104 @@
+{
+ "$captured": {
+  "route": "GET /api/list/accounts/business-profile",
+  "rank": "admin",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/accounts/business-profile",
+  "title": "Business Profile",
+  "columns": [
+   {
+    "field": "account",
+    "label": "Account",
+    "format": "text"
+   },
+   {
+    "field": "item",
+    "label": "Item",
+    "format": "enum"
+   },
+   {
+    "field": "connection",
+    "label": "Connection",
+    "format": "enum"
+   },
+   {
+    "field": "delivery",
+    "label": "Delivery",
+    "format": "enum"
+   },
+   {
+    "field": "rows_read",
+    "label": "Rows read",
+    "format": "number"
+   },
+   {
+    "field": "last_read",
+    "label": "Last read",
+    "format": "datetime"
+   },
+   {
+    "field": "age",
+    "label": "Age",
+    "format": "text"
+   },
+   {
+    "field": "next_action",
+    "label": "Next step",
+    "format": "text"
+   },
+   {
+    "field": "authority",
+    "label": "What the connection grants",
+    "format": "text"
+   }
+  ],
+  "recordType": null,
+  "empty": "Reviews and map listings appear against each account once a profile is linked.",
+  "canWrite": null,
+  "noWriteNotice": null,
+  "summary": null,
+  "emptyState": {
+   "kind": "blocked",
+   "icon": "IconMapPin",
+   "headline": "No accounts to read Business Profile for",
+   "line": "Reviews and map listings appear against each account once a profile is linked.",
+   "action": null,
+   "blockedAction": {
+    "label": "Add account",
+    "href": "/accounts?new=1"
+   },
+   "blockedLine": "You have no accounts yet, so there are no profiles to read.",
+   "errorWhenEmpty": false,
+   "noWrite": null,
+   "firstRun": null
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [
+   {
+    "id": "00000000-0000-4000-8000-000000000019:-",
+    "account": "Reference Account",
+    "item": "not_scheduled",
+    "connection": "never_granted",
+    "delivery": "not_scheduled",
+    "rows_read": null,
+    "last_read": null,
+    "age": "never read successfully",
+    "next_action": "Ask the client to connect this account",
+    "authority": "Full management access to your Google Business Profile. ★ Google does not offer a read-only version of this permission, so granting it gives this application the technical ability to CHANGE YOUR PUBLIC LISTING — your hours, your posts and your replies to reviews. We use it only to read reviews and insights; the limit is our agreement with you, not a restriction Google enforces."
+   }
+  ],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 1
+  }
+ }
+}

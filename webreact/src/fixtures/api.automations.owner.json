@@ -1,0 +1,1545 @@
+{
+ "$captured": {
+  "route": "GET /api/tasks/automations",
+  "rank": "owner",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/tasks/automations",
+  "title": "Automations",
+  "settings": {},
+  "platform": null,
+  "automations": [
+   {
+    "id": "booking.reminder",
+    "name": "Remind people the day before",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "invoice.late_chase",
+    "name": "Chase an unpaid invoice",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "run.review_ask",
+    "name": "Ask for a review after the third session",
+    "defaultOn": false,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "package.running_low",
+    "name": "Tell someone their block is running out",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "people.quiet_flag",
+    "name": "Flag a client who has gone quiet",
+    "defaultOn": false,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "booking.first_agreement",
+    "name": "Send the agreement when someone books",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "ads.keyword_pause",
+    "name": "Pause a keyword burning money",
+    "defaultOn": false,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "reports.monthly_writeup",
+    "name": "Write up what we did each month",
+    "defaultOn": false,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "people.win_back",
+    "name": "Win back anyone quiet eight weeks",
+    "defaultOn": false,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "forms.lead_task",
+    "name": "Make a task from the contact form",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "tasks.session_writeup",
+    "name": "Ask for the session write-up",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "money.device_registered",
+    "name": "Confirm to owner: a reader is live at this location",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "money.dispute_opened",
+    "name": "Urgent. Task with the 7-day clock, evidence pre-assembled, notify owner every channel",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "money.dispute_evidence_submitted",
+    "name": "Confirm what was sent, and when the bank decides",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "money.entitlement_granted",
+    "name": "Your six sessions are ready — book the first",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "money.estimate_sent",
+    "name": "The estimate email",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "money.estimate_opened",
+    "name": "Tell the owner they read it",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "money.estimate_accepted",
+    "name": "Raise the invoice, send the agreement, notify owner, open a task",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "money.estimate_declined",
+    "name": "Notify owner with the reason, open a follow-up task",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "money.estimate_expiring",
+    "name": "Remind the client 3 days out, tell the owner",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "money.estimate_expired",
+    "name": "Tell the owner, offer to re-send",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "money.invoice_sent",
+    "name": "Stripe's finalized-invoice email",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "money.invoice_opened",
+    "name": "Feeds the opened five times, not paid prompt",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "money.invoice_reminder_due",
+    "name": "Stripe's unpaid-invoice reminder schedule",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "money.invoice_paid",
+    "name": "Stripe receipt; n8n sends the book your next nudge",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "money.invoice_voided",
+    "name": "If already sent, tell them it's cancelled",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "money.payment_succeeded",
+    "name": "Stripe receipt",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "money.payment_failed",
+    "name": "Stripe dunning: retry, tell, pause",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "money.payment_retry_scheduled",
+    "name": "Stripe's own",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "money.payment_retries_exhausted",
+    "name": "Stripe pauses; n8n opens an owner task",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "money.payment_recorded_offline",
+    "name": "Stripe doesn't know about cash. We send the receipt",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "money.payment_refunded",
+    "name": "Stripe receipt; n8n reverses credits and tells the owner what reversed",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "money.payment_method_added",
+    "name": "Confirm a card was saved",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "money.payment_method_update_requested",
+    "name": "Stripe's card-update email",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "money.payment_link_paid",
+    "name": "Receipt, plus reconcile to whatever it was for",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "money.payment_plan_offered",
+    "name": "Send it, with a deadline",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "money.payment_plan_agreed",
+    "name": "Confirm both sides, schedule the instalments",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "money.payout_recorded",
+    "name": "Optional money landed in your bank",
+    "defaultOn": false,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "money.payout_failed",
+    "name": "Urgent. Every channel. Their money is stuck",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "money.refund_approval_needed",
+    "name": "Task to whoever may approve",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "money.subscription_started",
+    "name": "Stripe receipt; n8n sends the welcome and what happens next",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "money.subscription_past_due",
+    "name": "Stripe dunning",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "money.subscription_paused",
+    "name": "Confirm to both, say when it resumes",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "money.subscription_resumed",
+    "name": "Confirm, first charge date",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "money.subscription_cancel_scheduled",
+    "name": "Confirm the end date, schedule the win-back",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "money.subscription_cancelled",
+    "name": "Owner task, win-back sequence at 30 days",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "money.payer_group_created",
+    "name": "Welcome the payer, explain what they can see",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "money.payer_group_member_added",
+    "name": "Tell the payer they're now billed for this person",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "money.payer_group_member_removed",
+    "name": "Tell them they're not",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "money.payer_group_member_moved",
+    "name": "Billing changed — log and confirm",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "money.tap_to_pay_activated",
+    "name": "Confirm, plus the first-payment nudge",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "people.person_created",
+    "name": "Create the Stripe Customer. Then the welcome, or the portal invite",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "people.person_invited",
+    "name": "The portal invite, then two reminders if unused",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "people.person_assigned",
+    "name": "Tell the coach they have a new client, with context",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "people.person_role_changed",
+    "name": "Confirm to them and to the owner",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "people.person_stage_changed",
+    "name": "Pipeline moved — task on the new stage",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "people.person_lead_next_step_set",
+    "name": "Task with a due date",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "people.person_consent_status_changed",
+    "name": "Legal. Log, and stop or resume sends immediately",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "people.person_archived",
+    "name": "Cancel future bookings, warn about open money",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "people.person_merged",
+    "name": "Confirm what merged, 30-day undo window",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "people.person_merge_undone",
+    "name": "Confirm",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "people.guardian_linked",
+    "name": "Tell the parent what they can and cannot see",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "people.guardian_unlinked",
+    "name": "Tell both. Access has changed",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "people.goal_created",
+    "name": "Share with the client if the goal is shared",
+    "defaultOn": false,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "people.goal_updated",
+    "name": "Share with the client if the goal is shared",
+    "defaultOn": false,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "people.referral_received",
+    "name": "Task, urgently. Someone sent you a client",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "people.referral_sent",
+    "name": "Confirm, then chase the outcome at 14 days",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "people.referral_outcome_set",
+    "name": "Tell the referrer what happened",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "people.referral_blocked_no_release",
+    "name": "Task: get the release signed",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "people.role_granted",
+    "name": "Security. Tell the person and the owner",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "people.role_revoked",
+    "name": "Security. Tell the person and the owner",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "people.role_permission_changed",
+    "name": "Tell the owner what changed",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "people.team_member_added",
+    "name": "Welcome to the team, here's what you can see",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "people.team_member_removed",
+    "name": "Reassign their sessions, revoke access",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "people.person_removed_from_team",
+    "name": "Same as member_removed",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "people.shift_created",
+    "name": "Tell the coach, warn if it orphans a booking",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "people.shift_changed",
+    "name": "Tell the coach, warn if it orphans a booking",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "people.time_off_added",
+    "name": "Check for bookings inside it. Task if any",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "people.time_off_removed",
+    "name": "Availability reopened",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "items.service_created",
+    "name": "Sync to Stripe product and price. Prompt to put it on the booking page",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "items.service_updated",
+    "name": "Re-sync to Stripe",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "items.price_changed",
+    "name": "New Stripe price, old one kept. Tell subscribers if it affects them",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "items.service_stopped_selling",
+    "name": "Remove from booking page, check open packages",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "items.service_sellable_again",
+    "name": "Back on the page",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "items.service_archived",
+    "name": "Existing bookings survive; confirm the count",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "items.package_created",
+    "name": "Sync to Stripe",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "items.package_updated",
+    "name": "Sync to Stripe",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "items.package_stopped_selling",
+    "name": "Booking page in and out",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "items.package_sellable_again",
+    "name": "Booking page in and out",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "items.plan_created",
+    "name": "Sync to Stripe",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "items.plan_updated",
+    "name": "Sync to Stripe",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "items.plan_stopped_selling",
+    "name": "Existing subscriptions unaffected — say so",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "items.plan_sellable_again",
+    "name": "Existing subscriptions unaffected — say so",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "items.plan_archived",
+    "name": "Existing subscriptions unaffected — say so",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "items.discount_created",
+    "name": "Sync to Stripe coupon",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "items.discount_updated",
+    "name": "Sync to Stripe coupon",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "items.discount_active_changed",
+    "name": "On or off, with the redemption count",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "items.modifier_created",
+    "name": "Sync; a modifier is its own invoice line",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "items.modifier_updated",
+    "name": "Sync; a modifier is its own invoice line",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "items.modifier_active_changed",
+    "name": "Sync; a modifier is its own invoice line",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "items.agreement_requirement_attached",
+    "name": "From now on this service sends an agreement. Confirm",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "items.agreement_requirement_detached",
+    "name": "It no longer does. Confirm — this one matters",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "items.gift_card_sold",
+    "name": "Deliver it, record the liability",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "items.gift_card_nudged",
+    "name": "You still have $X",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "items.gift_card_voided",
+    "name": "Tell the holder. Money is involved",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "items.loyalty_points_earned",
+    "name": "Told per loyalty.tell_channel",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "items.loyalty_reward_claimed",
+    "name": "Confirm to both",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "documents.document_sent",
+    "name": "The document email",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "documents.document_opened",
+    "name": "Tell the sender they read it",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "documents.document_reminder_due",
+    "name": "3 days, 7 days, then stop",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "documents.document_signed",
+    "name": "PDF to both. Start the subscription if it starts one. Release any held booking",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "documents.document_executed",
+    "name": "Fully executed — all signatures in",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "documents.document_declined",
+    "name": "Task with the reason. A held booking stays held",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "documents.document_expired",
+    "name": "Tell both, offer to re-send",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "documents.template_published",
+    "name": "Live from now. Which services send it",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "documents.template_versioned",
+    "name": "Signed copies are unaffected — say so explicitly",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "documents.disclosure_accepted",
+    "name": "Signing is now available for this practice",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "documents.disclosure_withdrawn",
+    "name": "Signing stops. Urgent",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "documents.note_shared",
+    "name": "The client can now see this note",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "documents.pdf_imported",
+    "name": "Ready to turn into a template",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "documents.ai_check_run",
+    "name": "Findings as a task if anything flagged",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "booking.booking_created",
+    "name": "Confirmation, calendar invite, agreement if required, coach told",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "booking.booking_confirmed",
+    "name": "Confirmed, with what to bring and where",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "booking.booking_rescheduled",
+    "name": "Both told, calendar updated, price row preserved",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "booking.booking_cancelled",
+    "name": "Both told, charge-or-not stated plainly, credit returned or not",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "booking.booking_completed",
+    "name": "Write-up task for the coach; review ask at the third",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "booking.participant_added",
+    "name": "Their own confirmation",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "booking.waitlist_offered",
+    "name": "Time-limited. Claim it before it goes",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "booking.hold_expired",
+    "name": "Seat released, tell them why",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "booking.entitlement_exhausted",
+    "name": "Block used up — buy another",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "booking.entitlement_expiring",
+    "name": "30 and 7 days out. Real money expiring",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "booking.availability_changed",
+    "name": "Warn if it orphans a booking",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "booking.policy_changed",
+    "name": "Cancellation terms changed — tell people with future bookings",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "booking.day_summary",
+    "name": "The coach's morning list",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "settings.terminology_changed",
+    "name": "Everything is renamed. Confirm the scope",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "settings.policy_announced",
+    "name": "The practice announcing a policy to everyone",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "settings.location_created",
+    "name": "Sync a Stripe Terminal location",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "settings.location_updated",
+    "name": "Re-sync",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "settings.data_export_requested",
+    "name": "Confirm, then deliver",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "settings.data_export_ready",
+    "name": "The link, and when it expires",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "settings.data_person_export_requested",
+    "name": "Legal — a subject access request. Task with a deadline",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "settings.data_person_removal_completed",
+    "name": "Legal. Confirm what was removed and what was kept",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "settings.import_completed",
+    "name": "What came in, what didn't, undo window",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "settings.import_undone",
+    "name": "Confirm what reversed",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "settings.push_device_registered",
+    "name": "Push is on for this phone",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "settings.subscription_updated",
+    "name": "Their Workbench plan changed — confirm, new price, next date",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "settings.usage_reconciled",
+    "name": "Monthly usage, and a warning at 80%",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "growth.campaign_scheduled",
+    "name": "Confirm: who, when, how many",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "growth.campaign_sent",
+    "name": "Delivered, opened, clicked, bounced",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "growth.consent_unsubscribed",
+    "name": "Legal. Stop immediately. consent_record written",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "growth.consent_resubscribed",
+    "name": "Logged and honoured",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "growth.landing_page_lead",
+    "name": "Task within minutes. This is the speed-to-lead problem",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "tasks.task_assigned",
+    "name": "Tell the assignee, with context",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "tasks.task_completed",
+    "name": "Tell whoever raised it",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "tasks.task_reassigned",
+    "name": "Tell both",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "messages.message_sent",
+    "name": "Notify the recipient per their own preference",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "calendar.connection_connected",
+    "name": "Confirm what syncs now",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "calendar.connection_disconnected",
+    "name": "Warn loudly — double-booking is now possible",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "calendar.connection_renewal_failed",
+    "name": "Urgent, retry, then tell them to reconnect",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "calendar.remote_change_flagged",
+    "name": "Something changed outside Workbench — task",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "network.party_created",
+    "name": "Confirm, offer to send an intro",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "network.referral_created",
+    "name": "Task on both sides",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "run.item_blocked",
+    "name": "Their presence broke. Tell them with the fix",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "run.access_granted",
+    "name": "Confirm what we can now see and do",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "run.competitor_watch_recorded",
+    "name": "Monthly digest, not per event",
+    "defaultOn": false,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "reports.accountant_sent",
+    "name": "Confirm to the owner",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "provisioning.questions_answered",
+    "name": "The audit findings — the first value moment. Send them",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "provisioning.run_completed",
+    "name": "You're set up. Here are the five things",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "provisioning.samples_created",
+    "name": "What the sample data is, and how to clear it",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "provisioning.step_failed",
+    "name": "Tell us urgently. A practice is stuck at signup",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "platform.tenant_provisioned",
+    "name": "Welcome. And create their row in the FOUNDRY accounts tab",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "platform.support_access_requested",
+    "name": "Ask permission. One hour, logged",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "platform.support_access_answered",
+    "name": "Tell the operator yes or no",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "platform.support_access_ended",
+    "name": "What was done while inside",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "platform.impersonation_started",
+    "name": "Always tell the practice",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "platform.job_given_up",
+    "name": "Alert us. Something failed permanently",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "accounts.account_created",
+    "name": "Confirm; if it's a Workbench customer, link customer_tenant_id",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "accounts.pipeline_advanced",
+    "name": "Task on the new stage",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "developer.api_key_created",
+    "name": "Security. Tell the owner, name the scopes",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "developer.api_key_revoked",
+    "name": "Security",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "developer.api_key_scopes_changed",
+    "name": "Security",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "developer.webhook_endpoint_created",
+    "name": "Confirm",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "developer.webhook_endpoint_removed",
+    "name": "Confirm",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "workbench.subscription_updated",
+    "name": "Workbench plan changed",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "workbench.usage_warning",
+    "name": "Usage approaching limit",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "workbench.run_finding",
+    "name": "A scheduled item had findings",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "workbench.onboarding_stalled",
+    "name": "Setup appears stalled",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "workbench.announcement_published",
+    "name": "Announce something important",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "workbench.promotion_offered",
+    "name": "Offer a promotion",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "workbench.lifecycle_trial_ending",
+    "name": "Trial ending soon",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   },
+   {
+    "id": "workbench.lifecycle_win_back",
+    "name": "Win back after churn",
+    "defaultOn": true,
+    "week_count": 0,
+    "month_count": 0,
+    "enabled": true
+   }
+  ],
+  "ran_this_month": 0
+ }
+}

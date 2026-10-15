@@ -1,0 +1,13 @@
+{
+ "$captured": {
+  "route": "GET /api/people/:world.adult/goals",
+  "rank": "owner",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "rightNow": [],
+  "parked": [],
+  "done": []
+ }
+}

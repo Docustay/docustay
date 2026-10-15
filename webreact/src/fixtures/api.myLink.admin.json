@@ -1,0 +1,15 @@
+{
+ "$captured": {
+  "route": "GET /api/engagements/my-link",
+  "rank": "admin",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "slug": null,
+  "acceptingNewBookings": true,
+  "taggedLinks": [],
+  "url": null,
+  "domain": "Reference.example.com"
+ }
+}

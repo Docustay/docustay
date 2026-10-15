@@ -1,0 +1,16 @@
+{
+ "$captured": {
+  "route": "GET /api/records/account/:world.account",
+  "rank": "coach",
+  "status": 404,
+  "world": true
+ },
+ "body": {
+  "error": {
+   "kind": "not_found",
+   "message": "No such account. This account is not in your practice, or you may not see it.",
+   "requestId": "00000000-0000-4000-8000-000000000397",
+   "retryable": false
+  }
+ }
+}

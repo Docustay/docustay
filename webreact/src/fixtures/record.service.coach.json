@@ -1,0 +1,130 @@
+{
+ "$captured": {
+  "route": "GET /api/records/service/:world.service",
+  "rank": "coach",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "shell": {
+   "type": "service",
+   "label": "Service",
+   "fields": {
+    "name": "Reference Weekly coaching",
+    "archived_at": null
+   },
+   "readOnly": false,
+   "archived": false,
+   "header": {
+    "title": "Reference Weekly coaching",
+    "status": true
+   },
+   "highlights": [
+    {
+     "key": "name",
+     "label": "Service",
+     "from": "service.name",
+     "empty": "Unnamed",
+     "format": "text",
+     "value": "Reference Weekly coaching",
+     "present": true
+    },
+    {
+     "key": "price",
+     "label": "Price",
+     "from": "derived:live_price",
+     "empty": "No live price",
+     "format": "text",
+     "value": "125.00 USD",
+     "present": true
+    },
+    {
+     "key": "duration",
+     "label": "Duration",
+     "from": "service.duration_minutes",
+     "empty": "No duration",
+     "format": "number",
+     "value": 50,
+     "present": true
+    },
+    {
+     "key": "sellable",
+     "label": "Sellable",
+     "from": "derived:sellable",
+     "empty": "Not sellable",
+     "format": "text",
+     "value": "Yes",
+     "present": true
+    }
+   ],
+   "panels": [
+    {
+     "key": "basics",
+     "label": "Basics",
+     "fields": [
+      {
+       "field": "name",
+       "label": "Name",
+       "format": "text",
+       "value": "Reference Weekly coaching",
+       "currency": null
+      },
+      {
+       "field": "price_amount_minor",
+       "label": "Price",
+       "format": "money",
+       "value": 12500,
+       "currency": "USD"
+      },
+      {
+       "field": "duration_minutes",
+       "label": "Minutes",
+       "format": "number",
+       "value": 50,
+       "currency": null
+      },
+      {
+       "field": "bookable",
+       "label": "Bookable",
+       "format": "boolean",
+       "value": true,
+       "currency": null
+      }
+     ]
+    }
+   ],
+   "related": [],
+   "activity": {
+    "key": "activity",
+    "label": "Activity",
+    "kind": "list",
+    "of": "event"
+   }
+  },
+  "activity": [
+   {
+    "id": "00000000-0000-4000-8000-000000000391",
+    "topic": "items.service.created",
+    "emitted_by": "items",
+    "status": "pending",
+    "created_at": "2026-09-26T17:56:06.170Z",
+    "reason": null
+   },
+   {
+    "id": "00000000-0000-4000-8000-000000000392",
+    "topic": "items.price.changed",
+    "emitted_by": "items",
+    "status": "pending",
+    "created_at": "2026-09-26T17:56:06.170Z",
+    "reason": null
+   }
+  ],
+  "relatedCounts": {},
+  "relatedRows": {},
+  "whatKeepsWorking": {
+   "activePackages": 1,
+   "livePlanSubscribers": 0,
+   "futureBookings": 1
+  }
+ }
+}

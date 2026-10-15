@@ -1,0 +1,16 @@
+{
+ "$captured": {
+  "route": "GET /api/list/money",
+  "rank": "coach",
+  "status": 404,
+  "world": true
+ },
+ "body": {
+  "error": {
+   "kind": "not_found",
+   "message": "no list view for \"/money\"",
+   "requestId": "00000000-0000-4000-8000-000000000083",
+   "retryable": false
+  }
+ }
+}

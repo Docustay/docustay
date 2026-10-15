@@ -1,0 +1,16 @@
+{
+ "$captured": {
+  "route": "GET /api/list/whats-new",
+  "rank": "coach",
+  "status": 404,
+  "world": true
+ },
+ "body": {
+  "error": {
+   "kind": "not_found",
+   "message": "no list view for \"/whats-new\"",
+   "requestId": "00000000-0000-4000-8000-000000000308",
+   "retryable": false
+  }
+ }
+}

@@ -1,0 +1,16 @@
+{
+ "$captured": {
+  "route": "GET /api/people/scheduling",
+  "rank": "owner",
+  "status": 400,
+  "world": true
+ },
+ "body": {
+  "error": {
+   "kind": "validation",
+   "message": "weekStart must be a Monday, as YYYY-MM-DD",
+   "requestId": "00000000-0000-4000-8000-000000000312",
+   "retryable": false
+  }
+ }
+}

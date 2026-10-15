@@ -1,0 +1,74 @@
+{
+ "$captured": {
+  "route": "GET /api/list/accounts",
+  "rank": "owner",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/accounts",
+  "title": "Accounts",
+  "columns": [
+   {
+    "field": "name",
+    "label": "Account",
+    "format": "text"
+   },
+   {
+    "field": "status",
+    "label": "Status",
+    "format": "enum"
+   },
+   {
+    "field": "seats",
+    "label": "Seats",
+    "format": "number"
+   },
+   {
+    "field": "pipelines",
+    "label": "Pipelines",
+    "format": "text"
+   }
+  ],
+  "recordType": "account",
+  "empty": "An account is whoever pays: a family paying for a teenager, or an employer paying for staff. Invoices go to the account, sessions stay with each person.",
+  "canWrite": null,
+  "noWriteNotice": null,
+  "summary": null,
+  "emptyState": {
+   "kind": "first-run",
+   "icon": "IconBuilding",
+   "headline": "Group people who pay together",
+   "line": "An account is whoever pays: a family paying for a teenager, or an employer paying for staff. Invoices go to the account, sessions stay with each person.",
+   "action": {
+    "label": "Create an account",
+    "href": "/accounts?new=1"
+   },
+   "blockedAction": null,
+   "blockedLine": null,
+   "errorWhenEmpty": false,
+   "noWrite": null,
+   "firstRun": null
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [
+   {
+    "id": "00000000-0000-4000-8000-000000000019",
+    "name": "Reference Account",
+    "status": "active",
+    "seats": 0,
+    "pipelines": "provision: active"
+   }
+  ],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 1
+  }
+ }
+}

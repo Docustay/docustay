@@ -1,0 +1,71 @@
+{
+ "$captured": {
+  "route": "GET /api/list/people/clients",
+  "rank": "coach",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/people/clients",
+  "title": "Clients",
+  "columns": [
+   {
+    "field": "display_name",
+    "label": "Name",
+    "format": "text"
+   },
+   {
+    "field": "type",
+    "label": "Type",
+    "format": "enum"
+   },
+   {
+    "field": "who_pays",
+    "label": "Who pays",
+    "format": "text"
+   },
+   {
+    "field": "sessions",
+    "label": "Sessions",
+    "format": "number"
+   },
+   {
+    "field": "status",
+    "label": "Status",
+    "format": "enum"
+   }
+  ],
+  "recordType": "person",
+  "empty": "The people you coach. Each one gets a record, a private portal sign-in and their own document and payment history.",
+  "canWrite": null,
+  "noWriteNotice": null,
+  "summary": null,
+  "emptyState": {
+   "kind": "first-run",
+   "icon": "IconUserHeart",
+   "headline": "Add your first client",
+   "line": "The people you coach. Each one gets a record, a private portal sign-in and their own document and payment history.",
+   "action": {
+    "label": "Add client",
+    "href": "/people/clients?new=1"
+   },
+   "blockedAction": null,
+   "blockedLine": null,
+   "errorWhenEmpty": false,
+   "noWrite": null,
+   "firstRun": null
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 0
+  }
+ }
+}

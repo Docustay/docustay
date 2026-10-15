@@ -1,0 +1,2 @@
+-- Operator-specific data migration, omitted from the public edition.
+-- A self-hosted Docustay records this migration as applied without running it (docustay/selfhost/production-data-migrations.txt), so nothing here is ever executed.

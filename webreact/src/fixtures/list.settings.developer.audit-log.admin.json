@@ -1,0 +1,16 @@
+{
+ "$captured": {
+  "route": "GET /api/list/settings/developer/audit-log",
+  "rank": "admin",
+  "status": 404,
+  "world": true
+ },
+ "body": {
+  "error": {
+   "kind": "not_found",
+   "message": "no list view for \"/settings/developer/audit-log\"",
+   "requestId": "00000000-0000-4000-8000-000000000286",
+   "retryable": false
+  }
+ }
+}

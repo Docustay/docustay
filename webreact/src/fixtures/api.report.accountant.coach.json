@@ -1,0 +1,16 @@
+{
+ "$captured": {
+  "route": "GET /api/reports/accountant",
+  "rank": "coach",
+  "status": 403,
+  "world": true
+ },
+ "body": {
+  "error": {
+   "kind": "forbidden",
+   "message": "refused: that report is not available to your role",
+   "requestId": "00000000-0000-4000-8000-000000000404",
+   "retryable": false
+  }
+ }
+}

@@ -1,0 +1,19 @@
+{
+ "$captured": {
+  "route": "GET /api/me/push-config",
+  "rank": "owner",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "available": false,
+  "firebase": {
+   "apiKey": null,
+   "authDomain": null,
+   "projectId": "example-project",
+   "messagingSenderId": null,
+   "appId": null
+  },
+  "reason": "Push needs one more set-up step on our side."
+ }
+}

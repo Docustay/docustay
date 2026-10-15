@@ -1,0 +1,74 @@
+{
+ "$captured": {
+  "route": "GET /api/list/documents/forms/all",
+  "rank": "owner",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/documents/forms/all",
+  "title": "All forms",
+  "columns": [
+   {
+    "field": "title",
+    "label": "Document",
+    "format": "text"
+   },
+   {
+    "field": "subject",
+    "label": "Subject",
+    "format": "text"
+   },
+   {
+    "field": "builder",
+    "label": "Builder",
+    "format": "enum"
+   },
+   {
+    "field": "state",
+    "label": "State",
+    "format": "enum"
+   },
+   {
+    "field": "sent_at",
+    "label": "Sent",
+    "format": "date"
+   }
+  ],
+  "recordType": "document",
+  "empty": "Intake forms, questionnaires and anything else a client fills in.",
+  "canWrite": null,
+  "noWriteNotice": null,
+  "summary": null,
+  "emptyState": {
+   "kind": "blocked",
+   "icon": "IconForms",
+   "headline": "No forms yet",
+   "line": "Intake forms, questionnaires and anything else a client fills in.",
+   "action": {
+    "label": "Send a form",
+    "href": "/documents/forms/all?new=1"
+   },
+   "blockedAction": {
+    "label": "Create template",
+    "href": "/documents/forms/templates?new=1"
+   },
+   "blockedLine": "You have no form templates, and a form is a copy of one.",
+   "errorWhenEmpty": false,
+   "noWrite": null,
+   "firstRun": null
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 0
+  }
+ }
+}

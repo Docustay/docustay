@@ -1,0 +1,91 @@
+{
+ "$captured": {
+  "route": "GET /api/list/money/subscriptions",
+  "rank": "admin",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/money/subscriptions",
+  "title": "Subscriptions",
+  "columns": [
+   {
+    "field": "client_name",
+    "label": "Client",
+    "format": "text"
+   },
+   {
+    "field": "plan_name",
+    "label": "Plan",
+    "format": "text"
+   },
+   {
+    "field": "state",
+    "label": "State",
+    "format": "enum"
+   },
+   {
+    "field": "snapshot_amount_minor",
+    "label": "Agreed price",
+    "format": "money",
+    "currency": "currency"
+   },
+   {
+    "field": "current_period_end",
+    "label": "Renews",
+    "format": "date"
+   },
+   {
+    "field": "access",
+    "label": "Access",
+    "format": "enum"
+   }
+  ],
+  "recordType": "subscription",
+  "empty": "Bills a client on a repeating interval.",
+  "canWrite": null,
+  "noWriteNotice": null,
+  "summary": null,
+  "emptyState": {
+   "kind": "blocked",
+   "icon": "IconRepeat",
+   "headline": "No subscriptions yet",
+   "line": "Bills a client on a repeating interval.",
+   "action": {
+    "label": "Start subscription",
+    "href": "/money/subscriptions?new=1"
+   },
+   "blockedAction": {
+    "label": "Add plan",
+    "href": "/items/plans?new=1"
+   },
+   "blockedLine": "A subscription puts a client on a plan, and you have no plans yet.",
+   "errorWhenEmpty": false,
+   "noWrite": null,
+   "firstRun": null
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [
+   {
+    "id": "00000000-0000-4000-8000-000000000089",
+    "state": "active",
+    "snapshot_amount_minor": 25000,
+    "current_period_end": null,
+    "plan_name": "Reference Monthly plan",
+    "currency": "USD",
+    "client_name": "Reference Adult",
+    "access": "period_unknown"
+   }
+  ],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 1
+  }
+ }
+}

@@ -1,0 +1,16 @@
+{
+ "$captured": {
+  "route": "GET /api/records/document/:world.instance",
+  "rank": "coach",
+  "status": 404,
+  "world": true
+ },
+ "body": {
+  "error": {
+   "kind": "not_found",
+   "message": "No such document. This document is not in your practice, or you may not see it. An executed instrument is never deleted, so a missing one has usually been addressed to somebody else.",
+   "requestId": "00000000-0000-4000-8000-000000000390",
+   "retryable": false
+  }
+ }
+}

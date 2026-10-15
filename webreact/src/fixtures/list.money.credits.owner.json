@@ -1,0 +1,109 @@
+{
+ "$captured": {
+  "route": "GET /api/list/money/credits",
+  "rank": "owner",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/money/credits",
+  "title": "Credits",
+  "columns": [
+   {
+    "field": "client_name",
+    "label": "Client",
+    "format": "text"
+   },
+   {
+    "field": "service_name",
+    "label": "Service",
+    "format": "text"
+   },
+   {
+    "field": "status",
+    "label": "Status",
+    "format": "enum"
+   },
+   {
+    "field": "expires_at",
+    "label": "Expires",
+    "format": "date"
+   }
+  ],
+  "recordType": "entitlement",
+  "empty": "A credit is granted when a client buys a package or subscribes to a plan.",
+  "canWrite": null,
+  "noWriteNotice": null,
+  "summary": null,
+  "emptyState": {
+   "kind": "blocked",
+   "icon": "IconTicket",
+   "headline": "No credits yet",
+   "line": "A credit is granted when a client buys a package or subscribes to a plan.",
+   "action": null,
+   "blockedAction": {
+    "label": "Add package",
+    "href": "/items/packages?new=1"
+   },
+   "blockedLine": "A credit comes from a package or plan, and you have not built one yet.",
+   "errorWhenEmpty": false,
+   "noWrite": null,
+   "firstRun": null
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [
+   {
+    "id": "00000000-0000-4000-8000-000000000095",
+    "status": "available",
+    "expires_at": null,
+    "client_name": "Reference Adult",
+    "service_name": "Reference Weekly coaching"
+   },
+   {
+    "id": "00000000-0000-4000-8000-000000000096",
+    "status": "available",
+    "expires_at": null,
+    "client_name": "Reference Adult",
+    "service_name": "Reference Weekly coaching"
+   },
+   {
+    "id": "00000000-0000-4000-8000-000000000097",
+    "status": "available",
+    "expires_at": null,
+    "client_name": "Reference Adult",
+    "service_name": "Reference Weekly coaching"
+   },
+   {
+    "id": "00000000-0000-4000-8000-000000000098",
+    "status": "available",
+    "expires_at": null,
+    "client_name": "Reference Adult",
+    "service_name": "Reference Weekly coaching"
+   },
+   {
+    "id": "00000000-0000-4000-8000-000000000099",
+    "status": "available",
+    "expires_at": null,
+    "client_name": "Reference Adult",
+    "service_name": "Reference Weekly coaching"
+   },
+   {
+    "id": "00000000-0000-4000-8000-000000000100",
+    "status": "available",
+    "expires_at": null,
+    "client_name": "Reference Adult",
+    "service_name": "Reference Weekly coaching"
+   }
+  ],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 6
+  }
+ }
+}

@@ -1,0 +1,4 @@
+The fonts in this folder are subsets of Google's Noto Sans, Noto Sans Arabic, Noto Sans JP, Noto Sans SC and Noto Sans KR.
+Copyright 2022 The Noto Project Authors (https://github.com/notofonts/latin-greek-cyrillic and the other Noto repositories).
+Licensed under the SIL Open Font License, Version 1.1, with no Reserved Font Name. The licence text: https://openfontlicense.org/open-font-license-official-text/
+Subsets were made by scripts/fonts/subset.py. A font file is not code; nothing here is linked into the program.

@@ -1,0 +1,16 @@
+{
+ "$captured": {
+  "route": "GET /api/list/engagements/booking/links",
+  "rank": "owner",
+  "status": 404,
+  "world": true
+ },
+ "body": {
+  "error": {
+   "kind": "not_found",
+   "message": "no list view for \"/engagements/booking/links\"",
+   "requestId": "00000000-0000-4000-8000-000000000041",
+   "retryable": false
+  }
+ }
+}

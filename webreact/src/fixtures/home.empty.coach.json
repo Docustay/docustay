@@ -1,0 +1,170 @@
+{
+ "$captured": {
+  "route": "GET /api/home",
+  "rank": "coach",
+  "status": 200,
+  "world": false
+ },
+ "body": {
+  "view": "first_run",
+  "hero": {
+   "sessions": 0,
+   "deltaSentence": "▲ 0 on last week",
+   "sinceStarted": false
+  },
+  "headline": {
+   "text": "",
+   "strong": []
+  },
+  "prompts": {
+   "items": [
+    {
+     "kind": "analytics_snippet_missing",
+     "icon": "▢",
+     "tone": "warn",
+     "headline": "See where your traffic comes from",
+     "why": "Google Tag Manager shows you traffic sources and customer details when you paste the snippet.",
+     "action": {
+      "label": "Set up Google Tag Manager",
+      "href": "/settings/integrations"
+     },
+     "subjectId": null,
+     "dismissKey": "analytics_snippet_missing:"
+    }
+   ],
+   "moreCount": 0
+  },
+  "today": [],
+  "week": [
+   {
+    "day": {},
+    "date": "2026-09-26",
+    "n": 0
+   },
+   {
+    "day": {},
+    "date": "2026-09-27",
+    "n": 0
+   },
+   {
+    "day": {},
+    "date": "2026-09-28",
+    "n": 0
+   },
+   {
+    "day": {},
+    "date": "2026-09-29",
+    "n": 0
+   },
+   {
+    "day": {},
+    "date": "2026-09-30",
+    "n": 0
+   },
+   {
+    "day": {},
+    "date": "2026-10-01",
+    "n": 0
+   },
+   {
+    "day": {},
+    "date": "2026-10-02",
+    "n": 0
+   }
+  ],
+  "tiles": [
+   {
+    "key": "sessions_today",
+    "label": "Sessions today",
+    "path": "/engagements/calendar",
+    "count": 0,
+    "band": "work"
+   },
+   {
+    "key": "no_shows_this_week",
+    "label": "No-shows",
+    "path": "/engagements/calendar",
+    "count": 0,
+    "band": "work"
+   },
+   {
+    "key": "open_tasks",
+    "label": "Open tasks",
+    "path": "/tasks/mine",
+    "count": 0,
+    "band": "work"
+   },
+   {
+    "key": "documents_awaiting_signature",
+    "label": "Awaiting signature",
+    "path": "/documents/pipeline",
+    "count": 0,
+    "band": "work"
+   },
+   {
+    "key": "clients",
+    "label": "Clients",
+    "path": "/people/clients",
+    "count": 0,
+    "band": "people"
+   },
+   {
+    "key": "new_clients_this_month",
+    "label": "New this month",
+    "path": "/people/clients",
+    "count": 0,
+    "band": "people"
+   },
+   {
+    "key": "open_leads",
+    "label": "Open leads",
+    "path": "/people/leads",
+    "count": 0,
+    "band": "people"
+   },
+   {
+    "key": "adolescents_awaiting_consent",
+    "label": "Consent waiting",
+    "path": "/people/adolescents",
+    "count": 0,
+    "band": "people"
+   },
+   {
+    "key": "people",
+    "label": "People",
+    "path": "/people/all",
+    "count": 0,
+    "band": "people"
+   },
+   {
+    "key": "accounts",
+    "label": "Accounts",
+    "path": "/accounts",
+    "count": 0,
+    "band": "people"
+   },
+   {
+    "key": "sessions_this_week",
+    "label": "Sessions this week",
+    "path": "/engagements/calendar",
+    "count": 0,
+    "band": "people"
+   }
+  ],
+  "sampleBanner": {
+   "count": 0
+  },
+  "needsIntake": false,
+  "needsYou": [],
+  "needsYouTotal": 0,
+  "hasServices": false,
+  "hasPackages": false,
+  "hasPlans": false,
+  "shape": "both",
+  "people": {
+   "clients": 0,
+   "drifting": 0,
+   "notesToWrite": 0
+  }
+ }
+}

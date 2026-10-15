@@ -1,0 +1,133 @@
+{
+ "$captured": {
+  "route": "GET /api/list/people/all",
+  "rank": "owner",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/people/all",
+  "title": "People",
+  "columns": [
+   {
+    "field": "display_name",
+    "label": "Name",
+    "format": "text"
+   },
+   {
+    "field": "type",
+    "label": "Type",
+    "format": "enum"
+   },
+   {
+    "field": "who_pays",
+    "label": "Who pays",
+    "format": "text"
+   },
+   {
+    "field": "sessions",
+    "label": "Sessions",
+    "format": "number"
+   },
+   {
+    "field": "owes_minor",
+    "label": "Owes",
+    "format": "money",
+    "currency": "owes_currency",
+    "requires": "invoice.view"
+   },
+   {
+    "field": "status",
+    "label": "Status",
+    "format": "enum"
+   }
+  ],
+  "recordType": "person",
+  "empty": "Everyone your practice works with — clients, parents, leads and your own team.",
+  "canWrite": null,
+  "noWriteNotice": null,
+  "summary": {
+   "clients": 0,
+   "quiet": 0
+  },
+  "emptyState": {
+   "kind": "first-run",
+   "icon": "IconUsers",
+   "headline": "Add your first person",
+   "line": "Everyone your practice works with — clients, parents, leads and your own team.",
+   "action": {
+    "label": "Add person",
+    "href": "/people/all?new=1"
+   },
+   "blockedAction": null,
+   "blockedLine": null,
+   "errorWhenEmpty": false,
+   "noWrite": null,
+   "firstRun": null
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [
+   {
+    "id": "00000000-0000-4000-8000-000000000011",
+    "display_name": "Reference Adult",
+    "last_name": null,
+    "email": "Reference-adult@example.invalid",
+    "mobile_phone": null,
+    "role": "adult_client",
+    "staff_role": null,
+    "lifecycle_status": "lead",
+    "type": "lead",
+    "who_pays": "Pays for themselves",
+    "sessions": 0,
+    "owes_minor": "12500",
+    "owes_currency": "USD",
+    "status": "lead",
+    "portal_status": "never_signed_in"
+   },
+   {
+    "id": "00000000-0000-4000-8000-000000000012",
+    "display_name": "Reference Parent",
+    "last_name": null,
+    "email": "Reference-parent@example.invalid",
+    "mobile_phone": null,
+    "role": "parent",
+    "staff_role": null,
+    "lifecycle_status": "lead",
+    "type": "parent",
+    "who_pays": "Pays for themselves",
+    "sessions": 0,
+    "owes_minor": "0",
+    "owes_currency": null,
+    "status": "lead",
+    "portal_status": "never_signed_in"
+   },
+   {
+    "id": "00000000-0000-4000-8000-000000000013",
+    "display_name": "Reference Teen",
+    "last_name": null,
+    "email": "Reference-teen@example.invalid",
+    "mobile_phone": null,
+    "role": "adolescent_client",
+    "staff_role": null,
+    "lifecycle_status": "lead",
+    "type": "lead",
+    "who_pays": "Pays for themselves",
+    "sessions": 0,
+    "owes_minor": "0",
+    "owes_currency": null,
+    "status": "lead",
+    "portal_status": "never_signed_in"
+   }
+  ],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 3
+  }
+ }
+}

@@ -1,0 +1,45 @@
+{
+  "name": "@docustay2026/embed",
+  "version": "0.1.2",
+  "description": "The <docustay-sign> element: show a Docustay signing form inside your own page.",
+  "type": "module",
+  "license": "MIT",
+  "main": "./src/index.js",
+  "types": "./src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "import": "./src/index.js"
+    }
+  },
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
+  "devDependencies": {
+    "jsdom": "^26.0.0"
+  },
+  "homepage": "https://docustay.app/developers",
+  "keywords": [
+    "docustay",
+    "e-signature",
+    "esignature",
+    "documents",
+    "signing"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/docustay/docustay.git",
+    "directory": "sdk/embed"
+  },
+  "bugs": {
+    "url": "https://github.com/docustay/docustay/issues"
+  }
+}

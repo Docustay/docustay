@@ -1,0 +1,80 @@
+{
+ "$captured": {
+  "route": "GET /api/list/items/packages",
+  "rank": "coach",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/items/packages",
+  "title": "Packages",
+  "columns": [
+   {
+    "field": "name",
+    "label": "Package",
+    "format": "text"
+   },
+   {
+    "field": "price_amount_minor",
+    "label": "Price",
+    "format": "money",
+    "currency": "price_currency"
+   },
+   {
+    "field": "contents",
+    "label": "Contents",
+    "format": "text"
+   },
+   {
+    "field": "sellable",
+    "label": "Sellable",
+    "format": "text"
+   }
+  ],
+  "recordType": null,
+  "empty": "Several sessions sold together at a better rate.",
+  "canWrite": null,
+  "noWriteNotice": null,
+  "summary": null,
+  "emptyState": {
+   "kind": "blocked",
+   "icon": "IconPackage",
+   "headline": "No packages yet",
+   "line": "Several sessions sold together at a better rate.",
+   "action": {
+    "label": "Add package",
+    "href": "/items/packages?new=1"
+   },
+   "blockedAction": {
+    "label": "Add service",
+    "href": "/items/services?new=1"
+   },
+   "blockedLine": "A package is built from services, and none of yours has an active price yet.",
+   "errorWhenEmpty": false,
+   "noWrite": null,
+   "firstRun": null
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [
+   {
+    "id": "00000000-0000-4000-8000-000000000052",
+    "name": "Reference Six sessions",
+    "active": true,
+    "price_amount_minor": 60000,
+    "price_currency": "USD",
+    "contents": "6 × Reference Weekly coaching",
+    "sellable": "Yes"
+   }
+  ],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 1
+  }
+ }
+}

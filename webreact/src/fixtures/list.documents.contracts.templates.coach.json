@@ -1,0 +1,99 @@
+{
+ "$captured": {
+  "route": "GET /api/list/documents/contracts/templates",
+  "rank": "coach",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/documents/contracts/templates",
+  "title": "Contract templates",
+  "columns": [
+   {
+    "field": "name",
+    "label": "Template",
+    "format": "text"
+   },
+   {
+    "field": "version",
+    "label": "Version",
+    "format": "number"
+   },
+   {
+    "field": "instances",
+    "label": "In use",
+    "format": "number"
+   },
+   {
+    "field": "active",
+    "label": "Active",
+    "format": "boolean"
+   }
+  ],
+  "recordType": null,
+  "empty": "The words an agreement is made of. Nothing can be sent for signature until one exists.",
+  "canWrite": null,
+  "noWriteNotice": null,
+  "summary": null,
+  "emptyState": {
+   "kind": "first-run",
+   "icon": "IconTemplate",
+   "headline": "Create your first contract template",
+   "line": "The words an agreement is made of. Nothing can be sent for signature until one exists.",
+   "action": {
+    "label": "Create template",
+    "href": "/documents/contracts/templates?new=1"
+   },
+   "blockedAction": null,
+   "blockedLine": null,
+   "errorWhenEmpty": false,
+   "noWrite": null,
+   "firstRun": null
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [
+   {
+    "id": "00000000-0000-4000-8000-000000000076",
+    "name": "Reference Coaching agreement",
+    "version": 1,
+    "active": true,
+    "updated_at": "2026-09-26T17:56:06.208Z",
+    "body": {
+     "kind": "contract",
+     "sections": [
+      {
+       "key": "agreement",
+       "owner": "pir",
+       "title": "Agreement",
+       "blocks": [
+        {
+         "text": "A fixture agreement.",
+         "type": "prose"
+        },
+        {
+         "key": "fixture_signature",
+         "type": "signature",
+         "label": "Signature"
+        }
+       ],
+       "requires_signature": true
+      }
+     ],
+     "schema_version": 1
+    },
+    "instances": "0",
+    "sent_instances": "0"
+   }
+  ],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 1
+  }
+ }
+}

@@ -1,0 +1,81 @@
+{
+ "$captured": {
+  "route": "GET /api/list/documents/executed",
+  "rank": "owner",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/documents/executed",
+  "title": "Executed",
+  "columns": [
+   {
+    "field": "title",
+    "label": "Document",
+    "format": "text"
+   },
+   {
+    "field": "subject",
+    "label": "Subject",
+    "format": "text"
+   },
+   {
+    "field": "builder",
+    "label": "Builder",
+    "format": "enum"
+   },
+   {
+    "field": "executed_at",
+    "label": "Executed",
+    "format": "datetime"
+   }
+  ],
+  "recordType": "document",
+  "empty": "Fully signed documents land here permanently. This is the legal record.",
+  "canWrite": null,
+  "noWriteNotice": null,
+  "summary": null,
+  "emptyState": {
+   "kind": "blocked",
+   "icon": "IconFileCheck",
+   "headline": "Nothing executed yet",
+   "line": "Fully signed documents land here permanently. This is the legal record.",
+   "action": {
+    "label": "Send a document",
+    "href": "/documents/contracts/all?new=1"
+   },
+   "blockedAction": {
+    "label": "Create template",
+    "href": "/documents/contracts/templates?new=1"
+   },
+   "blockedLine": "Nothing can be executed yet: a template has to exist before anything can be sent.",
+   "errorWhenEmpty": false,
+   "noWrite": null,
+   "firstRun": null
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [
+   {
+    "id": "00000000-0000-4000-8000-000000000075",
+    "title": "Reference Executed coaching agreement",
+    "builder": "contract",
+    "state": "executed",
+    "sent_at": "2026-09-26T17:56:06.253Z",
+    "executed_at": "2026-09-26T17:56:06.262Z",
+    "subject": "Reference Adult",
+    "signatures": 0,
+    "has_pdf": false
+   }
+  ],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 1
+  }
+ }
+}

@@ -1,0 +1,66 @@
+# Docustay Helm chart values. Every setting is documented in docs/settings-reference.md.
+image:
+  app: ghcr.io/docustay/docustay-app      # the API and worker (one image, two commands)
+  web: ghcr.io/docustay/docustay-web
+  storage: ghcr.io/docustay/docustay-storage
+  tag: "1.0.0"
+  pullPolicy: IfNotPresent
+
+publicUrl: "https://sign.example.com"      # the address people open Docustay at (no path)
+
+ingress:
+  enabled: true
+  className: ""
+  host: sign.example.com
+  tls: true
+  tlsSecretName: docustay-tls
+  annotations: {}
+  trustedProxyHops: 1                       # one ingress controller in front
+
+# Secrets. Leave empty to have the chart generate them ONCE (kept across upgrades); or pass an existing Secret with the same keys.
+existingSecret: ""
+secrets:
+  dbPassword: ""
+  tokenPepper: ""
+  localAuthSecret: ""
+  masterKey: ""
+  setupToken: ""
+  s3AccessKeyId: ""
+  s3SecretAccessKey: ""
+  resendApiKey: ""
+
+postgres:                                   # set enabled=false and give externalUrl to use your own database
+  enabled: true
+  image: postgres:16-alpine
+  storage: 10Gi
+  storageClassName: ""
+  externalUrl: ""                           # postgresql://user:pass@host:5432/db  (a superuser, for migrations)
+  ssl: "off"
+
+storage:                                    # set enabled=false and fill s3.* to use S3, R2, Tigris or any S3-compatible store
+  enabled: true
+  size: 20Gi
+  storageClassName: ""
+s3:
+  endpoint: ""
+  bucket: docustay
+  region: us-east-1
+
+gotenberg:
+  image: gotenberg/gotenberg:8
+
+app:
+  replicas: 1
+  resources: { requests: { cpu: 100m, memory: 256Mi }, limits: { memory: 1Gi } }
+worker:
+  replicas: 1
+  resources: { requests: { cpu: 100m, memory: 256Mi }, limits: { memory: 1Gi } }
+web:
+  replicas: 2
+  resources: { requests: { cpu: 50m, memory: 128Mi }, limits: { memory: 512Mi } }
+
+metrics:
+  token: ""                                 # set (16+ characters) to turn on GET /metrics for Prometheus
+telemetry: "on"                             # "off" stops the anonymous daily usage ping
+licenseKey: ""                              # a Docustay Pro licence key
+extraEnv: []                                # [{ name: KEYSTONE_..., value: "..." }]

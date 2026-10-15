@@ -1,0 +1,80 @@
+{
+ "$captured": {
+  "route": "GET /api/list/engagements/sessions",
+  "rank": "coach",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/engagements/sessions",
+  "title": "Sessions",
+  "columns": [
+   {
+    "field": "starts_at",
+    "label": "When",
+    "format": "datetime"
+   },
+   {
+    "field": "who",
+    "label": "Who",
+    "format": "text"
+   },
+   {
+    "field": "service_name",
+    "label": "What",
+    "format": "text"
+   },
+   {
+    "field": "host_name",
+    "label": "With",
+    "format": "text"
+   },
+   {
+    "field": "where_label",
+    "label": "Where",
+    "format": "text"
+   },
+   {
+    "field": "state_label",
+    "label": "State",
+    "format": "enum"
+   }
+  ],
+  "recordType": "booking",
+  "empty": "Every past and upcoming session, with its state and its notes.",
+  "canWrite": null,
+  "noWriteNotice": null,
+  "summary": {
+   "thisWeek": 0,
+   "noShows": 0,
+   "unsignedConsent": 0
+  },
+  "emptyState": {
+   "kind": "first-run",
+   "icon": "IconClock",
+   "headline": "No sessions yet",
+   "line": "Every past and upcoming session, with its state and its notes.",
+   "action": {
+    "label": "Book session",
+    "href": "/engagements/sessions?book=1"
+   },
+   "blockedAction": null,
+   "blockedLine": null,
+   "errorWhenEmpty": false,
+   "noWrite": null,
+   "firstRun": null
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 0
+  }
+ }
+}

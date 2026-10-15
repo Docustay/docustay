@@ -1,0 +1,79 @@
+{
+ "$captured": {
+  "route": "GET /api/list/documents/pipeline",
+  "rank": "coach",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/documents/pipeline",
+  "title": "Pipeline",
+  "columns": [
+   {
+    "field": "title",
+    "label": "Document",
+    "format": "text"
+   },
+   {
+    "field": "subject",
+    "label": "Subject",
+    "format": "text"
+   },
+   {
+    "field": "builder",
+    "label": "Builder",
+    "format": "enum"
+   },
+   {
+    "field": "state",
+    "label": "State",
+    "format": "enum"
+   },
+   {
+    "field": "sent_at",
+    "label": "Sent",
+    "format": "date"
+   },
+   {
+    "field": "age_days",
+    "label": "Out for (days)",
+    "format": "number"
+   }
+  ],
+  "recordType": "document",
+  "empty": "Documents appear here once they are sent, and leave once they are executed.",
+  "canWrite": null,
+  "noWriteNotice": null,
+  "summary": null,
+  "emptyState": {
+   "kind": "blocked",
+   "icon": "IconFileText",
+   "headline": "Nothing waiting on a signature",
+   "line": "Documents appear here once they are sent, and leave once they are executed.",
+   "action": {
+    "label": "Send a document",
+    "href": "/documents/contracts/all?new=1"
+   },
+   "blockedAction": {
+    "label": "Create template",
+    "href": "/documents/contracts/templates?new=1"
+   },
+   "blockedLine": "Nothing can be sent yet: a contract or form template has to exist first.",
+   "errorWhenEmpty": false,
+   "noWrite": null,
+   "firstRun": null
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 0
+  }
+ }
+}

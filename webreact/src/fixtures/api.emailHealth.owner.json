@@ -1,0 +1,17 @@
+{
+ "$captured": {
+  "route": "GET /api/settings/email/health",
+  "rank": "owner",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "state": "unknown",
+  "brokeAt": null,
+  "cause": null,
+  "address": null,
+  "record": null,
+  "since": null,
+  "cloudflareConnected": false
+ }
+}

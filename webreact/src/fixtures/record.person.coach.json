@@ -1,0 +1,16 @@
+{
+ "$captured": {
+  "route": "GET /api/records/person/:world.adult",
+  "rank": "coach",
+  "status": 404,
+  "world": true
+ },
+ "body": {
+  "error": {
+   "kind": "not_found",
+   "message": "No such person. This person is not in your practice, or you may not see them. Both look the same from here, on purpose — a record page must not become a way to find out who exists.",
+   "requestId": "00000000-0000-4000-8000-000000000387",
+   "retryable": false
+  }
+ }
+}

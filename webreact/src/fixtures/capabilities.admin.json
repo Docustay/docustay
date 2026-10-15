@@ -1,0 +1,382 @@
+{
+ "$captured": {
+  "route": "GET /api/capabilities",
+  "rank": "admin",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "capabilities": [
+   {
+    "capability": "sign_documents",
+    "label": "Send documents for signature",
+    "available": true,
+    "degraded": false,
+    "reason": null,
+    "render": "enabled"
+   },
+   {
+    "capability": "send_email",
+    "label": "Send email to clients",
+    "available": true,
+    "degraded": true,
+    "reason": null,
+    "render": "enabled_with_notice"
+   },
+   {
+    "capability": "take_payments",
+    "label": "Take payments",
+    "available": false,
+    "degraded": false,
+    "reason": {
+     "explanation": "We're still connecting your billing account.",
+     "stillWorks": "You can add clients and book sessions; invoicing turns on once billing is connected.",
+     "blockingStep": "stripe_customer",
+     "stepState": "missing",
+     "needsHuman": false,
+     "fixUrl": "/onboarding#step-stripe_customer"
+    },
+    "render": "locked_with_reason"
+   },
+   {
+    "capability": "collect_forms",
+    "label": "Collect intake forms",
+    "available": false,
+    "degraded": false,
+    "reason": {
+     "explanation": "We're still creating your forms workspace.",
+     "stillWorks": "Client records work now; intake forms turn on shortly.",
+     "blockingStep": "form_workspace",
+     "stepState": "missing",
+     "needsHuman": false,
+     "fixUrl": "/onboarding#step-form_workspace"
+    },
+    "render": "locked_with_reason"
+   },
+   {
+    "capability": "book_appointments",
+    "label": "Book appointments",
+    "available": true,
+    "degraded": false,
+    "reason": null,
+    "render": "enabled"
+   }
+  ],
+  "checklist": {
+   "groups": [
+    {
+     "key": "needs_you",
+     "title": "Needs you",
+     "rows": [
+      {
+       "title": "Send email to clients",
+       "capability": "send_email",
+       "status": "in_progress",
+       "actor": "you",
+       "whatIsBlocked": "Send email to clients isn't ready yet.",
+       "whatStillWorks": "Email is working now, sending from our domain until yours is verified.",
+       "whatToDo": "Add the DNS records shown here to your domain, then we'll verify automatically.",
+       "fixUrl": "/onboarding#step-resend_domain",
+       "diagnostics": {
+        "step": "resend_domain",
+        "state": "missing",
+        "attempts": 0,
+        "maxAttempts": null,
+        "lastError": null,
+        "retryable": null
+       }
+      },
+      {
+       "title": "Connect an account's properties",
+       "capability": null,
+       "status": "in_progress",
+       "actor": "you",
+       "whatIsBlocked": "No account has a connected property, so there is no search, ads or analytics data.",
+       "whatStillWorks": "Accounts, sites and reporting still work without them.",
+       "whatToDo": "Connect Search Console, Google Ads, Analytics or a Business Profile on an account.",
+       "fixUrl": "/accounts/access",
+       "diagnostics": {
+        "source": "real_state",
+        "key": "propertiesConnected",
+        "count": 0
+       }
+      },
+      {
+       "title": "Build your first list",
+       "capability": null,
+       "status": "in_progress",
+       "actor": "you",
+       "whatIsBlocked": "You have no lists, so there is nobody for a campaign to go to.",
+       "whatStillWorks": "Everything else works; you simply cannot send a campaign yet.",
+       "whatToDo": "Save a list from the people you already have.",
+       "fixUrl": "/growth/lists",
+       "diagnostics": {
+        "source": "real_state",
+        "key": "listsCreated",
+        "count": 0
+       }
+      },
+      {
+       "title": "Connect Stripe",
+       "capability": null,
+       "status": "in_progress",
+       "actor": "you",
+       "whatIsBlocked": "Stripe Connect is not set up, so you cannot process payments.",
+       "whatStillWorks": "You can still create documents, schedule sessions, and manage your practice structure.",
+       "whatToDo": "Connect your Stripe account in Money settings.",
+       "fixUrl": "/settings/money",
+       "diagnostics": {
+        "source": "real_state",
+        "key": "connectStripe",
+        "count": 0
+       }
+      }
+     ]
+    },
+    {
+     "key": "needs_us",
+     "title": "We're on it",
+     "rows": []
+    },
+    {
+     "key": "waiting",
+     "title": "Waiting on DNS or a provider",
+     "rows": [
+      {
+       "title": "Take payments",
+       "capability": "take_payments",
+       "status": "in_progress",
+       "actor": "nobody",
+       "whatIsBlocked": "We're still connecting your billing account.",
+       "whatStillWorks": "You can add clients and book sessions; invoicing turns on once billing is connected.",
+       "whatToDo": "Nothing — this finishes on its own, usually within a few minutes.",
+       "fixUrl": "/onboarding#step-stripe_customer",
+       "diagnostics": {
+        "step": "stripe_customer",
+        "state": "missing",
+        "attempts": 0,
+        "maxAttempts": null,
+        "lastError": null,
+        "retryable": null
+       }
+      },
+      {
+       "title": "Collect intake forms",
+       "capability": "collect_forms",
+       "status": "in_progress",
+       "actor": "nobody",
+       "whatIsBlocked": "We're still creating your forms workspace.",
+       "whatStillWorks": "Client records work now; intake forms turn on shortly.",
+       "whatToDo": "Nothing — this finishes on its own, usually within a few minutes.",
+       "fixUrl": "/onboarding#step-form_workspace",
+       "diagnostics": {
+        "step": "form_workspace",
+        "state": "missing",
+        "attempts": 0,
+        "maxAttempts": null,
+        "lastError": null,
+        "retryable": null
+       }
+      }
+     ]
+    },
+    {
+     "key": "done",
+     "title": "Ready",
+     "rows": [
+      {
+       "title": "Add the services you offer",
+       "capability": null,
+       "status": "done",
+       "actor": null,
+       "whatIsBlocked": null,
+       "whatStillWorks": null,
+       "whatToDo": null,
+       "fixUrl": null,
+       "diagnostics": {
+        "source": "real_state",
+        "key": "servicesDefined",
+        "count": 1
+       }
+      },
+      {
+       "title": "Price your services",
+       "capability": null,
+       "status": "done",
+       "actor": null,
+       "whatIsBlocked": null,
+       "whatStillWorks": null,
+       "whatToDo": null,
+       "fixUrl": null,
+       "diagnostics": {
+        "source": "real_state",
+        "key": "servicesPriced",
+        "count": 1
+       }
+      },
+      {
+       "title": "Add your first client",
+       "capability": null,
+       "status": "done",
+       "actor": null,
+       "whatIsBlocked": null,
+       "whatStillWorks": null,
+       "whatToDo": null,
+       "fixUrl": null,
+       "diagnostics": {
+        "source": "real_state",
+        "key": "peopleAdded",
+        "count": 3
+       }
+      },
+      {
+       "title": "Set when your coaches are free",
+       "capability": null,
+       "status": "done",
+       "actor": null,
+       "whatIsBlocked": null,
+       "whatStillWorks": null,
+       "whatToDo": null,
+       "fixUrl": null,
+       "diagnostics": {
+        "source": "real_state",
+        "key": "coachHoursSet",
+        "count": 1
+       }
+      },
+      {
+       "title": "Create a document template",
+       "capability": null,
+       "status": "done",
+       "actor": null,
+       "whatIsBlocked": null,
+       "whatStillWorks": null,
+       "whatToDo": null,
+       "fixUrl": null,
+       "diagnostics": {
+        "source": "real_state",
+        "key": "templatesCreated",
+        "count": 2
+       }
+      },
+      {
+       "title": "Add your first account",
+       "capability": null,
+       "status": "done",
+       "actor": null,
+       "whatIsBlocked": null,
+       "whatStillWorks": null,
+       "whatToDo": null,
+       "fixUrl": null,
+       "diagnostics": {
+        "source": "real_state",
+        "key": "accountsAdded",
+        "count": 1
+       }
+      },
+      {
+       "title": "Create a recurring plan",
+       "capability": null,
+       "status": "done",
+       "actor": null,
+       "whatIsBlocked": null,
+       "whatStillWorks": null,
+       "whatToDo": null,
+       "fixUrl": null,
+       "diagnostics": {
+        "source": "real_state",
+        "key": "plansCreated",
+        "count": 1
+       }
+      }
+     ]
+    }
+   ],
+   "summary": {
+    "total": 13,
+    "done": 7,
+    "blockedOnTenant": 4,
+    "blockedOnPlatform": 0,
+    "tenantIsUsable": true,
+    "allDone": false
+   },
+   "firstRunFive": [
+    {
+     "title": "Add the services you offer",
+     "capability": null,
+     "status": "done",
+     "actor": null,
+     "whatIsBlocked": null,
+     "whatStillWorks": null,
+     "whatToDo": null,
+     "fixUrl": null,
+     "diagnostics": {
+      "source": "real_state",
+      "key": "servicesDefined",
+      "count": 1
+     }
+    },
+    {
+     "title": "Connect Stripe",
+     "capability": null,
+     "status": "in_progress",
+     "actor": "you",
+     "whatIsBlocked": "Stripe Connect is not set up, so you cannot process payments.",
+     "whatStillWorks": "You can still create documents, schedule sessions, and manage your practice structure.",
+     "whatToDo": "Connect your Stripe account in Money settings.",
+     "fixUrl": "/settings/money",
+     "diagnostics": {
+      "source": "real_state",
+      "key": "connectStripe",
+      "count": 0
+     }
+    },
+    {
+     "title": "Add your first client",
+     "capability": null,
+     "status": "done",
+     "actor": null,
+     "whatIsBlocked": null,
+     "whatStillWorks": null,
+     "whatToDo": null,
+     "fixUrl": null,
+     "diagnostics": {
+      "source": "real_state",
+      "key": "peopleAdded",
+      "count": 3
+     }
+    },
+    {
+     "title": "Set when your coaches are free",
+     "capability": null,
+     "status": "done",
+     "actor": null,
+     "whatIsBlocked": null,
+     "whatStillWorks": null,
+     "whatToDo": null,
+     "fixUrl": null,
+     "diagnostics": {
+      "source": "real_state",
+      "key": "coachHoursSet",
+      "count": 1
+     }
+    },
+    {
+     "title": "Connect an account's properties",
+     "capability": null,
+     "status": "in_progress",
+     "actor": "you",
+     "whatIsBlocked": "No account has a connected property, so there is no search, ads or analytics data.",
+     "whatStillWorks": "Accounts, sites and reporting still work without them.",
+     "whatToDo": "Connect Search Console, Google Ads, Analytics or a Business Profile on an account.",
+     "fixUrl": "/accounts/access",
+     "diagnostics": {
+      "source": "real_state",
+      "key": "propertiesConnected",
+      "count": 0
+     }
+    }
+   ]
+  }
+ }
+}

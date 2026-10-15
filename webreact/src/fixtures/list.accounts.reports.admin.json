@@ -1,0 +1,78 @@
+{
+ "$captured": {
+  "route": "GET /api/list/accounts/reports",
+  "rank": "admin",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/accounts/reports",
+  "title": "Reports",
+  "columns": [
+   {
+    "field": "month",
+    "label": "Month",
+    "format": "date"
+   },
+   {
+    "field": "account",
+    "label": "Account",
+    "format": "text"
+   },
+   {
+    "field": "service",
+    "label": "Service",
+    "format": "enum"
+   },
+   {
+    "field": "metric",
+    "label": "Metric",
+    "format": "enum"
+   },
+   {
+    "field": "total",
+    "label": "Total",
+    "format": "number"
+   },
+   {
+    "field": "daily_average",
+    "label": "Daily average",
+    "format": "number"
+   },
+   {
+    "field": "days_with_data",
+    "label": "Days with data",
+    "format": "number"
+   }
+  ],
+  "recordType": null,
+  "empty": "Monthly reports generate at month end, once the Run worker has ingested a day of data.",
+  "canWrite": null,
+  "noWriteNotice": null,
+  "summary": null,
+  "emptyState": {
+   "kind": "period",
+   "icon": "IconFileAnalytics",
+   "headline": "No reports yet",
+   "line": "Monthly reports generate at month end, once the Run worker has ingested a day of data.",
+   "action": null,
+   "blockedAction": null,
+   "blockedLine": null,
+   "errorWhenEmpty": false,
+   "noWrite": null,
+   "firstRun": null
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 0
+  }
+ }
+}

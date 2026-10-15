@@ -1,0 +1,16 @@
+{
+ "$captured": {
+  "route": "GET /api/staff/payer-groups",
+  "rank": "coach",
+  "status": 403,
+  "world": true
+ },
+ "body": {
+  "error": {
+   "kind": "forbidden",
+   "message": "access to payer groups requires access to the accounts section",
+   "requestId": "00000000-0000-4000-8000-000000000318",
+   "retryable": false
+  }
+ }
+}

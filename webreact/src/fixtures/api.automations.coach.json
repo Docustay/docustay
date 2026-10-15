@@ -1,0 +1,16 @@
+{
+ "$captured": {
+  "route": "GET /api/tasks/automations",
+  "rank": "coach",
+  "status": 403,
+  "world": true
+ },
+ "body": {
+  "error": {
+   "kind": "forbidden",
+   "message": "requires admin or higher",
+   "requestId": "00000000-0000-4000-8000-000000000322",
+   "retryable": false
+  }
+ }
+}

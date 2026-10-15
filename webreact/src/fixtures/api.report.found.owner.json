@@ -1,0 +1,41 @@
+{
+ "$captured": {
+  "route": "GET /api/reports/found",
+  "rank": "owner",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "didnt": [
+   {
+    "person_id": "00000000-0000-4000-8000-000000000011",
+    "display_name": "Reference Adult",
+    "reason_class": "unknown"
+   },
+   {
+    "person_id": "00000000-0000-4000-8000-000000000013",
+    "display_name": "Reference Teen",
+    "reason_class": "unknown"
+   }
+  ],
+  "range": "[2026-09-01,2026-10-01)",
+  "compare": "[2026-08-01,2026-09-01)",
+  "sources": [
+   {
+    "source": "unknown",
+    "enquiries": 2,
+    "became_clients": 0
+   }
+  ],
+  "enquiries": 2,
+  "enough_data": {
+   "enough": false,
+   "payments": 0,
+   "days_going": 0
+  },
+  "became_clients": 0,
+  "conversion_pct": 0,
+  "enquiries_compare": 0,
+  "days_to_first_session_median": null
+ }
+}

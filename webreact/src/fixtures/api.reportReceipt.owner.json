@@ -1,0 +1,11 @@
+{
+ "$captured": {
+  "route": "GET /api/reports/receipt",
+  "rank": "owner",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "managed": false
+ }
+}

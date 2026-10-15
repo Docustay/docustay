@@ -1,0 +1,18 @@
+{
+ "$captured": {
+  "route": "GET /api/reports/coaches",
+  "rank": "coach",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "rows": [],
+  "range": "[2026-09-01,2026-10-01)",
+  "compare": "[2026-08-01,2026-09-01)",
+  "enough_data": {
+   "enough": false,
+   "payments": 0,
+   "days_going": 0
+  }
+ }
+}

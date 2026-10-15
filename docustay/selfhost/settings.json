@@ -1,0 +1,345 @@
+[
+ {
+  "name": "KEYSTONE_DB_PASSWORD",
+  "group": "Secrets (init.sh makes them)",
+  "required": "yes",
+  "default": "(generated)",
+  "description": "The password of the bundled Postgres. Used by compose to build the database URL."
+ },
+ {
+  "name": "KEYSTONE_TOKEN_PEPPER",
+  "group": "Secrets (init.sh makes them)",
+  "required": "yes",
+  "default": "(generated)",
+  "description": "A secret mixed into every API key and session digest. Changing it signs everyone out and invalidates every API key."
+ },
+ {
+  "name": "KEYSTONE_LOCAL_AUTH_SECRET",
+  "group": "Secrets (init.sh makes them)",
+  "required": "yes",
+  "default": "(generated)",
+  "description": "Signs the built-in sign-in tokens. Changing it signs everyone out."
+ },
+ {
+  "name": "KEYSTONE_SETUP_TOKEN",
+  "group": "Secrets (init.sh makes them)",
+  "required": "first run",
+  "default": "(generated)",
+  "description": "The one-time key that lets you create the owner account at /setup. Unused after setup."
+ },
+ {
+  "name": "KEYSTONE_MASTER_KEY",
+  "group": "Secrets (init.sh makes them)",
+  "required": "yes (production)",
+  "default": "(generated)",
+  "description": "Wraps the keys that seal stored secrets (webhook secrets, SMTP passwords, two-step secrets) and each workspace's key for its stored document files. Back it up with the database: without it sealed secrets and the stored files cannot be opened."
+ },
+ {
+  "name": "DOCUSTAY_REFUSE_PLAINTEXT_FILES",
+  "group": "Secrets (init.sh makes them)",
+  "required": "no",
+  "default": "off",
+  "description": "Set to on once `scripts/file-keys.mjs status` shows every workspace as all files sealed: a stored file that is not sealed is then refused instead of served. Leave it off until then; files stored before encryption existed are served as they are until the worker's sealing pass has been through them."
+ },
+ {
+  "name": "KEYSTONE_PUBLIC_URL",
+  "group": "Where things are",
+  "required": "yes behind a domain",
+  "default": "http://localhost:8080",
+  "description": "The address people open Docustay at, without a path. Every signing link, reset link and email starts with it."
+ },
+ {
+  "name": "KEYSTONE_DOCUSTAY_APP_URL",
+  "group": "Where things are",
+  "required": "no",
+  "default": "= KEYSTONE_PUBLIC_URL",
+  "description": "The address of the signed-in app, when it differs from the signing address."
+ },
+ {
+  "name": "KEYSTONE_DOCUSTAY_SIGN_URL",
+  "group": "Where things are",
+  "required": "no",
+  "default": "= KEYSTONE_PUBLIC_URL",
+  "description": "The address signing links start with."
+ },
+ {
+  "name": "DOCUSTAY_PORT",
+  "group": "Where things are",
+  "required": "no",
+  "default": "8080",
+  "description": "The port on this machine the web app listens on."
+ },
+ {
+  "name": "PORT",
+  "group": "Where things are",
+  "required": "no",
+  "default": "8080",
+  "description": "The port the API process listens on inside its container."
+ },
+ {
+  "name": "KEYSTONE_TRUSTED_PROXY_HOPS",
+  "group": "Where things are",
+  "required": "behind a proxy",
+  "default": "0",
+  "description": "How many reverse proxies sit in front. With 0 every visitor looks like the proxy and shares one rate limit; set 1 behind one proxy."
+ },
+ {
+  "name": "KEYSTONE_DB_SUPERUSER_URL",
+  "group": "Database and files",
+  "required": "yes",
+  "default": "(compose)",
+  "description": "Connection string the migration runner uses. It creates the application roles on first run."
+ },
+ {
+  "name": "KEYSTONE_DATABASE_URL",
+  "group": "Database and files",
+  "required": "no",
+  "default": "(derived)",
+  "description": "Connection string for the application role, when you run the database yourself."
+ },
+ {
+  "name": "KEYSTONE_DB_SSL",
+  "group": "Database and files",
+  "required": "no",
+  "default": "on",
+  "description": "Set to off for a database in the same private network without TLS (the bundled compose does)."
+ },
+ {
+  "name": "KEYSTONE_PG_POOL_MAX",
+  "group": "Database and files",
+  "required": "no",
+  "default": "10",
+  "description": "Largest number of database connections the API keeps."
+ },
+ {
+  "name": "KEYSTONE_S3_ENDPOINT",
+  "group": "Database and files",
+  "required": "yes",
+  "default": "(compose)",
+  "description": "Address of the S3-compatible store that keeps signed PDFs."
+ },
+ {
+  "name": "KEYSTONE_S3_BUCKET",
+  "group": "Database and files",
+  "required": "yes",
+  "default": "docustay",
+  "description": "The bucket (created for you by the bundled store)."
+ },
+ {
+  "name": "KEYSTONE_S3_ACCESS_KEY_ID",
+  "group": "Database and files",
+  "required": "yes",
+  "default": "(generated)",
+  "description": "Access key for the file store."
+ },
+ {
+  "name": "KEYSTONE_S3_SECRET_ACCESS_KEY",
+  "group": "Database and files",
+  "required": "yes",
+  "default": "(generated)",
+  "description": "Secret key for the file store."
+ },
+ {
+  "name": "KEYSTONE_S3_REGION",
+  "group": "Database and files",
+  "required": "no",
+  "default": "us-east-1",
+  "description": "Region name some S3 providers require."
+ },
+ {
+  "name": "KEYSTONE_GOTENBERG_URL",
+  "group": "Database and files",
+  "required": "yes",
+  "default": "(compose)",
+  "description": "Address of the PDF converter (Gotenberg) that prints documents."
+ },
+ {
+  "name": "RESEND_API_KEY",
+  "group": "Email",
+  "required": "one of Resend or SMTP",
+  "default": "",
+  "description": "Your own Resend API key. Leave empty to use your own SMTP server (Settings → Email)."
+ },
+ {
+  "name": "KEYSTONE_MAIL_SENDER",
+  "group": "Email",
+  "required": "no",
+  "default": "",
+  "description": "The From address used until you verify your own domain."
+ },
+ {
+  "name": "KEYSTONE_MAIL_DAILY_LIMIT",
+  "group": "Email",
+  "required": "no",
+  "default": "(none)",
+  "description": "Hard cap on emails sent per day by this install."
+ },
+ {
+  "name": "KEYSTONE_EMAIL_ALLOWLIST",
+  "group": "Email",
+  "required": "no",
+  "default": "(off)",
+  "description": "Comma list of addresses/domains mail may go to. Everything else is dropped. Use it on a test install."
+ },
+ {
+  "name": "KEYSTONE_LOCAL_AUTH",
+  "group": "Sign-in",
+  "required": "yes (self-host)",
+  "default": "1",
+  "description": "Uses the built-in sign-in (email and password). Firebase is for the hosted service only."
+ },
+ {
+  "name": "KEYSTONE_PASSKEYS",
+  "group": "Sign-in",
+  "required": "no",
+  "default": "off",
+  "description": "Set to 1 to let people sign in with passkeys. Needs KEYSTONE_PASSKEY_ORIGINS."
+ },
+ {
+  "name": "KEYSTONE_PASSKEY_ORIGINS",
+  "group": "Sign-in",
+  "required": "with passkeys",
+  "default": "= KEYSTONE_DOCUSTAY_APP_URL",
+  "description": "Comma list of web addresses a passkey may be used from. A passkey is tied to the address's host name."
+ },
+ {
+  "name": "KEYSTONE_SIGNING_CERT_PEM",
+  "group": "Signing certificate and timestamps",
+  "required": "no",
+  "default": "(made at first run)",
+  "description": "The certificate that seals finished documents. By default Docustay makes one for this install; set your own to use a certificate from a trusted authority."
+ },
+ {
+  "name": "KEYSTONE_SIGNING_CERT_PATH",
+  "group": "Signing certificate and timestamps",
+  "required": "no",
+  "default": "",
+  "description": "Path to a PEM file instead of the value itself."
+ },
+ {
+  "name": "DOCUMENT_TSA_URL",
+  "group": "Signing certificate and timestamps",
+  "required": "no",
+  "default": "(none)",
+  "description": "A trusted timestamp authority; when set, finished documents carry a trusted timestamp."
+ },
+ {
+  "name": "KEYSTONE_METRICS_TOKEN",
+  "group": "Operations",
+  "required": "no",
+  "default": "(metrics off)",
+  "description": "Turns on GET /metrics (Prometheus). Callers send Authorization: Bearer <this>. At least 16 characters."
+ },
+ {
+  "name": "KEYSTONE_LOG_REDACTION",
+  "group": "Operations",
+  "required": "no",
+  "default": "on",
+  "description": "Server and worker logs leave out email addresses and credentials. off turns that off (only for debugging a test install)."
+ },
+ {
+  "name": "DOCUSTAY_TELEMETRY",
+  "group": "Operations",
+  "required": "no",
+  "default": "on",
+  "description": "off stops the one anonymous daily usage ping (a random install id, the version, five counts)."
+ },
+ {
+  "name": "DOCUSTAY_LICENSE_KEY",
+  "group": "Operations",
+  "required": "no",
+  "default": "",
+  "description": "A Pro licence key. With it the worker checks the licence daily and unlocks Pro features."
+ },
+ {
+  "name": "KEYSTONE_ENVIRONMENT",
+  "group": "Operations",
+  "required": "no",
+  "default": "production",
+  "description": "staging for a test install: live Stripe keys are refused and email goes only to the allowlist."
+ },
+ {
+  "name": "KEYSTONE_ALERT_EMAIL",
+  "group": "Operations",
+  "required": "no",
+  "default": "",
+  "description": "Where the install sends operational alerts (a failing backup, a paused sender)."
+ },
+ {
+  "name": "KEYSTONE_SELF_HOST",
+  "group": "Operations",
+  "required": "set by compose",
+  "default": "1",
+  "description": "Marks this as a self-hosted install: hides hosted-only screens such as billing."
+ },
+ {
+  "name": "KEYSTONE_STRIPE_SECRET_KEY",
+  "group": "Payments (optional)",
+  "required": "for payment fields",
+  "default": "",
+  "description": "Your own Stripe secret key for collecting payments at signing."
+ },
+ {
+  "name": "KEYSTONE_STRIPE_PUBLISHABLE_KEY",
+  "group": "Payments (optional)",
+  "required": "for payment fields",
+  "default": "",
+  "description": "The matching publishable key. With it the signer pays inside the signing page as its last step; without it they pay on Stripe's own page and come back."
+ },
+ {
+  "name": "KEYSTONE_STRIPE_CHARGES_ENABLED",
+  "group": "Payments (optional)",
+  "required": "no",
+  "default": "off",
+  "description": "A safety switch: live charges stay refused until this is on."
+ },
+ {
+  "name": "ANTHROPIC_API_KEY",
+  "group": "AI (optional)",
+  "required": "for AI features",
+  "default": "",
+  "description": "Your own Anthropic key. Without it the AI drafting, reviewing and chat features are hidden."
+ },
+ {
+  "name": "KEYSTONE_AI_DEFAULT_MODEL",
+  "group": "AI (optional)",
+  "required": "no",
+  "default": "(a current model)",
+  "description": "The model used for drafting."
+ },
+ {
+  "name": "DOCUSTAY_OIDC_ISSUER",
+  "group": "Sign-in",
+  "required": "no",
+  "default": "(off)",
+  "description": "The address of your OpenID Connect provider (Keycloak, Authentik, Entra, Okta…), for example https://sso.example.com/realms/main. Setting this, the client id and the client secret turns on single sign-on."
+ },
+ {
+  "name": "DOCUSTAY_OIDC_CLIENT_ID",
+  "group": "Sign-in",
+  "required": "no",
+  "default": "(none)",
+  "description": "The client id you made for Docustay at your provider."
+ },
+ {
+  "name": "DOCUSTAY_OIDC_CLIENT_SECRET",
+  "group": "Sign-in",
+  "required": "no",
+  "default": "(none)",
+  "description": "The client secret for that client. Keep it as private as the other secrets in `.env`."
+ },
+ {
+  "name": "DOCUSTAY_OIDC_LABEL",
+  "group": "Sign-in",
+  "required": "no",
+  "default": "your identity provider",
+  "description": "The name on the sign-in button: “Sign in with …”."
+ },
+ {
+  "name": "DOCUSTAY_OIDC_SCOPES",
+  "group": "Sign-in",
+  "required": "no",
+  "default": "openid email profile",
+  "description": "What to ask the provider for. It must include `openid` and `email`."
+ }
+]

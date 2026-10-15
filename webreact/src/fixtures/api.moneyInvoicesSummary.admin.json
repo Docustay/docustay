@@ -1,0 +1,19 @@
+{
+ "$captured": {
+  "route": "GET /api/money/invoices/summary",
+  "rank": "admin",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "outstandingMinor": 12500,
+  "outstandingCount": 1,
+  "lateMinor": 0,
+  "lateCount": 0,
+  "lateNamed": null,
+  "avgDaysToPaid": null,
+  "termsDays": 14,
+  "fiveOpens": [],
+  "mirrorAsOf": "2026-09-26T17:56:06.296Z"
+ }
+}

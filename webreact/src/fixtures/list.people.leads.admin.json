@@ -1,0 +1,78 @@
+{
+ "$captured": {
+  "route": "GET /api/list/people/leads",
+  "rank": "admin",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/people/leads",
+  "title": "Leads",
+  "columns": [
+   {
+    "field": "display_name",
+    "label": "Name",
+    "format": "text"
+   },
+   {
+    "field": "sessions",
+    "label": "Sessions",
+    "format": "number"
+   },
+   {
+    "field": "lead_next_step",
+    "label": "State",
+    "format": "text"
+   }
+  ],
+  "recordType": "person",
+  "empty": "Someone who has enquired but is not a client. Leads become clients when they book.",
+  "canWrite": null,
+  "noWriteNotice": null,
+  "summary": {
+   "count": 1,
+   "fromBookingPageThisWeek": 0
+  },
+  "emptyState": {
+   "kind": "first-run",
+   "icon": "IconUserPlus",
+   "headline": "No leads yet",
+   "line": "Someone who has enquired but is not a client. Leads become clients when they book.",
+   "action": {
+    "label": "Add lead",
+    "href": "/people/leads?new=1"
+   },
+   "blockedAction": null,
+   "blockedLine": null,
+   "errorWhenEmpty": false,
+   "noWrite": null,
+   "firstRun": null
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [
+   {
+    "id": "00000000-0000-4000-8000-000000000013",
+    "display_name": "Reference Teen",
+    "last_name": null,
+    "email": "Reference-teen@example.invalid",
+    "mobile_phone": null,
+    "role": "adolescent_client",
+    "staff_role": null,
+    "lifecycle_status": "lead",
+    "sessions": 0,
+    "lead_next_step": null,
+    "portal_status": "never_signed_in"
+   }
+  ],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 1
+  }
+ }
+}

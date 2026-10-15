@@ -1,0 +1,49 @@
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /api/
+Disallow: /sign/
+Disallow: /documents
+Disallow: /settings
+
+User-agent: Claude-SearchBot
+Allow: /
+Disallow: /api/
+Disallow: /sign/
+Disallow: /documents
+Disallow: /settings
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /api/
+Disallow: /sign/
+Disallow: /documents
+Disallow: /settings
+
+User-agent: Bingbot
+Allow: /
+Disallow: /api/
+Disallow: /sign/
+Disallow: /documents
+Disallow: /settings
+
+User-agent: GPTBot
+Allow: /
+Disallow: /api/
+Disallow: /sign/
+Disallow: /documents
+Disallow: /settings
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /api/
+Disallow: /sign/
+Disallow: /documents
+Disallow: /settings
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /sign/
+Disallow: /documents
+Disallow: /settings
+Sitemap: https://docustay.app/sitemap.xml

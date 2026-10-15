@@ -1,0 +1,81 @@
+{
+ "$captured": {
+  "route": "GET /api/list/accounts/monitoring",
+  "rank": "coach",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/accounts/monitoring",
+  "title": "Monitoring",
+  "columns": [
+   {
+    "field": "account",
+    "label": "Account",
+    "format": "text"
+   },
+   {
+    "field": "item",
+    "label": "Item",
+    "format": "enum"
+   },
+   {
+    "field": "delivery",
+    "label": "Delivery",
+    "format": "enum"
+   },
+   {
+    "field": "rows_read",
+    "label": "Rows read",
+    "format": "number"
+   },
+   {
+    "field": "last_read",
+    "label": "Last read",
+    "format": "datetime"
+   },
+   {
+    "field": "age",
+    "label": "Age",
+    "format": "text"
+   },
+   {
+    "field": "failure",
+    "label": "Last failure",
+    "format": "text"
+   }
+  ],
+  "recordType": null,
+  "empty": "Uptime and error checks run against each account's own site — no Google consent needed.",
+  "canWrite": null,
+  "noWriteNotice": null,
+  "summary": null,
+  "emptyState": {
+   "kind": "blocked",
+   "icon": "IconActivity",
+   "headline": "Nothing being monitored yet",
+   "line": "Uptime and error checks run against each account's own site — no Google consent needed.",
+   "action": null,
+   "blockedAction": {
+    "label": "Add account",
+    "href": "/accounts?new=1"
+   },
+   "blockedLine": "You have no accounts yet, so there is nothing to monitor.",
+   "errorWhenEmpty": false,
+   "noWrite": null,
+   "firstRun": null
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 0
+  }
+ }
+}

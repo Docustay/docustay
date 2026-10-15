@@ -1,0 +1,13 @@
+{
+ "$captured": {
+  "route": "GET /api/search",
+  "rank": "owner",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "q": "",
+  "hits": [],
+  "detail": "Type at least two characters to search."
+ }
+}

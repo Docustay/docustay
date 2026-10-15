@@ -1,0 +1,453 @@
+THIRD-PARTY NOTICES — Docustay
+
+This lists the open-source software Docustay's website is built from, with each package's licence. Each package's own licence text is in its package; nothing here changes those terms.
+
+== Shipped with the site (326 packages) ==
+@antfu/install-pkg@2.1.0  MIT  https://github.com/antfu-collective/install-pkg
+@ark-ui/svelte@5.24.3  MIT  https://github.com/chakra-ui/ark
+@braintree/sanitize-url@7.1.2  MIT  https://github.com/braintree/sanitize-url
+@chevrotain/types@11.1.2  Apache-2.0  https://github.com/Chevrotain/chevrotain
+@floating-ui/core@1.8.0  MIT  https://github.com/floating-ui/floating-ui
+@floating-ui/dom@1.8.0  MIT  https://github.com/floating-ui/floating-ui
+@floating-ui/utils@0.2.12  MIT  https://github.com/floating-ui/floating-ui
+@fontsource-variable/geist@5.3.0  OFL-1.1  https://github.com/fontsource/font-files
+@fontsource-variable/jetbrains-mono@5.3.0  OFL-1.1  https://github.com/fontsource/font-files
+@fontsource/instrument-serif@5.3.0  OFL-1.1  https://github.com/fontsource/font-files
+@formkit/auto-animate@0.10.0  MIT  https://github.com/formkit/auto-animate
+@iconify/types@2.0.0  MIT  https://github.com/iconify/iconify
+@iconify/utils@3.1.7  MIT  https://github.com/iconify/iconify
+@internationalized/date@3.12.4  Apache-2.0  https://github.com/adobe/react-spectrum.git#main
+@internationalized/number@3.6.7  Apache-2.0  https://github.com/adobe/react-spectrum
+@jridgewell/gen-mapping@0.3.13  MIT  https://github.com/jridgewell/sourcemaps
+@jridgewell/remapping@2.3.5  MIT  https://github.com/jridgewell/sourcemaps
+@jridgewell/resolve-uri@3.1.2  MIT  https://github.com/jridgewell/resolve-uri
+@jridgewell/sourcemap-codec@1.6.0  MIT  https://github.com/jridgewell/sourcemaps
+@jridgewell/trace-mapping@0.3.31  MIT  https://github.com/jridgewell/sourcemaps
+@lucide/svelte@1.52.0  ISC  https://github.com/lucide-icons/lucide
+@mermaid-js/parser@1.2.1  MIT  https://github.com/mermaid-js/mermaid
+@napi-rs/canvas@1.0.10  MIT  https://github.com/Brooooooklyn/canvas
+@napi-rs/canvas-darwin-arm64@1.0.10  MIT  https://github.com/Brooooooklyn/canvas
+@pdf-lib/standard-fonts@1.0.0  MIT  https://github.com/Hopding/standard-fonts
+@pdf-lib/upng@1.0.1  MIT  https://github.com/Hopding/upng
+@stripe/stripe-js@10.0.0  MIT  https://github.com/stripe/stripe-js
+@svelte-put/shortcut@4.2.0  MIT  https://github.com/vnphanquang/svelte-put
+@sveltejs/acorn-typescript@1.0.13  MIT  https://github.com/sveltejs/acorn-typescript
+@swc/helpers@0.5.23  Apache-2.0  https://github.com/swc-project/swc
+@tanstack/highlight@1.0.0  MIT  https://github.com/TanStack/highlight
+@tiptap/core@3.31.4  MIT  https://github.com/ueberdosis/tiptap
+@tiptap/extension-blockquote@3.31.4  MIT  https://github.com/ueberdosis/tiptap
+@tiptap/extension-bold@3.31.4  MIT  https://github.com/ueberdosis/tiptap
+@tiptap/extension-bullet-list@3.31.4  MIT  https://github.com/ueberdosis/tiptap
+@tiptap/extension-code@3.31.4  MIT  https://github.com/ueberdosis/tiptap
+@tiptap/extension-code-block@3.31.4  MIT  https://github.com/ueberdosis/tiptap
+@tiptap/extension-document@3.31.4  MIT  https://github.com/ueberdosis/tiptap
+@tiptap/extension-dropcursor@3.31.4  MIT  https://github.com/ueberdosis/tiptap
+@tiptap/extension-gapcursor@3.31.4  MIT  https://github.com/ueberdosis/tiptap
+@tiptap/extension-hard-break@3.31.4  MIT  https://github.com/ueberdosis/tiptap
+@tiptap/extension-heading@3.31.4  MIT  https://github.com/ueberdosis/tiptap
+@tiptap/extension-horizontal-rule@3.31.4  MIT  https://github.com/ueberdosis/tiptap
+@tiptap/extension-italic@3.31.4  MIT  https://github.com/ueberdosis/tiptap
+@tiptap/extension-link@3.31.4  MIT  https://github.com/ueberdosis/tiptap
+@tiptap/extension-list@3.31.4  MIT  https://github.com/ueberdosis/tiptap
+@tiptap/extension-list-item@3.31.4  MIT  https://github.com/ueberdosis/tiptap
+@tiptap/extension-list-keymap@3.31.4  MIT  https://github.com/ueberdosis/tiptap
+@tiptap/extension-ordered-list@3.31.4  MIT  https://github.com/ueberdosis/tiptap
+@tiptap/extension-paragraph@3.31.4  MIT  https://github.com/ueberdosis/tiptap
+@tiptap/extension-strike@3.31.4  MIT  https://github.com/ueberdosis/tiptap
+@tiptap/extension-table@3.31.4  MIT  https://github.com/ueberdosis/tiptap
+@tiptap/extension-text@3.31.4  MIT  https://github.com/ueberdosis/tiptap
+@tiptap/extension-underline@3.31.4  MIT  https://github.com/ueberdosis/tiptap
+@tiptap/extensions@3.31.4  MIT  https://github.com/ueberdosis/tiptap
+@tiptap/pm@3.31.4  MIT  https://github.com/ueberdosis/tiptap
+@tiptap/starter-kit@3.31.4  MIT  https://github.com/ueberdosis/tiptap
+@tiptap/suggestion@3.31.4  MIT  https://github.com/ueberdosis/tiptap
+@types/d3@7.4.3  MIT  https://github.com/DefinitelyTyped/DefinitelyTyped
+@types/d3-array@3.2.2  MIT  https://github.com/DefinitelyTyped/DefinitelyTyped
+@types/d3-axis@3.0.6  MIT  https://github.com/DefinitelyTyped/DefinitelyTyped
+@types/d3-brush@3.0.6  MIT  https://github.com/DefinitelyTyped/DefinitelyTyped
+@types/d3-chord@3.0.6  MIT  https://github.com/DefinitelyTyped/DefinitelyTyped
+@types/d3-color@3.1.3  MIT  https://github.com/DefinitelyTyped/DefinitelyTyped
+@types/d3-contour@3.0.6  MIT  https://github.com/DefinitelyTyped/DefinitelyTyped
+@types/d3-delaunay@6.0.4  MIT  https://github.com/DefinitelyTyped/DefinitelyTyped
+@types/d3-dispatch@3.0.7  MIT  https://github.com/DefinitelyTyped/DefinitelyTyped
+@types/d3-drag@3.0.7  MIT  https://github.com/DefinitelyTyped/DefinitelyTyped
+@types/d3-dsv@3.0.7  MIT  https://github.com/DefinitelyTyped/DefinitelyTyped
+@types/d3-ease@3.0.2  MIT  https://github.com/DefinitelyTyped/DefinitelyTyped
+@types/d3-fetch@3.0.7  MIT  https://github.com/DefinitelyTyped/DefinitelyTyped
+@types/d3-force@3.0.10  MIT  https://github.com/DefinitelyTyped/DefinitelyTyped
+@types/d3-format@3.0.4  MIT  https://github.com/DefinitelyTyped/DefinitelyTyped
+@types/d3-geo@3.1.1  MIT  https://github.com/DefinitelyTyped/DefinitelyTyped
+@types/d3-hierarchy@3.1.7  MIT  https://github.com/DefinitelyTyped/DefinitelyTyped
+@types/d3-interpolate@3.0.4  MIT  https://github.com/DefinitelyTyped/DefinitelyTyped
+@types/d3-path@3.1.1  MIT  https://github.com/DefinitelyTyped/DefinitelyTyped
+@types/d3-polygon@3.0.2  MIT  https://github.com/DefinitelyTyped/DefinitelyTyped
+@types/d3-quadtree@3.0.6  MIT  https://github.com/DefinitelyTyped/DefinitelyTyped
+@types/d3-random@3.0.4  MIT  https://github.com/DefinitelyTyped/DefinitelyTyped
+@types/d3-scale@4.0.9  MIT  https://github.com/DefinitelyTyped/DefinitelyTyped
+@types/d3-scale-chromatic@3.1.0  MIT  https://github.com/DefinitelyTyped/DefinitelyTyped
+@types/d3-selection@3.0.12  MIT  https://github.com/DefinitelyTyped/DefinitelyTyped
+@types/d3-shape@3.2.0  MIT  https://github.com/DefinitelyTyped/DefinitelyTyped
+@types/d3-time@3.0.4  MIT  https://github.com/DefinitelyTyped/DefinitelyTyped
+@types/d3-time-format@4.0.3  MIT  https://github.com/DefinitelyTyped/DefinitelyTyped
+@types/d3-timer@3.0.2  MIT  https://github.com/DefinitelyTyped/DefinitelyTyped
+@types/d3-transition@3.0.9  MIT  https://github.com/DefinitelyTyped/DefinitelyTyped
+@types/d3-zoom@3.0.9  MIT  https://github.com/DefinitelyTyped/DefinitelyTyped
+@types/estree@1.0.9  MIT  https://github.com/DefinitelyTyped/DefinitelyTyped
+@types/geojson@7946.0.16  MIT  https://github.com/DefinitelyTyped/DefinitelyTyped
+@types/trusted-types@2.0.7  MIT  https://github.com/DefinitelyTyped/DefinitelyTyped
+@upsetjs/venn.js@2.0.0  MIT  https://github.com/upsetjs/venn.js
+@xyflow/svelte@1.7.0  MIT  https://github.com/xyflow/xyflow
+@xyflow/system@0.0.83  MIT  https://github.com/xyflow/xyflow
+@zag-js/accordion@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/anatomy@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/angle-slider@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/aria-hidden@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/async-list@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/auto-resize@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/avatar@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/carousel@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/cascade-select@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/checkbox@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/clipboard@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/collapsible@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/collection@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/color-picker@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/color-utils@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/combobox@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/core@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/date-input@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/date-picker@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/date-utils@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/dialog@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/dismissable@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/dom-query@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/drawer@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/editable@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/file-upload@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/file-utils@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/floating-panel@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/focus-trap@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/focus-visible@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/highlight-word@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/hotkeys@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/hover-card@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/i18n-utils@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/image-cropper@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/interact-outside@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/json-tree-utils@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/listbox@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/live-region@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/marquee@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/menu@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/navigation-menu@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/number-input@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/pagination@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/password-input@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/pin-input@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/popover@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/popper@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/presence@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/progress@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/qr-code@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/radio-group@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/rating-group@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/rect-utils@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/remove-scroll@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/scroll-area@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/scroll-snap@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/select@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/signature-pad@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/slider@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/splitter@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/steps@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/svelte@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/switch@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/tabs@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/tags-input@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/timer@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/toast@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/toc@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/toggle@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/toggle-group@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/tooltip@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/tour@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/tree-view@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/types@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+@zag-js/utils@1.45.0  MIT  https://github.com/chakra-ui/zag.git#main
+acorn@8.18.0  MIT  https://github.com/acornjs/acorn
+ansi-regex@5.0.1  MIT  https://github.com/chalk/ansi-regex
+ansi-styles@4.3.0  MIT  https://github.com/chalk/ansi-styles
+aria-query@5.3.1  Apache-2.0  https://github.com/A11yance/aria-query
+axobject-query@4.1.0  Apache-2.0  https://github.com/A11yance/axobject-query
+camelcase@5.3.1  MIT  https://github.com/sindresorhus/camelcase
+cliui@6.0.0  ISC  https://github.com/yargs/cliui
+clsx@2.1.1  MIT  https://github.com/lukeed/clsx
+color-convert@2.0.1  MIT  https://github.com/Qix-/color-convert
+color-name@1.1.4  MIT  https://github.com/colorjs/color-name
+commander@7.2.0  MIT  https://github.com/tj/commander.js
+commander@8.3.0  MIT  https://github.com/tj/commander.js
+cose-base@1.0.3  MIT  https://github.com/iVis-at-Bilkent/cose-base
+cose-base@2.2.0  MIT  https://github.com/iVis-at-Bilkent/cose-base
+csstype@3.2.3  MIT  https://github.com/frenic/csstype
+cytoscape@3.34.3  MIT  https://github.com/cytoscape/cytoscape.js
+cytoscape-cose-bilkent@4.1.0  MIT  https://github.com/cytoscape/cytoscape.js-cose-bilkent
+cytoscape-fcose@2.2.0  MIT  https://github.com/iVis-at-Bilkent/cytoscape.js-fcose
+d3@7.9.0  ISC  https://github.com/d3/d3
+d3-array@2.12.1  BSD-3-Clause  https://github.com/d3/d3-array
+d3-array@3.2.4  ISC  https://github.com/d3/d3-array
+d3-axis@3.0.0  ISC  https://github.com/d3/d3-axis
+d3-brush@3.0.0  ISC  https://github.com/d3/d3-brush
+d3-chord@3.0.1  ISC  https://github.com/d3/d3-chord
+d3-color@3.1.0  ISC  https://github.com/d3/d3-color
+d3-contour@4.0.2  ISC  https://github.com/d3/d3-contour
+d3-delaunay@6.0.4  ISC  https://github.com/d3/d3-delaunay
+d3-dispatch@3.0.1  ISC  https://github.com/d3/d3-dispatch
+d3-drag@3.0.0  ISC  https://github.com/d3/d3-drag
+d3-dsv@3.0.1  ISC  https://github.com/d3/d3-dsv
+d3-ease@3.0.1  BSD-3-Clause  https://github.com/d3/d3-ease
+d3-fetch@3.0.1  ISC  https://github.com/d3/d3-fetch
+d3-force@3.0.0  ISC  https://github.com/d3/d3-force
+d3-format@3.1.2  ISC  https://github.com/d3/d3-format
+d3-geo@3.1.1  ISC  https://github.com/d3/d3-geo
+d3-hierarchy@3.1.2  ISC  https://github.com/d3/d3-hierarchy
+d3-interpolate@3.0.1  ISC  https://github.com/d3/d3-interpolate
+d3-path@1.0.9  BSD-3-Clause  https://github.com/d3/d3-path
+d3-path@3.1.0  ISC  https://github.com/d3/d3-path
+d3-polygon@3.0.1  ISC  https://github.com/d3/d3-polygon
+d3-quadtree@3.0.1  ISC  https://github.com/d3/d3-quadtree
+d3-random@3.0.1  ISC  https://github.com/d3/d3-random
+d3-sankey@0.12.3  BSD-3-Clause  https://github.com/d3/d3-sankey
+d3-scale@4.0.2  ISC  https://github.com/d3/d3-scale
+d3-scale-chromatic@3.1.0  ISC  https://github.com/d3/d3-scale-chromatic
+d3-selection@3.0.0  ISC  https://github.com/d3/d3-selection
+d3-shape@1.3.7  BSD-3-Clause  https://github.com/d3/d3-shape
+d3-shape@3.2.0  ISC  https://github.com/d3/d3-shape
+d3-time@3.1.0  ISC  https://github.com/d3/d3-time
+d3-time-format@4.1.0  ISC  https://github.com/d3/d3-time-format
+d3-timer@3.0.1  ISC  https://github.com/d3/d3-timer
+d3-transition@3.0.1  ISC  https://github.com/d3/d3-transition
+d3-zoom@3.0.0  ISC  https://github.com/d3/d3-zoom
+dagre-d3-es@7.0.14  MIT  https://github.com/tbo47/dagre-es
+dayjs@1.11.23  MIT  https://github.com/iamkun/dayjs
+decamelize@1.2.0  MIT  https://github.com/sindresorhus/decamelize
+delaunator@5.1.0  ISC  https://github.com/mapbox/delaunator
+devalue@5.9.4  MIT  https://github.com/sveltejs/devalue
+dijkstrajs@1.0.3  MIT  https://github.com/tcort/dijkstrajs
+dompurify@3.4.16  (MPL-2.0 OR Apache-2.0)  https://github.com/cure53/DOMPurify
+driver.js@1.3.6  MIT  https://github.com/kamranahmedse/driver.js
+emoji-regex@8.0.0  MIT  https://github.com/mathiasbynens/emoji-regex
+es-toolkit@1.52.0  MIT  https://github.com/toss/es-toolkit
+esm-env@1.2.2  MIT  https://github.com/benmccann/esm-env
+esrap@2.4.0  MIT  https://github.com/sveltejs/esrap
+fastdom@1.0.12  MIT  https://github.com/wilsonpage/fastdom
+find-up@4.1.0  MIT  https://github.com/sindresorhus/find-up
+get-caller-file@2.0.5  ISC  https://github.com/stefanpenner/get-caller-file
+hachure-fill@0.5.2  MIT  https://github.com/pshihn/hachure-fill
+iconv-lite@0.6.3  MIT  https://github.com/ashtuchkin/iconv-lite
+import-meta-resolve@4.2.0  MIT  https://github.com/wooorm/import-meta-resolve
+internmap@1.0.1  ISC  https://github.com/mbostock/internmap
+internmap@2.0.3  ISC  https://github.com/mbostock/internmap
+is-fullwidth-code-point@3.0.0  MIT  https://github.com/sindresorhus/is-fullwidth-code-point
+is-reference@3.0.3  MIT  https://github.com/Rich-Harris/is-reference
+json-logic-js@2.0.5  MIT  https://github.com/jwadhams/json-logic-js
+katex@0.16.47  MIT  https://github.com/KaTeX/KaTeX
+khroma@2.1.0  MIT*  https://github.com/fabiospampinato/khroma
+layout-base@1.0.2  MIT  https://github.com/iVis-at-Bilkent/layout-base
+layout-base@2.0.1  MIT  https://github.com/iVis-at-Bilkent/layout-base
+lenis@1.3.26  MIT  https://github.com/darkroomengineering/lenis
+linkifyjs@4.3.3  MIT  https://github.com/nfrasser/linkifyjs
+locate-character@3.0.0  MIT  git+https://gitlab.com/Rich-Harris/locate-character
+locate-path@5.0.0  MIT  https://github.com/sindresorhus/locate-path
+lodash-es@4.18.1  MIT  https://github.com/lodash/lodash
+magic-string@0.30.21  MIT  https://github.com/Rich-Harris/magic-string
+marked@16.4.2  MIT  https://github.com/markedjs/marked
+marked@18.0.12  MIT  https://github.com/markedjs/marked
+marked@18.0.14  MIT  https://github.com/markedjs/marked
+mermaid@11.17.2  MIT  https://github.com/mermaid-js/mermaid
+node-forge@1.4.0  (BSD-3-Clause OR GPL-2.0)  https://github.com/digitalbazaar/forge
+orderedmap@2.1.1  MIT  https://github.com/marijnh/orderedmap
+p-limit@2.3.0  MIT  https://github.com/sindresorhus/p-limit
+p-locate@4.1.0  MIT  https://github.com/sindresorhus/p-locate
+p-try@2.2.0  MIT  https://github.com/sindresorhus/p-try
+package-manager-detector@1.9.0  MIT  https://github.com/antfu-collective/package-manager-detector
+pako@1.0.11  (MIT AND Zlib)  https://github.com/nodeca/pako
+papaparse@5.7.0  MIT  https://github.com/mholt/PapaParse
+path-data-parser@0.1.0  MIT  https://github.com/pshihn/path-data-parser
+path-exists@4.0.0  MIT  https://github.com/sindresorhus/path-exists
+pdf-lib@1.17.1  MIT  https://github.com/Hopding/pdf-lib
+pdfjs-dist@6.4.299  Apache-2.0  https://github.com/mozilla/pdf.js
+perfect-freehand@1.2.3  MIT  https://github.com/steveruizok/perfect-freehand
+pngjs@5.0.0  MIT  https://github.com/lukeapage/pngjs
+points-on-curve@0.2.0  MIT  https://github.com/pshihn/bezier-points
+points-on-path@0.2.1  MIT  https://github.com/pshihn/points-on-path
+prosemirror-changeset@2.4.4  MIT  git+https://code.haverbeke.berlin/prosemirror/prosemirror-changeset
+prosemirror-commands@1.7.2  MIT  git+https://code.haverbeke.berlin/prosemirror/prosemirror-commands
+prosemirror-dropcursor@1.8.4  MIT  git+https://code.haverbeke.berlin/prosemirror/prosemirror-dropcursor
+prosemirror-gapcursor@1.4.1  MIT  https://github.com/prosemirror/prosemirror-gapcursor
+prosemirror-history@1.5.1  MIT  git+https://code.haverbeke.berlin/prosemirror/prosemirror-history
+prosemirror-inputrules@1.5.1  MIT  https://github.com/prosemirror/prosemirror-inputrules
+prosemirror-keymap@1.2.3  MIT  https://github.com/prosemirror/prosemirror-keymap
+prosemirror-model@1.25.12  MIT  git+https://code.haverbeke.berlin/prosemirror/prosemirror-model
+prosemirror-schema-list@1.5.1  MIT  https://github.com/prosemirror/prosemirror-schema-list
+prosemirror-state@1.4.4  MIT  https://github.com/prosemirror/prosemirror-state
+prosemirror-tables@1.8.5  MIT  https://github.com/ProseMirror/prosemirror-tables
+prosemirror-transform@1.12.2  MIT  git+https://code.haverbeke.berlin/prosemirror/prosemirror-transform
+prosemirror-view@1.42.6  MIT  git+https://code.haverbeke.berlin/prosemirror/prosemirror-view
+proxy-compare@3.0.1  MIT  https://github.com/dai-shi/proxy-compare
+proxy-memoize@3.0.1  MIT  https://github.com/dai-shi/proxy-memoize
+qrcode@1.5.4  MIT  https://github.com/soldair/node-qrcode
+require-directory@2.1.1  MIT  https://github.com/troygoode/node-require-directory
+require-main-filename@2.0.0  ISC  https://github.com/yargs/require-main-filename
+robust-predicates@3.0.3  Unlicense  https://github.com/mourner/robust-predicates
+rope-sequence@1.3.4  MIT  https://github.com/marijnh/rope-sequence
+roughjs@4.6.6  MIT  https://github.com/pshihn/rough
+runed@0.28.0  MIT  https://github.com/svecosystem/runed
+rw@1.3.3  BSD-3-Clause  https://github.com/mbostock/rw
+safer-buffer@2.1.2  MIT  https://github.com/ChALkeR/safer-buffer
+set-blocking@2.0.0  ISC  https://github.com/yargs/set-blocking
+signature_pad@5.1.4  MIT  https://github.com/szimek/signature_pad
+simple-icons@16.34.0  CC0-1.0  https://github.com/simple-icons/simple-icons
+strictdom@1.0.1  MIT  https://github.com/wilsonpage/strictdom
+string-width@4.2.3  MIT  https://github.com/sindresorhus/string-width
+strip-ansi@6.0.1  MIT  https://github.com/chalk/strip-ansi
+stylis@4.4.0  MIT  https://github.com/thysultan/stylis.js
+svelte@5.57.1  MIT  https://github.com/sveltejs/svelte
+svelte-sonner@1.2.1  MIT  https://github.com/wobsoriano/svelte-sonner
+svelte-streamdown@4.2.1  MIT  https://github.com/beynar/svelte-streamdown
+tailwind-merge@3.7.0  MIT  https://github.com/dcastil/tailwind-merge
+three@0.170.0  MIT  https://github.com/mrdoob/three.js
+tinyexec@1.3.1  MIT  https://github.com/tinylibs/tinyexec
+ts-dedent@2.3.0  MIT  https://github.com/tamino-martinius/node-ts-dedent
+tslib@1.14.1  0BSD  https://github.com/Microsoft/tslib
+tslib@2.8.1  0BSD  https://github.com/Microsoft/tslib
+uqr@0.1.3  MIT  https://github.com/unjs/uqr
+uuid@14.0.2  MIT  https://github.com/uuidjs/uuid
+w3c-keyname@2.2.8  MIT  https://github.com/marijnh/w3c-keyname
+which-module@2.0.1  ISC  https://github.com/nexdrew/which-module
+wrap-ansi@6.2.0  MIT  https://github.com/chalk/wrap-ansi
+y18n@4.0.3  ISC  https://github.com/yargs/y18n
+yargs@15.4.1  MIT  https://github.com/yargs/yargs
+yargs-parser@18.1.3  ISC  https://github.com/yargs/yargs-parser
+zimmerframe@1.1.5  MIT  https://github.com/sveltejs/zimmerframe
+
+== Fonts ==
+Inter and Fraunces, SIL Open Font Licence 1.1 (texts in /fonts/LICENSE-OFL-*.txt)
+
+== Film and clips ==
+Pexels footage, Pexels License. Clip ids: 5483220, 8814718, 8471105, 7821621, 5486226, 7287527, 8902485, 7580446, 5637933, 8061370, 8632187, 8279150, 4115791
+
+== Build and test tools, not shipped (114 packages) ==
+@oxc-project/types@0.152.0  MIT
+@polka/url@1.0.0-next.29  MIT
+@rolldown/binding-darwin-arm64@1.2.12  MIT
+@rolldown/pluginutils@1.0.1  MIT
+@rollup/plugin-commonjs@29.0.3  MIT
+@rollup/plugin-json@6.1.0  MIT
+@rollup/plugin-node-resolve@16.0.3  MIT
+@rollup/plugin-replace@6.0.3  MIT
+@rollup/pluginutils@5.4.0  MIT
+@rollup/rollup-darwin-arm64@4.64.0  MIT
+@shikijs/core@4.5.0  MIT
+@shikijs/engine-javascript@4.5.0  MIT
+@shikijs/engine-oniguruma@4.5.0  MIT
+@shikijs/langs@4.5.0  MIT
+@shikijs/primitive@4.5.0  MIT
+@shikijs/themes@4.5.0  MIT
+@shikijs/types@4.5.0  MIT
+@shikijs/vscode-textmate@10.0.2  MIT
+@standard-schema/spec@1.1.0  MIT
+@sveltejs/adapter-node@5.5.7  MIT
+@sveltejs/kit@2.70.3  MIT
+@sveltejs/load-config@0.2.3  MIT
+@sveltejs/vite-plugin-svelte@7.3.1  MIT
+@tailwindcss/node@4.3.3  MIT
+@tailwindcss/oxide@4.3.3  MIT
+@tailwindcss/oxide-darwin-arm64@4.3.3  MIT
+@tailwindcss/vite@4.3.3  MIT
+@types/cookie@0.6.0  MIT
+@types/hast@3.0.5  MIT
+@types/mdast@4.0.4  MIT
+@types/resolve@1.20.2  MIT
+@types/unist@3.0.3  MIT
+@ungap/structured-clone@1.4.0  ISC
+ccount@2.0.1  MIT
+character-entities-html4@2.1.0  MIT
+character-entities-legacy@3.0.0  MIT
+chokidar@4.0.3  MIT
+comma-separated-tokens@2.0.3  MIT
+commondir@1.0.1  MIT
+cookie@0.6.0  MIT
+deepmerge@4.3.1  MIT
+dequal@2.0.3  MIT
+detect-libc@2.1.2  Apache-2.0
+devlop@1.1.0  MIT
+enhanced-resolve@5.26.0  MIT
+es-errors@1.3.0  MIT
+estree-walker@2.0.2  MIT
+fdir@6.5.0  MIT
+fsevents@2.3.3  MIT
+function-bind@1.1.2  MIT
+graceful-fs@4.2.11  ISC
+hasown@2.0.4  MIT
+hast-util-to-html@9.0.5  MIT
+hast-util-whitespace@3.0.0  MIT
+html-void-elements@3.0.0  MIT
+is-core-module@2.17.0  MIT
+is-module@1.0.0  MIT
+is-reference@1.2.1  MIT
+jiti@2.7.0  MIT
+kleur@4.1.5  MIT
+lightningcss@1.32.0  MPL-2.0
+lightningcss@1.33.0  MPL-2.0
+lightningcss-darwin-arm64@1.32.0  MPL-2.0
+lightningcss-darwin-arm64@1.33.0  MPL-2.0
+magic-string@1.4.2  MIT
+mdast-util-to-hast@13.2.1  MIT
+micromark-util-character@2.1.1  MIT
+micromark-util-encode@2.0.1  MIT
+micromark-util-sanitize-uri@2.0.1  MIT
+micromark-util-symbol@2.0.1  MIT
+micromark-util-types@2.0.3  MIT
+mri@1.2.0  MIT
+mrmime@2.0.1  MIT
+nanoid@3.3.19  MIT
+obug@2.2.1  MIT
+oniguruma-parser@0.12.2  MIT
+oniguruma-to-es@4.3.6  MIT
+path-parse@1.0.7  MIT
+picocolors@1.1.1  ISC
+picomatch@4.0.7  MIT
+postcss@8.5.28  MIT
+property-information@7.2.0  MIT
+readdirp@4.1.2  MIT
+regex@6.1.0  MIT
+regex-recursion@6.0.2  MIT
+regex-utilities@2.3.0  MIT
+resolve@1.22.12  MIT
+rolldown@1.2.12  MIT
+rollup@4.64.0  MIT
+sade@1.8.1  MIT
+set-cookie-parser@3.1.2  MIT
+shiki@4.5.0  MIT
+sirv@3.0.2  MIT
+source-map-js@1.2.2  BSD-3-Clause
+space-separated-tokens@2.0.2  MIT
+stringify-entities@4.0.4  MIT
+supports-preserve-symlinks-flag@1.0.0  MIT
+svelte-check@4.7.6  MIT
+tailwindcss@4.3.3  MIT
+tapable@2.3.3  MIT
+tinyglobby@0.2.17  MIT
+totalist@3.0.1  MIT
+trim-lines@3.0.1  MIT
+typescript@6.0.3  Apache-2.0
+unist-util-is@6.0.1  MIT
+unist-util-position@5.0.0  MIT
+unist-util-stringify-position@4.0.0  MIT
+unist-util-visit@5.1.0  MIT
+unist-util-visit-parents@6.0.2  MIT
+vfile@6.0.3  MIT
+vfile-message@4.0.3  MIT
+vite@8.3.2  MIT
+vitefu@1.1.3  MIT
+zwitch@2.0.4  MIT

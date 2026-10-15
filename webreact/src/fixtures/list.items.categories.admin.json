@@ -1,0 +1,66 @@
+{
+ "$captured": {
+  "route": "GET /api/list/items/categories",
+  "rank": "admin",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/items/categories",
+  "title": "Categories",
+  "columns": [
+   {
+    "field": "name",
+    "label": "Category",
+    "format": "text"
+   },
+   {
+    "field": "service_count",
+    "label": "What's in it",
+    "format": "number"
+   },
+   {
+    "field": "on_booking_page",
+    "label": "On the booking page",
+    "format": "text"
+   },
+   {
+    "field": "booked_this_year",
+    "label": "Booked this year",
+    "format": "number"
+   }
+  ],
+  "recordType": null,
+  "empty": "Categories become the headings on your booking page. One is plenty to start.",
+  "canWrite": null,
+  "noWriteNotice": null,
+  "summary": null,
+  "emptyState": {
+   "kind": "first-run",
+   "icon": "IconFolder",
+   "headline": "No groups yet",
+   "line": "Categories become the headings on your booking page. One is plenty to start.",
+   "action": {
+    "label": "New category",
+    "href": "/items/categories?new=1"
+   },
+   "blockedAction": null,
+   "blockedLine": null,
+   "errorWhenEmpty": false,
+   "noWrite": null,
+   "firstRun": null
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 0
+  }
+ }
+}

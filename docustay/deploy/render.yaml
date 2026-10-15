@@ -1,0 +1,70 @@
+# Docustay on Render — click "Deploy to Render" in the README, or New → Blueprint and point it at this file.
+# Six pieces: the web app (public), the API and worker and PDF converter and file store (private), and a Postgres database.
+# Fill the sync:false values when Render asks (the secrets are generated for you).
+databases:
+  - name: docustay-db
+    plan: basic-256mb
+    databaseName: docustay
+    user: docustay
+
+services:
+  - type: web
+    name: docustay-web
+    runtime: docker
+    dockerfilePath: ./docustay/web/Dockerfile
+    dockerContext: .
+    healthCheckPath: /
+    envVars:
+      - { key: DOCUSTAY_API_URL, fromService: { type: pserv, name: docustay-app, property: hostport } }   # prefixed with http:// below by the entrypoint
+      - { key: DOCUSTAY_SELF_HOST, value: "1" }
+      - { key: PORT, value: "3000" }
+      # NOT SET ON PURPOSE: Render does not document which header carries the visitor's address, and reports say it appends to a client-supplied X-Forwarded-For. Until you have looked at a real request on your own service, every visitor shares Render's edge address (one rate-limit bucket). See docs/self-host-reverse-proxy.md, "Checking the address".
+
+  - type: pserv
+    name: docustay-app
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    dockerCommand: node docustay/entrypoint.mjs app
+    healthCheckPath: /healthz
+    envVars: &appenv
+      - { key: KEYSTONE_DB_SUPERUSER_URL, fromDatabase: { name: docustay-db, property: connectionString } }
+      - { key: KEYSTONE_DB_SSL, value: "on" }
+      - { key: KEYSTONE_S3_ENDPOINT, fromService: { type: pserv, name: docustay-storage, property: hostport } }
+      - { key: KEYSTONE_S3_BUCKET, value: docustay }
+      - { key: KEYSTONE_S3_ACCESS_KEY_ID, generateValue: true }
+      - { key: KEYSTONE_S3_SECRET_ACCESS_KEY, generateValue: true }
+      - { key: KEYSTONE_GOTENBERG_URL, fromService: { type: pserv, name: docustay-gotenberg, property: hostport } }
+      - { key: KEYSTONE_TOKEN_PEPPER, generateValue: true }
+      - { key: KEYSTONE_LOCAL_AUTH, value: "1" }
+      - { key: KEYSTONE_LOCAL_AUTH_SECRET, generateValue: true }
+      - { key: KEYSTONE_MASTER_KEY, generateValue: true }
+      - { key: KEYSTONE_SETUP_TOKEN, generateValue: true }
+      - { key: KEYSTONE_SELF_HOST, value: "1" }
+      - { key: KEYSTONE_TRUSTED_PROXY_HOPS, value: "1" }
+      - { key: KEYSTONE_PUBLIC_URL, sync: false }          # https://your-name.onrender.com, or your own domain
+      - { key: RESEND_API_KEY, sync: false }               # or leave empty and set SMTP in Settings → Email
+
+  - type: worker
+    name: docustay-worker
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    dockerCommand: node docustay/entrypoint.mjs worker
+    envVars: *appenv
+
+  - type: pserv
+    name: docustay-gotenberg
+    runtime: image
+    image: { url: docker.io/gotenberg/gotenberg:8 }
+
+  - type: pserv
+    name: docustay-storage
+    runtime: docker
+    dockerfilePath: ./infra/seaweedfs/Dockerfile
+    dockerContext: ./infra/seaweedfs
+    disk: { name: files, mountPath: /data, sizeGB: 20 }
+    envVars:
+      - { key: KEYSTONE_S3_BUCKET, value: docustay }
+      - { key: KEYSTONE_S3_ACCESS_KEY_ID, fromService: { type: pserv, name: docustay-app, envVarKey: KEYSTONE_S3_ACCESS_KEY_ID } }
+      - { key: KEYSTONE_S3_SECRET_ACCESS_KEY, fromService: { type: pserv, name: docustay-app, envVarKey: KEYSTONE_S3_SECRET_ACCESS_KEY } }

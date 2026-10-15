@@ -1,0 +1,71 @@
+{
+ "$captured": {
+  "route": "GET /api/list/items/modifiers",
+  "rank": "admin",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/items/modifiers",
+  "title": "Modifiers",
+  "columns": [
+   {
+    "field": "name",
+    "label": "Name",
+    "format": "text"
+   },
+   {
+    "field": "effect",
+    "label": "What it does",
+    "format": "text"
+   },
+   {
+    "field": "applies_to",
+    "label": "Applies to",
+    "format": "text"
+   },
+   {
+    "field": "used_count",
+    "label": "Used",
+    "format": "number"
+   },
+   {
+    "field": "active",
+    "label": "Active",
+    "format": "boolean"
+   }
+  ],
+  "recordType": null,
+  "empty": "Things that change a service without being a different service.",
+  "canWrite": null,
+  "noWriteNotice": null,
+  "summary": null,
+  "emptyState": {
+   "kind": "first-run",
+   "icon": "IconAdjustments",
+   "headline": "Add your first modifier",
+   "line": "Things that change a service without being a different service.",
+   "action": {
+    "label": "New modifier",
+    "href": "/items/modifiers?new=1"
+   },
+   "blockedAction": null,
+   "blockedLine": null,
+   "errorWhenEmpty": false,
+   "noWrite": null,
+   "firstRun": null
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 0
+  }
+ }
+}

@@ -1,0 +1,122 @@
+{
+ "$captured": {
+  "route": "GET /api/list/accounts/access",
+  "rank": "owner",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/accounts/access",
+  "title": "Access",
+  "columns": [
+   {
+    "field": "account",
+    "label": "Account",
+    "format": "text"
+   },
+   {
+    "field": "service",
+    "label": "Service",
+    "format": "enum"
+   },
+   {
+    "field": "access",
+    "label": "Access",
+    "format": "enum"
+   },
+   {
+    "field": "property",
+    "label": "Property",
+    "format": "text"
+   },
+   {
+    "field": "granted",
+    "label": "Granted",
+    "format": "datetime"
+   },
+   {
+    "field": "next_action",
+    "label": "Next step",
+    "format": "text"
+   },
+   {
+    "field": "authority",
+    "label": "What the connection grants",
+    "format": "text"
+   }
+  ],
+  "recordType": null,
+  "empty": "What each account has let us reach, service by service.",
+  "canWrite": null,
+  "noWriteNotice": null,
+  "summary": null,
+  "emptyState": {
+   "kind": "blocked",
+   "icon": "IconKey",
+   "headline": "No access granted yet",
+   "line": "What each account has let us reach, service by service.",
+   "action": null,
+   "blockedAction": {
+    "label": "Add account",
+    "href": "/accounts?new=1"
+   },
+   "blockedLine": "You have no accounts yet, so there is no access to show.",
+   "errorWhenEmpty": false,
+   "noWrite": null,
+   "firstRun": null
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [
+   {
+    "id": "00000000-0000-4000-8000-000000000019:analytics",
+    "account": "Reference Account",
+    "service": "analytics",
+    "access": "never_granted",
+    "property": null,
+    "granted": null,
+    "next_action": "Ask the client to connect this account",
+    "authority": "Read-only access to your Google Analytics data."
+   },
+   {
+    "id": "00000000-0000-4000-8000-000000000019:business_profile",
+    "account": "Reference Account",
+    "service": "business_profile",
+    "access": "never_granted",
+    "property": null,
+    "granted": null,
+    "next_action": "Ask the client to connect this account",
+    "authority": "Full management access to your Google Business Profile. ★ Google does not offer a read-only version of this permission, so granting it gives this application the technical ability to CHANGE YOUR PUBLIC LISTING — your hours, your posts and your replies to reviews. We use it only to read reviews and insights; the limit is our agreement with you, not a restriction Google enforces."
+   },
+   {
+    "id": "00000000-0000-4000-8000-000000000019:google_ads",
+    "account": "Reference Account",
+    "service": "google_ads",
+    "access": "never_granted",
+    "property": null,
+    "granted": null,
+    "next_action": "Ask the client to connect this account",
+    "authority": "Full access to your Google Ads account. ★ Google does not offer a read-only version of this permission, so granting it gives this application the technical ability to CHANGE YOUR ADVERTISING — including what you spend. We use it only to read reports; the limit is our agreement with you, not a restriction Google enforces."
+   },
+   {
+    "id": "00000000-0000-4000-8000-000000000019:search_console",
+    "account": "Reference Account",
+    "service": "search_console",
+    "access": "never_granted",
+    "property": null,
+    "granted": null,
+    "next_action": "Ask the client to connect this account",
+    "authority": "Read-only access to your Search Console data."
+   }
+  ],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 4
+  }
+ }
+}

@@ -1,0 +1,16 @@
+{
+ "$captured": {
+  "route": "GET /api/growth/audience",
+  "rank": "owner",
+  "status": 400,
+  "world": true
+ },
+ "body": {
+  "error": {
+   "kind": "validation",
+   "message": "choose a segment to count its audience",
+   "requestId": "00000000-0000-4000-8000-000000000331",
+   "retryable": false
+  }
+ }
+}

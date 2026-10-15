@@ -1,0 +1,100 @@
+{
+ "$captured": {
+  "route": "GET /api/list/money/invoices",
+  "rank": "admin",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/money/invoices",
+  "title": "Invoices",
+  "columns": [
+   {
+    "field": "invoice_number",
+    "label": "Number",
+    "format": "text"
+   },
+   {
+    "field": "payer",
+    "label": "Payer",
+    "format": "text"
+   },
+   {
+    "field": "amount_minor",
+    "label": "Amount",
+    "format": "money",
+    "currency": "currency"
+   },
+   {
+    "field": "status",
+    "label": "Status",
+    "format": "enum"
+   },
+   {
+    "field": "due_at",
+    "label": "Due",
+    "format": "date"
+   },
+   {
+    "field": "paid_minor",
+    "label": "Paid",
+    "format": "money",
+    "currency": "currency"
+   },
+   {
+    "field": "lines",
+    "label": "Lines",
+    "format": "number"
+   }
+  ],
+  "recordType": "invoice",
+  "empty": "Raised against a service or a completed session.",
+  "canWrite": null,
+  "noWriteNotice": null,
+  "summary": null,
+  "emptyState": {
+   "kind": "blocked",
+   "icon": "IconFileInvoice",
+   "headline": "No invoices yet",
+   "line": "Raised against a service or a completed session.",
+   "action": {
+    "label": "Raise invoice",
+    "href": "/money/invoices?new=1"
+   },
+   "blockedAction": {
+    "label": "Add service",
+    "href": "/items/services?new=1"
+   },
+   "blockedLine": "An invoice is raised from a priced service, and none of yours has an active price yet.",
+   "errorWhenEmpty": false,
+   "noWrite": null,
+   "firstRun": null
+  },
+  "totalColumn": "amount_minor",
+  "total": 12500,
+  "totalCurrency": "USD",
+  "totalCurrencies": [
+   "USD"
+  ],
+  "timezone": "America/Denver",
+  "rows": [
+   {
+    "id": "00000000-0000-4000-8000-000000000084",
+    "amount_minor": 12500,
+    "currency": "USD",
+    "status": "open",
+    "due_at": "2026-10-10T17:56:06.296Z",
+    "invoice_number": "2026-0001",
+    "payer": "Reference Adult",
+    "paid_minor": "0",
+    "lines": 1
+   }
+  ],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 1
+  }
+ }
+}

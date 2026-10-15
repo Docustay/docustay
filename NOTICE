@@ -1,0 +1,11 @@
+Docustay
+Copyright (C) 2026 GLRS LLC
+
+This repository is the open core of Docustay, licensed under the GNU Affero General Public License,
+version 3 (see LICENSE). Third-party components keep their own licences: see THIRD-PARTY-LICENSES.
+
+The Docustay Pro add-on is a separate, proprietary program. It is not part of this repository and is
+delivered only to holders of a valid Pro key. The names "Docustay" and its logo are not licensed for use
+as the name of a modified or competing service.
+
+Security reports: see SECURITY.md. Contributions: see CONTRIBUTING.md.

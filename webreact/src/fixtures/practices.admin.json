@@ -1,0 +1,18 @@
+{
+ "$captured": {
+  "route": "GET /api/auth/practices",
+  "rank": "admin",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "practices": [
+   {
+    "id": "00000000-0000-4000-8000-000000000001",
+    "slug": "Reference",
+    "name": "Reference",
+    "is_current": true
+   }
+  ]
+ }
+}

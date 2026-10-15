@@ -1,0 +1,7 @@
+{
+  "name": "docustay",
+  "version": "0.1.0",
+  "description": "Send documents for signature with Docustay from Claude Code: an MCP server plus skills for sending, text tags, embedded signing and webhooks.",
+  "license": "MIT",
+  "mcpServers": "./.mcp.json"
+}

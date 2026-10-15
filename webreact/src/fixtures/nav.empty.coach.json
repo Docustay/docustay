@@ -1,0 +1,1363 @@
+{
+ "$captured": {
+  "route": "GET /api/nav",
+  "rank": "coach",
+  "status": 200,
+  "world": false
+ },
+ "body": {
+  "sections": [
+   {
+    "key": "home",
+    "path": "/home",
+    "label": "Home",
+    "minRole": "client"
+   },
+   {
+    "key": "people",
+    "path": "/people",
+    "label": "People",
+    "minRole": "staff",
+    "children": [
+     {
+      "key": "all-people",
+      "path": "/people/all",
+      "label": "All people"
+     },
+     {
+      "key": "clients",
+      "path": "/people/clients",
+      "termKey": "userType.clientPlural",
+      "fallback": "Clients",
+      "label": "Clients"
+     },
+     {
+      "key": "adolescents",
+      "path": "/people/adolescents",
+      "label": "Adolescents"
+     },
+     {
+      "key": "parents",
+      "path": "/people/parents",
+      "termKey": "userType.parentPlural",
+      "fallback": "Parents",
+      "label": "Parents"
+     },
+     {
+      "key": "leads",
+      "path": "/people/leads",
+      "label": "Leads"
+     },
+     {
+      "key": "archived",
+      "path": "/people/archived",
+      "label": "Archived"
+     },
+     {
+      "key": "team",
+      "path": "/people/team",
+      "label": "Team",
+      "minRole": "admin",
+      "children": [
+       {
+        "key": "invites",
+        "path": "/people/team/invites",
+        "label": "Invites"
+       }
+      ]
+     },
+     {
+      "key": "scheduling",
+      "path": "/people/scheduling",
+      "label": "Scheduling"
+     }
+    ]
+   },
+   {
+    "key": "accounts",
+    "path": "/accounts",
+    "label": "Accounts",
+    "minRole": "staff",
+    "children": [
+     {
+      "key": "acc-all",
+      "path": "/accounts/all",
+      "label": "All accounts",
+      "minRole": "admin"
+     },
+     {
+      "key": "acc-search-console",
+      "path": "/accounts/search-console",
+      "label": "Search Console"
+     },
+     {
+      "key": "acc-google-ads",
+      "path": "/accounts/google-ads",
+      "label": "Google Ads"
+     },
+     {
+      "key": "acc-analytics",
+      "path": "/accounts/analytics",
+      "label": "Analytics"
+     },
+     {
+      "key": "acc-business-profile",
+      "path": "/accounts/business-profile",
+      "label": "Business Profile"
+     },
+     {
+      "key": "acc-monitoring",
+      "path": "/accounts/monitoring",
+      "label": "Monitoring"
+     },
+     {
+      "key": "acc-access",
+      "path": "/accounts/access",
+      "label": "Access"
+     },
+     {
+      "key": "acc-reports",
+      "path": "/accounts/reports",
+      "label": "Reports"
+     }
+    ]
+   },
+   {
+    "key": "network",
+    "path": "/network",
+    "label": "Network",
+    "minRole": "staff",
+    "children": [
+     {
+      "key": "net-referrals",
+      "path": "/network/referrals",
+      "label": "Referrals"
+     },
+     {
+      "key": "net-releases",
+      "path": "/network/releases",
+      "label": "Releases"
+     }
+    ]
+   },
+   {
+    "key": "engagements",
+    "path": "/engagements",
+    "label": "Engagements",
+    "minRole": "staff",
+    "children": [
+     {
+      "key": "calendar",
+      "path": "/engagements/calendar",
+      "label": "Calendar"
+     },
+     {
+      "key": "availability",
+      "path": "/engagements/availability",
+      "label": "Availability"
+     },
+     {
+      "key": "sessions",
+      "path": "/engagements/sessions",
+      "label": "Sessions"
+     },
+     {
+      "key": "waitlist",
+      "path": "/engagements/waitlist",
+      "label": "Waitlist"
+     },
+     {
+      "key": "online-booking",
+      "path": "/engagements/booking",
+      "label": "Online booking"
+     },
+     {
+      "key": "booking-channels",
+      "path": "/engagements/booking/channels",
+      "label": "Booking channels"
+     },
+     {
+      "key": "booking-links",
+      "path": "/engagements/booking/links",
+      "label": "Booking links",
+      "minRole": "admin"
+     },
+     {
+      "key": "booking-settings",
+      "path": "/engagements/booking/settings",
+      "label": "Settings"
+     }
+    ]
+   },
+   {
+    "key": "items",
+    "path": "/items",
+    "label": "Items and services",
+    "minRole": "staff",
+    "children": [
+     {
+      "key": "cat-catalogue",
+      "path": "/items/catalogue",
+      "label": "Catalogue",
+      "children": [
+       {
+        "key": "services",
+        "path": "/items/services",
+        "label": "Services"
+       },
+       {
+        "key": "packages",
+        "path": "/items/packages",
+        "label": "Packages"
+       },
+       {
+        "key": "plans",
+        "path": "/items/plans",
+        "label": "Plans"
+       },
+       {
+        "key": "categories",
+        "path": "/items/categories",
+        "label": "Categories"
+       }
+      ]
+     },
+     {
+      "key": "cat-pricing",
+      "path": "/items/pricing",
+      "label": "Pricing",
+      "children": [
+       {
+        "key": "coupons",
+        "path": "/items/coupons",
+        "label": "Coupons"
+       },
+       {
+        "key": "modifiers",
+        "path": "/items/modifiers",
+        "label": "Modifiers"
+       },
+       {
+        "key": "units",
+        "path": "/items/units",
+        "label": "Units"
+       },
+       {
+        "key": "defaults",
+        "path": "/items/defaults",
+        "label": "Item defaults"
+       }
+      ]
+     },
+     {
+      "key": "cat-extras",
+      "path": "/items/extras",
+      "label": "Extras",
+      "children": [
+       {
+        "key": "gift-cards",
+        "path": "/items/gift-cards",
+        "label": "Gift cards"
+       },
+       {
+        "key": "loyalty",
+        "path": "/items/loyalty",
+        "label": "Loyalty"
+       }
+      ]
+     },
+     {
+      "key": "cat-library",
+      "path": "/items/library",
+      "label": "Library",
+      "children": [
+       {
+        "key": "images",
+        "path": "/items/images",
+        "label": "Image library"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "key": "documents",
+    "path": "/documents",
+    "label": "Documents",
+    "minRole": "staff",
+    "children": [
+     {
+      "key": "doc-pipeline",
+      "path": "/documents/pipeline",
+      "label": "Pipeline"
+     },
+     {
+      "key": "contracts",
+      "path": "/documents/contracts",
+      "label": "Contracts",
+      "children": [
+       {
+        "key": "all-contracts",
+        "path": "/documents/contracts/all",
+        "label": "All contracts"
+       },
+       {
+        "key": "contract-templates",
+        "path": "/documents/contracts/templates",
+        "label": "Templates"
+       }
+      ]
+     },
+     {
+      "key": "forms",
+      "path": "/documents/forms",
+      "label": "Forms",
+      "children": [
+       {
+        "key": "all-forms",
+        "path": "/documents/forms/all",
+        "label": "All forms"
+       },
+       {
+        "key": "form-templates",
+        "path": "/documents/forms/templates",
+        "label": "Templates"
+       }
+      ]
+     },
+     {
+      "key": "executed",
+      "path": "/documents/executed",
+      "label": "Executed"
+     }
+    ]
+   },
+   {
+    "key": "money",
+    "path": "/money",
+    "label": "Money",
+    "minRole": "staff",
+    "children": [
+     {
+      "key": "invoices",
+      "path": "/money/invoices",
+      "label": "Invoices"
+     },
+     {
+      "key": "estimates",
+      "path": "/money/estimates",
+      "label": "Estimates"
+     },
+     {
+      "key": "subscriptions",
+      "path": "/money/subscriptions",
+      "label": "Subscriptions"
+     },
+     {
+      "key": "payments",
+      "path": "/money/payments",
+      "label": "Payments"
+     },
+     {
+      "key": "money-account",
+      "path": "/money/account",
+      "label": "Account management"
+     },
+     {
+      "key": "credits",
+      "path": "/money/credits",
+      "label": "Credits"
+     },
+     {
+      "key": "payouts",
+      "path": "/money/payouts",
+      "label": "Payouts"
+     },
+     {
+      "key": "disputes",
+      "path": "/money/disputes",
+      "label": "Disputes"
+     },
+     {
+      "key": "payment-links",
+      "path": "/money/payment-links",
+      "label": "Payment links"
+     },
+     {
+      "key": "payment-methods",
+      "path": "/money/payment-methods",
+      "label": "Payment methods"
+     },
+     {
+      "key": "virtual-terminal",
+      "path": "/money/virtual-terminal",
+      "label": "Virtual terminal"
+     },
+     {
+      "key": "readers",
+      "path": "/money/readers",
+      "label": "Card readers"
+     },
+     {
+      "key": "money-settings",
+      "path": "/money/settings",
+      "label": "Settings",
+      "children": [
+       {
+        "key": "money-tax",
+        "path": "/money/settings/tax",
+        "label": "Tax"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "key": "run",
+    "path": "/run",
+    "label": "Run",
+    "minRole": "staff",
+    "children": [
+     {
+      "key": "dashboard",
+      "path": "/run/dashboard",
+      "label": "Dashboard"
+     },
+     {
+      "key": "run-presence",
+      "path": "/run/presence",
+      "label": "Presence",
+      "children": [
+       {
+        "key": "website",
+        "path": "/run/website",
+        "label": "Website"
+       },
+       {
+        "key": "search",
+        "path": "/run/search",
+        "label": "Search"
+       },
+       {
+        "key": "ai-visibility",
+        "path": "/run/ai-visibility",
+        "label": "AI visibility"
+       },
+       {
+        "key": "listings",
+        "path": "/run/listings",
+        "label": "Listings"
+       },
+       {
+        "key": "reviews",
+        "path": "/run/reviews",
+        "label": "Reviews"
+       }
+      ]
+     },
+     {
+      "key": "run-reach",
+      "path": "/run/reach",
+      "label": "Reach",
+      "children": [
+       {
+        "key": "social",
+        "path": "/run/social",
+        "label": "Social"
+       },
+       {
+        "key": "ads",
+        "path": "/run/ads",
+        "label": "Ads"
+       },
+       {
+        "key": "campaigns",
+        "path": "/run/campaigns",
+        "label": "Campaigns"
+       },
+       {
+        "key": "landing-pages",
+        "path": "/run/pages",
+        "label": "Landing pages"
+       },
+       {
+        "key": "forms-funnels",
+        "path": "/run/funnels",
+        "label": "Forms and funnels"
+       }
+      ]
+     },
+     {
+      "key": "run-audience",
+      "path": "/run/audience",
+      "label": "Audience",
+      "children": [
+       {
+        "key": "lists-segments",
+        "path": "/run/lists",
+        "label": "Lists and segments"
+       },
+       {
+        "key": "templates",
+        "path": "/run/templates",
+        "label": "Templates"
+       }
+      ]
+     },
+     {
+      "key": "run-signals",
+      "path": "/run/signals",
+      "label": "Signals",
+      "children": [
+       {
+        "key": "calls",
+        "path": "/run/calls",
+        "label": "Calls"
+       },
+       {
+        "key": "competitors",
+        "path": "/run/competitors",
+        "label": "Competitors"
+       }
+      ]
+     },
+     {
+      "key": "connections",
+      "path": "/run/connections",
+      "label": "Connections"
+     }
+    ]
+   },
+   {
+    "key": "tasks",
+    "path": "/tasks",
+    "label": "Tasks",
+    "minRole": "staff",
+    "children": [
+     {
+      "key": "my-tasks",
+      "path": "/tasks/mine",
+      "label": "My tasks"
+     },
+     {
+      "key": "team-tasks",
+      "path": "/tasks/team",
+      "label": "Team"
+     },
+     {
+      "key": "automations",
+      "path": "/tasks/automations",
+      "label": "Automations"
+     }
+    ]
+   },
+   {
+    "key": "reports",
+    "path": "/reports",
+    "label": "Reports",
+    "minRole": "staff",
+    "children": [
+     {
+      "key": "rep-money",
+      "path": "/reports/money",
+      "label": "Money",
+      "minRole": "admin"
+     },
+     {
+      "key": "rep-people",
+      "path": "/reports/people",
+      "label": "People",
+      "minRole": "admin"
+     },
+     {
+      "key": "rep-sessions",
+      "path": "/reports/sessions",
+      "label": "Sessions"
+     },
+     {
+      "key": "rep-found",
+      "path": "/reports/found",
+      "label": "How people find you",
+      "minRole": "admin"
+     },
+     {
+      "key": "rep-coaches",
+      "path": "/reports/coaches",
+      "label": "Coaches"
+     },
+     {
+      "key": "rep-accountant",
+      "path": "/reports/accountant",
+      "label": "For your accountant",
+      "minRole": "admin"
+     },
+     {
+      "key": "rep-receipt",
+      "path": "/reports/receipt",
+      "label": "What we did this month",
+      "minRole": "admin"
+     }
+    ]
+   },
+   {
+    "key": "whats-new",
+    "path": "/whats-new",
+    "label": "What's new",
+    "minRole": "staff",
+    "children": [
+     {
+      "key": "whats-new-log",
+      "path": "/whats-new/log",
+      "label": "Activity log"
+     }
+    ]
+   }
+  ],
+  "rank": "coach",
+  "permissions": {
+   "rank": "coach",
+   "grants": {
+    "account": [
+     {
+      "verb": "view",
+      "scope": "owned"
+     }
+    ],
+    "audit": [
+     {
+      "verb": "none",
+      "scope": "none"
+     }
+    ],
+    "automation": [
+     {
+      "verb": "none",
+      "scope": "none"
+     }
+    ],
+    "campaign": [
+     {
+      "verb": "none",
+      "scope": "none"
+     }
+    ],
+    "discount": [
+     {
+      "verb": "none",
+      "scope": "none"
+     }
+    ],
+    "dispute": [
+     {
+      "verb": "none",
+      "scope": "none"
+     }
+    ],
+    "document": [
+     {
+      "verb": "edit",
+      "scope": "owned"
+     }
+    ],
+    "engagement": [
+     {
+      "verb": "edit",
+      "scope": "owned"
+     }
+    ],
+    "goal": [
+     {
+      "verb": "edit",
+      "scope": "owned"
+     }
+    ],
+    "invoice": [
+     {
+      "verb": "none",
+      "scope": "none"
+     }
+    ],
+    "item": [
+     {
+      "verb": "view",
+      "scope": "everything"
+     }
+    ],
+    "message": [
+     {
+      "verb": "edit",
+      "scope": "owned"
+     }
+    ],
+    "network_party": [
+     {
+      "verb": "view",
+      "scope": "everything"
+     }
+    ],
+    "note": [
+     {
+      "verb": "none",
+      "scope": "none"
+     }
+    ],
+    "payout": [
+     {
+      "verb": "none",
+      "scope": "none"
+     }
+    ],
+    "person": [
+     {
+      "verb": "edit",
+      "scope": "owned"
+     }
+    ],
+    "referral": [
+     {
+      "verb": "edit",
+      "scope": "owned"
+     }
+    ],
+    "report": [
+     {
+      "verb": "view",
+      "scope": "everything"
+     }
+    ],
+    "setting": [
+     {
+      "verb": "none",
+      "scope": "none"
+     }
+    ],
+    "site": [
+     {
+      "verb": "none",
+      "scope": "none"
+     }
+    ],
+    "task": [
+     {
+      "verb": "edit",
+      "scope": "owned"
+     }
+    ]
+   },
+   "actions": [
+    "document.sign",
+    "person.create",
+    "template.author"
+   ],
+   "teamVisibleUserIds": []
+  },
+  "tenant": {
+   "id": "00000000-0000-4000-8000-000000000001",
+   "slug": "Reference",
+   "name": "Reference",
+   "isPlatform": false,
+   "logoUrl": null
+  },
+  "me": {
+   "appUserId": "00000000-0000-4000-8000-000000000004",
+   "displayName": "Reference coach",
+   "role": "staff",
+   "staffRole": "member",
+   "operatorGrantActive": false,
+   "needsIntake": false,
+   "sidebarCollapsed": false,
+   "density": "compact",
+   "calendarPreferences": {
+    "weekStarts": "monday",
+    "dayFromMinute": 420,
+    "dayToMinute": 1200,
+    "slotMinutes": 30,
+    "showCancelledDays": 7,
+    "colourBy": "service"
+   }
+  },
+  "viewingAs": null,
+  "knownPathCount": 151,
+  "sectionCount": 14,
+  "staff": [
+   {
+    "key": "today",
+    "path": "/staff/today",
+    "label": "Today"
+   },
+   {
+    "key": "people",
+    "path": "/staff/people",
+    "label": "People"
+   },
+   {
+    "key": "calendar",
+    "path": "/staff/calendar",
+    "label": "Calendar"
+   },
+   {
+    "key": "get-paid",
+    "path": "/staff/get-paid",
+    "label": "Get paid"
+   },
+   {
+    "key": "more",
+    "path": "/staff/more",
+    "label": "More"
+   }
+  ],
+  "buildState": {
+   "/home": {
+    "state": "built"
+   },
+   "/people": {
+    "state": "no_read_path",
+    "phase": "15",
+    "reason": "This screen isn't built yet."
+   },
+   "/people/all": {
+    "state": "built"
+   },
+   "/people/clients": {
+    "state": "built"
+   },
+   "/people/adolescents": {
+    "state": "built"
+   },
+   "/people/parents": {
+    "state": "built"
+   },
+   "/people/leads": {
+    "state": "built"
+   },
+   "/people/archived": {
+    "state": "built"
+   },
+   "/people/team": {
+    "state": "built"
+   },
+   "/people/team/invites": {
+    "state": "built"
+   },
+   "/people/scheduling": {
+    "state": "built"
+   },
+   "/accounts": {
+    "state": "built"
+   },
+   "/accounts/all": {
+    "state": "built"
+   },
+   "/accounts/search-console": {
+    "state": "built"
+   },
+   "/accounts/google-ads": {
+    "state": "built"
+   },
+   "/accounts/analytics": {
+    "state": "built"
+   },
+   "/accounts/business-profile": {
+    "state": "built"
+   },
+   "/accounts/monitoring": {
+    "state": "built"
+   },
+   "/accounts/access": {
+    "state": "built"
+   },
+   "/accounts/reports": {
+    "state": "built"
+   },
+   "/network": {
+    "state": "built"
+   },
+   "/network/referrals": {
+    "state": "built"
+   },
+   "/network/releases": {
+    "state": "built"
+   },
+   "/engagements": {
+    "state": "no_read_path",
+    "phase": "15",
+    "reason": "This screen isn't built yet."
+   },
+   "/engagements/calendar": {
+    "state": "built"
+   },
+   "/engagements/availability": {
+    "state": "no_read_path",
+    "phase": "15",
+    "reason": "This screen isn't built yet."
+   },
+   "/engagements/sessions": {
+    "state": "built"
+   },
+   "/engagements/waitlist": {
+    "state": "built"
+   },
+   "/engagements/booking": {
+    "state": "built"
+   },
+   "/engagements/booking/channels": {
+    "state": "no_read_path",
+    "phase": "15",
+    "reason": "This screen isn't built yet."
+   },
+   "/engagements/booking/links": {
+    "state": "no_read_path",
+    "phase": "15",
+    "reason": "This screen isn't built yet."
+   },
+   "/engagements/booking/settings": {
+    "state": "built"
+   },
+   "/items": {
+    "state": "no_read_path",
+    "phase": "15",
+    "reason": "This screen isn't built yet."
+   },
+   "/items/catalogue": {
+    "state": "no_read_path",
+    "phase": "15",
+    "reason": "This screen isn't built yet."
+   },
+   "/items/services": {
+    "state": "built"
+   },
+   "/items/packages": {
+    "state": "built"
+   },
+   "/items/plans": {
+    "state": "built"
+   },
+   "/items/categories": {
+    "state": "built"
+   },
+   "/items/pricing": {
+    "state": "no_read_path",
+    "phase": "15",
+    "reason": "This screen isn't built yet."
+   },
+   "/items/coupons": {
+    "state": "built"
+   },
+   "/items/modifiers": {
+    "state": "built"
+   },
+   "/items/units": {
+    "state": "built"
+   },
+   "/items/defaults": {
+    "state": "built"
+   },
+   "/items/extras": {
+    "state": "no_read_path",
+    "phase": "15",
+    "reason": "This screen isn't built yet."
+   },
+   "/items/gift-cards": {
+    "state": "built"
+   },
+   "/items/loyalty": {
+    "state": "built"
+   },
+   "/items/library": {
+    "state": "no_read_path",
+    "phase": "15",
+    "reason": "This screen isn't built yet."
+   },
+   "/items/images": {
+    "state": "built"
+   },
+   "/documents": {
+    "state": "no_read_path",
+    "phase": "15",
+    "reason": "This screen isn't built yet."
+   },
+   "/documents/pipeline": {
+    "state": "built"
+   },
+   "/documents/contracts": {
+    "state": "no_read_path",
+    "phase": "15",
+    "reason": "This screen isn't built yet."
+   },
+   "/documents/contracts/all": {
+    "state": "built"
+   },
+   "/documents/contracts/templates": {
+    "state": "built"
+   },
+   "/documents/forms": {
+    "state": "no_read_path",
+    "phase": "15",
+    "reason": "This screen isn't built yet."
+   },
+   "/documents/forms/all": {
+    "state": "built"
+   },
+   "/documents/forms/templates": {
+    "state": "built"
+   },
+   "/documents/executed": {
+    "state": "built"
+   },
+   "/money": {
+    "state": "no_read_path",
+    "phase": "15",
+    "reason": "This screen isn't built yet."
+   },
+   "/money/invoices": {
+    "state": "built"
+   },
+   "/money/estimates": {
+    "state": "built"
+   },
+   "/money/subscriptions": {
+    "state": "built"
+   },
+   "/money/payments": {
+    "state": "built"
+   },
+   "/money/account": {
+    "state": "built"
+   },
+   "/money/credits": {
+    "state": "built"
+   },
+   "/money/payouts": {
+    "state": "built"
+   },
+   "/money/disputes": {
+    "state": "built"
+   },
+   "/money/payment-links": {
+    "state": "no_read_path",
+    "phase": "15",
+    "reason": "This screen isn't built yet."
+   },
+   "/money/payment-methods": {
+    "state": "no_read_path",
+    "phase": "15",
+    "reason": "This screen isn't built yet."
+   },
+   "/money/virtual-terminal": {
+    "state": "no_read_path",
+    "phase": "15",
+    "reason": "This screen isn't built yet."
+   },
+   "/money/readers": {
+    "state": "no_read_path",
+    "phase": "15",
+    "reason": "This screen isn't built yet."
+   },
+   "/money/settings": {
+    "state": "no_read_path",
+    "phase": "15",
+    "reason": "This screen isn't built yet."
+   },
+   "/money/settings/tax": {
+    "state": "built"
+   },
+   "/run": {
+    "state": "no_read_path",
+    "phase": "15",
+    "reason": "This screen isn't built yet."
+   },
+   "/run/dashboard": {
+    "state": "no_read_path",
+    "phase": "15",
+    "reason": "This screen isn't built yet."
+   },
+   "/run/presence": {
+    "state": "no_read_path",
+    "phase": "15",
+    "reason": "This screen isn't built yet."
+   },
+   "/run/website": {
+    "state": "no_read_path",
+    "phase": "15",
+    "reason": "This screen isn't built yet."
+   },
+   "/run/search": {
+    "state": "no_read_path",
+    "phase": "15",
+    "reason": "This screen isn't built yet."
+   },
+   "/run/ai-visibility": {
+    "state": "no_read_path",
+    "phase": "15",
+    "reason": "This screen isn't built yet."
+   },
+   "/run/listings": {
+    "state": "no_read_path",
+    "phase": "15",
+    "reason": "This screen isn't built yet."
+   },
+   "/run/reviews": {
+    "state": "no_read_path",
+    "phase": "15",
+    "reason": "This screen isn't built yet."
+   },
+   "/run/reach": {
+    "state": "no_read_path",
+    "phase": "15",
+    "reason": "This screen isn't built yet."
+   },
+   "/run/social": {
+    "state": "no_read_path",
+    "phase": "15",
+    "reason": "This screen isn't built yet."
+   },
+   "/run/ads": {
+    "state": "no_read_path",
+    "phase": "15",
+    "reason": "This screen isn't built yet."
+   },
+   "/run/campaigns": {
+    "state": "built"
+   },
+   "/run/pages": {
+    "state": "built"
+   },
+   "/run/funnels": {
+    "state": "no_read_path",
+    "phase": "15",
+    "reason": "This screen isn't built yet."
+   },
+   "/run/audience": {
+    "state": "no_read_path",
+    "phase": "15",
+    "reason": "This screen isn't built yet."
+   },
+   "/run/lists": {
+    "state": "built"
+   },
+   "/run/templates": {
+    "state": "built"
+   },
+   "/run/signals": {
+    "state": "no_read_path",
+    "phase": "15",
+    "reason": "This screen isn't built yet."
+   },
+   "/run/calls": {
+    "state": "no_read_path",
+    "phase": "15",
+    "reason": "This screen isn't built yet."
+   },
+   "/run/competitors": {
+    "state": "no_read_path",
+    "phase": "15",
+    "reason": "This screen isn't built yet."
+   },
+   "/run/connections": {
+    "state": "no_read_path",
+    "phase": "15",
+    "reason": "This screen isn't built yet."
+   },
+   "/tasks": {
+    "state": "not_built",
+    "phase": "20",
+    "reason": "a task is what an event chain leaves behind; six of nine topics do not exist yet (P20.3a)"
+   },
+   "/tasks/mine": {
+    "state": "built"
+   },
+   "/tasks/team": {
+    "state": "built"
+   },
+   "/tasks/automations": {
+    "state": "built"
+   },
+   "/reports": {
+    "state": "built"
+   },
+   "/reports/money": {
+    "state": "built"
+   },
+   "/reports/people": {
+    "state": "built"
+   },
+   "/reports/sessions": {
+    "state": "built"
+   },
+   "/reports/found": {
+    "state": "built"
+   },
+   "/reports/coaches": {
+    "state": "built"
+   },
+   "/reports/accountant": {
+    "state": "built"
+   },
+   "/reports/receipt": {
+    "state": "built"
+   },
+   "/settings": {
+    "state": "built"
+   },
+   "/settings/practice-grp": {
+    "state": "no_read_path",
+    "phase": "15",
+    "reason": "This screen isn't built yet."
+   },
+   "/settings/practice": {
+    "state": "built"
+   },
+   "/settings/branding": {
+    "state": "built"
+   },
+   "/settings/roles/presets": {
+    "state": "built"
+   },
+   "/settings/fields-required": {
+    "state": "built"
+   },
+   "/settings/clients-grp": {
+    "state": "no_read_path",
+    "phase": "15",
+    "reason": "This screen isn't built yet."
+   },
+   "/settings/client-app": {
+    "state": "built"
+   },
+   "/settings/documents": {
+    "state": "built"
+   },
+   "/settings/notifications": {
+    "state": "built"
+   },
+   "/settings/money-grp": {
+    "state": "no_read_path",
+    "phase": "15",
+    "reason": "This screen isn't built yet."
+   },
+   "/settings/money": {
+    "state": "built"
+   },
+   "/settings/plans": {
+    "state": "built"
+   },
+   "/settings/billing": {
+    "state": "built"
+   },
+   "/settings/usage": {
+    "state": "built"
+   },
+   "/settings/channels-grp": {
+    "state": "no_read_path",
+    "phase": "15",
+    "reason": "This screen isn't built yet."
+   },
+   "/settings/email": {
+    "state": "built"
+   },
+   "/settings/integrations": {
+    "state": "built"
+   },
+   "/settings/data-grp": {
+    "state": "no_read_path",
+    "phase": "15",
+    "reason": "This screen isn't built yet."
+   },
+   "/settings/import": {
+    "state": "built"
+   },
+   "/settings/data": {
+    "state": "built"
+   },
+   "/settings/developer": {
+    "state": "built"
+   },
+   "/settings/developer/api-keys": {
+    "state": "built"
+   },
+   "/settings/developer/webhooks": {
+    "state": "built"
+   },
+   "/settings/developer/embeds": {
+    "state": "built"
+   },
+   "/settings/developer/audit-log": {
+    "state": "built"
+   },
+   "/settings/developer/sandbox": {
+    "state": "built"
+   },
+   "/settings/shape": {
+    "state": "no_read_path",
+    "phase": "15",
+    "reason": "This screen isn't built yet."
+   },
+   "/settings/roles": {
+    "state": "built"
+   },
+   "/settings/terminology": {
+    "state": "built"
+   },
+   "/settings/sign-in": {
+    "state": "built"
+   },
+   "/settings/mine": {
+    "state": "built"
+   },
+   "/whats-new": {
+    "state": "built"
+   },
+   "/whats-new/log": {
+    "state": "built"
+   },
+   "/platform": {
+    "state": "no_read_path",
+    "phase": "15",
+    "reason": "This screen isn't built yet."
+   },
+   "/platform/overview": {
+    "state": "built"
+   },
+   "/platform/tenants": {
+    "state": "built"
+   },
+   "/platform/provisioning": {
+    "state": "built"
+   },
+   "/platform/usage": {
+    "state": "built"
+   },
+   "/platform/automations": {
+    "state": "built"
+   },
+   "/platform/branding": {
+    "state": "built"
+   },
+   "/platform/flags": {
+    "state": "built"
+   },
+   "/platform/tiers": {
+    "state": "no_read_path",
+    "phase": "15",
+    "reason": "This screen isn't built yet."
+   },
+   "/platform/jobs": {
+    "state": "built"
+   },
+   "/platform/health": {
+    "state": "built"
+   },
+   "/platform/impersonation": {
+    "state": "cut",
+    "cut": true,
+    "reason": "OUT OF SCOPE (Part G). No mechanism — and §A9 requires audit-log writing AND tenant visibility BEFORE it may exist at all"
+   }
+  },
+  "buildStateCounts": {
+   "built": 105,
+   "notBuilt": 2,
+   "noReadPath": 44,
+   "total": 151
+  }
+ }
+}

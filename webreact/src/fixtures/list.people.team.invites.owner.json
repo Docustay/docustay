@@ -1,0 +1,71 @@
+{
+ "$captured": {
+  "route": "GET /api/list/people/team/invites",
+  "rank": "owner",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/people/team/invites",
+  "title": "Invites",
+  "columns": [
+   {
+    "field": "email",
+    "label": "Email",
+    "format": "text"
+   },
+   {
+    "field": "invited_role",
+    "label": "Role",
+    "format": "text"
+   },
+   {
+    "field": "invited_by_name",
+    "label": "Invited by",
+    "format": "text"
+   },
+   {
+    "field": "sent_at",
+    "label": "Sent",
+    "format": "date"
+   },
+   {
+    "field": "status",
+    "label": "Status",
+    "format": "text"
+   }
+  ],
+  "recordType": "person",
+  "empty": "Invite someone from Team, and it will show up here until they accept it.",
+  "canWrite": null,
+  "noWriteNotice": null,
+  "summary": null,
+  "emptyState": {
+   "kind": "first-run",
+   "icon": "IconUserPlus",
+   "headline": "No invitations sent",
+   "line": "Invite someone from Team, and it will show up here until they accept it.",
+   "action": {
+    "label": "Invite",
+    "href": "/people/team"
+   },
+   "blockedAction": null,
+   "blockedLine": null,
+   "errorWhenEmpty": false,
+   "noWrite": null,
+   "firstRun": null
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 0
+  }
+ }
+}

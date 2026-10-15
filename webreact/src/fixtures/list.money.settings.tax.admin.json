@@ -1,0 +1,16 @@
+{
+ "$captured": {
+  "route": "GET /api/list/money/settings/tax",
+  "rank": "admin",
+  "status": 404,
+  "world": true
+ },
+ "body": {
+  "error": {
+   "kind": "not_found",
+   "message": "no list view for \"/money/settings/tax\"",
+   "requestId": "00000000-0000-4000-8000-000000000124",
+   "retryable": false
+  }
+ }
+}

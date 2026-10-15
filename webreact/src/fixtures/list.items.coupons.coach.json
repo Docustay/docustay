@@ -1,0 +1,58 @@
+{
+ "$captured": {
+  "route": "GET /api/list/items/coupons",
+  "rank": "coach",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/items/coupons",
+  "title": "Coupons",
+  "columns": [
+   {
+    "field": "name",
+    "label": "Coupon",
+    "format": "text"
+   },
+   {
+    "field": "codes_count",
+    "label": "Codes",
+    "format": "number"
+   },
+   {
+    "field": "active",
+    "label": "Active",
+    "format": "boolean"
+   }
+  ],
+  "recordType": null,
+  "empty": "A coupon is the rule. Codes are what customers type to redeem it.",
+  "canWrite": false,
+  "noWriteNotice": "You can view coupons. Creating or editing them is done by the practice owner or an admin.",
+  "summary": null,
+  "emptyState": {
+   "kind": "first-run",
+   "icon": "IconDiscount2",
+   "headline": "No coupons yet",
+   "line": "The practice owner creates coupons and codes. Once they do, they'll show here.",
+   "action": null,
+   "blockedAction": null,
+   "blockedLine": null,
+   "errorWhenEmpty": false,
+   "firstRun": null,
+   "notice": "You can view coupons. Creating or editing them is done by the practice owner or an admin."
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 0
+  }
+ }
+}

@@ -1,0 +1,74 @@
+{
+ "$captured": {
+  "route": "GET /api/list/documents/contracts/all",
+  "rank": "coach",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/documents/contracts/all",
+  "title": "All contracts",
+  "columns": [
+   {
+    "field": "title",
+    "label": "Document",
+    "format": "text"
+   },
+   {
+    "field": "subject",
+    "label": "Subject",
+    "format": "text"
+   },
+   {
+    "field": "builder",
+    "label": "Builder",
+    "format": "enum"
+   },
+   {
+    "field": "state",
+    "label": "State",
+    "format": "enum"
+   },
+   {
+    "field": "sent_at",
+    "label": "Sent",
+    "format": "date"
+   }
+  ],
+  "recordType": "document",
+  "empty": "Every agreement sent, signed or executed.",
+  "canWrite": null,
+  "noWriteNotice": null,
+  "summary": null,
+  "emptyState": {
+   "kind": "blocked",
+   "icon": "IconFileCertificate",
+   "headline": "No contracts yet",
+   "line": "Every agreement sent, signed or executed.",
+   "action": {
+    "label": "Send a contract",
+    "href": "/documents/contracts/all?new=1"
+   },
+   "blockedAction": {
+    "label": "Create template",
+    "href": "/documents/contracts/templates?new=1"
+   },
+   "blockedLine": "You have no contract templates, and a contract is a copy of one.",
+   "errorWhenEmpty": false,
+   "noWrite": null,
+   "firstRun": null
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 0
+  }
+ }
+}

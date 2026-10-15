@@ -1,0 +1,203 @@
+{
+ "$captured": {
+  "route": "GET /api/records/booking/:world.booking",
+  "rank": "owner",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "shell": {
+   "type": "booking",
+   "label": "Session",
+   "fields": {
+    "state": "confirmed",
+    "title": null,
+    "archived_at": null
+   },
+   "readOnly": false,
+   "archived": false,
+   "header": {
+    "title": null,
+    "status": "confirmed"
+   },
+   "highlights": [
+    {
+     "key": "client",
+     "label": "Client",
+     "from": "derived:booking_client",
+     "empty": "No participants",
+     "format": "text",
+     "value": "Reference Adult",
+     "present": true
+    },
+    {
+     "key": "coach",
+     "label": "Coach",
+     "from": "derived:booking_host",
+     "empty": "Unassigned",
+     "format": "text",
+     "value": "Reference Coach",
+     "present": true
+    },
+    {
+     "key": "when",
+     "label": "When",
+     "from": "derived:booking_when",
+     "empty": "Not scheduled",
+     "format": "text",
+     "value": "Thu 01 Oct, 09:00 (America/Denver)",
+     "present": true
+    },
+    {
+     "key": "where",
+     "label": "Where",
+     "from": "derived:booking_where",
+     "empty": "Not set",
+     "format": "text",
+     "value": null,
+     "present": false
+    }
+   ],
+   "panels": [
+    {
+     "key": "basics",
+     "label": "Session",
+     "fields": [
+      {
+       "field": "title",
+       "label": "Title",
+       "format": "text",
+       "value": null,
+       "currency": null
+      },
+      {
+       "field": "state",
+       "label": "State",
+       "format": "enum",
+       "value": "confirmed",
+       "currency": null
+      },
+      {
+       "field": "description",
+       "label": "Notes",
+       "format": "text",
+       "value": null,
+       "currency": null
+      }
+     ]
+    },
+    {
+     "key": "where",
+     "label": "Location",
+     "fields": [
+      {
+       "field": "location_kind",
+       "label": "Kind",
+       "format": "enum",
+       "value": null,
+       "currency": null
+      },
+      {
+       "field": "location_detail",
+       "label": "Details",
+       "format": "text",
+       "value": null,
+       "currency": null
+      }
+     ]
+    },
+    {
+     "key": "reminder",
+     "label": "Reminder",
+     "fields": [
+      {
+       "field": "reminder_minutes_before",
+       "label": "Minutes before",
+       "format": "number",
+       "value": 1440,
+       "currency": null
+      },
+      {
+       "field": "recurrence_cadence",
+       "label": "Repeats",
+       "format": "enum",
+       "value": null,
+       "currency": null
+      }
+     ]
+    },
+    {
+     "key": "cancellation",
+     "label": "Cancellation",
+     "fields": [
+      {
+       "field": "cancellation_reason",
+       "label": "Reason",
+       "format": "text",
+       "value": null,
+       "currency": null
+      }
+     ]
+    }
+   ],
+   "related": [
+    {
+     "key": "participants",
+     "kind": "list",
+     "label": "Who was there",
+     "of": "participant"
+    },
+    {
+     "key": "lines",
+     "kind": "list",
+     "label": "Charges",
+     "of": "line_item"
+    }
+   ],
+   "activity": {
+    "key": "activity",
+    "label": "Activity",
+    "kind": "list",
+    "of": "event"
+   }
+  },
+  "activity": [
+   {
+    "id": "00000000-0000-4000-8000-000000000377",
+    "topic": "booking.participant.added",
+    "emitted_by": "booking",
+    "status": "pending",
+    "created_at": "2026-09-26T17:56:06.293Z",
+    "reason": null
+   },
+   {
+    "id": "00000000-0000-4000-8000-000000000378",
+    "topic": "booking.participant.added",
+    "emitted_by": "booking",
+    "status": "pending",
+    "created_at": "2026-09-26T17:56:06.289Z",
+    "reason": null
+   },
+   {
+    "id": "00000000-0000-4000-8000-000000000379",
+    "topic": "booking.booking.created",
+    "emitted_by": "booking",
+    "status": "pending",
+    "created_at": "2026-09-26T17:56:06.280Z",
+    "reason": null
+   }
+  ],
+  "relatedCounts": {},
+  "relatedRows": {
+   "participants": [
+    {
+     "id": "00000000-0000-4000-8000-000000000388",
+     "label": "Reference Adult",
+     "sub": "Attended"
+    }
+   ],
+   "lines": []
+  },
+  "whatKeepsWorking": {}
+ }
+}

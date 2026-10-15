@@ -1,0 +1,63 @@
+{
+ "$captured": {
+  "route": "GET /api/list/people/archived",
+  "rank": "admin",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/people/archived",
+  "title": "Archived people",
+  "columns": [
+   {
+    "field": "display_name",
+    "label": "Name",
+    "format": "text"
+   },
+   {
+    "field": "type",
+    "label": "Type",
+    "format": "enum"
+   },
+   {
+    "field": "archived_at",
+    "label": "Archived on",
+    "format": "date"
+   },
+   {
+    "field": "archived_by",
+    "label": "Archived by",
+    "format": "text"
+   }
+  ],
+  "recordType": "person",
+  "empty": "Archived people are out of the way, not gone.",
+  "canWrite": null,
+  "noWriteNotice": null,
+  "summary": null,
+  "emptyState": {
+   "kind": "first-run",
+   "icon": "IconUsers",
+   "headline": "Nobody archived",
+   "line": "Archived people are out of the way, not gone.",
+   "action": null,
+   "blockedAction": null,
+   "blockedLine": null,
+   "errorWhenEmpty": false,
+   "noWrite": null,
+   "firstRun": null
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 0
+  }
+ }
+}

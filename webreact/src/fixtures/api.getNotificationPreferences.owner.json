@@ -1,0 +1,18 @@
+{
+ "$captured": {
+  "route": "GET /api/notifications/my-preferences",
+  "rank": "owner",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "userId": "00000000-0000-4000-8000-000000000002",
+  "preferences": [
+   {
+    "topic": "booking.booking.created",
+    "channel": "email",
+    "enabled": true
+   }
+  ]
+ }
+}

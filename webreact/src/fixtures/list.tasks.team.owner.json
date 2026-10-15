@@ -1,0 +1,76 @@
+{
+ "$captured": {
+  "route": "GET /api/list/tasks/team",
+  "rank": "owner",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/tasks/team",
+  "title": "Team tasks",
+  "columns": [
+   {
+    "field": "title",
+    "label": "Task",
+    "format": "text"
+   },
+   {
+    "field": "written_by",
+    "label": "Who",
+    "format": "text"
+   },
+   {
+    "field": "about",
+    "label": "About",
+    "format": "text"
+   },
+   {
+    "field": "due_at",
+    "label": "Due",
+    "format": "datetime"
+   },
+   {
+    "field": "topic",
+    "label": "Where it came from",
+    "format": "enum"
+   },
+   {
+    "field": "state",
+    "label": "State",
+    "format": "enum"
+   }
+  ],
+  "recordType": null,
+  "empty": "Every open task, whoever it belongs to.",
+  "canWrite": null,
+  "noWriteNotice": null,
+  "summary": null,
+  "emptyState": {
+   "kind": "first-run",
+   "icon": "IconUsersGroup",
+   "headline": "Nothing outstanding across the team",
+   "line": "Every open task, whoever it belongs to.",
+   "action": {
+    "label": "Add task",
+    "href": "/tasks/team?new=1"
+   },
+   "blockedAction": null,
+   "blockedLine": null,
+   "errorWhenEmpty": false,
+   "noWrite": null,
+   "firstRun": null
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 0
+  }
+ }
+}

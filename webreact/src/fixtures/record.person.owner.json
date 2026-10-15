@@ -1,0 +1,580 @@
+{
+ "$captured": {
+  "route": "GET /api/records/person/:world.adult",
+  "rank": "owner",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "shell": {
+   "type": "person",
+   "label": "Person",
+   "fields": {
+    "lifecycle_status": "lead",
+    "role": "adult_client",
+    "staff_role": null,
+    "email": "Reference-adult@example.invalid",
+    "name": "Reference Adult",
+    "display_name": "Reference Adult",
+    "archived_at": null
+   },
+   "readOnly": false,
+   "archived": false,
+   "header": {
+    "title": "Reference Adult",
+    "status": "adult_client"
+   },
+   "highlights": [
+    {
+     "key": "name",
+     "label": "Name",
+     "from": "app_user.display_name",
+     "empty": "Unnamed",
+     "format": "text",
+     "value": "Reference Adult",
+     "present": true
+    },
+    {
+     "key": "engagement",
+     "label": "Engagement",
+     "from": "derived:sessions_90d",
+     "empty": "No sessions yet",
+     "format": "text",
+     "value": "No sessions in 90 days",
+     "present": true
+    },
+    {
+     "key": "coach",
+     "label": "Coach",
+     "from": "derived:current_coach",
+     "empty": "Unassigned",
+     "format": "text",
+     "value": "Reference Coach",
+     "present": true
+    },
+    {
+     "key": "progress",
+     "label": "Progress",
+     "from": "derived:credit_progress",
+     "empty": "No package",
+     "format": "text",
+     "value": "0 of 6 credits used",
+     "present": true
+    },
+    {
+     "key": "next_session",
+     "label": "Next session",
+     "from": "derived:next_session",
+     "empty": "None scheduled",
+     "format": "text",
+     "value": "Thu 01 Oct, 09:00",
+     "present": true
+    },
+    {
+     "key": "billing_status",
+     "label": "Billing",
+     "from": "derived:billing_status",
+     "empty": "Nothing due",
+     "format": "text",
+     "value": "Invoice open",
+     "present": true
+    }
+   ],
+   "panels": [
+    {
+     "key": "identity",
+     "label": "Identity",
+     "fields": [
+      {
+       "field": "display_name",
+       "label": "Name",
+       "format": "text",
+       "value": "Reference Adult",
+       "currency": null
+      },
+      {
+       "field": "first_name",
+       "label": "First name",
+       "format": "text",
+       "value": null,
+       "currency": null
+      },
+      {
+       "field": "last_name",
+       "label": "Last name",
+       "format": "text",
+       "value": null,
+       "currency": null
+      },
+      {
+       "field": "preferred_name",
+       "label": "Preferred name",
+       "format": "text",
+       "value": null,
+       "currency": null
+      },
+      {
+       "field": "pronouns",
+       "label": "Pronouns",
+       "format": "text",
+       "value": null,
+       "currency": null
+      },
+      {
+       "field": "date_of_birth",
+       "label": "Date of birth",
+       "format": "date",
+       "value": null,
+       "currency": null
+      },
+      {
+       "field": "role",
+       "label": "Role",
+       "format": "enum",
+       "value": "adult_client",
+       "currency": null
+      },
+      {
+       "field": "lifecycle_status",
+       "label": "Status",
+       "format": "enum",
+       "value": "lead",
+       "currency": null
+      }
+     ]
+    },
+    {
+     "key": "contact",
+     "label": "Contact",
+     "fields": [
+      {
+       "field": "email",
+       "label": "Email",
+       "format": "text",
+       "value": "Reference-adult@example.invalid",
+       "currency": null
+      },
+      {
+       "field": "secondary_email",
+       "label": "Secondary email",
+       "format": "text",
+       "value": null,
+       "currency": null
+      },
+      {
+       "field": "mobile_phone",
+       "label": "Mobile",
+       "format": "phone",
+       "value": null,
+       "currency": null
+      },
+      {
+       "field": "home_phone",
+       "label": "Home phone",
+       "format": "phone",
+       "value": null,
+       "currency": null
+      },
+      {
+       "field": "preferred_contact_method",
+       "label": "Prefers",
+       "format": "enum",
+       "value": null,
+       "currency": null
+      },
+      {
+       "field": "do_not_email",
+       "label": "Do not email",
+       "format": "boolean",
+       "value": false,
+       "currency": null
+      },
+      {
+       "field": "do_not_text",
+       "label": "Do not text",
+       "format": "boolean",
+       "value": false,
+       "currency": null
+      },
+      {
+       "field": "do_not_call",
+       "label": "Do not call",
+       "format": "boolean",
+       "value": false,
+       "currency": null
+      }
+     ]
+    },
+    {
+     "key": "address",
+     "label": "Address",
+     "fields": [
+      {
+       "field": "address_line1",
+       "label": "Line 1",
+       "format": "text",
+       "value": null,
+       "currency": null
+      },
+      {
+       "field": "address_line2",
+       "label": "Line 2",
+       "format": "text",
+       "value": null,
+       "currency": null
+      },
+      {
+       "field": "city",
+       "label": "City",
+       "format": "text",
+       "value": null,
+       "currency": null
+      },
+      {
+       "field": "state_region",
+       "label": "State",
+       "format": "text",
+       "value": null,
+       "currency": null
+      },
+      {
+       "field": "postcode",
+       "label": "Postcode",
+       "format": "text",
+       "value": null,
+       "currency": null
+      },
+      {
+       "field": "country",
+       "label": "Country",
+       "format": "text",
+       "value": null,
+       "currency": null
+      },
+      {
+       "field": "timezone",
+       "label": "Timezone",
+       "format": "text",
+       "value": null,
+       "currency": null
+      }
+     ]
+    },
+    {
+     "key": "relationship",
+     "label": "Relationship",
+     "fields": [
+      {
+       "field": "source",
+       "label": "Source",
+       "format": "text",
+       "value": null,
+       "currency": null
+      },
+      {
+       "field": "joined_at",
+       "label": "Joined",
+       "format": "date",
+       "value": null,
+       "currency": null
+      },
+      {
+       "field": "notes",
+       "label": "Notes",
+       "format": "text",
+       "value": null,
+       "currency": null
+      }
+     ]
+    },
+    {
+     "key": "emergency",
+     "label": "Emergency contact",
+     "fields": [
+      {
+       "field": "emergency_contact_name",
+       "label": "Name",
+       "format": "text",
+       "value": null,
+       "currency": null
+      },
+      {
+       "field": "emergency_contact_relationship",
+       "label": "Relationship",
+       "format": "text",
+       "value": null,
+       "currency": null
+      },
+      {
+       "field": "emergency_contact_phone",
+       "label": "Phone",
+       "format": "phone",
+       "value": null,
+       "currency": null
+      }
+     ]
+    },
+    {
+     "key": "recovery",
+     "label": "Recovery",
+     "fields": [
+      {
+       "field": "sobriety_date",
+       "label": "Sobriety date",
+       "format": "date",
+       "value": null,
+       "currency": null
+      },
+      {
+       "field": "recovery_programme",
+       "label": "Programme",
+       "format": "text",
+       "value": null,
+       "currency": null
+      },
+      {
+       "field": "sponsor_name",
+       "label": "Sponsor",
+       "format": "text",
+       "value": null,
+       "currency": null
+      },
+      {
+       "field": "support_network",
+       "label": "Support network",
+       "format": "text",
+       "value": null,
+       "currency": null
+      }
+     ]
+    }
+   ],
+   "related": [
+    {
+     "key": "documents",
+     "kind": "list",
+     "label": "Documents",
+     "of": "document"
+    },
+    {
+     "key": "subscriptions",
+     "kind": "list",
+     "label": "Subscriptions",
+     "of": "subscription"
+    }
+   ],
+   "activity": {
+    "key": "activity",
+    "label": "Activity",
+    "kind": "list",
+    "of": "event"
+   }
+  },
+  "activity": [
+   {
+    "id": "00000000-0000-4000-8000-000000000376",
+    "topic": "money.invoice.opened",
+    "emitted_by": "money",
+    "status": "pending",
+    "created_at": "2026-09-26T17:56:06.296Z",
+    "reason": null
+   },
+   {
+    "id": "00000000-0000-4000-8000-000000000377",
+    "topic": "booking.participant.added",
+    "emitted_by": "booking",
+    "status": "pending",
+    "created_at": "2026-09-26T17:56:06.293Z",
+    "reason": null
+   },
+   {
+    "id": "00000000-0000-4000-8000-000000000378",
+    "topic": "booking.participant.added",
+    "emitted_by": "booking",
+    "status": "pending",
+    "created_at": "2026-09-26T17:56:06.289Z",
+    "reason": null
+   },
+   {
+    "id": "00000000-0000-4000-8000-000000000379",
+    "topic": "booking.booking.created",
+    "emitted_by": "booking",
+    "status": "pending",
+    "created_at": "2026-09-26T17:56:06.280Z",
+    "reason": null
+   },
+   {
+    "id": "00000000-0000-4000-8000-000000000380",
+    "topic": "documents.document.executed",
+    "emitted_by": "documents",
+    "status": "pending",
+    "created_at": "2026-09-26T17:56:06.262Z",
+    "reason": null
+   },
+   {
+    "id": "00000000-0000-4000-8000-000000000381",
+    "topic": "documents.document.sent",
+    "emitted_by": "documents",
+    "status": "pending",
+    "created_at": "2026-09-26T17:56:06.253Z",
+    "reason": null
+   },
+   {
+    "id": "00000000-0000-4000-8000-000000000382",
+    "topic": "documents.document.created",
+    "emitted_by": "documents",
+    "status": "pending",
+    "created_at": "2026-09-26T17:56:06.248Z",
+    "reason": null
+   },
+   {
+    "id": "00000000-0000-4000-8000-000000000383",
+    "topic": "documents.document.sent",
+    "emitted_by": "documents",
+    "status": "pending",
+    "created_at": "2026-09-26T17:56:06.226Z",
+    "reason": null
+   },
+   {
+    "id": "00000000-0000-4000-8000-000000000384",
+    "topic": "documents.document.created",
+    "emitted_by": "documents",
+    "status": "pending",
+    "created_at": "2026-09-26T17:56:06.221Z",
+    "reason": null
+   },
+   {
+    "id": "00000000-0000-4000-8000-000000000385",
+    "topic": "people.person.created",
+    "emitted_by": "people",
+    "status": "pending",
+    "created_at": "2026-09-26T17:56:06.129Z",
+    "reason": null
+   }
+  ],
+  "relatedCounts": {},
+  "relatedRows": {
+   "documents": [
+    {
+     "id": "00000000-0000-4000-8000-000000000075",
+     "label": "Reference Executed coaching agreement",
+     "sub": "executed"
+    },
+    {
+     "id": "00000000-0000-4000-8000-000000000007",
+     "label": "Reference Coaching agreement for Adult",
+     "sub": "sent"
+    }
+   ],
+   "subscriptions": [
+    {
+     "id": "00000000-0000-4000-8000-000000000089",
+     "label": "Reference Monthly plan",
+     "sub": "active"
+    }
+   ]
+  },
+  "whatKeepsWorking": {},
+  "personTabs": {
+   "variant": "new",
+   "mayMoney": true,
+   "factLine": {
+    "clientSince": null,
+    "payerName": "Reference Adult",
+    "cadence": null
+   },
+   "comingUp": [
+    {
+     "bookingId": "00000000-0000-4000-8000-000000000030",
+     "startsAt": "2026-10-01T15:00:00.000Z",
+     "title": null,
+     "locationDetail": null,
+     "hostName": "Reference Coach",
+     "state": "confirmed"
+    }
+   ],
+   "notesPreview": [],
+   "sessions": {
+    "count": 0,
+    "since": null,
+    "cancelledInGoodTime": 0,
+    "rows": [
+     {
+      "bookingId": "00000000-0000-4000-8000-000000000030",
+      "startsAt": "2026-10-01T15:00:00.000Z",
+      "title": null,
+      "state": "confirmed"
+     }
+    ]
+   },
+   "documents": {
+    "signed": [
+     {
+      "id": "00000000-0000-4000-8000-000000000075",
+      "title": "Reference Executed coaching agreement",
+      "signedAt": "2026-09-26T17:56:06.262Z",
+      "version": 1
+     }
+    ],
+    "waiting": [
+     {
+      "id": "00000000-0000-4000-8000-000000000007",
+      "title": "Reference Coaching agreement for Adult",
+      "sentAt": "2026-09-26T17:56:06.226Z"
+     }
+    ]
+   },
+   "whoPays": {
+    "group": null,
+    "contact": null,
+    "boundaryLine": null,
+    "alsoOnAccount": []
+   },
+   "details": {
+    "email": "Reference-adult@example.invalid",
+    "phone": null,
+    "prefersText": false
+   },
+   "foundThrough": {
+    "partyId": null,
+    "partyName": null,
+    "referredByName": null,
+    "source": null
+   },
+   "teen": null,
+   "archived": null,
+   "goalsCount": 0,
+   "money": {
+    "owing": [
+     {
+      "invoiceId": "00000000-0000-4000-8000-000000000084",
+      "invoiceNumber": "2026-0001",
+      "amountMinor": 12500,
+      "currency": "USD",
+      "dueAt": "2026-10-10T17:56:06.296Z",
+      "memo": null
+     }
+    ],
+    "credits": [
+     {
+      "entitlementId": "00000000-0000-4000-8000-000000000386",
+      "serviceName": "Reference Weekly coaching",
+      "total": 6,
+      "used": 0,
+      "expiresAt": null
+     }
+    ],
+    "paidSinceMinor": 0,
+    "paidInvoiceCount": 0,
+    "firstPaidAt": null,
+    "paidRows": [],
+    "howPays": {
+     "card": null,
+     "viaGroupName": null,
+     "invoicesGoToName": "Reference Adult"
+    }
+   },
+   "portalStatus": "never_signed_in"
+  }
+ }
+}

@@ -1,0 +1,45 @@
+{
+ "$captured": {
+  "route": "GET /api/reports/money",
+  "rank": "owner",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "costs": {
+   "ads_minor": null,
+   "workbench_minor": null,
+   "bank_fees_minor": null,
+   "card_fees_minor": null
+  },
+  "range": "[2026-09-01,2026-10-01)",
+  "by_item": [
+   {
+    "kind": "service",
+    "count": 1,
+    "item_name": "Weekly coaching",
+    "amount_minor": 12500
+   }
+  ],
+  "compare": "[2026-08-01,2026-09-01)",
+  "by_month": [],
+  "enough_data": {
+   "enough": false,
+   "payments": 0,
+   "days_going": 0
+  },
+  "earned_minor": 0,
+  "owed_by_person": [
+   {
+    "person_id": "00000000-0000-4000-8000-000000000011",
+    "owed_minor": 12500,
+    "display_name": "Reference Adult"
+   }
+  ],
+  "collected_minor": 0,
+  "still_owed_minor": 12500,
+  "owed_in_work_minor": 0,
+  "collected_compare_minor": 0,
+  "credits_liability_minor": 0
+ }
+}

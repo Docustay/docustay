@@ -1,0 +1,66 @@
+{
+ "$captured": {
+  "route": "GET /api/list/settings/developer/embeds",
+  "rank": "admin",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/settings/developer/embeds",
+  "title": "Embed submissions",
+  "columns": [
+   {
+    "field": "source",
+    "label": "Source",
+    "format": "text"
+   },
+   {
+    "field": "summary",
+    "label": "Submitted",
+    "format": "text"
+   },
+   {
+    "field": "submitted_at",
+    "label": "Received",
+    "format": "datetime"
+   },
+   {
+    "field": "promoted",
+    "label": "Promoted",
+    "format": "text"
+   }
+  ],
+  "recordType": null,
+  "empty": "Forms embedded on your website drop their submissions here.",
+  "canWrite": null,
+  "noWriteNotice": null,
+  "summary": null,
+  "emptyState": {
+   "kind": "first-run",
+   "icon": "IconCode",
+   "headline": "No submissions yet",
+   "line": "Forms embedded on your website drop their submissions here.",
+   "action": {
+    "label": "Get embed code",
+    "href": "/settings/developer/embeds?embed=1"
+   },
+   "blockedAction": null,
+   "blockedLine": null,
+   "errorWhenEmpty": false,
+   "noWrite": null,
+   "firstRun": null
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 0
+  }
+ }
+}

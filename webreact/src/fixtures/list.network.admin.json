@@ -1,0 +1,90 @@
+{
+ "$captured": {
+  "route": "GET /api/list/network",
+  "rank": "admin",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/network",
+  "title": "Who you refer to and from",
+  "columns": [
+   {
+    "field": "name",
+    "label": "Practice",
+    "format": "text"
+   },
+   {
+    "field": "what_they_do",
+    "label": "What they do",
+    "format": "text"
+   },
+   {
+    "field": "sent_to_you",
+    "label": "Sent to you",
+    "format": "number"
+   },
+   {
+    "field": "you_sent",
+    "label": "You sent them",
+    "format": "number"
+   },
+   {
+    "field": "last_one",
+    "label": "Last one",
+    "format": "date"
+   },
+   {
+    "field": "state",
+    "label": "State",
+    "format": "enum"
+   }
+  ],
+  "recordType": "network_party",
+  "empty": "The practices you refer to and from live here — a therapist you trust, a trainer, a programme. Referrals carry a name and a reason, never a record.",
+  "canWrite": null,
+  "noWriteNotice": null,
+  "summary": {
+   "parties": 1,
+   "sent_this_year": 0
+  },
+  "emptyState": {
+   "kind": "first-run",
+   "icon": "IconAffiliate",
+   "headline": "Nobody in your network yet",
+   "line": "The practices you refer to and from live here — a therapist you trust, a trainer, a programme. Referrals carry a name and a reason, never a record.",
+   "action": {
+    "label": "Add a practice",
+    "href": "/network?new=1"
+   },
+   "blockedAction": null,
+   "blockedLine": null,
+   "errorWhenEmpty": false,
+   "noWrite": null,
+   "firstRun": null
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [
+   {
+    "id": "00000000-0000-4000-8000-000000000023",
+    "name": "Reference Referrer",
+    "what_they_do": null,
+    "email": null,
+    "sent_to_you": 0,
+    "you_sent": 0,
+    "last_one": null,
+    "state": "none"
+   }
+  ],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 1
+  }
+ }
+}

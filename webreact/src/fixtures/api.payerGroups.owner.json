@@ -1,0 +1,11 @@
+{
+ "$captured": {
+  "route": "GET /api/staff/payer-groups",
+  "rank": "owner",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "groups": []
+ }
+}

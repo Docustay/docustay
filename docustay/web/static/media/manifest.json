@@ -1,0 +1,324 @@
+{
+ "film": "login.mp4 (1280x720), login-m.mp4 (854x480), login.poster.jpg",
+ "duration_seconds": 76.6,
+ "clips": 13,
+ "crossfade_seconds": 1.2,
+ "seconds_per_clip": 7,
+ "source": "Pexels (free to use under the Pexels licence; attribution recorded here, not required)",
+ "built_with": "ffmpeg crossfade, one colour grade (saturation 0.9, contrast 1.03, slight warm balance)",
+ "clips_used": [
+  {
+   "pexels_id": 5483220,
+   "page": "https://www.pexels.com/video/man-going-to-his-workspace-at-the-office-5483220/",
+   "author": "cottonbro studio",
+   "author_page": "https://www.pexels.com/@cottonbro"
+  },
+  {
+   "pexels_id": 8814718,
+   "page": "https://www.pexels.com/video/woman-signing-the-contract-8814718/",
+   "author": "Kampus Production",
+   "author_page": "https://www.pexels.com/@kampus"
+  },
+  {
+   "pexels_id": 8471105,
+   "page": "https://www.pexels.com/video/close-up-video-of-a-person-signing-a-document-8471105/",
+   "author": "Thirdman",
+   "author_page": "https://www.pexels.com/@thirdman"
+  },
+  {
+   "pexels_id": 7821621,
+   "page": "https://www.pexels.com/video/businessman-doing-a-handshake-7821621/",
+   "author": "RDNE Stock project",
+   "author_page": "https://www.pexels.com/@rdne"
+  },
+  {
+   "pexels_id": 5486226,
+   "page": "https://www.pexels.com/video/a-person-having-a-video-call-5486226/",
+   "author": "cottonbro studio",
+   "author_page": "https://www.pexels.com/@cottonbro"
+  },
+  {
+   "pexels_id": 7287527,
+   "page": "https://www.pexels.com/video/man-busy-writing-on-white-paper-7287527/",
+   "author": "Kampus Production",
+   "author_page": "https://www.pexels.com/@kampus"
+  },
+  {
+   "pexels_id": 8902485,
+   "page": "https://www.pexels.com/video/a-woman-using-a-tablet-at-an-office-8902485/",
+   "author": "https://kaboompics.com/",
+   "author_page": "https://www.pexels.com/@karola-g"
+  },
+  {
+   "pexels_id": 7580446,
+   "page": "https://www.pexels.com/video/man-using-laptop-while-working-7580446/",
+   "author": "Tima Miroshnichenko",
+   "author_page": "https://www.pexels.com/@tima-miroshnichenko"
+  },
+  {
+   "pexels_id": 5637933,
+   "page": "https://www.pexels.com/video/people-shaking-hands-5637933/",
+   "author": "Sora Shimazaki",
+   "author_page": "https://www.pexels.com/@sora-shimazaki"
+  },
+  {
+   "pexels_id": 8061370,
+   "page": "https://www.pexels.com/video/man-signing-the-paper-8061370/",
+   "author": "Pavel Danilyuk",
+   "author_page": "https://www.pexels.com/@pavel-danilyuk"
+  },
+  {
+   "pexels_id": 8632187,
+   "page": "https://www.pexels.com/video/colleagues-talking-together-while-working-8632187/",
+   "author": "Kampus Production",
+   "author_page": "https://www.pexels.com/@kampus"
+  },
+  {
+   "pexels_id": 8279150,
+   "page": "https://www.pexels.com/video/a-woman-looking-at-a-magazine-while-talking-on-the-phone-8279150/",
+   "author": "RDNE Stock project",
+   "author_page": "https://www.pexels.com/@rdne"
+  },
+  {
+   "pexels_id": 4115791,
+   "page": "https://www.pexels.com/video/woman-laptop-smile-workplace-4115791/",
+   "author": "Marcus Aurelius",
+   "author_page": "https://www.pexels.com/@marcus-aurelius"
+  }
+ ],
+ "considered_and_dropped": [
+  {
+   "pexels_id": 854027,
+   "page": "https://www.pexels.com/video/close-up-video-of-hands-854027/",
+   "reason": "dark and blurred"
+  },
+  {
+   "pexels_id": 3251811,
+   "page": "https://www.pexels.com/video/group-of-people-discussing-about-the-information-they-have-on-the-laptop-3251811/",
+   "reason": "visible Apple logo on the laptop"
+  },
+  {
+   "pexels_id": 5944870,
+   "page": "https://www.pexels.com/video/silhouette-of-a-person-working-on-a-laptop-5944870/",
+   "reason": "silhouette against open water"
+  }
+ ],
+ "hero": "hero.mp4 (1280 wide, 2.0 MB) and hero-m.mp4 (854 wide, 0.95 MB): the first 22 seconds of login.mp4 (the first three clips below), no audio, re-encoded smaller for the home page. Poster is login.poster.jpg.",
+ "home": {
+  "film": "hero.mp4 / hero.webm (1280x720) and hero-m.mp4 / hero-m.webm (854x480), hero.poster.jpg",
+  "duration_seconds": 52.5,
+  "crossfade_seconds": 0.8,
+  "seconds_per_clip": 5.5,
+  "audio": "none",
+  "built_with": "scripts/build-film.mjs: ffmpeg trim, scale, one colour grade (saturation 0.9, contrast 1.03, slight warm balance), xfade; H.264 crf by size budget and VP9",
+  "bytes": {
+   "desktop": {
+    "mp4": 3768008,
+    "webm": 2626387,
+    "crf": 29,
+    "webmCrf": 42
+   },
+   "mobile": {
+    "mp4": 2020104,
+    "webm": 1435174,
+    "crf": 29,
+    "webmCrf": 44
+   },
+   "seconds": 52.5,
+   "poster": 55861
+  },
+  "clips_used": [
+   {
+    "scene": "the old way: paper piling up",
+    "pexels_id": 7054942,
+    "page": "https://www.pexels.com/video/stack-of-paperwork-on-the-desk-7054942/",
+    "author": "Kindel Media",
+    "author_page": "https://www.pexels.com/@kindelmedia"
+   },
+   {
+    "scene": "chasing signatures on paper",
+    "pexels_id": 7710452,
+    "page": "https://www.pexels.com/video/a-person-finding-a-document-7710452/",
+    "author": "https://kaboompics.com/",
+    "author_page": "https://www.pexels.com/@karola-g"
+   },
+   {
+    "scene": "create: a document is written",
+    "pexels_id": 5385839,
+    "page": "https://www.pexels.com/video/woman-typing-on-the-laptop-5385839/",
+    "author": "Monstera Production",
+    "author_page": "https://www.pexels.com/@gabby-k"
+   },
+   {
+    "scene": "send: a link arrives on a phone",
+    "pexels_id": 7821643,
+    "page": "https://www.pexels.com/video/notification-on-a-phone-7821643/",
+    "author": "RDNE Stock project",
+    "author_page": "https://www.pexels.com/@rdne"
+   },
+   {
+    "scene": "sign: pen on paper, close-up",
+    "pexels_id": 8439245,
+    "page": "https://www.pexels.com/video/a-person-signing-a-document-8439245/",
+    "author": "Kampus Production",
+    "author_page": "https://www.pexels.com/@kampus"
+   },
+   {
+    "scene": "sign: on a tablet",
+    "pexels_id": 6612468,
+    "page": "https://www.pexels.com/video/a-woman-signing-on-the-tablet-6612468/",
+    "author": "Mikhail Nilov",
+    "author_page": "https://www.pexels.com/@mikhail-nilov"
+   },
+   {
+    "scene": "sign: a certificate",
+    "pexels_id": 8523701,
+    "page": "https://www.pexels.com/video/a-person-signing-the-certificate-8523701/",
+    "author": "olia danilevich",
+    "author_page": "https://www.pexels.com/@olia-danilevich"
+   },
+   {
+    "scene": "real estate: the keys change hands",
+    "pexels_id": 10375432,
+    "page": "https://www.pexels.com/video/handing-over-the-keys-10375432/",
+    "author": "RDNE Stock project",
+    "author_page": "https://www.pexels.com/@rdne"
+   },
+   {
+    "scene": "intake: a form filled in by hand",
+    "pexels_id": 7981941,
+    "page": "https://www.pexels.com/video/a-person-assisting-another-person-in-filling-out-a-form-7981941/",
+    "author": "Kindel Media",
+    "author_page": "https://www.pexels.com/@kindelmedia"
+   },
+   {
+    "scene": "agreement: hands shaken",
+    "pexels_id": 8170593,
+    "page": "https://www.pexels.com/video/group-of-people-shaking-hands-8170593/",
+    "author": "Kampus Production",
+    "author_page": "https://www.pexels.com/@kampus"
+   },
+   {
+    "scene": "keep: the seal",
+    "pexels_id": 7344550,
+    "page": "https://www.pexels.com/video/seal-stamps-and-inks-7344550/",
+    "author": "MART  PRODUCTION",
+    "author_page": "https://www.pexels.com/@mart-production"
+   }
+  ]
+ },
+ "use_case_clips": {
+  "contracts": {
+   "file": "uc-contracts.mp4 / .webm / .poster.jpg",
+   "pexels_id": 8439245,
+   "page": "https://www.pexels.com/video/a-person-signing-a-document-8439245/",
+   "author": "Kampus Production",
+   "author_page": "https://www.pexels.com/@kampus",
+   "bytes": {
+    "clip": 8439245,
+    "mp4": 372961,
+    "webm": 262225,
+    "crf": 27,
+    "webmCrf": 38
+   }
+  },
+  "consent-and-waivers": {
+   "file": "uc-consent-and-waivers.mp4 / .webm / .poster.jpg",
+   "pexels_id": 7821634,
+   "page": "https://www.pexels.com/video/a-person-holding-a-pen-7821634/",
+   "author": "RDNE Stock project",
+   "author_page": "https://www.pexels.com/@rdne",
+   "bytes": {
+    "clip": 7821634,
+    "mp4": 330547,
+    "webm": 262579,
+    "crf": 27,
+    "webmCrf": 40
+   }
+  },
+  "ndas": {
+   "file": "uc-ndas.mp4 / .webm / .poster.jpg",
+   "pexels_id": 8523701,
+   "page": "https://www.pexels.com/video/a-person-signing-the-certificate-8523701/",
+   "author": "olia danilevich",
+   "author_page": "https://www.pexels.com/@olia-danilevich",
+   "bytes": {
+    "clip": 8523701,
+    "mp4": 194205,
+    "webm": 146198,
+    "crf": 27,
+    "webmCrf": 36
+   }
+  },
+  "hr-and-onboarding": {
+   "file": "uc-hr-and-onboarding.mp4 / .webm / .poster.jpg",
+   "pexels_id": 5385839,
+   "page": "https://www.pexels.com/video/woman-typing-on-the-laptop-5385839/",
+   "author": "Monstera Production",
+   "author_page": "https://www.pexels.com/@gabby-k",
+   "bytes": {
+    "clip": 5385839,
+    "mp4": 448405,
+    "webm": 326102,
+    "crf": 27,
+    "webmCrf": 42
+   }
+  },
+  "real-estate": {
+   "file": "uc-real-estate.mp4 / .webm / .poster.jpg",
+   "pexels_id": 10375432,
+   "page": "https://www.pexels.com/video/handing-over-the-keys-10375432/",
+   "author": "RDNE Stock project",
+   "author_page": "https://www.pexels.com/@rdne",
+   "bytes": {
+    "clip": 10375432,
+    "mp4": 157313,
+    "webm": 94505,
+    "crf": 27,
+    "webmCrf": 36
+   }
+  },
+  "healthcare-intake": {
+   "file": "uc-healthcare-intake.mp4 / .webm / .poster.jpg",
+   "pexels_id": 7981941,
+   "page": "https://www.pexels.com/video/a-person-assisting-another-person-in-filling-out-a-form-7981941/",
+   "author": "Kindel Media",
+   "author_page": "https://www.pexels.com/@kindelmedia",
+   "bytes": {
+    "clip": 7981941,
+    "mp4": 424847,
+    "webm": 306919,
+    "crf": 27,
+    "webmCrf": 40
+   }
+  },
+  "education": {
+   "file": "uc-education.mp4 / .webm / .poster.jpg",
+   "pexels_id": 7710452,
+   "page": "https://www.pexels.com/video/a-person-finding-a-document-7710452/",
+   "author": "https://kaboompics.com/",
+   "author_page": "https://www.pexels.com/@karola-g",
+   "bytes": {
+    "clip": 7710452,
+    "mp4": 372073,
+    "webm": 295633,
+    "crf": 27,
+    "webmCrf": 38
+   }
+  },
+  "agencies": {
+   "file": "uc-agencies.mp4 / .webm / .poster.jpg",
+   "pexels_id": 8170593,
+   "page": "https://www.pexels.com/video/group-of-people-shaking-hands-8170593/",
+   "author": "Kampus Production",
+   "author_page": "https://www.pexels.com/@kampus",
+   "bytes": {
+    "clip": 8170593,
+    "mp4": 372745,
+    "webm": 269392,
+    "crf": 27,
+    "webmCrf": 40
+   }
+  }
+ }
+}

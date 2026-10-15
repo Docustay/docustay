@@ -1,0 +1,71 @@
+{
+ "$captured": {
+  "route": "GET /api/list/items/units",
+  "rank": "coach",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/items/units",
+  "title": "Units",
+  "columns": [
+   {
+    "field": "name",
+    "label": "Unit",
+    "format": "text"
+   },
+   {
+    "field": "plural",
+    "label": "Plural",
+    "format": "text"
+   },
+   {
+    "field": "in_use_count",
+    "label": "In use",
+    "format": "number"
+   },
+   {
+    "field": "is_default",
+    "label": "Default",
+    "format": "boolean"
+   },
+   {
+    "field": "active",
+    "label": "Active",
+    "format": "boolean"
+   }
+  ],
+  "recordType": null,
+  "empty": "What you sell things by.",
+  "canWrite": null,
+  "noWriteNotice": null,
+  "summary": null,
+  "emptyState": {
+   "kind": "first-run",
+   "icon": "IconRuler2",
+   "headline": "Add your first unit",
+   "line": "What you sell things by.",
+   "action": {
+    "label": "New unit",
+    "href": "/items/units?new=1"
+   },
+   "blockedAction": null,
+   "blockedLine": null,
+   "errorWhenEmpty": false,
+   "noWrite": null,
+   "firstRun": null
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 0
+  }
+ }
+}

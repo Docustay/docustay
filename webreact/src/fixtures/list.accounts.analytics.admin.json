@@ -1,0 +1,98 @@
+{
+ "$captured": {
+  "route": "GET /api/list/accounts/analytics",
+  "rank": "admin",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/accounts/analytics",
+  "title": "Analytics",
+  "columns": [
+   {
+    "field": "account",
+    "label": "Account",
+    "format": "text"
+   },
+   {
+    "field": "item",
+    "label": "Item",
+    "format": "enum"
+   },
+   {
+    "field": "connection",
+    "label": "Connection",
+    "format": "enum"
+   },
+   {
+    "field": "delivery",
+    "label": "Delivery",
+    "format": "enum"
+   },
+   {
+    "field": "rows_read",
+    "label": "Rows read",
+    "format": "number"
+   },
+   {
+    "field": "last_read",
+    "label": "Last read",
+    "format": "datetime"
+   },
+   {
+    "field": "age",
+    "label": "Age",
+    "format": "text"
+   },
+   {
+    "field": "next_action",
+    "label": "Next step",
+    "format": "text"
+   }
+  ],
+  "recordType": null,
+  "empty": "Traffic and conversions appear against each account once a property is linked.",
+  "canWrite": null,
+  "noWriteNotice": null,
+  "summary": null,
+  "emptyState": {
+   "kind": "blocked",
+   "icon": "IconChartArea",
+   "headline": "No accounts to read Analytics for",
+   "line": "Traffic and conversions appear against each account once a property is linked.",
+   "action": null,
+   "blockedAction": {
+    "label": "Add account",
+    "href": "/accounts?new=1"
+   },
+   "blockedLine": "You have no accounts yet, so there is no analytics data to report.",
+   "errorWhenEmpty": false,
+   "noWrite": null,
+   "firstRun": null
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [
+   {
+    "id": "00000000-0000-4000-8000-000000000019:-",
+    "account": "Reference Account",
+    "item": "not_scheduled",
+    "connection": "never_granted",
+    "delivery": "not_scheduled",
+    "rows_read": null,
+    "last_read": null,
+    "age": "never read successfully",
+    "next_action": "Ask the client to connect this account"
+   }
+  ],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 1
+  }
+ }
+}

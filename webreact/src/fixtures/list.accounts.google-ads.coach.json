@@ -1,0 +1,91 @@
+{
+ "$captured": {
+  "route": "GET /api/list/accounts/google-ads",
+  "rank": "coach",
+  "status": 200,
+  "world": true
+ },
+ "body": {
+  "path": "/accounts/google-ads",
+  "title": "Google Ads",
+  "columns": [
+   {
+    "field": "account",
+    "label": "Account",
+    "format": "text"
+   },
+   {
+    "field": "item",
+    "label": "Item",
+    "format": "enum"
+   },
+   {
+    "field": "connection",
+    "label": "Connection",
+    "format": "enum"
+   },
+   {
+    "field": "delivery",
+    "label": "Delivery",
+    "format": "enum"
+   },
+   {
+    "field": "rows_read",
+    "label": "Rows read",
+    "format": "number"
+   },
+   {
+    "field": "last_read",
+    "label": "Last read",
+    "format": "datetime"
+   },
+   {
+    "field": "age",
+    "label": "Age",
+    "format": "text"
+   },
+   {
+    "field": "next_action",
+    "label": "Next step",
+    "format": "text"
+   },
+   {
+    "field": "authority",
+    "label": "What the connection grants",
+    "format": "text"
+   }
+  ],
+  "recordType": null,
+  "empty": "Campaign spend appears against each account once Google Ads is linked to it.",
+  "canWrite": null,
+  "noWriteNotice": null,
+  "summary": null,
+  "emptyState": {
+   "kind": "blocked",
+   "icon": "IconSpeakerphone",
+   "headline": "No accounts to read Google Ads for",
+   "line": "Campaign spend appears against each account once Google Ads is linked to it.",
+   "action": null,
+   "blockedAction": {
+    "label": "Add account",
+    "href": "/accounts?new=1"
+   },
+   "blockedLine": "You have no accounts yet, so there is no ad spend to report.",
+   "errorWhenEmpty": false,
+   "noWrite": null,
+   "firstRun": null
+  },
+  "totalColumn": null,
+  "total": null,
+  "totalCurrency": null,
+  "totalCurrencies": [],
+  "timezone": "America/Denver",
+  "rows": [],
+  "page": {
+   "limit": 50,
+   "nextCursor": null,
+   "hasMore": false,
+   "totalCount": 0
+  }
+ }
+}
