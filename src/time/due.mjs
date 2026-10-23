@@ -57,7 +57,7 @@ import { PAYOUT_ITEMISE_FACT } from "../money/payouts.mjs";
 //   shape the four money imports just above already use. Nothing about the facts themselves
 //   changed — same predicates, same writes, same events, relocated verbatim.
 import { MAIL_DOMAIN_PENDING_FACT } from "../mail/index.mjs";
-import { DOCUMENT_LAPSED_FACT, DOCUMENT_REMINDER_DUE_FACT, KEY_DATES_BACKFILL_FACT, KEY_DATE_DUE_FACT, PLAYBOOK_WAIT_DUE_FACT, PAYMENT_HOLD_LAPSED_FACT, PAYMENT_RECEIPT_DUE_FACT, PAYMENT_FEE_DUE_FACT } from "../documents/frontDoor.mjs";
+import { DOCUMENT_LAPSED_FACT, DOCUMENT_REMINDER_DUE_FACT, PAYMENT_HOLD_LAPSED_FACT, PAYMENT_RECEIPT_DUE_FACT, PAYMENT_FEE_DUE_FACT } from "../documents/frontDoor.mjs";
 
 /**
  * ★★ HOW LONG BEFORE AN ENTITLEMENT EXPIRES SOMEBODY IS TOLD. Seven days is the ruling: long enough
@@ -262,9 +262,6 @@ export const DUE_FACTS = Object.freeze([
   DOCUMENT_LAPSED_FACT,
   DOCUMENT_REMINDER_DUE_FACT,
   // ★ Run 9 Part 3.4 — key dates read from signed documents' boxes, then the renewal reminder (Pro), in that order so a newly read notice date is reminded the same sweep
-  KEY_DATES_BACKFILL_FACT,
-  KEY_DATE_DUE_FACT,
-  PLAYBOOK_WAIT_DUE_FACT,   // Run 9 Part 3.6: a playbook run's wait is over
   PAYMENT_HOLD_LAPSED_FACT,   // Run 9 Part 3.7: a signature held 7 days for its payment, unpaid — cleared, signer and sender told
   PAYMENT_RECEIPT_DUE_FACT,   // Run 9 Part 3.7: a paid payment whose document did not complete gets its receipt on its own
   PAYMENT_FEE_DUE_FACT,       // Run 9 Part 3.7: Stripe's fee that was not settled at payment time is asked for again

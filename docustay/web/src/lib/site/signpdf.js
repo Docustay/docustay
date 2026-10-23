@@ -31,5 +31,69 @@ doc = docustay.send_document(
     [{"seat": "signer_1", "name": "Pat Example", "email": "pat@example.com"}],
 )
 print(doc["id"], doc["state"])` },
+  { slug: "go", notes: "The module needs Go 1.18 or newer and has no dependencies beyond the standard library. Every call that creates something takes an idempotency key: build one per attempt and reuse it when you retry. Pass the server only when you point at a self-hosted install. The client is generated from the OpenAPI document, so every operation is there.", name: "Go", ext: "go", file: "main.go", container: { image: "golang:1.22-alpine", run: "go mod init snippet >/dev/null 2>&1 && go get github.com/docustay/docustay-go/docustay@v0.1.2 >/dev/null 2>&1 && go run ." }, sdk: true, install: "go get github.com/docustay/docustay-go/docustay@v0.1.2",
+    code: `package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	"time"
+
+	docustay "github.com/docustay/docustay-go/docustay"
+)
+
+func main() {
+	cfg := docustay.NewConfiguration()
+	server := "https://app.docustay.app"
+	if u := os.Getenv("DOCUSTAY_URL"); u != "" {
+		server = u
+	}
+	cfg.Servers = docustay.ServerConfigurations{{URL: server}}
+	client := docustay.NewAPIClient(cfg)
+	ctx := context.WithValue(context.Background(), docustay.ContextAccessToken, os.Getenv("DOCUSTAY_API_KEY"))
+
+	request := *docustay.NewSendRequest(os.Getenv("DOCUSTAY_TEMPLATE_ID"), []docustay.SendRequestPartiesInner{
+		*docustay.NewSendRequestPartiesInner("signer_1", "Pat Example", "pat@example.com"),
+	})
+	doc, _, err := client.DocumentsAPI.SendDocument(ctx).SendRequest(request).IdempotencyKey(fmt.Sprintf("send-%d", time.Now().UnixNano())).Execute()
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+	fmt.Println(doc.GetId(), doc.GetState())
+}` },
+  { slug: "php", notes: "The package needs PHP 7.4 or newer with the curl and json extensions, and uses Guzzle. The first argument of each call that creates something is an idempotency key: build one per attempt and reuse it when you retry. Pass the host only when you point at a self-hosted install.", name: "PHP", ext: "php", file: "snippet.php", container: { image: "composer:2", run: "composer init --no-interaction --name=snippet/snippet -q && composer require docustay/docustay-php:0.1.2 --no-interaction -q 2>&1 | tail -1; php snippet.php" }, sdk: true, install: "composer require docustay/docustay-php",
+    code: `<?php
+require __DIR__ . '/vendor/autoload.php';
+
+$config = Docustay\\Configuration::getDefaultConfiguration()->setAccessToken(getenv('DOCUSTAY_API_KEY'));
+if ($url = getenv('DOCUSTAY_URL')) {
+    $config->setHost($url);
+}
+$api = new Docustay\\Api\\DocumentsApi(new GuzzleHttp\\Client(), $config);
+
+$request = new Docustay\\Model\\SendRequest([
+    'template_id' => getenv('DOCUSTAY_TEMPLATE_ID'),
+    'parties' => [new Docustay\\Model\\SendRequestPartiesInner([
+        'seat' => 'signer_1', 'name' => 'Pat Example', 'email' => 'pat@example.com',
+    ])],
+]);
+$doc = $api->sendDocument(bin2hex(random_bytes(16)), $request);
+echo $doc->getId(), ' ', $doc->getState(), PHP_EOL;` },
+  { slug: "csharp", notes: "The package targets .NET 8. Every call that creates something takes an idempotency key as its first argument: build one per attempt and reuse it when you retry. Set BasePath only when you point at a self-hosted install.", name: "C#", ext: "cs", file: "Program.cs", container: { image: "mcr.microsoft.com/dotnet/sdk:8.0", run: "dotnet new console -o app >/dev/null && cp Program.cs app/Program.cs && cd app && dotnet add package Docustay.Api --version 0.1.2 >/dev/null 2>&1 && dotnet run 2>&1 | tail -3" }, sdk: true, install: "dotnet add package Docustay.Api",
+    code: `using Docustay.Api.Api;
+using Docustay.Api.Client;
+using Docustay.Api.Model;
+
+var config = new Configuration { BasePath = Environment.GetEnvironmentVariable("DOCUSTAY_URL") ?? "https://app.docustay.app" };
+config.AccessToken = Environment.GetEnvironmentVariable("DOCUSTAY_API_KEY");
+var api = new DocumentsApi(config);
+
+var request = new SendRequest(
+    templateId: Guid.Parse(Environment.GetEnvironmentVariable("DOCUSTAY_TEMPLATE_ID")!),
+    parties: new List<SendRequestPartiesInner> { new SendRequestPartiesInner(seat: "signer_1", name: "Pat Example", email: "pat@example.com") });
+var doc = api.SendDocument(Guid.NewGuid().ToString(), request);
+Console.WriteLine($"{doc.Id} {doc.State}");` },
 ];
 export const bySlug = (s) => SIGNPDF.find((x) => x.slug === s) ?? null;

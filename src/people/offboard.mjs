@@ -33,7 +33,7 @@ import { writeAudit } from "../permissions/audit.mjs";
 import { assignPerson, setLifecycleStatus } from "./writes.mjs";
 import { revokeSessionsForUser } from "../auth/session.mjs";
 import { disconnectConnection } from "../booking/calendarConnect.mjs";
-import { invalid, conflict, notFound } from "../http/errors.mjs";
+import { invalid, conflict, notFound, forbidden } from "../http/errors.mjs";
 import { teamSeatUsage } from "./seats.mjs";
 import { db, run } from "../db/kysely.mjs";
 import { openInstanceCountsBySubject, pendingCountersignaturesFor, sessionNoteCountAuthoredBy } from "../documents/api.mjs";
@@ -252,6 +252,11 @@ export async function offboardTeamMember(tx, {
   tenantId, personId, reassignments = [], futureSessions, actorUserId = null,
 }) {
   const person = await loadDepartingStaff(tx, personId);
+  // R13-D300: an Admin may remove Members and Admins, never an Owner (with two Owners an Admin could remove one); only an Owner removes an Owner
+  if (person.staff_role === "owner" && actorUserId) {
+    const { rows: [actor] } = await tx.query(`SELECT staff_role FROM keystone.app_user WHERE id = $1`, [actorUserId]);
+    if (actor?.staff_role !== "owner") throw forbidden("Only an Owner can remove an Owner.");
+  }
 
   // ── 2. the only-Owner refusal — the real enforcement for THIS write (see note above) ──────────
   if (person.staff_role === "owner") {

@@ -7,13 +7,16 @@
   import PdfPage from "$lib/PdfPage.svelte"; import Doodle from "$lib/doodle/Doodle.svelte";
   import { Coin, PayCard3D, ReceiptPrint } from "$lib/fx3d/index.js";
   import SignaturePad from "$lib/SignaturePad.svelte";
-  import SuggestTranslation from "$lib/i18n/SuggestTranslation.svelte";
-  import { wordsFor, dirOf, LANG_META, LANGUAGES, languageLabel, pickLanguage, fmt, serverMessage } from "$lib/i18n.js";
+  import Ribbon from "$lib/ui/Ribbon.svelte"; import Seal from "$lib/ui/Seal.svelte";
+  import { wordsFor, dirOf, fmt, serverMessage } from "$lib/i18n.js";
+  import { modal } from "$lib/ui/modal.js";
+  import { closeDetails } from "$lib/ui/closeDetails.js";
 
   const MARKS = ["signature", "initials", "image", "stamp"];
-  let phase = $state("loading"), view = $state(null), token = null, test = $state(false), lastOne = $state(false);
+  let phase = $state("loading"), view = $state(null), token = null, test = $state(false), lastOne = $state(false), downloadUrl = $state(null);
   let vals = $state({}), marks = $state({}), name = $state(""), consent = $state(false), problem = $state(null), saved = $state(null);
   let pdf = $state(null), pdfError = $state(false), padFor = $state(null), declining = $state(false), reason = $state(""), code = $state(""), gateMsg = $state(null);
+  let changing = $state(false), changeText = $state(""), changeSent = $state(false);   // R13-D052: "Ask for changes" (the server had it; no screen did)
   let method = $state(null), why = $state(""), delegating = $state(false), dName = $state(""), dEmail = $state(""), delegated = $state(null);
   let column = $state(null), width = $state(720), waitingFor = $state([]);
   // Run 8 J6: on a phone a date field opens the phone's own date picker (its value is YYYY-MM-DD, the format the field checks); a mouse keeps the plain box, which fits the paper
@@ -23,18 +26,14 @@
   function tell(type, extra = {}) { if (embedTo && window.parent !== window) window.parent.postMessage({ source: "docustay", version: 1, type, documentId: view?.documents?.[0]?.id ?? null, ...extra }, embedTo); }
 
   async function call(path, body) {
-    const r = await fetch(`/api/public/pdf/${path}`, { method: "POST", headers: { "content-type": "application/json", "idempotency-key": newKey() }, body: JSON.stringify({ presented: token, ...body }) });
+    // R13-D169: no network made fetch THROW "Failed to fetch" and the signer read that; say it is the connection and that nothing they entered is lost
+    const r = await fetch(`/api/public/pdf/${path}`, { method: "POST", headers: { "content-type": "application/json", "idempotency-key": newKey() }, body: JSON.stringify({ presented: token, ...body }) }).catch(() => { throw Object.assign(new Error(T.sp.offline ?? "You seem to be offline. Nothing you entered is lost: check your connection, then press the button again."), { status: 0 }); });
     const json = await r.json().catch(() => null);
     if (!r.ok) throw Object.assign(new Error(json?.error?.message ? serverMessage(lang, json.error.message) : T.sp.wentWrong), { status: r.status, detail: json?.error?.detail });
     return json;
   }
-  // The language: the sender's choice when they made one; otherwise the signer's own (a choice they made here before, else their browser's languages); the small switcher is a manual override remembered in this browser.
-  const SAVED = "docustay-sign-lang";
-  const savedLang = () => { try { const v = localStorage.getItem(SAVED); return LANGUAGES.includes(v) ? v : null; } catch { return null; } };
-  const browserLang = () => (typeof navigator === "undefined" ? null : (savedLang() ?? pickLanguage(navigator.languages ?? [navigator.language])));
-  let picked = $state(null);
-  // Run 8 (S2 languages): with no document to read (a dead or cancelled link) there is no document language — the error is said in the signer's own browser language, not always English
-  const lang = $derived(view ? (view.languageAuto ? (picked ?? browserLang() ?? view.language) : view.language) : (browserLang() ?? "en"));
+  // Docustay v1: English only. A document sent earlier in another language is shown in English (the server answers "en"); the words table keeps its shape so nothing else changes.
+  const lang = "en", browserLang = () => null;
   const T = $derived(wordsFor(lang));
   // Run 8 R8-70 (WCAG 3.1.1): the words were in the signer's language but <html lang> stayed "en" — a screen reader read the page as English; the page's own language follows what it shows
   $effect(() => { if (typeof document !== "undefined") { document.documentElement.lang = lang ?? "en"; document.documentElement.dir = dirOf(lang); } });
@@ -46,7 +45,6 @@
       el.href = url; el.download = a.name; el.click(); setTimeout(() => URL.revokeObjectURL(url), 10000);
     } catch { problem = T.sp.wentWrong; }
   }
-  async function chooseLang(l) { picked = l; try { localStorage.setItem(SAVED, l); } catch { /* storage may be blocked */ } try { await call("view", { language: l }); } catch { /* the choice still applies on this page */ } }
   let roleDone = $state(null), roleComment = $state(""), busyRole = $state(false), upBusy = $state({}), payFor = $state(null), payMsg = $state(null), payBusy = $state(false);
   const doc = $derived(view?.documents?.[0]);
   // Run 9 — the same rules the server re-checks (src/documents/rules.mjs, copied to $lib/rules): what earlier people signed, what the sender locked, and this person's own answers decide which
@@ -66,7 +64,10 @@
   const paidIds = $derived(new Set((view?.payments ?? []).filter((p) => p.paid).map((p) => p.fieldId)));
   const valueOf = (f) => f.calc ? (worked[f.id] ?? null) : (f.type === "signature" ? marks.signature : f.type === "initials" ? marks.initials : f.type === "payment" ? (paidIds.has(f.id) || vals[f.id] === "paid" ? "paid" : null) : vals[f.id]) ?? (f.default && !vals[f.id] ? f.default : null);
   // Run 9 Part 3.7 (R9-l): THE SIGNER PAYS LAST — a payment box never holds up Finish; the signature is kept while they pay, straight after
-  const open = $derived(role === "signer" || role === "assistant" ? mine.filter((f) => (role === "assistant" ? false : f.type !== "payment" && validateFieldValue(f, valueOf(f)) !== null)) : []);
+  // R13-D232: one check for every role's page — the server's own rule (validate.js). A helper fills nothing they must, so only a value in the wrong form holds them up; the message names the box and the rule.
+  const checkOf = (f) => validateFieldValue(role === "assistant" ? { ...f, required: false } : f, valueOf(f));
+  const open = $derived(role === "signer" || role === "assistant" ? mine.filter((f) => f.type !== "payment" && checkOf(f) !== null) : []);
+  const whatsWrong = () => (open[0] ? `${role === "assistant" ? "" : `${T.needFields(open.length)} `}${open[0].label || T.sp.typeHere} ${checkOf(open[0])}.` : null);
   const policy = $derived(view?.policy ?? {});
   const accent = $derived(/^#[0-9a-fA-F]{6}$/.test(view?.brand?.accent ?? "") ? view.brand.accent : null);
 
@@ -90,7 +91,8 @@
       else if (back.cancelled) problem = T.payCancelled ?? "The payment was cancelled. You have not been charged.";
     } catch (e) { phase = e.status === 403 ? "refused" : "trouble"; }
   });
-  $effect(() => { if (!column) return; const fit = () => { const avail = column.clientWidth - 24; width = avail < 560 ? 640 : Math.min(820, avail);   /* P10-A-15: on a phone the paper keeps a readable size and pans sideways instead of shrinking to 6px text */ }; fit(); addEventListener("resize", fit); return () => removeEventListener("resize", fit); });
+  let zoomed = $state(false), narrow = $state(false);
+  $effect(() => { if (!column) return; const z = zoomed; const fit = () => { const avail = column.clientWidth - 24; narrow = avail < 560; width = narrow ? (z ? 640 : Math.max(280, avail)) : Math.min(820, avail);   /* R13-D098: on a phone the whole page fits the screen first; "Zoom in" gives the readable size that pans sideways (P10-A-15), with a cue */ }; fit(); addEventListener("resize", fit); return () => removeEventListener("resize", fit); });
   $effect(() => { document.title = view?.document?.title ?? "Sign"; });
   $effect(() => {
     const p = phase, to = embedTo, map = { ready: "ready", gate: "ready", waiting: "waiting", signed: "completed", declined: "declined", refused: "error", trouble: "error" };
@@ -114,7 +116,7 @@
   async function sign() {
     if (test) { problem = T.testNoSign; return; }
     if (!name.trim()) { problem = T.needName; return; }
-    if (open.length) { problem = T.needFields(open.length); return; }
+    if (open.length) { problem = whatsWrong(); return; }
     if (!consent) { problem = T.needConsent; return; }
     if (policy.requireReason && !why.trim()) { problem = T.sp.signReasonHint; return; }
     // Run 9: a witness signs on this device straight after the signer; both go in the one request
@@ -123,7 +125,7 @@
     try { const res = await call("sign", { language: lang, typedName: name.trim(), consent: true, marks: { signature: marks.signature, initials: marks.initials }, values: payload(), signerTimezone: zone(), reason: why.trim() || null, signatureMethod: method, ...(view.party?.witnessRequired ? { witness: { name: wName.trim(), email: wEmail.trim() || null, mark: wMark } } : {}) });
       const out = res?.data ?? res; problem = null;
       if (out?.held) { heldUntil = out.holdExpiresAt ?? null; phase = "pay"; await nextPayment(); return; }
-      lastOne = out?.completed === true; phase = "signed"; }
+      lastOne = out?.completed === true; downloadUrl = out?.downloadUrl ?? null; phase = "signed"; }
     catch (e) {
       if (e.status === 403) phase = "refused";
       else if (e.status === 409 && e.detail?.code === "group_closed") { phase = "closed"; }
@@ -135,6 +137,11 @@
   async function delegateNow() {
     if (test) { problem = T.testNoRec; return; }
     try { const r = await call("delegate", { name: dName.trim(), email: dEmail.trim() }); delegated = r.to; phase = "delegated"; problem = null; } catch (e) { problem = e.message; }
+  }
+  async function sendChanges() {
+    if (!changeText.trim()) { problem = T.askNeed ?? "Tell the sender what needs to change."; return; }
+    if (test) { problem = T.testNoRec; return; }
+    try { await call("request-changes", { message: changeText.trim() }); changeSent = true; changing = false; changeText = ""; problem = null; } catch (e) { problem = e.message; }
   }
   async function saveForLater() { try { await call("progress", { values: payload() }); saved = T.saved; } catch { saved = T.saveFailed; } }
   async function declineNow() {
@@ -236,18 +243,18 @@
     if (!c?.hold?.signed) return false;
     const f = payFields.find((x) => x.id === fieldId);
     receipt = { lines: [f?.label || "", view?.org?.name ?? "", c.label ?? "", longDate(new Date().toISOString())].filter(Boolean) };
-    lastOne = c.hold.completed === true; heldUntil = null; payStep = null; phase = "paid"; return true;
+    lastOne = c.hold.completed === true; downloadUrl = c.hold.downloadUrl ?? null; heldUntil = null; payStep = null; phase = "paid"; return true;
   }
   async function decideNow(decision) { busyRole = true; problem = null; try { await call("decide", { decision, comment: roleComment.trim() || null }); roleDone = T.approvedDone; } catch (e) { problem = e.message; } finally { busyRole = false; } }
   async function acknowledgeNow() { busyRole = true; problem = null; try { await call("acknowledge", {}); roleDone = T.viewDone; } catch (e) { problem = e.message; } finally { busyRole = false; } }
-  async function assistNow(finish) { busyRole = true; problem = null; try { await call("assist", { values: payload(), finish }); if (finish) roleDone = T.assistDone; else saved = T.saved; } catch (e) { problem = e.message; } finally { busyRole = false; } }
+  async function assistNow(finish) { if (open.length) { problem = whatsWrong(); return; } busyRole = true; problem = null; try { await call("assist", { values: payload(), finish }); if (finish) roleDone = T.assistDone; else saved = T.saved; } catch (e) { problem = e.message; } finally { busyRole = false; } }
   let touched = $state({});   // a box the person has left: a value that will not count is flagged at once, not only after a refused Finish
   const setVal = (id, v) => (vals = { ...vals, [id]: v });
   const initials = (n) => n.split(/\s+/).map((w) => w[0] ?? "").join("").toUpperCase();
 </script>
 
 <svelte:head><meta name="robots" content="noindex" /></svelte:head>
-<div class="flex min-h-screen flex-col bg-tint" dir={dirOf(lang)} lang={lang ?? "en"}>
+<div class="paper-ground flex min-h-screen flex-col" dir={dirOf(lang)} lang={lang ?? "en"}>
 {#if phase === "loading"}<p class="m-auto text-mute" data-testid="signpdf-loading">{T.loading}</p>
 {:else if phase === "refused" || phase === "trouble"}
   <div class="m-auto max-w-[44ch] px-6 text-center" data-testid="signpdf-refused"><h1 class="text-2xl font-bold">{T.refusedTitle}</h1><p class="mt-3" role="alert">{phase === "refused" ? T.refused : T.trouble}</p></div>
@@ -260,7 +267,7 @@
       <input class="field" bind:value={code} inputmode={view.gate.kind === "email_code" ? "numeric" : "text"} autocomplete="one-time-code" aria-label={T.sp.gateCode} /><button class="btn primary" disabled={!code.trim()}>{T.sp.gateOpen}</button></form>{/if}
     {#if gateMsg}<p class="text-sm text-mute" role="status">{gateMsg}</p>{/if}</div>
 {:else if phase === "signed"}
-  <div class="m-auto max-w-[44ch] px-6 text-center" data-testid="signpdf-signed"><div class="mx-auto mb-4 w-32 sealpress"><Doodle name="seal" size="8rem" /></div><h1 class="text-2xl font-bold">{T.signedTitle}</h1><p class="mt-3">{lastOne ? T.signedLastBody : T.signedBody}</p>{#if view?.form?.thankYou}<p class="mt-3" data-testid="signpdf-thankyou">{view.form.thankYou}</p>{/if}{#if view?.form?.againUrl || view?.resubmitUrl}<p class="mt-4"><a class="btn" href={view?.form?.againUrl ? `${view.form.againUrl}${embedQ ? "?embed=1" : ""}` : view.resubmitUrl} data-testid="signpdf-resubmit">{T.sp.fillAgain}</a></p>{/if}</div>
+  <div class="m-auto max-w-[44ch] px-6 text-center" data-testid="signpdf-signed"><div class="mx-auto mb-4 grid place-items-center">{#if lastOne}<Seal size={132} stamp />{:else}<Seal size={96} stamp />{/if}</div><h1 class="paper-serif text-[30px] font-medium leading-tight">{lastOne ? (T.sp.signedSealed ?? "Signed and sealed") : T.signedTitle}</h1><div class="mx-auto mt-6 max-w-[520px]"><Ribbon full slim facts={{ state: lastOne ? "executed" : "partially_signed", sentAt: true, openedCount: 1, signedCount: 1, totalCount: lastOne ? 1 : 2 }} names={{ Signed: (T.sp.ribbonSigning ?? "Signing") }} testid="signpdf-ribbon" /></div><p class="mt-6">{lastOne ? T.signedLastBody : T.signedBody}</p>{#if lastOne && downloadUrl}<p class="mt-4"><a class="btn" href={downloadUrl} target="_blank" rel="noopener" data-testid="signpdf-download">{T.sp.openSigned}</a></p>{/if}{#if view?.form?.thankYou}<p class="mt-3" data-testid="signpdf-thankyou">{view.form.thankYou}</p>{/if}{#if view?.form?.againUrl || view?.resubmitUrl}<p class="mt-4"><a class="btn" href={view?.form?.againUrl ? `${view.form.againUrl}${embedQ ? "?embed=1" : ""}` : view.resubmitUrl} data-testid="signpdf-resubmit">{T.sp.fillAgain}</a></p>{/if}</div>
 {:else if phase === "pay"}
   <div class="mx-auto grid w-full max-w-[1100px] gap-6 px-4 py-8 md:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] md:py-12" data-testid="signpdf-pay">
     <section class="hidden rounded-2xl bg-card p-6 shadow-[0_30px_70px_rgb(30_20_70/.12)] md:block" aria-hidden="true">
@@ -285,7 +292,7 @@
     </section>
   </div>
   {#if askFor}
-    <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" role="dialog" aria-modal="true" aria-label={T.payChoose ?? "Choose an amount"} data-testid="pay-ask-dialog"><div class="w-full max-w-[420px] rounded-2xl bg-card p-5">
+    <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" role="dialog" aria-modal="true" {@attach modal(() => (askFor = null))} aria-label={T.payChoose ?? "Choose an amount"} data-testid="pay-ask-dialog"><div class="w-full max-w-[420px] rounded-2xl bg-card p-5">
       <h2 class="mb-1 text-lg font-semibold">{T.payChoose ?? "Choose an amount"}</h2>
       <p class="mb-3 text-sm text-mute">{cash(askBounds(askFor).lo, askFor.currency)}{askFor.amount_ask?.max_minor ? ` – ${cash(askBounds(askFor).hi, askFor.currency)}` : ""}</p>
       <input class="field w-full" inputmode="decimal" bind:value={askText} aria-label={T.payChoose ?? "Choose an amount"} data-testid="pay-ask-input" />
@@ -297,7 +304,7 @@
     <ReceiptPrint title={T.sp.receipt} lines={receipt?.lines ?? []} stamp={T.sp.paidStamp} />
     <div class="w-28 sealpress"><Doodle name="seal" size="7rem" /></div>
     <h1 class="text-2xl font-bold">{T.sp.paidTitle}</h1>
-    <p>{lastOne ? T.sp.paidBodyLast : T.sp.paidBodyMore}</p>
+    <p>{lastOne ? T.sp.paidBodyLast : T.sp.paidBodyMore}</p>{#if lastOne && downloadUrl}<p class="mt-4"><a class="btn" href={downloadUrl} target="_blank" rel="noopener" data-testid="signpdf-download">{T.sp.openSigned}</a></p>{/if}
   </div>
 {:else if phase === "closed"}
   <div class="m-auto max-w-[44ch] px-6 text-center" data-testid="signpdf-closed"><h1 class="text-2xl font-bold">{T.sp.closedTitle}</h1><p class="mt-3">{view?.party?.closedBy ? fmt(T.sp.closedBody, view.party.closedBy, view.party.group ?? "") : fmt(T.sp.closedBodyAnon, view?.party?.group ?? "")}</p></div>
@@ -312,15 +319,18 @@
     <header class="mb-4 space-y-1" style={accent ? `border-top:4px solid ${accent};padding-top:10px` : ""}>
       {#if view.brand?.showLogo !== false && view.org?.logoUrl}<img src={view.org.logoUrl} alt={view.org?.name ?? ""} class="mb-1 h-9 w-auto" />{/if}
       {#if view.org?.name}<p class="text-xs text-mute">{view.org.name}</p>{/if}
-      <h1 class="text-2xl font-semibold sm:text-3xl">{view.document.title}</h1>
+      <h1 class="paper-serif text-[26px] font-medium leading-tight sm:text-[32px]">{view.document.title}</h1>
       {#if test}<p class="rounded bg-card px-3 py-2 text-sm" role="status">{T.testNote}</p>{/if}
       {#if view.document.test}<p class="rounded border border-warn-line bg-warn-bg px-3 py-2 text-sm" role="status" data-testid="signpdf-testdoc">{T.sp.testDoc}</p>{/if}
       {#if view.brand?.note}<p class="text-sm text-mute">{view.brand.note}</p>{/if}
+      {#if view.document.expiresAt && longDate(view.document.expiresAt)}<p class="text-sm text-mute" data-testid="signpdf-deadline">{fmt(T.sp.openUntil ?? "Open for signing until {0}.", longDate(view.document.expiresAt))}</p>{/if}   <!-- R13-D059: the signer is told the deadline the sender set -->
       {#if view.document.message}<p class="text-[15px]">{view.document.message}</p>{/if}
       {#if view.party?.group}<p class="rounded bg-card px-3 py-2 text-sm" role="note" data-testid="signpdf-group">{fmt(T.sp.groupNote, view.party.group)}</p>{/if}
       {#if view.attachments?.length}<div class="text-sm" data-testid="signpdf-extra-files"><p class="text-mute">{T.sp.extraFiles ?? "Files to read with this document"}</p><ul class="mt-1 space-y-1">{#each view.attachments as a}<li><button type="button" class="underline" onclick={() => openExtra(a)} data-testid={`extra-file-${a.id}`}>{a.name}</button></li>{/each}</ul></div>{/if}
     </header>
+    <Ribbon full slim class="mb-5" facts={{ state: "sent", sentAt: true, openedCount: 1, totalCount: 1 }} names={{ Signed: (T.sp.ribbonSigning ?? "Signing") }} testid="signpdf-ribbon" />
     {#if pdfError}<p class="text-bad" role="alert">{T.pagesFailed}</p>{/if}
+    {#if narrow}<div class="flex items-center justify-between gap-3 text-sm text-mute" data-testid="signpdf-zoom"><span>{zoomed ? (T.sp.panHint ?? "Swipe sideways to read each line.") : (T.sp.fitHint ?? "The whole page fits the screen.")}</span><button type="button" class="btn !min-h-0 !py-1.5" onclick={() => (zoomed = !zoomed)} aria-pressed={zoomed}>{zoomed ? (T.sp.fitPage ?? "Fit to screen") : (T.sp.zoomIn ?? "Zoom in")}</button></div>{/if}
     <div class="space-y-4 {width > column?.clientWidth - 24 ? 'overflow-x-auto' : ''}" aria-label={T.sp.docPages} data-testid="signpdf-pages">
       {#each doc?.file.pages ?? [] as _, i}
         {#if hidden.pages.has(i + 1)}<p class="rounded border border-dashed border-line px-3 py-2 text-center text-sm text-mute" data-testid={`signpdf-page-left-out-${i + 1}`}>{fmt(T.sp.leftOutPage, i + 1)}</p>{:else}
@@ -339,24 +349,22 @@
             {:else if f.type === "dropdown"}<div style={box} class={cls} data-field={f.id}><select value={val ?? ""} disabled={Boolean(f.locked)} title={f.tooltip || undefined} onchange={(e) => setVal(f.id, e.currentTarget.value)} aria-label={f.label || "Choose"} class="fieldinput h-full w-full truncate bg-transparent px-1" style="font-size:{fs}px"><option value="">{f.label || "Choose…"}</option>{#each f.options ?? [] as o}<option value={o}>{o}</option>{/each}</select></div>
             {:else if f.type === "multiselect"}
               {@const chosen = (() => { try { return val ? JSON.parse(val) : []; } catch { return []; } })()}
-              <details style={box} class="overflow-visible {cls}" data-field={f.id}><!-- Run 8 J7: once something is picked the summary shows only the picks; its name keeps the question --><summary class="cursor-pointer truncate px-1" style="font-size:{fs}px" aria-label={f.label && chosen.length ? `${f.label}: ${chosen.join(", ")}` : undefined}>{chosen.length ? chosen.join(", ") : (f.label || T.sp.pickAny)}</summary>
+              <details style={box} class="overflow-visible {cls}" data-field={f.id} {@attach closeDetails}><!-- Run 8 J7: once something is picked the summary shows only the picks; its name keeps the question --><summary class="cursor-pointer truncate px-1" style="font-size:{fs}px" aria-label={f.label && chosen.length ? `${f.label}: ${chosen.join(", ")}` : undefined}>{chosen.length ? chosen.join(", ") : (f.label || T.sp.pickAny)}</summary>
                 <div role="group" aria-label={f.label || undefined} class="absolute left-0 top-full z-20 mt-1 min-w-[160px] space-y-1 rounded border border-line bg-card p-2 text-sm shadow">{#each f.options ?? [] as o}<label class="flex items-center gap-2"><input type="checkbox" checked={chosen.includes(o)} onchange={() => setVal(f.id, JSON.stringify(chosen.includes(o) ? chosen.filter((x) => x !== o) : [...chosen, o]))} />{o}</label>{/each}</div></details>
             {:else if f.type === "file"}<div style={box} class="flex items-center justify-center overflow-hidden px-1 text-xs {cls}" data-field={f.id}>
               {#if val}<span class="truncate" data-testid="file-done">✓ {T.uploaded}</span>{:else}<label class="cursor-pointer truncate underline">{upBusy[f.id] ? T.uploading : (f.label || T.upload)}<input type="file" class="sr-only" accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png" onchange={(e) => uploadField(f, e.currentTarget.files?.[0])} data-testid={`file-${f.id}`} /></label>{/if}</div>
             {:else if f.type === "payment"}<div style={box} class="flex items-center justify-center overflow-hidden px-1 text-xs {cls}" data-field={f.id}>
               {#if val === "paid"}<span data-testid="pay-done">✓ {T.paid}</span>{:else}<span class="truncate" data-testid={`pay-${f.id}`} title={T.sp.payKept}>{payLabel(f) ? `${payLabel(f)} · ` : ""}{T.sp.payAtEnd}</span>{/if}</div>
-            {:else}<div style={box} class={cls} data-field={f.id}><input type={f.validation === "date" && coarse ? "date" : "text"} value={val ?? ""} readonly={Boolean((f.autofill && !f.editable && val) || f.locked)} title={f.tooltip || undefined} maxlength={f.max_length ?? 500} oninput={(e) => setVal(f.id, e.currentTarget.value)} onblur={() => (touched = { ...touched, [f.id]: true })} placeholder={(f.validation === "date" ? (f.placeholder && f.placeholder !== "YYYY-MM-DD" ? `${f.placeholder} (YYYY-MM-DD)` : "YYYY-MM-DD") : f.placeholder || f.label) || T.sp.typeHere}   aria-invalid={(Boolean(problem) || touched[f.id]) && val ? validateFieldValue(f, val) !== null : undefined} aria-label={f.label || "Text"} inputmode={f.validation === "number" ? "decimal" : f.validation === "phone" ? "tel" : f.validation === "email" ? "email" : "text"} class="fieldinput h-full w-full truncate bg-transparent px-1 {f.sensitive ? 'masked' : ''}" autocomplete={f.sensitive ? "off" : undefined} data-sensitive={f.sensitive ? "1" : undefined} style="font-size:{fs}px" /></div>{/if}
+            {:else}<div style={box} class={cls} data-field={f.id}><input type={f.validation === "date" && coarse ? "date" : "text"} value={val ?? ""} readonly={Boolean((f.autofill && !f.editable && val) || f.locked)} title={f.tooltip || undefined} maxlength={f.max_length ?? 500} oninput={(e) => setVal(f.id, e.currentTarget.value)} onblur={() => (touched = { ...touched, [f.id]: true })} placeholder={(f.validation === "date" ? (f.placeholder && f.placeholder !== "YYYY-MM-DD" ? `${f.placeholder} (YYYY-MM-DD)` : "YYYY-MM-DD") : f.placeholder || f.label) || T.sp.typeHere}   aria-invalid={(Boolean(problem) && checkOf(f) !== null) || (touched[f.id] && val && checkOf(f) !== null) || undefined} aria-label={f.label || "Text"} inputmode={f.validation === "number" ? "decimal" : f.validation === "phone" ? "tel" : f.validation === "email" ? "email" : "text"} class="fieldinput h-full w-full truncate bg-transparent px-1 {f.sensitive ? 'masked' : ''}" autocomplete={f.sensitive ? "off" : undefined} data-sensitive={f.sensitive ? "1" : undefined} style="font-size:{fs}px" /></div>{/if}
           {/each}
         </PdfPage>{/if}
       {/each}
     </div>
 
     {#if view.brand?.poweredBy}<p class="mt-6 text-center text-xs text-mute" data-testid="signpdf-powered">{view.brand.poweredBy}</p>{/if}
-    {#if view.languageAuto}<p class="mt-2 text-center text-xs text-mute"><label>{T.languageLabel ?? "Language"}: <select class="rounded border border-line bg-card px-1 py-0.5" value={lang} onchange={(e) => chooseLang(e.currentTarget.value)} data-testid="signpdf-lang">{#each LANGUAGES as l}<option value={l}>{languageLabel(l)}</option>{/each}</select></label></p>{/if}
-    {#if lang !== "en" && T.autoNote}<p class="mt-2 text-center text-xs text-mute" data-testid="signpdf-auto">{T.autoNote} <SuggestTranslation surface="signing" {lang} /></p>{/if}
 
     {#if padFor}
-      <div class="fixed inset-0 z-50 flex items-end justify-center bg-black/40 sm:items-center sm:p-4" role="dialog" aria-modal="true" aria-label={fmt(T.sp.addYour, padFor.type === "initials" ? T.pad.initials : padFor.type === "image" ? T.pad.picture : T.pad.signature)}>
+      <div class="fixed inset-0 z-50 flex items-end justify-center bg-black/40 sm:items-center sm:p-4" role="dialog" aria-modal="true" {@attach modal(() => (padFor = null))} aria-label={fmt(T.sp.addYour, padFor.type === "initials" ? T.pad.initials : padFor.type === "image" ? T.pad.picture : T.pad.signature)}>
         <div class="w-full max-w-[520px] rounded-t-2xl bg-card p-4 sm:rounded-2xl">
           <SignaturePad words={T} allowTyped={policy.allowTyped !== false} remember={policy.rememberSignature === true} label={padFor.type === "initials" ? "initials" : padFor.type === "image" ? "picture" : "signature"} defaultName={padFor.type === "initials" ? initials(name) : name}
             onDone={(url, m) => { if (padFor.type === "signature" || padFor.type === "initials") { marks = { ...marks, [padFor.type]: url }; if (padFor.type === "signature") method = m ?? null; } else setVal(padFor.id, url); padFor = null; }} onCancel={() => (padFor = null)} />
@@ -364,7 +372,7 @@
     {/if}
 
     {#if witnessing}
-      <div class="fixed inset-0 z-50 flex items-end justify-center bg-black/40 sm:items-center sm:p-4" role="dialog" aria-modal="true" aria-labelledby="witness-title" data-testid="witness-dialog">
+      <div class="fixed inset-0 z-50 flex items-end justify-center bg-black/40 sm:items-center sm:p-4" role="dialog" aria-modal="true" {@attach modal(() => (witnessing = false))} aria-labelledby="witness-title" data-testid="witness-dialog">
         <div class="w-full max-w-[520px] space-y-3 rounded-t-2xl bg-card p-4 sm:rounded-2xl">
           <h2 id="witness-title" class="text-lg font-semibold">{T.sp.witnessTitle}</h2>
           <p class="text-sm text-mute">{T.sp.witnessBody}</p>
@@ -378,7 +386,7 @@
     {/if}
 
     {#if askFor}
-      <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" role="dialog" aria-modal="true" aria-label={T.payChoose ?? "Choose an amount"} data-testid="pay-ask-dialog"><div class="w-full max-w-[420px] rounded-2xl bg-card p-5">
+      <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" role="dialog" aria-modal="true" {@attach modal(() => (askFor = null))} aria-label={T.payChoose ?? "Choose an amount"} data-testid="pay-ask-dialog"><div class="w-full max-w-[420px] rounded-2xl bg-card p-5">
         <h2 class="mb-1 text-lg font-semibold">{T.payChoose ?? "Choose an amount"}</h2>
         <p class="mb-3 text-sm text-mute">{cash(askBounds(askFor).lo, askFor.currency)}{askFor.amount_ask?.max_minor ? ` – ${cash(askBounds(askFor).hi, askFor.currency)}` : " or more"}</p>
         <input class="field w-full" inputmode="decimal" bind:value={askText} aria-label={T.payChoose ?? "Choose an amount"} data-testid="pay-ask-input" />
@@ -387,7 +395,7 @@
     {/if}
 
     {#if payFor}
-      <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" role="dialog" aria-modal="true" aria-label={T.payStripe ?? "Pay with Stripe"} data-testid="pay-dialog"><div class="w-full max-w-[460px] rounded-2xl bg-card p-5">
+      <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" role="dialog" aria-modal="true" {@attach modal()} aria-label={T.payStripe ?? "Pay with Stripe"} data-testid="pay-dialog"><div class="w-full max-w-[460px] rounded-2xl bg-card p-5">
         <h2 class="mb-3 text-lg font-semibold">{T.pay(payFor.label)}</h2>
         <p class="text-sm">{T.payWaiting ?? "Stripe's secure payment page opened in a new tab. Finish there; this page will notice."}</p>
         {#if payMsg}<p class="mt-2 text-sm text-bad" role="alert">{payMsg}</p>{/if}
@@ -396,8 +404,8 @@
     {/if}
 
     <!-- The action bar is mobile first: one column on a phone (progress, name, agreement, a big Finish), a single row from 640px. Less-used actions sit under "More". -->
-    <div class="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-card px-3 pb-[max(.75rem,env(safe-area-inset-bottom))] pt-3 shadow-[0_-6px_18px_rgb(0_0_0/.08)]" data-testid="signpdf-bar">
-      <div class="mx-auto flex max-w-[860px] flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
+    <div class="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-card pb-[max(.75rem,env(safe-area-inset-bottom))] pt-3 shadow-[0_-6px_18px_rgb(0_0_0/.08)]" style="padding-inline: clamp(12px, 2.2vw, 32px)" data-testid="signpdf-bar">
+      <div class="mx-auto flex max-w-[1760px] flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
         {#if roleDone}<span class="text-sm" role="status" data-testid="role-done">{roleDone}</span>
         {:else if role === "approver"}
           <span class="text-sm font-medium">{T.approveTitle}</span><input class="field sm:!w-[220px]" bind:value={roleComment} placeholder={T.comment} aria-label={T.comment} data-testid="approve-comment" />
@@ -410,9 +418,9 @@
           <div class="flex items-center gap-3 sm:min-w-[200px]">
             <div class="h-1.5 flex-1 overflow-hidden rounded-full bg-tint sm:w-24 sm:flex-none" role="progressbar" aria-valuemin="0" aria-valuemax={mine.length} aria-valuenow={mine.length - open.length} aria-label={T.toFill(open.length)}><div class="barfill h-full rounded-full bg-brand" style="width:{mine.length ? ((mine.length - open.length) / mine.length) * 100 : 100}%"></div></div>
             <span class="text-sm text-mute" role="status" data-testid="signpdf-left">{open.length ? T.toFill(open.length) : T.allFilled}</span>
-            <!-- R8-30: the next field's name sits INSIDE its button; beside the signer's own name box it read as that box's label ("Time to review: Pat Provider") -->{#if open.length}<button class="btn !min-h-9 max-w-[16rem] !px-3 !py-1" onclick={nextField} data-testid="signpdf-next"><span class="shrink-0 whitespace-nowrap">{T.nextField}</span>{#if open[0].label}<span class="ml-1.5 min-w-0 truncate text-xs font-normal text-mute" data-testid="signpdf-next-label">· {open[0].label}</span>{/if}</button>{/if}
+            <!-- R8-30: the next field's name sits INSIDE its button; beside the signer's own name box it read as that box's label ("Time to review: Pat Provider") -->{#if open.length}<button class="btn !min-h-9 max-w-[13rem] !px-3 !py-1" onclick={nextField} data-testid="signpdf-next"><span class="shrink-0 whitespace-nowrap">{T.nextField}</span>{#if open[0].label}<span class="ml-1.5 min-w-0 truncate text-xs font-normal text-mute" data-testid="signpdf-next-label">· {open[0].label}</span>{/if}</button>{/if}
           </div>
-          <input class="field sm:!w-[200px]" bind:value={name} placeholder={T.yourName} aria-label={T.yourName} autocomplete="name" data-testid="signpdf-name" />
+          <input class="field sm:!w-[170px]" bind:value={name} placeholder={T.yourName} aria-label={T.yourName} autocomplete="name" data-testid="signpdf-name" />
           {#if policy.requireReason}<input class="field sm:!w-[220px]" bind:value={why} maxlength="500" placeholder={T.sp.whySigning} aria-label={T.sp.whySigning} data-testid="signpdf-reason" />{/if}
           <label class="flex items-start gap-2 text-sm text-mute sm:max-w-[16rem] sm:text-xs"><input type="checkbox" class="mt-0.5 h-5 w-5 shrink-0 accent-[var(--brand)] sm:h-4 sm:w-4" bind:checked={consent} data-testid="signpdf-consent" /><span title={view.consent?.text}>{T.agree}</span></label>
           <div class="flex items-center gap-2 sm:ml-auto">
@@ -421,15 +429,18 @@
               <div class="absolute bottom-full right-0 mb-2 flex w-56 flex-col gap-1 rounded-lg border border-line bg-card p-2 shadow-lg" onclick={(e) => e.currentTarget.closest("details")?.removeAttribute("open")} role="presentation">
                 <button class="btn quiet !justify-start" onclick={saveForLater}>{T.later}</button>
                 {#if policy.allowDecline !== false}<button class="btn quiet !justify-start" onclick={() => (declining = !declining)} data-testid="signpdf-decline">{T.decline}</button>{/if}
+                <button class="btn quiet !justify-start" onclick={() => (changing = !changing)} data-testid="signpdf-ask-changes">{T.askChanges ?? "Ask for changes"}</button>
                 {#if policy.allowDelegate}<button class="btn quiet !justify-start" onclick={() => (delegating = !delegating)} data-testid="signpdf-delegate">{T.sp.passTo}</button>{/if}
               </div></details>
           </div>
         {/if}
       </div>
-      {#if saved}<p class="mx-auto mt-1 max-w-[860px] text-xs text-mute" role="status">{saved}</p>{/if}
-      {#if problem}<p class="mx-auto mt-1 max-w-[860px] text-sm text-bad" role="alert" data-testid="signpdf-problem">{problem}</p>{/if}
-      {#if delegating}<form class="mx-auto mt-2 flex max-w-[860px] flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center" onsubmit={(e) => { e.preventDefault(); delegateNow(); }}><input class="field sm:!w-[200px]" bind:value={dName} placeholder={T.sp.theirName} aria-label={T.sp.theirName} /><input class="field sm:!w-[240px]" type="email" bind:value={dEmail} placeholder={T.sp.theirEmail} aria-label={T.sp.theirEmail} /><button class="btn primary" disabled={!dName.trim() || !dEmail.trim()} data-testid="signpdf-delegate-send">{T.sp.sendThem}</button></form>{/if}
-      {#if declining}<div class="mx-auto mt-2 max-w-[860px] space-y-2"><textarea class="field" bind:value={reason} placeholder={view.requireDeclineReason ? T.declineWhyReq : T.declineWhy} aria-label={T.sp.declineReason}></textarea><button class="btn" onclick={declineNow} data-testid="signpdf-decline-confirm">{T.declineSend}</button></div>{/if}
+      {#if saved}<p class="mx-auto mt-1 max-w-[1760px] text-xs text-mute" role="status">{saved}</p>{/if}
+      {#if problem}<p class="mx-auto mt-1 max-w-[1760px] text-sm text-bad" role="alert" data-testid="signpdf-problem">{problem}</p>{/if}
+      {#if delegating}<form class="mx-auto mt-2 flex max-w-[1760px] flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center" onsubmit={(e) => { e.preventDefault(); delegateNow(); }}><input class="field sm:!w-[200px]" bind:value={dName} placeholder={T.sp.theirName} aria-label={T.sp.theirName} /><input class="field sm:!w-[240px]" type="email" bind:value={dEmail} placeholder={T.sp.theirEmail} aria-label={T.sp.theirEmail} /><button class="btn primary" disabled={!dName.trim() || !dEmail.trim()} data-testid="signpdf-delegate-send">{T.sp.sendThem}</button></form>{/if}
+      {#if changing}<div class="mx-auto mt-2 max-w-[1760px] space-y-2"><textarea class="field" bind:value={changeText} maxlength="1000" placeholder={T.askWhy ?? "What needs to change?"} aria-label={T.askWhy ?? "What needs to change?"}></textarea><button class="btn" onclick={sendChanges} data-testid="signpdf-ask-send">{T.askSend ?? "Send to the sender"}</button></div>{/if}
+      {#if changeSent}<p class="mx-auto mt-2 max-w-[1760px] text-sm" role="status" data-testid="signpdf-asked">{T.askDone ?? "Sent. The sender has been told what to change. You can sign once they have fixed it."}</p>{/if}
+      {#if declining}<div class="mx-auto mt-2 max-w-[1760px] space-y-2"><textarea class="field" bind:value={reason} placeholder={view.requireDeclineReason ? T.declineWhyReq : T.declineWhy} aria-label={T.sp.declineReason}></textarea><button class="btn" onclick={declineNow} data-testid="signpdf-decline-confirm">{T.declineSend}</button></div>{/if}
     </div>
   </div>
 {/if}

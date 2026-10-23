@@ -121,6 +121,8 @@ const REVOKE_REASONS = Object.freeze(new Set([
   "removed_from_team",
   // ★ Migration 0555, 1 Oct 2026 — suspendTeamMember (src/people/offboard.mjs).
   "suspended",
+  // Migration 0769, 21 Oct 2026 — a Free workspace's fourth device signed in and the oldest was signed out (src/auth/deviceLimit.mjs).
+  "device_limit",
 ]));
 
 /**

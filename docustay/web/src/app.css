@@ -6,37 +6,56 @@
 /* Docustay design system, 7 Oct 2026 (specs/FINAL-PUSH-7OCT.md §13 and §17). One token layer, four value sets:
      :root                      the portal, LIGHT (the default): §17.1 values
      :root[data-theme="dark"]   the portal, DARK: the drawn values of §13.2
-     [data-surface="site"]      the marketing website: always dark, no switch (same values as dark)
+     [data-surface="site"]      the marketing website: always LIGHT on one cream ground, no switch (16 Oct 2026, specs/SITE-CREAM-RESTYLE.md)
      [data-surface="signing"]   the signing page and emails: light and friendly, whatever the account picked
    The server writes data-theme (from the cookie) and data-surface (from the route) on <html> before paint; "System" is resolved by the inline script in app.html.
    Screens use the token utilities (text-ink, bg-card, border-line, text-brand ...) and never a raw colour. Every text pair is proved by scripts/contrast-gate.mjs (AA, 4.5:1). */
 /* Run 9 Part 3.8 (the Rulebook): the portal's light values are ink #16161d, violet #5a3ac1, light violet #8585fd (shapes, never text), lavender #f1efff, near-white #f7f6fc; lines are violet-tinted hairlines */
+/* COMBINED STYLE (19 Oct 2026, specs/v1/design-review/COMBINED-STYLE-SPEC.md): "paper trail with a developer spine". Hairlines instead of boxes, one purple accent, warm paper only where people read and sign.
+   Spec values; where a spec grey fails 4.5:1 as TEXT it is darkened (text 3 #8e8e9b -> --faint #6c6c7a; amber #c27803 and green as text use --warn / --ok, the spec's hues stay on dots and fills). */
 :root {
   color-scheme: light;
-  --paper: #f7f6fc; --card: #ffffff; --tint: #f1efff; --panel: #ffffff; --sidebar: #f3f2f9; --line: rgb(24 20 60 / .08); --line-strong: rgb(24 20 60 / .17);
-  --ink: #16161d; --text-2: #3a3a46; --mute: #5d5d6b; --faint: #646472;
-  --brand: #5a3ac1; --brand-hover: #4a2fa6; --brand-ink: #ffffff; --accent: #5a3ac1; --brand-soft: rgb(90 58 193 / .1); --accent-soft: rgb(90 58 193 / .1); --accent-line: rgb(90 58 193 / .4);
-  --ok: #0b6a40; --ok-bg: rgb(15 122 75 / .09); --ok-line: rgb(15 122 75 / .32);
-  --warn: #8a5600; --warn-bg: rgb(176 112 0 / .1); --warn-line: rgb(176 112 0 / .35);
+  --paper: #fcfcfe; --card: #ffffff; --tint: #f6f6f9; --panel: #ffffff; --sidebar: #f5f5f9; --line: #e4e4ec; --line-strong: #cdcdd9;
+  --ink: #14141b; --text-2: #3b3b48; --mute: #62626f; --faint: #6c6c7a;
+  --brand: #5a3ac1; --brand-hover: #4a2fa3; --brand-ink: #ffffff; --accent: #5a3ac1; --brand-soft: #e9e6f6; --accent-soft: #e9e6f6; --accent-line: rgb(90 58 193 / .4); --link: #5a3ac1;
+  --plate: #f1f1f6; --accent-ink: #3f2790; --seal: #2a1a6b; --paper-ground: #f3f1ec; --paper-sheet-line: #e6e2da; --stage-off: #e4e4ec;
+  --ok: #0b6a40; --ok-bg: rgb(26 127 75 / .09); --ok-line: rgb(26 127 75 / .32); --ok-dot: #1a7f4b;
+  --warn: #8a5600; --warn-bg: rgb(194 120 3 / .1); --warn-line: rgb(194 120 3 / .35); --warn-dot: #c27803;
   --bad: #b42318; --bad-bg: rgb(180 35 24 / .08); --bad-line: rgb(180 35 24 / .3);
-  --info: #3f2899; --info-bg: rgb(90 58 193 / .09); --info-line: rgb(90 58 193 / .3);
-  --shadow: 0 1px 2px rgb(24 20 60 / .04), 0 8px 28px rgb(24 20 60 / .06);
+  --info: #3f2790; --info-bg: #e9e6f6; --info-line: rgb(90 58 193 / .3);
+  --shadow: none;
   --paper-doc: #ffffff; --ink-doc: #15171c; --grid-line: rgb(0 0 0 / .045);
   --font-display: var(--font-sans); --w-display: 600;
 }
-:root[data-theme="dark"], :root[data-surface="site"] {
+/* dark: the spec's ground #0e0e14, sidebar #12121a, hairline #22222d, text #ececf2 / #a9a9bb; fills use the spec accent #7c5ce0 (white text), links and text-brand use #b9a7f2 */
+:root[data-theme="dark"] {
   color-scheme: dark;
-  --paper: #08090c; --card: #0e1016; --tint: #151821; --panel: #0e1016; --sidebar: #0b0d11; --line: rgb(255 255 255 / .09); --line-strong: rgb(255 255 255 / .16);
-  --ink: #e6e9ef; --text-2: #c9cfdc; --mute: #9aa2b3; --faint: #7c8497;
-  --brand: #9a8cff; --brand-hover: #b0a5ff; --brand-ink: #08090c; --accent: #9a8cff; --brand-soft: rgb(154 140 255 / .14); --accent-soft: rgb(154 140 255 / .14); --accent-line: rgb(154 140 255 / .4);
-  --ok: #9cf0c6; --ok-bg: rgb(156 240 198 / .1); --ok-line: rgb(156 240 198 / .35);
-  --warn: #f5d37a; --warn-bg: rgb(245 211 122 / .1); --warn-line: rgb(245 211 122 / .35);
+  --paper: #0e0e14; --card: #12121a; --tint: #171722; --panel: #12121a; --sidebar: #12121a; --line: #22222d; --line-strong: #34344a;
+  --ink: #ececf2; --text-2: #cfcfdc; --mute: #a9a9bb; --faint: #8f8fa3;
+  --brand: #7c5ce0; --brand-hover: #6b4bd0; --brand-ink: #ffffff; --accent: #7c5ce0; --brand-soft: #231f3a; --accent-soft: #231f3a; --accent-line: rgb(185 167 242 / .4); --link: #b9a7f2;
+  --plate: #171722; --accent-ink: #cfc3f6; --seal: #b9a7f2; --paper-ground: #17171f; --paper-sheet-line: #2a2a36; --stage-off: #2a2a36;
+  --ok: #7be0aa; --ok-bg: rgb(123 224 170 / .1); --ok-line: rgb(123 224 170 / .35); --ok-dot: #3fb97a;
+  --warn: #f5d37a; --warn-bg: rgb(245 211 122 / .1); --warn-line: rgb(245 211 122 / .35); --warn-dot: #e0a020;
   --bad: #ff9c8a; --bad-bg: rgb(255 156 138 / .1); --bad-line: rgb(255 156 138 / .35);
-  --info: #b5b1ff; --info-bg: rgb(154 140 255 / .12); --info-line: rgb(154 140 255 / .35);
-  --shadow: 0 1px 2px rgb(0 0 0 / .5), 0 8px 24px rgb(0 0 0 / .35);
+  --info: #cfc3f6; --info-bg: #231f3a; --info-line: rgb(185 167 242 / .35);
+  --shadow: none;
   --grid-line: #141922;
 }
-:root[data-surface="site"] { --font-display: var(--font-serif); --w-display: 400; }
+/* the marketing website is LIGHT ONLY on one cream ground (16 Oct 2026, specs/SITE-CREAM-RESTYLE.md, decision 33): it no longer shares the dark values,
+   and this block comes after the dark one so a dark-theme cookie never turns the site dark. The portal's own light and dark values are unchanged. */
+:root[data-surface="site"] {
+  color-scheme: light;
+  --paper: #f7f6fc; --card: #ffffff; --tint: #f3f0fe; --panel: #ffffff; --sidebar: #f3f2f9; --line: #e4e1f0; --line-strong: rgb(24 20 60 / .17);
+  --ink: #16161d; --text-2: #3a3a46; --mute: #4c4a5e; --faint: #6b6880;
+  --brand: #5a3ac1; --brand-hover: #4a2fa3; --brand-ink: #ffffff; --accent: #5a3ac1; --brand-soft: rgb(90 58 193 / .1); --accent-soft: rgb(90 58 193 / .1); --accent-line: rgb(90 58 193 / .4);
+  --ok: #1c7448; --ok-bg: rgb(28 116 72 / .09); --ok-line: rgb(28 116 72 / .32);
+  --warn: #8a5208; --warn-bg: rgb(176 112 0 / .1); --warn-line: rgb(176 112 0 / .35);
+  --bad: #b4233c; --bad-bg: rgb(180 35 60 / .08); --bad-line: rgb(180 35 60 / .3);
+  --info: #1d5fa8; --info-bg: rgb(90 58 193 / .09); --info-line: rgb(90 58 193 / .3);
+  --shadow: 0 1px 2px rgb(22 22 29 / .04), 0 24px 48px -28px rgb(60 40 140 / .28);
+  --paper-doc: #ffffff; --ink-doc: #15171c; --grid-line: rgb(90 58 193 / .06);
+  --font-display: var(--font-serif); --w-display: 400;
+}
 :root[data-surface="signing"] {
   color-scheme: light;
   --paper: #f1efe9; --card: #ffffff; --tint: #e8e5dd; --panel: #ffffff; --sidebar: #ebe8e0; --line: #ddd8cc; --line-strong: #cbc5b6;
@@ -55,6 +74,9 @@
 @font-face { font-family: "JetBrains Mono Variable"; src: url("/fonts/jetbrains-mono-latin-wght-normal.woff2") format("woff2"); font-weight: 100 800; font-style: normal; font-display: swap; }
 @font-face { font-family: "Instrument Serif"; src: url("/fonts/instrument-serif-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
 @font-face { font-family: "Instrument Serif"; src: url("/fonts/instrument-serif-latin-400-italic.woff2") format("woff2"); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: "Newsreader Variable"; src: url("/fonts/newsreader-latin-wght-normal.woff2") format("woff2"); font-weight: 200 800; font-style: normal; font-display: swap; }
+@font-face { font-family: "Newsreader Variable"; src: url("/fonts/newsreader-latin-wght-italic.woff2") format("woff2"); font-weight: 200 800; font-style: italic; font-display: swap; }
+@font-face { font-family: "Newsreader Fallback"; src: local("Georgia"); size-adjust: 98%; ascent-override: 94%; descent-override: 28%; line-gap-override: 0%; }
 @font-face { font-family: "Geist Fallback"; src: local("Arial"); size-adjust: 104%; ascent-override: 92%; descent-override: 24%; line-gap-override: 0%; }
 @font-face { font-family: "Instrument Serif Fallback"; src: local("Georgia"); size-adjust: 92%; ascent-override: 98%; descent-override: 26%; line-gap-override: 0%; }
 :root {
@@ -94,6 +116,7 @@
   --font-sans: "Geist Variable", "Geist Fallback", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
   --font-mono: "JetBrains Mono Variable", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   --font-serif: "Instrument Serif", "Instrument Serif Fallback", Georgia, "Iowan Old Style", "Times New Roman", serif;
+  --font-paper: "Newsreader Variable", "Newsreader Fallback", Georgia, "Iowan Old Style", "Times New Roman", serif;
   --color-text-2: var(--text-2); --color-faint: var(--faint); --color-panel: var(--panel); --color-sidebar: var(--sidebar); --color-accent-soft: var(--accent-soft); --color-accent-line: var(--accent-line);
   --shadow-card: var(--shadow);
   --radius-lg: 10px; --radius-xl: 14px; --radius-2xl: 18px;   /* the Rulebook's corners: small things, panels, the page's main surface */
@@ -139,7 +162,7 @@ a { color: inherit; }
 }
 @layer components {
 /* buttons — at least 40px tall everywhere, 44px on a touch screen */
-.btn { max-width: 100%; overflow-wrap: anywhere; }
+.btn { max-width: 100%; overflow-wrap: break-word; }   /* R13-D144/D151: "anywhere" also shrank a button's smallest width, so a narrow table or row squeezed "Customize" and "Sign out" to one letter per line; break-word still breaks a word too long for the line */
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; min-height: 2.5rem; padding: .5rem 1.1rem; border-radius: var(--rad-s); font-weight: 600; font-size: .95rem; border: 1px solid var(--line-strong); background: var(--card); color: var(--ink); cursor: pointer; text-decoration: none; transition: background .15s, border-color .15s; }
 .btn:hover { background: var(--tint); }
 .btn.primary { background: var(--brand); border-color: var(--brand); color: var(--brand-ink); }
@@ -190,7 +213,7 @@ button.chip, a.chip { min-height: 1.5rem; }
 
 /* ── Doodles (hand-inked illustrations; specs/DOCUSTAY-DESIGN-SYSTEM-V2.md) ─────────────────────────────────────────────────────────────────────────── */
 :root { --dc-a: #5a3ac1; --dc-b: #7f7bf6; --dc-c: #cfcaf8; }
-:root[data-theme="dark"], :root[data-surface="site"] { --dc-a: #9a8cff; --dc-b: #6b67e0; --dc-c: #3a3670; }
+:root[data-theme="dark"] { --dc-a: #9a8cff; --dc-b: #6b67e0; --dc-c: #3a3670; }
 .doodle { display: inline-block; width: 8rem; height: auto; overflow: visible; color: var(--ink); }
 .doodle path { fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; }
 .doodle .ink { stroke-width: 2.8; } .doodle .ink2 { stroke-width: 1.2; opacity: .85; }
@@ -271,12 +294,12 @@ html.lenis, html.lenis body { height: auto; }
 /* ── Website v2 (frames, 8 Oct 2026): site-surface buttons and bits ─────────────────────────────────────────────────────────────── */
 [data-surface="site"] .btn { border-radius: 10px; padding: .55rem .95rem; font-size: 13.5px; font-weight: 500; background: var(--tint); border: 1px solid var(--line-strong); color: var(--ink); }
 [data-surface="site"] .btn:hover { border-color: var(--accent-line); background: var(--tint); }
-[data-surface="site"] .btn.primary { background: #e6e9ef; border-color: #e6e9ef; color: #08090c; }
-[data-surface="site"] .btn.primary:hover { background: #fff; border-color: #fff; }
-[data-surface="site"] .btn.on-film { background: #e6e9ef; color: #08090c; border-color: #e6e9ef; }
+[data-surface="site"] .btn.primary { background: #5a3ac1; border-color: #5a3ac1; color: #fff; }
+[data-surface="site"] .btn.primary:hover { background: #4a2fa3; border-color: #4a2fa3; }
+[data-surface="site"] .btn.on-film { background: #5a3ac1; color: #fff; border-color: #5a3ac1; }
 [data-surface="site"] .btn.ghost-film { background: var(--tint); color: var(--ink); border-color: var(--line-strong); backdrop-filter: none; }
 [data-surface="site"] .card { border-radius: 16px; }
-[data-surface="site"] .on-black { background: transparent; color: var(--ink); --line: rgb(255 255 255 / .09); --mute: #9aa2b3; }
+[data-surface="site"] .on-black { background: transparent; color: var(--ink); --line: #e4e1f0; --mute: #4c4a5e; }
 [data-surface="site"] .eyebrow { font-family: var(--font-mono); color: var(--faint); }
 [data-surface="site"] .lede { color: var(--mute); }
 [data-surface="site"] .t-h1, [data-surface="site"] .t-xl { font-family: var(--font-sans); font-weight: 500; letter-spacing: -.02em; }
@@ -284,11 +307,11 @@ html.lenis, html.lenis body { height: auto; }
 .grad { background: linear-gradient(180deg, var(--ink), var(--mute)); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .ev-eyebrow { display: inline-flex; align-items: center; gap: .5rem; font-size: 13px; color: var(--mute); }
 .ev-eyebrow svg { color: var(--accent); }
-/* the older page styles still read the Stage-1 palette (lilac, violet, black section); on the site they now resolve to the frame's dark tokens */
-:root[data-surface="site"] { --lilac-soft: var(--tint); --lilac: rgb(154 140 255 / .22); --violet: #2d2778; --periwinkle: var(--accent); --black-section: var(--card); --black-ink: var(--ink); --black-mute: var(--mute); --black-line: var(--line); --r-5: 1.5rem; --r-4: 1.25rem; --ink-line: var(--line); }
+/* the older page styles still read the Stage-1 palette (lilac, violet, black section); on the site they now resolve to the cream tokens */
+:root[data-surface="site"] { --lilac-soft: var(--tint); --lilac: rgb(90 58 193 / .12); --violet: #2d2778; --periwinkle: var(--accent); --black-section: var(--card); --black-ink: var(--ink); --black-mute: var(--mute); --black-line: var(--line); --r-5: 1.5rem; --r-4: 1.25rem; --ink-line: var(--line); }
 /* Shiki (build-time highlighting): both themes are in the markup as CSS variables; the page's resolved theme picks one. */
 .shiki, .shiki span { color: var(--shiki-light); background: transparent; }
-:root[data-theme="dark"] .shiki, :root[data-theme="dark"] .shiki span, :root[data-surface="site"] .shiki, :root[data-surface="site"] .shiki span { color: var(--shiki-dark); }
+:root[data-theme="dark"]:not([data-surface="site"]) .shiki, :root[data-theme="dark"]:not([data-surface="site"]) .shiki span { color: var(--shiki-dark); }
 .shiki { margin: 0; padding: 0; font-family: var(--font-mono); font-size: .82rem; line-height: 1.7; overflow-x: auto; }
 .prose-docs .shiki { background: var(--code, var(--tint)); border-radius: 12px; padding: 1rem; }
 
@@ -316,16 +339,113 @@ html.lenis, html.lenis body { height: auto; }
    `main[data-fold]` is set by ChatAssistant from a ResizeObserver on <main> (container queries would trap the fixed-position dialogs inside). */
 main[data-fold] :is(.sm\:grid-cols-3, .sm\:grid-cols-4, .md\:grid-cols-3, .md\:grid-cols-4, .lg\:grid-cols-3, .lg\:grid-cols-4, .xl\:grid-cols-3, .xl\:grid-cols-4) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
-/* ── THE RULEBOOK on the portal (Run 9 Part 3.8, board "Less box, more page") ──────────────────────────────────────────────────────────────────────────────────
-   Unlayered on purpose: it must win over a screen's own border utilities. Only the portal (no data-surface); the site and the signing page keep their looks.
-   1. A surface is lifted by ONE soft shadow and draws no border (light). In dark a shadow does not show, so it keeps a hairline.
-   2. Never a border inside a border: a surface inside a surface is flat — no shadow, no border, a lavender wash.
-   3. Lists keep hairlines between rows (the lighter --line above).
-   4. Titles 26, body 15, meta 13 (--t-title / --t-body / --t-meta). */
-:root:not([data-surface]):not([data-theme="dark"]) :is(.card, .bg-card.border.rounded-xl, .bg-card.border.rounded-2xl) { border-color: transparent; box-shadow: var(--surface-shadow); }
-:root:not([data-surface])[data-theme="dark"] :is(.card, .bg-card.border.rounded-xl, .bg-card.border.rounded-2xl) { border-color: var(--hair); }
-:root:not([data-surface]) :is(.card, .bg-card.border.rounded-xl, .bg-card.border.rounded-2xl) :is(.card, .bg-card.border.rounded-xl, .bg-card.border.rounded-2xl) { box-shadow: none; border-color: transparent; background: var(--tint); }
+/* ── COMBINED STYLE on the portal (19 Oct 2026) ───────────────────────────────────────────────────────────────────────
+   Unlayered on purpose: it must win over a screen's own utilities. Only the portal (no data-surface); the site and the signing page keep their own looks (the signing page gets its own block below).
+   Rules: the only boxes are document thumbnails; everything else is rows, hairlines and space. No shadows. 13px body, 12px labels, 15px app page titles, 20px section titles.
+   Sizes: row 36, button 28 (final action 34 to 36), input 28, switch 28x16, sidebar 224, sticky header 52, content fills the main column (fluid gutter 16 to 32px, page capped at 1760px); phone targets 44 (final 46). */
+:root:not([data-surface]) { --t-title: .9375rem; --t-body: .8125rem; --t-meta: .75rem; --rad-s: 6px; --rad-m: 8px; --rad-l: 10px; --surface-shadow: none; --surface-shadow-lift: none; --sh-1: none; --sh-2: none; --sh-3: 0 0 0 1px var(--line-strong); --hair: var(--line); --page: var(--paper); }
+:root:not([data-surface]), :root:not([data-surface]) body { overscroll-behavior: none; }
+:root:not([data-surface]) body { font-size: 13px; line-height: 1.5; font-feature-settings: "tnum" 0; }
+:root:not([data-surface]) .text-link, :root:not([data-surface]) .text-brand { color: var(--link); }
+/* The only boxes are document thumbnails. A panel that used to be a bordered, rounded box (a .card, or a div with border and rounded-lg/xl/2xl) becomes a plain block between two hairlines: no side lines, no corners, no fill.
+   Pictures, inputs, buttons and floating surfaces (menus, dialogs) keep their boxes; a block inside a block loses even its hairlines. */
+:root:not([data-surface]) main :is(div, section, article, aside, ul, ol, dl, form, details, fieldset, header).card,
+:root:not([data-surface]) main :is(div, section, article, aside, ul, ol, dl, form, details, fieldset).border:is(.rounded-lg, .rounded-xl, .rounded-2xl, .rounded-[14px], .rounded-[18px]) { border-width: 1px 0; border-color: var(--line); border-radius: 0; box-shadow: none; background: transparent; padding-inline: 0; }
+:root:not([data-surface]) main :is(.card, .border.rounded-xl, .border.rounded-2xl, .border.rounded-lg) :is(.card, .border.rounded-xl, .border.rounded-2xl, .border.rounded-lg):not(img):not(input):not(button):not(textarea):not(select) { border-width: 0; box-shadow: none; background: transparent; }
+:root:not([data-surface]) main .card { margin-block: 0; }
 :root:not([data-surface]) main h1 { letter-spacing: -.01em; }
+/* buttons: 28px, 6px corners, 13px/500; the one final action per view is .final (34px; 46px on a phone) */
+:root:not([data-surface]) .btn { min-height: 1.75rem; padding: 0 .7rem; gap: .4rem; border-radius: 6px; font-size: 13px; font-weight: 500; line-height: 1.2; border-color: var(--line-strong); }
+:root:not([data-surface]) .btn.final { min-height: 2.125rem; padding: 0 1.1rem; font-weight: 600; }
+:root:not([data-surface]) .btn.quiet { border-color: transparent; background: transparent; }
+:root:not([data-surface]) .btn.danger { border-color: transparent; background: transparent; color: var(--bad); }
+:root:not([data-surface]) .btn.danger:hover { background: var(--bad-bg); }
+@media (pointer: coarse), (max-width: 640px) { :root:not([data-surface]) .btn { min-height: 2.75rem; } :root:not([data-surface]) .btn.final { min-height: 2.875rem; } }
+:root:not([data-surface]) .field { min-height: 1.75rem; padding: .2rem .6rem; border-radius: 8px; font-size: 13px; border-color: var(--line-strong); }
+@media (pointer: coarse), (max-width: 640px) { :root:not([data-surface]) .field { min-height: 2.75rem; font-size: 16px; } }
+:root:not([data-surface]) .label { font-size: 12px; font-weight: 500; color: var(--mute); margin-bottom: .25rem; }
+:root:not([data-surface]) .notice { border-radius: 8px; font-size: 13px; padding: .5rem .75rem; }
+/* status: a 7px dot and the word, never a pill; the dot uses the spec's hue, the word a darker one that passes 4.5:1 */
+:root:not([data-surface]) .chip { font-size: 12px; }
+:root:not([data-surface]) .chip.status { font-weight: 500; gap: .4rem; }
+:root:not([data-surface]) .chip.status > span:first-child { width: 7px; height: 7px; }
+:root:not([data-surface]) .chip.status.ok > span:first-child { background: var(--ok-dot); }
+:root:not([data-surface]) .chip.status.warn > span:first-child { background: var(--warn-dot); }
+:root:not([data-surface]) .chip.status.info > span:first-child { background: var(--brand); }
+:root:not([data-surface]) .chip.status.mute > span:first-child { background: var(--faint); }
+/* tabs: ONE style everywhere, a 2px accent underline, a count in text 3 */
+:root:not([data-surface]) [data-scope="tabs"][data-part="list"] { display: flex; gap: 1.25rem; padding: 0; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: transparent; max-width: 100%; }
+:root:not([data-surface]) [data-scope="tabs"][data-part="trigger"] { padding: .55rem 0; border-radius: 0; font-size: 13px; font-weight: 500; color: var(--mute); }
+:root:not([data-surface]) [data-scope="tabs"][data-part="trigger"]:hover { color: var(--ink); }
+:root:not([data-surface]) [data-scope="tabs"][data-part="trigger"][data-selected] { color: var(--ink); }
+:root:not([data-surface]) [data-scope="tabs"][data-part="trigger"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+:root:not([data-surface]) [data-scope="tabs"][data-part="indicator"] { top: auto; bottom: -1px; height: 2px; background: var(--brand); border: 0; border-radius: 0; box-shadow: none; }
+:root:not([data-surface]) .tab-count { margin-left: .35rem; color: var(--faint); font-weight: 400; font-variant-numeric: tabular-nums; }
+:root:not([data-surface]) [data-scope="tabs"][data-part="content"] { padding-top: 1.25rem; }
+/* segment: a small two-way toggle (List or Thumbnails) */
+:root:not([data-surface]) [data-scope="segment-group"][data-part="root"] { padding: 2px; border-radius: 6px; border-color: var(--line); background: var(--tint); }
+:root:not([data-surface]) [data-scope="segment-group"][data-part="item"] { padding: .2rem .65rem; border-radius: 4px; font-size: 12px; font-weight: 500; }
+:root:not([data-surface]) [data-scope="segment-group"][data-part="indicator"] { border-radius: 4px; border-color: var(--line-strong); box-shadow: none; }
+/* switch 28 x 16 */
+:root:not([data-surface]) [data-scope="switch"][data-part="control"] { width: 28px; height: 16px; background: var(--line-strong); }
+:root:not([data-surface]) [data-scope="switch"][data-part="control"][data-state="checked"] { background: var(--brand); }
+:root:not([data-surface]) [data-scope="switch"][data-part="thumb"] { top: 2px; left: 2px; width: 12px; height: 12px; box-shadow: none; }
+:root:not([data-surface]) [data-scope="switch"][data-part="thumb"][data-state="checked"] { transform: translateX(12px); }
+/* meter: a 3px bar */
+:root:not([data-surface]) [data-scope="progress"][data-part="track"] { height: 3px; border: 0; background: var(--line); }
+:root:not([data-surface]) [data-scope="progress"][data-part="range"]::after { display: none; }
+/* floating surfaces: a 1px line, no shadow */
+:root:not([data-surface]) :is([data-scope="menu"], [data-scope="popover"], [data-scope="hover-card"], [data-scope="select"], [data-scope="combobox"])[data-part="content"] { border-radius: 8px; box-shadow: 0 8px 24px rgb(20 20 40 / .12); border-color: var(--line-strong); }
+:root:not([data-surface]) [data-scope="dialog"][data-part="content"] { border-radius: 10px; box-shadow: 0 16px 48px rgb(20 20 40 / .18); }
+:root:not([data-surface]) [data-scope="menu"] :is([data-part="item"], [data-part="radio-item"], [data-part="checkbox-item"]) { font-size: 13px; padding: .4rem .6rem; border-radius: 6px; }
+/* table of rows: a 30px header in text 3, rows 36 to 56px with a bottom hairline, no box */
+:root:not([data-surface]) .rows { width: 100%; }
+:root:not([data-surface]) .rows-head { align-items: center; height: 30px; padding: 0 .5rem; color: var(--faint); font-size: 12px; border-bottom: 1px solid var(--line); }
+:root:not([data-surface]) .rows-row { display: grid; align-items: center; min-height: 36px; padding: .35rem .5rem; border-bottom: 1px solid var(--line); }
+:root:not([data-surface]) .rows-row:hover { background: var(--tint); }
+:root:not([data-surface]) .rows-row.tall { min-height: 56px; }
+/* selects and pick lists: 28px, 8px corners, 13px */
+:root:not([data-surface]) .pick-trigger { min-height: 1.75rem; padding: 0 .6rem; border-radius: 8px; font-size: 13px; gap: .4rem; }
+:root:not([data-surface]) .pick-content { border-radius: 8px; }
+@media (pointer: coarse), (max-width: 640px) { :root:not([data-surface]) .pick-trigger { min-height: 2.75rem; } }
+/* a long row of tabs on a phone scrolls sideways (the old rule wrapped it onto a second line) */
+@media (max-width: 640px) { :root:not([data-surface]) [data-scope="tabs"][data-part="list"] { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; } }
+/* the page shell: the sidebar and the page header never move; the main column is its own scroller */
+/* FULL-WIDTH LAYOUT (spec section 8): ONE fluid gutter, the same left and right on every page; the page is capped at 1760px (gutters included) and centred only beyond that.
+   The shell sets --over (px of extra space on each side beyond the cap) from the measured width of the main column; nothing else may set a page's side padding or a max-width on the page itself. */
+:root:not([data-surface]) [data-scroll-main] { --gutter: clamp(16px, 2.2vw, 32px); --edge: calc(var(--gutter) + var(--over, 0px)); }
+:root:not([data-surface]) .page-gutter { padding-inline: var(--edge, 2rem); }
+:root:not([data-surface]) .page-head { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: .75rem; min-height: 52px; margin-inline: calc(-1 * var(--edge, 2rem)); padding-inline: var(--edge, 2rem); background: var(--paper); border-bottom: 1px solid var(--line); }
+@media (max-width: 640px) { :root:not([data-surface]) .page-head { flex-wrap: wrap; row-gap: 0; } :root:not([data-surface]) .page-head > .min-w-0 { min-height: 52px; align-items: center; } }
+:root:not([data-surface]) .page-head h1 { font-size: var(--t-title); font-weight: 600; letter-spacing: -.005em; line-height: 1.2; }
+:root:not([data-surface]) .page-sticky-sub { position: sticky; top: 52px; z-index: 19; margin-inline: calc(-1 * var(--edge, 2rem)); padding-inline: var(--edge, 2rem); background: var(--paper); }
+/* the four page types (components/ui/Page.svelte). GALLERY: tiles fill any width. SPLIT: a main column that flexes plus an aside of fixed width (a preview, usage, help, the document); it stacks under below 1180px
+   (the labelled sidebar takes 224px from 1100px, so the main column is under ~960px there). SECTIONS: independent sections flow into as many columns as fit, all sharing the page's edges. */
+:root:not([data-surface]) .pg-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(var(--tile, 168px), 1fr)); gap: var(--tile-gap-y, 1.5rem) 1.25rem; }
+:root:not([data-surface]) .pg-split { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.5rem 2.5rem; align-items: start; }
+:root:not([data-surface]) .pg-split-box { container-type: inline-size; width: 100%; min-width: 0; }
+/* R13-D292: two columns only when the split itself has room; with the assistant docked the AI settings squeezed to one word wide */
+@container (min-width: 46rem) { :root:not([data-surface]) .pg-split { grid-template-columns: minmax(0, 1fr) minmax(0, var(--aside, 22rem)); } :root:not([data-surface]) .pg-split.pg-split-left { grid-template-columns: minmax(0, var(--aside, 22rem)) minmax(0, 1fr); } }
+@container (min-width: 46rem) { :root:not([data-surface]) .pg-aside.sticky-aside { position: sticky; top: 68px; max-height: calc(var(--main-h, 100dvh) - 8rem); overflow-y: auto; overscroll-behavior: contain; } }
+:root:not([data-surface]) .pg-split.pg-split.pg-split-solo { grid-template-columns: minmax(0, 1fr); }
+:root:not([data-surface]) .pg-split-solo > .pg-aside { display: none; }
+:root:not([data-surface]) .pg-sections { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--col, 30rem)), 1fr)); gap: var(--row, 1.5rem) var(--colgap, 3rem); align-items: start; }
+:root:not([data-surface]) .pg-sections > * { min-width: 0; margin-top: 0; }
+:root:not([data-surface]) .pg-sections > .pg-wide { grid-column: 1 / -1; }
+:root:not([data-surface]) .pg-paper { background: var(--paper-ground); margin-inline: calc(-1 * var(--edge, 2rem)); padding-inline: var(--edge, 2rem); min-height: calc(100% - 52px); }
+:root:not([data-surface]) .pg-prose { max-width: 68ch; }
+:root:not([data-surface]) .section-title { font-size: 20px; font-weight: 600; letter-spacing: -.01em; line-height: 1.25; }
+:root:not([data-surface]) main .card { background: transparent; border: 0; border-top: 1px solid var(--line); border-radius: 0; box-shadow: none; padding-inline: 0; }
+:root:not([data-surface]) main .card .card { border-top: 0; }
+:root:not([data-surface]) main .uppercase { text-transform: none; letter-spacing: 0; }
+:root:not([data-surface]) main .font-mono.uppercase, :root:not([data-surface]) main .eyebrow { font-family: var(--font-sans); font-size: 12px; text-transform: none; letter-spacing: 0; color: var(--mute); }
+/* paper: warm ground and serif only where people read and sign */
+.paper-ground { background: var(--paper-ground); }
+.paper-serif { font-family: var(--font-paper); }
+:root:not([data-surface]) .mono-id { font-family: var(--font-mono); font-size: 12px; color: var(--mute); }
+@media (prefers-reduced-motion: reduce) { .seal-stamp, .ribbon-fill { animation: none !important; transition: none !important; } }
+@keyframes seal-stamp { from { transform: rotate(-9deg) scale(1.5); opacity: 0; } 60% { transform: rotate(-9deg) scale(.96); opacity: 1; } to { transform: rotate(-9deg) scale(1); opacity: 1; } }
+@keyframes ribbon-fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
 /* R10-58: a checkbox or radio is picked by clicking its label, so the label is the target: at least 24 px tall (WCAG 2.5.8) */
 label:has(> input[type="checkbox"]), label:has(> input[type="radio"]) { min-height: 24px; }

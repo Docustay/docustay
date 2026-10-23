@@ -71,12 +71,8 @@ test("run 9 commands: a refund is never sent without --yes (and with it, exactly
     const u = new URL(req.url, "http://x"); res.setHeader("content-type", "application/json");
     const send = (status, j) => { res.statusCode = status; res.end(JSON.stringify(j)); };
     if (u.pathname === "/api/v1/search") return send(200, { q: u.searchParams.get("q"), groups: { documents: [{ id: "d1", title: "Deposit agreement", state: "executed" }], templates: [], people: [{ id: "p1", name: "Pat Payer", email: "pat@example.test" }] } });
-    if (u.pathname === "/api/v1/contracts") return send(200, { contracts: [{ id: "c1", title: "Lease", executedAt: "2026-10-01T00:00:00Z", dates: { end: { date: "2027-01-31" } } }], summary: { signed: 1, renewingIn30Days: 0 } });
-    if (/^\/api\/v1\/contracts\/[^/]+\/dates$/.test(u.pathname)) return send(200, { ok: true });
     if (u.pathname === "/api/v1/payments") return send(200, { items: [{ id: "a1", status: "paid", label: "$50.00", person: "Pat Payer", title: "Deposit", paidAt: "2026-10-02T00:00:00Z" }], month: { collected: "$50.00", refunded: "$0.00" }, next: null });
     if (/\/refund$/.test(u.pathname)) return send(201, { id: "a1", status: "partially_refunded", refundedMinor: 500, refundedLabel: "$5.00" });
-    if (u.pathname === "/api/v1/automations") return send(200, { automations: [{ id: "f1", name: "Welcome", enabled: false, runCount: 2 }] });
-    if (/^\/api\/v1\/automations\/.+\/enable$/.test(u.pathname)) return send(200, { automation: { id: "f1", name: "Welcome", enabled: JSON.parse(b).on } });
     if (u.pathname === "/api/v1/playbooks") return send(200, { playbooks: [{ name: "new-tenant-pack", title: "New tenant pack", enabled: false, builtin: true, templates: ["builtin:rental-application"], plays: ["payment-terms"] }] });
     if (/^\/api\/v1\/playbooks\/.+\/enable$/.test(u.pathname)) return send(200, { name: "new-tenant-pack", enabled: JSON.parse(b).enabled, builtin: true });
     if (u.pathname === "/api/v1/templates/library") return send(200, { shown: true, templates: [{ slug: "rental-application", kind: "document", title: "Rental application" }].filter((x) => !u.searchParams.get("kind") || x.kind === u.searchParams.get("kind")) });
@@ -102,17 +98,9 @@ test("run 9 commands: a refund is never sent without --yes (and with it, exactly
     // and the reads
     const s = await run("search", "Deposit", "agreement"); assert.equal(s.code, 0, s.stderr); assert.match(s.stdout, /document {2}d1 .*Deposit agreement/); assert.match(s.stdout, /person {4}p1 {2}Pat Payer <pat@example\.test>/);
     assert.equal(new URL(calls.find((c) => c.url.startsWith("/api/v1/search")).url, "http://x").searchParams.get("q"), "Deposit agreement");
-    const c = await run("contracts"); assert.match(c.stdout, /c1 {2}2026-10-01 {2}Lease {2}\(end 2027-01-31\)/);
-    const d0 = await run("contracts", "date", PID, "--kind", "end", "--date", "31/01/2027"); assert.equal(d0.code, 1); assert.equal(calls.filter((x) => /\/dates$/.test(x.url)).length, 0, "a malformed date is refused before any call");
-    const d1 = await run("contracts", "date", PID, "--kind", "end", "--date", "2027-02-28"); assert.equal(d1.code, 0, d1.stderr);
-    assert.deepEqual(calls.find((x) => /\/dates$/.test(x.url)).body, { kind: "end", date: "2027-02-28" });
     const p = await run("payments", "list"); assert.match(p.stdout, /a1 {2}2026-10-02 {2}paid .*\$50\.00 {2}Pat Payer {2}— Deposit/);
-    const on = await run("automations", "on", PID); assert.equal(on.code, 0, on.stderr); assert.match(on.stdout, /Welcome is on/);
-    assert.deepEqual(calls.find((x) => /automations\/.+\/enable$/.test(x.url)).body, { on: true });
-    const pl = await run("automations"); assert.match(pl.stdout, /f1 {2}off  ran 2× {2}Welcome/);
     const pk = await run("playbooks"); assert.match(pk.stdout, /new-tenant-pack +off  1 templates, 1 skills  New tenant pack/);
     const pon = await run("playbooks", "on", "new-tenant-pack"); assert.equal(pon.code, 0, pon.stderr); assert.match(pon.stdout, /new-tenant-pack is on/);
-    const lib = await run("templates", "library", "--kind", "form"); assert.equal(lib.code, 0, lib.stderr); assert.doesNotMatch(lib.stdout, /rental-application/, "the kind filter reached the API");
     const lib2 = await run("templates"); assert.match(lib2.stdout, /document +rental-application +Rental application/);
     const noName = await run("playbooks", "on"); assert.notEqual(noName.code, 0, "a pack name is required (negative control)");
     assert.ok(calls.every((x) => x.auth === `Bearer ${env.DOCUSTAY_API_KEY}`), "every call carries the key");
@@ -171,4 +159,15 @@ test("R10-46: the built command run THROUGH A SYMLINK (how npm installs it as .b
   const viaLink = spawnSync(process.execPath, [link, "help"], { encoding: "utf8" });
   assert.match(direct.stdout, /the Docustay command line/);   // positive control: the program does print when run directly
   assert.equal(viaLink.stdout, direct.stdout);                  // the symlinked run prints the SAME (it printed nothing before the fix)
+});
+
+// R13-D342: the documented `listen --events X` then `trigger --topic X` works, and plain `trigger` sends the documented default
+import { sameTopics, triggerTopic } from "../src/listen.mjs";
+test("trigger sends executed by default when the listen webhook receives it, refuses a topic it does not receive in words, and listen spots other events", () => {
+  assert.deepEqual(triggerTopic(["documents.email.paused", "documents.document.executed"]), { topic: "documents.document.executed" });
+  assert.deepEqual(triggerTopic(["documents.document.sent"]), { topic: "documents.document.sent" });
+  assert.deepEqual(triggerTopic(["documents.document.executed"], "documents.document.executed"), { topic: "documents.document.executed" });
+  assert.match(triggerTopic(["documents.document.sent"], "documents.document.executed").error, /does not receive documents\.document\.executed\. Run  docustay listen --events documents\.document\.executed/);
+  assert.match(triggerTopic([]).error, /receives no events/);
+  assert.equal(sameTopics(["a", "b"], ["b", "a"]), true); assert.equal(sameTopics(["a", "b"], ["a"]), false); assert.equal(sameTopics(["a"], ["b"]), false);
 });

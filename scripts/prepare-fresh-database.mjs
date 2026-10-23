@@ -187,6 +187,7 @@ const FORCE = process.argv.includes("--force");
 
 // ── 1 · roles, grants, graphile-worker's own schema ──────────────────────────────────────────────
 runNode(["scripts/bootstrap-roles.mjs"], "scripts/bootstrap-roles.mjs");
+runNode(["scripts/ensure-metrics-roles.mjs"], "scripts/ensure-metrics-roles.mjs");   // migration 0755 needs metrics_owner and posthog_reader; a self-hosted install has no ops bootstrap
 
 // ── 1.5 · ASSERT THE ROLE ATTRIBUTES BEFORE ANY MIGRATION RUNS (F484 — see the header) ──────────
 {

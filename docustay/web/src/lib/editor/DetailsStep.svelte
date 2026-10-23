@@ -17,8 +17,8 @@
     set({ [focusKey]: v || undefined }); queueMicrotask(() => { el.focus(); el.setSelectionRange(a + c.length, a + c.length); });
   }
 </script>
-<div class="max-w-[860px] space-y-4" data-testid="details-step">
-  <div class="grid gap-4 rounded-xl border border-line p-5">
+<div class="min-w-0 space-y-4" data-testid="details-step">
+  <div class="grid gap-4 border-y border-line py-5">
     <label class="grid gap-1"><span class="text-sm font-medium">{t("Title")}</span><input class="field !py-1.5" value={doc.title} oninput={(e) => onChange({ title: e.currentTarget.value })} data-testid="pdf-title" /></label>
     <label class="grid gap-1"><span class="text-sm font-medium">{t("Internal note")}</span><span class="text-xs text-mute">{t("Only you see this. It is never shown to signers or put in the signed copy.")}</span>
       <textarea class="field" rows="2" value={o.internal_note ?? ""} oninput={(e) => set({ internal_note: e.currentTarget.value || undefined })} data-testid="details-internal"></textarea></label>

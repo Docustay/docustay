@@ -2,23 +2,23 @@
 // by the Run 9 listeners) were never read by Docustay's own app. This turns each row into FACTS — what kind of thing happened, to which document, by whom, the numbers of a limit —
 // and the browser words them in the reader's language. Nothing here is a second store: read state and preferences are the host's own (`/api/notifications/read`, `/read-all`,
 // `/preferences`). The document facts come through the Documents front door (no document_* table is named here).
-import { inboxFacts, playbookTitles } from "../documents/frontDoor.mjs";
+import { inboxFacts } from "../documents/frontDoor.mjs";
 
 /** Topic → inbox kind, and which tab the kind shows under. A topic not listed here is not a Docustay notice and never shows. */
 const KIND_OF = {
   "documents.document.signed": "signed", "documents.document.executed": "completed", "documents.document.opened": "opened", "documents.document.declined": "declined",
-  "documents.document.expired": "expired", "documents.document.bounced": "bounced", "documents.document.changes_requested": "changes",
+  "documents.document.expired": "expired", "documents.document.bounced": "bounced", "documents.document.changes_requested": "changes", "documents.document.delegated": "passed_on",
   "documents.usage.threshold": "limit", "settings.subscription.updated": "plan",
-  "documents.playbook.ran": "playbook", "documents.key_date.due": "renewal", "documents.payment.failed": "payment_failed", "documents.payment.received": "paid",
+  "documents.payment.failed": "payment_failed", "documents.payment.received": "paid",
 };
 const INBOX_TOPICS = Object.freeze(Object.keys(KIND_OF));
-const TAB_OF = { signed: "signed", completed: "signed", opened: "signed", declined: "signed", expired: "signed", bounced: "signed", changes: "signed", response: "forms", limit: "limits", plan: "limits", playbook: "all", renewal: "all", payment_failed: "all", paid: "all" };
-const INBOX_TABS = Object.freeze(["all", "signed", "forms", "limits"]);
+const TAB_OF = { signed: "signed", completed: "signed", opened: "signed", declined: "signed", expired: "signed", bounced: "signed", changes: "signed", response: "all", limit: "limits", plan: "limits", payment_failed: "all", paid: "all" };
+const INBOX_TABS = Object.freeze(["all", "signed", "limits"]);
 
 /** An absolute deep link written for email ("https://sign.example/documents/…") becomes the app's own path; anything that is not a path inside the app is dropped. */
 function appPath(link) {
   if (!link) return null;
-  try { const u = new URL(link, "https://x.invalid"); const p = u.pathname + u.search; return /^\/(documents|forms|billing|templates|contracts|people|plays|reports|settings|payments)(\/|\?|$)/.test(p) ? p : null; } catch { return null; }
+  try { const u = new URL(link, "https://x.invalid"); const p = u.pathname + u.search; return /^\/(documents|billing|templates|people|plays|reports|settings|payments)(\/|\?|$)/.test(p) ? p : null; } catch { return null; }
 }
 
 /** → { items, unread, tab }. `before` pages back (an ISO time). The unread count covers every Docustay notice, whatever the tab, so the bell and the panel agree. */
@@ -37,8 +37,6 @@ export async function listInbox(tx, { appUserId, tab = "all", limit = 40, before
       ORDER BY n.created_at DESC LIMIT $4`, [appUserId, topics, b, t === "all" ? n : n * 4]);
   const refs = rows.filter((r) => r.subject_type === "document" && r.subject_id).map((r) => ({ instanceId: r.subject_id, role: r.payload?.role ?? null }));
   const facts = await inboxFacts(tx, { refs });
-  // Run 9 Part 3.6: a playbook's notice carries only ids (§2.4); its name is read through the door
-  const books = await playbookTitles(tx, { ids: rows.filter((r) => r.topic === "documents.playbook.ran").map((r) => r.payload?.playbook_id).filter(Boolean) });
   const items = [];
   for (const r of rows) {
     const f = r.subject_type === "document" ? facts.get(r.subject_id) : null;
@@ -52,7 +50,7 @@ export async function listInbox(tx, { appUserId, tab = "all", limit = 40, before
       who: f?.whoByRole?.[p.role] ?? (f?.form ? (f.parties.find((x) => x.role !== "witness")?.name ?? null) : null),
       limit: kind === "limit" ? { kind: p.kind, used: p.used, limit: p.limit, percent: p.percent, resetsAt: p.period_end ?? null } : null,
       plan: kind === "plan" ? { planKey: p.planKey ?? null, status: p.status ?? null, change: p.change ?? null } : null,
-      extra: kind === "playbook" ? { ...p, name: books.get(p.playbook_id) ?? null } : ["renewal", "payment_failed", "paid"].includes(kind) ? p : null,
+      extra: ["payment_failed", "paid"].includes(kind) ? p : null,
       link: f ? `/documents/${r.subject_id}` : kind === "limit" || kind === "plan" ? "/billing" : appPath(r.deep_link),
     });
   }
@@ -73,9 +71,7 @@ export const INBOX_SETTINGS = Object.freeze([
   { key: "signed", topics: ["documents.document.signed"] },
   { key: "completed", topics: ["documents.document.executed"] },
   { key: "opened", topics: ["documents.document.opened"] },
-  { key: "declined", topics: ["documents.document.declined", "documents.document.expired", "documents.document.bounced", "documents.document.changes_requested"] },
+  { key: "declined", topics: ["documents.document.declined", "documents.document.expired", "documents.document.bounced", "documents.document.changes_requested", "documents.document.delegated"] },
   { key: "limits", topics: ["documents.usage.threshold"] },
-  { key: "playbook", topics: ["documents.playbook.ran"] },
-  { key: "renewal", topics: ["documents.key_date.due"] },
   { key: "payments", topics: ["documents.payment.received", "documents.payment.failed"] },
 ]);

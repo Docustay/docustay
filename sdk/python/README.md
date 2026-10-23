@@ -4,7 +4,7 @@ Python client for the Docustay API. Standard library only; Python 3.9+. MIT.
 
 ```python
 from docustay import Docustay, verify_webhook
-d = Docustay(os.environ["DOCUSTAY_KEY"])   # "dsk_test_…" keys run in test mode
+d = Docustay(os.environ["DOCUSTAY_API_KEY"])   # "dsk_test_…" keys run in test mode
 doc = d.send_document(template_id, [{"seat": "signer_1", "name": "Tess", "email": "tess@example.com"}])
 for x in d.each_document(state="executed"): print(x["id"])
 ```

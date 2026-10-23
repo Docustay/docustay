@@ -43,6 +43,7 @@ export function createDocumentsApi({ request, ApiError }) {
     documentsEmail: () => request("/api/documents/email"),
     addEmailDomain: ({ domain }, idempotencyKey) => request("/api/documents/email/domain", { method: "POST", body: { domain }, idempotencyKey: idempotencyKey ?? crypto.randomUUID() }),
     verifyEmailDomain: (idempotencyKey) => request("/api/documents/email/domain/verify", { method: "POST", body: {}, idempotencyKey: idempotencyKey ?? crypto.randomUUID() }),
+    removeEmailDomain: (idempotencyKey) => request("/api/documents/email/domain/remove", { method: "POST", body: {}, idempotencyKey: idempotencyKey ?? crypto.randomUUID() }),
     saveSmtpPassword: ({ password }, idempotencyKey) => request("/api/documents/email/smtp-password", { method: "POST", body: { password }, idempotencyKey: idempotencyKey ?? crypto.randomUUID() }),
     sendTestEmail: ({ to }, idempotencyKey) => request("/api/documents/email/test", { method: "POST", body: { to }, idempotencyKey: idempotencyKey ?? crypto.randomUUID() }),
     /** POST /api/documents/settings — change ONE Documents setting; value null resets it to the default. */

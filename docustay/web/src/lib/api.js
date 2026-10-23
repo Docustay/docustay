@@ -31,6 +31,6 @@ async function call(path, { method = "GET", body, key } = {}) {
   // Run 7: a session idle past the workspace's limit has been ended on the server: go to sign-in and say why
   if (r.status === 401 && json?.error?.detail?.code === "idle_signed_out" && typeof location !== "undefined") location.assign("/login?signedout=idle");
   const raw = json?.error?.message ?? null;
-  return { ok: r.ok, status: r.status, json, error: r.status === 429 ? tooManyText(r.headers.get("retry-after")) : r.status === 403 && raw && RANK_REFUSAL.test(raw) ? t("You do not have permission to do that. Ask an owner or an admin.") : serverText(json?.error, t, i18n.lang) };
+  return { ok: r.ok, status: r.status, json, error: r.status === 429 ? tooManyText(r.headers.get("retry-after")) : r.status === 401 && !path.startsWith("/api/auth") && !path.startsWith("/api/public") ? t("Your session has ended. Sign in again.") : r.status === 403 && raw && RANK_REFUSAL.test(raw) ? t("You do not have permission to do that. Ask an owner or an admin.") : serverText(json?.error, t, i18n.lang) };
 }
 export const money = (minor, cur = "usd") => new Intl.NumberFormat("en-US", { style: "currency", currency: cur.toUpperCase(), minimumFractionDigits: minor % 100 ? 2 : 0 }).format(minor / 100);

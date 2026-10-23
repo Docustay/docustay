@@ -18,8 +18,11 @@ const whatsNewPath = resolve(__dirname, "../../specs/whats-new.md");
  * Each note has the structure: { date, title, body, tags }
  * Tags are optional and parsed from a trailing `Tags: feature|fix|change` line.
  */
-export function parseWhatsNewMarkdown() {
-  const content = readFileSync(whatsNewPath, "utf-8");
+export function parseWhatsNewMarkdown(path = whatsNewPath) {
+  // ★ R13-D377: Docustay's images and the self-host export ship no specs/, so the file is absent there and
+  //   GET /api/whats-new answered 500 (ENOENT). Absent file = no release notes; any other read error still throws.
+  let content;
+  try { content = readFileSync(path, "utf-8"); } catch (e) { if (e?.code === "ENOENT") return []; throw e; }
   const lines = content.split("\n");
   const notes = [];
   let currentNote = null;

@@ -68,26 +68,3 @@ export function validateDraft(draft) {
 
 /** The text sent back to the model for its one automatic retry: the exact problems, nothing else new. */
 export const retryInstruction = (blocking) => `Your draft had these problems:\n${blocking.map((b) => `- ${b}`).join("\n")}\nFix every one of them and answer again with the complete JSON object.`;
-
-/** Run 7: the extra checks for a drafted FORM (plain code, like everything in this file). `document` is the compact text with {{tags}}; `people` the drafted people.
- *  → string[] of plain sentences; empty when the draft keeps the form rules (FORM_RULES in prompt2.mjs). */
-const FORM_BANNED = /card number|card details|account number|routing number|sort code|iban|social security|\bssn\b|passport (no|number)|licen[cs]e number|tax id|\bw-?9\b|\bw-?4\b|background[- ]check|medical record/i;
-export function formDraftChecks({ document, people }) {
-  const out = [];
-  const signers = (people ?? []).filter((p) => p.action === "signer");
-  if (signers.length === 0) out.push("A form needs the person who fills it in to sign.");
-  if (signers.length > 2) out.push(`A form has one person who fills it in (and at most one team member who counter-signs); this draft has ${signers.length} people signing.`);
-  const tags = [...String(document ?? "").matchAll(/\{\{([^{}]+)\}\}/g)].map((m) => m[1]);
-  const roleOf = (t) => (/role=([^;]+)/.exec(t)?.[1] ?? "").trim().toLowerCase();
-  const filler = (signers[0]?.role ?? "").toLowerCase();
-  const mine = tags.filter((t) => roleOf(t) === filler);
-  if (!mine.some((t) => /type=email/.test(t))) out.push("A form should ask the person for their email, so the response can reach them.");
-  if (!mine.some((t) => /^(full )?name|;label=(your )?(full )?name/i.test(t))) out.push("A form should ask the person for their name.");
-  if (signers[1]) {
-    const staff = signers[1].role.toLowerCase(), types = tags.filter((t) => roleOf(t) === staff).map((t) => /type=([a-z_]+)/.exec(t)?.[1] ?? "text");
-    if (types.some((x) => !["dropdown", "text", "signature", "date_signed"].includes(x)) || types.filter((x) => x === "text").length > 1) out.push(`The ${signers[1].role} only records a decision, a note and a signature on a form.`);
-  }
-  const bad = tags.filter((t) => FORM_BANNED.test(t.split(";")[0]) || FORM_BANNED.test(/label=([^;]+)/.exec(t)?.[1] ?? ""));
-  if (bad.length) out.push(`A form must not ask for card or bank numbers, ID numbers, tax forms, background checks or medical records (${bad.map((t) => t.split(";")[0]).slice(0, 3).join(", ")}).`);
-  return out;
-}

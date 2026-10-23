@@ -9,11 +9,10 @@
   import { EXPLORE_PRO_URL, plan } from "./plan.svelte.js";
   let card = $state(null), opener = null;
   const ITEMS = $derived([
-    ["unlimited_documents", t("Unlimited documents and forms")], ["unlimited_templates", t("Unlimited new templates")], ["team_roles", t("Your team, with roles")],
-    ["bulk_send", t("Send to a list, automatic reminders")], ["think_harder", t("Think harder on difficult documents")], ["custom_plays", t("Your own plays and playbooks, and the Plays API")],
-    ["recurring_payments", t("Installments and subscriptions in a document")], ["own_signing_domain", t("Signing links on your own domain, no Docustay footer")],
+    ["unlimited_documents", t("Unlimited documents")], ["unlimited_templates", t("Unlimited new templates")], ["unlimited_people", t("Unlimited team members and signers")],
+    ["custom_plays", t("Your own plays and playbooks, and the Plays API")],
   ]);
-  const ALIAS = { ai_bulk: "bulk_send", auto_reminders: "bulk_send", plays_api: "custom_plays", hide_footer: "own_signing_domain", template_limit: "unlimited_templates", document_limit: "unlimited_documents" };
+  const ALIAS = { plays_api: "custom_plays", team_roles: "unlimited_people", template_limit: "unlimited_templates", document_limit: "unlimited_documents" };
   const first = $derived(ALIAS[proSheet.item] ?? proSheet.item);
   const list = $derived([...ITEMS.filter(([k]) => k === first), ...ITEMS.filter(([k]) => k !== first)].slice(0, 5));
   const canUpgrade = $derived(plan.data?.billing?.canUpgrade === true);
@@ -34,7 +33,7 @@
     <ul class="bd">{#each list as [k, label] (k)}<li class:first={k === first}><span class="ck" aria-hidden="true"><Icon name="check" size={14} /></span>{label}</li>{/each}</ul>
     <div class="ft">
       <a class="go" href={EXPLORE_PRO_URL} target="_blank" rel="noopener" data-autofocus data-testid="explore-pro-plans">{t("See Pro plans")}</a>
-      {#if canUpgrade}<button type="button" class="up" data-testid="explore-pro-upgrade" onclick={() => openUpgrade(proSheet.item)}>{t("Upgrade to Pro")}</button>{/if}
+      {#if canUpgrade}<button type="button" class="up" data-testid="explore-pro-upgrade" onclick={() => openUpgrade(proSheet.item)}>{t("Choose Pro")}</button>{/if}
     </div>
   </div>
 {/if}

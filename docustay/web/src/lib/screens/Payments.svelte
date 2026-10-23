@@ -5,6 +5,7 @@
   // every amount and fee here is what Stripe said. Payouts are Stripe's, on its own schedule.
   import { onMount } from "svelte";
   import { api } from "$lib/api.js";
+  import { inDemo } from "$lib/pro/plan.svelte.js";
   import { live } from "$lib/live.js";
   import { t, i18n } from "$lib/i18n/index.svelte.js";
   import StatTile from "$lib/ui/StatTile.svelte";
@@ -14,7 +15,8 @@
   let data = $state(null), stripe = $state(null), problem = $state(null), loaded = $state(false), note = $state(null), more = $state(false);
   let refund = $state(null), full = $state(true), part = $state(""), why = $state(""), busy = $state(false), sheetProblem = $state(null);
   async function load() {
-    const [r, s] = await Promise.all([api("/api/documents/payments"), api("/api/product/docustay/payments")]);
+    const demo = await inDemo();   // R13-D020: no Stripe call in the demo (it would only answer 403)
+    const [r, s] = await Promise.all([api("/api/documents/payments"), demo ? { ok: false } : api("/api/product/docustay/payments")]);
     loaded = true;
     if (r.ok) { data = un(r); problem = null; } else problem = r.error ?? t("The payments could not be loaded.");
     if (s.ok) stripe = un(s);
@@ -54,7 +56,7 @@
 </script>
 <div class="flex flex-wrap items-start gap-3">
   <div class="min-w-0">{#if !embedded}<h1 class="text-[length:var(--t-title)] font-medium leading-tight tracking-[-0.02em]">{t("Payments")}</h1>{/if}
-    <p class="mt-1 text-mute">{t("Money collected through payment fields in your documents and forms.")}</p></div>
+    <p class="mt-1 text-mute">{t("Money collected through payment fields in your documents.")}</p></div>
   {#if stripe?.state === "live"}<a class="btn quiet ml-auto" href={dash("payments")} target="_blank" rel="noopener" data-testid="payments-dashboard">{t("Open your Stripe dashboard")} →</a>{/if}
 </div>
 {#if problem}<p class="notice warn mt-3" role="alert" data-testid="payments-problem">{problem}</p>{/if}
@@ -62,13 +64,13 @@
 {#if note}<p class="notice mt-3" role="status" data-testid="payments-note">{note}</p>{/if}
 <section class="strip mt-5" aria-label={t("This month")} data-testid="payments-strip">
   <StatTile label={t("Collected this month")} value={data?.month?.collected ?? "—"} />
-  <StatTile label={t("Docustay fee")} value={data?.month?.fee ?? "—"} delta={t("2% on Free · 0% on Pro")} />
+  <StatTile label={t("Docustay fee")} value={data?.month?.fee ?? "—"} delta={t("2% on Free and Pay as you go · 0% on Pro and Lifetime")} />
   <StatTile label={t("Stripe fees")} value={data?.month?.stripeFee ?? "—"} delta={data?.month?.stripeFeePending ? t("{n} still settling at Stripe", { n: data.month.stripeFeePending }) : t("Charged by Stripe")} />
   <StatTile label={t("Refunded")} value={data?.month?.refunded ?? "—"} delta={t("{n} this month", { n: data?.month?.refunds ?? 0 })} />
 </section>
 <div class="mt-4 overflow-x-auto rounded-xl border border-line bg-card">
   <table class="w-full min-w-[720px] text-left text-[14px]" data-testid="payments-table">
-    <thead class="font-mono text-[.7rem] uppercase tracking-wider text-faint"><tr><th class="h-9 px-4">{t("From")}</th><th class="px-4">{t("Document or form")}</th><th class="px-4">{t("Amount")}</th><th class="px-4">{t("Status")}</th><th class="px-4"></th></tr></thead>
+    <thead class="font-mono text-[.7rem] uppercase tracking-wider text-faint"><tr><th class="h-9 px-4">{t("From")}</th><th class="px-4">{t("Document")}</th><th class="px-4">{t("Amount")}</th><th class="px-4">{t("Status")}</th><th class="px-4"></th></tr></thead>
     <tbody>
       {#if !loaded}<tr><td colspan="5" class="p-4"><PageSkel kind="list" testid="payments-skel" /></td></tr>
       {:else}

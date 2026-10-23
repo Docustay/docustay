@@ -64,7 +64,10 @@ function assertKnownPurpose(purpose) {
 // `loadMasterKey` header: version 2 reads `KEYSTONE_MASTER_KEY` (the new value), and every row still
 // at `kek_version = 1` falls through to `KEYSTONE_MASTER_KEY_PREVIOUS` (the old value) until
 // `rewrapSecrets`/`rewrap_secrets` (src/secrets/rewrap.mjs, task 9.12) moves it to version 2.
-export const CURRENT_KEK_VERSION = 2;
+// ★★★ BUMPED 2 → 3, 22 Oct 2026 — the security rotation after the 20 Oct exposure. Deploy together with the new KEYSTONE_MASTER_KEY and the OLD value in KEYSTONE_MASTER_KEY_PREVIOUS;
+// scripts/rotate/rewrap-kek.mjs then re-wraps every stored data key (all eight envelope columns, not only the five REWRAP_TABLES) and the previous key is removed. While both keys are set,
+// openSecret() tries the key for the stated version first and the other key second, so a row whose version label is stale (a NULL, or a row mid-sweep) still opens.
+export const CURRENT_KEK_VERSION = 3;
 
 /**
  * Load the master key. ★ Fail loud — never a hardcoded or generated-on-the-fly fallback.
@@ -158,11 +161,19 @@ export function openSecret(envelope, { tenantId, purpose, kekVersion = CURRENT_K
     // ★ The key resolution lives INSIDE this try too now: a missing/short KEYSTONE_MASTER_KEY_PREVIOUS
     // for a row asking for an earlier `kekVersion` is a SecretOpenError, not a crash — the same
     // "one message for every failure mode" reasoning below, extended to "wrong/absent key version".
-    const kek = masterKey ?? loadMasterKey(process.env, { version: kekVersion });
-    const kDecipher = createDecipheriv(ALG, kek, Buffer.from(envelope.keyIv, "base64"));
-    kDecipher.setAAD(aad);
-    kDecipher.setAuthTag(Buffer.from(envelope.keyTag, "base64"));
-    dek = Buffer.concat([kDecipher.update(Buffer.from(envelope.wrappedKey, "base64")), kDecipher.final()]);
+    // ★ The stated version's key first; during a rotation (both KEYSTONE_MASTER_KEY and KEYSTONE_MASTER_KEY_PREVIOUS set) the other one second. A wrong key can never open a GCM-authenticated wrap,
+    //   so trying a second key widens nothing; it only forgives a stale version label.
+    const tryKeys = masterKey ? [masterKey] : [loadMasterKey(process.env, { version: kekVersion })];
+    if (!masterKey) { try { tryKeys.push(loadMasterKey(process.env, { version: kekVersion === CURRENT_KEK_VERSION ? CURRENT_KEK_VERSION - 1 : CURRENT_KEK_VERSION })); } catch { /* only one key configured */ } }
+    for (const kek of tryKeys) {
+      try {
+        const kDecipher = createDecipheriv(ALG, kek, Buffer.from(envelope.keyIv, "base64"));
+        kDecipher.setAAD(aad);
+        kDecipher.setAuthTag(Buffer.from(envelope.keyTag, "base64"));
+        dek = Buffer.concat([kDecipher.update(Buffer.from(envelope.wrappedKey, "base64")), kDecipher.final()]);
+        break;
+      } catch (e) { if (kek === tryKeys[tryKeys.length - 1]) throw e; }
+    }
   } catch {
     // ★ One message for every failure mode. Distinguishing "wrong tenant" from "wrong key" from
     // "tampered" would be an oracle.

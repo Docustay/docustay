@@ -27,7 +27,8 @@
 
 import { emit } from "../events/outbox.mjs";
 import { PLAN_KEYS } from "./plans.mjs";
-import { periodOf } from "./subscriptionPeriod.mjs";
+import { periodOf, planItem } from "./subscriptionPeriod.mjs";
+import { PRICES } from "../product/docustayPrices.mjs";
 import { isDocustayPlanKey, foundersFlagFor } from "../product/docustayPlans.mjs";
 import * as mail from "../mail/index.mjs";
 import { billingEmail, receiptEmail } from "../email/docustayBilling.mjs";
@@ -100,6 +101,7 @@ export async function handleSubscriptionWebhook(tx, event, { tenantId } = {}) {
   if (shared) return handleDocustayBillingEvent(tx, event, { tenantId });
 
   const d = event.data?.object ?? {};
+  if (d.metadata?.docustay_kind === "lifetime_drafts") return { applied: false, reason: "lifetime_drafts_subscription", type: event.type };   // bills a Lifetime workspace's extra drafts only; it is not the workspace's plan
   const stripeSubscriptionId = d.id ?? null;
   if (!stripeSubscriptionId) throw new SubscriptionWebhookRejected("no subscription id", "malformed");
 
@@ -119,7 +121,7 @@ export async function handleSubscriptionWebhook(tx, event, { tenantId } = {}) {
   const planKey = PLAN_KEYS.includes(metaPlanKey) || isDocustayPlanKey(metaPlanKey) ? metaPlanKey : null;
   const seatCount = Number.isInteger(Number(d.metadata?.seat_count))
     ? Number(d.metadata.seat_count)
-    : (Number.isInteger(d.items?.data?.[0]?.quantity) ? d.items.data[0].quantity : null);
+    : (Number.isInteger(planItem(d)?.quantity) ? planItem(d).quantity : null);
   const trialEndsAt = d.trial_end ? new Date(d.trial_end * 1000) : null;
 
   // ★★★ R4 (the maintainer, 25 Sep 2026) — THE RENEWAL DATE IS STRIPE'S. `current_period_start`/`_end` travel
@@ -137,15 +139,20 @@ export async function handleSubscriptionWebhook(tx, event, { tenantId } = {}) {
   //   founders' flag follows the stamp checkout put on the subscription, is set only once it is paid (active/trialing), and is cleared only by the subscription ending.
   const { rows: [cur] } = await tx.query(`SELECT plan_key, past_due_since, status, cancel_at, seat_count FROM keystone.workbench_subscription WHERE tenant_id = $1`, [tenantId]);
   const docustay = Boolean(cur && isDocustayPlanKey(cur.plan_key));
+  // a Lifetime workspace has no subscription of its own: the old Pay as you go or Pro subscription it was bought from ends, and its events must never undo Lifetime
+  if (cur?.plan_key === "docustay_lifetime") return { applied: false, reason: "lifetime_workspace", type: event.type };
+  // A plan switch makes a NEW subscription and ends the old one: the old one's ending (or any late event of it) must not undo the workspace's current subscription.
+  { const { rows: [stored] } = await tx.query(`SELECT stripe_subscription_id, status FROM keystone.workbench_subscription WHERE tenant_id = $1`, [tenantId]);
+    if (docustay && stored?.stripe_subscription_id && stored.stripe_subscription_id !== stripeSubscriptionId && ["active", "trialing", "past_due"].includes(stored.status) && (event.type === "customer.subscription.deleted" || d.status === "canceled" || d.status === "incomplete_expired")) return { applied: false, reason: "superseded_subscription", type: event.type }; }
   let docPlanKey = planKey, graceMode = "keep", founders = null, interval = null, priceId = null;
   if (docustay) {
     if (!["active", "trialing", "past_due"].includes(mappedStatus)) docPlanKey = null;
     graceMode = mappedStatus === "past_due" ? "set" : (mappedStatus === "active" || mappedStatus === "trialing") ? "clear" : "keep";
     founders = foundersFlagFor({ status: mappedStatus, metadata: d.metadata, created: d.created, deleted: event.type === "customer.subscription.deleted" });
     if (event.type === "customer.subscription.deleted") graceMode = "clear";
-    interval = d.items?.data?.[0]?.price?.recurring?.interval ?? d.metadata?.billing_interval ?? null;
+    interval = planItem(d)?.price?.recurring?.interval ?? d.metadata?.billing_interval ?? null;
     if (!["month", "year"].includes(interval)) interval = null;
-    priceId = d.items?.data?.[0]?.price?.id ?? null;
+    priceId = planItem(d)?.price?.id ?? null;
   }
   const { rows } = await tx.query(
     `UPDATE keystone.workbench_subscription
@@ -198,13 +205,22 @@ export async function handleSubscriptionWebhook(tx, event, { tenantId } = {}) {
   const sameMoment = (a, b) => (a ? new Date(a).getTime() : null) === (b ? new Date(b).getTime() : null);
   const changed = !cur || cur.plan_key !== rows[0].plan_key || cur.status !== rows[0].status || cur.seat_count !== rows[0].seat_count || (cancelKnown && !sameMoment(cur.cancel_at, cancelAt));
   if (!changed) return { applied: true, type: event.type, subscriptionId: rows[0].id, unchanged: true };
-  const wasPro = cur?.plan_key === "docustay_pro" && ["active", "trialing", "past_due"].includes(cur?.status), isPro = rows[0].plan_key === "docustay_pro" && ["active", "trialing"].includes(rows[0].status);
+  const SUB_PLANS = ["docustay_pro", "docustay_payg"];   // the plans that live on a Stripe subscription (Lifetime is one payment)
+  const wasPro = SUB_PLANS.includes(cur?.plan_key) && ["active", "trialing", "past_due"].includes(cur?.status), isPro = SUB_PLANS.includes(rows[0].plan_key) && ["active", "trialing"].includes(rows[0].status);
   const change = !docustay ? "updated"
     : (!wasPro && isPro) ? "pro_started"
     : (wasPro && !isPro && rows[0].status !== "past_due") ? "pro_ended"
     : (isPro && cancelKnown && cancelAt && !sameMoment(cur?.cancel_at, cancelAt)) ? "cancel_scheduled"
     : (isPro && cancelKnown && !cancelAt && cur?.cancel_at) ? "resumed"
     : rows[0].status === "past_due" ? "payment_failed" : "updated";
+  // A workspace that becomes Pay as you go or Pro starts with the default $50 budget on record (alerts at 50, 80 and 100 percent and the pause at 100 work from the first unit; a budget it already set is never touched).
+  if (change === "pro_started" && ["docustay_payg", "docustay_pro"].includes(rows[0].plan_key)) {
+    await tx.query("SAVEPOINT ds_default_budget");
+    try {
+      await tx.query(`INSERT INTO keystone.docustay_budget (tenant_id, budget_minor, period_start) VALUES ($1, $2, COALESCE($3::timestamptz, now())) ON CONFLICT (tenant_id) DO NOTHING`, [tenantId, PRICES.budget.defaultMinor, currentPeriodStart]);
+      await tx.query("RELEASE SAVEPOINT ds_default_budget");
+    } catch (e) { await tx.query("ROLLBACK TO SAVEPOINT ds_default_budget").catch(() => {}); console.error("docustay: could not record the default budget:", e?.message ?? e); }
+  }
   await emit(tx, {
     tenantId,
     emittedBy: "settings",
@@ -218,7 +234,7 @@ export async function handleSubscriptionWebhook(tx, event, { tenantId } = {}) {
       change,
       cancelAt: cancelAt ? cancelAt.toISOString() : null,
       periodEnd: currentPeriodEnd ? currentPeriodEnd.toISOString() : null,
-      amountMinor: d.items?.data?.[0]?.price?.unit_amount ?? null, currency: d.items?.data?.[0]?.price?.currency ?? d.currency ?? null, interval,   // what the person is told, from Stripe's own subscription (never typed here)
+      amountMinor: planItem(d)?.price?.unit_amount ?? null, currency: planItem(d)?.price?.currency ?? d.currency ?? null, interval,   // what the person is told, from Stripe's own subscription (never typed here)
       founders: founders === true,
       planKey: rows[0].plan_key,
       status: rows[0].status,
@@ -261,9 +277,32 @@ export async function mirrorSubscriptionFromStripe(tx, { tenantId, subscription,
  *   invoice.paid                → paid: status active, the grace clock cleared
  *   invoice.payment_failed      → past due: the grace clock starts at the FIRST failure (never restarted), and the owner is told once, in plain words, with no number of days
  */
+/** A paid Lifetime checkout: the workspace is on Lifetime. Idempotent (a second call finds it already there and changes nothing). → the updated rows ([] when nothing changed). */
+export async function applyLifetimePurchase(tx, { tenantId, customer = null }) {
+  // 21 Oct 2026 (the maintainer): Lifetime bought from a running Pay as you go or Pro subscription ends that subscription (its usage invoiced, nothing prorated: the unused-time credit was the coupon on the Checkout)
+  const { rows: [before] } = await tx.query(`SELECT plan_key, stripe_subscription_id FROM keystone.workbench_subscription WHERE tenant_id = $1`, [tenantId]);
+  const { rows } = await tx.query(
+    `UPDATE keystone.workbench_subscription SET plan_key = 'docustay_lifetime', status = 'active', stripe_customer_id = COALESCE(stripe_customer_id, $2), past_due_since = NULL, cancel_at = NULL, founders_price = false,
+      current_period_start = now(), current_period_end = NULL   -- Lifetime has no Stripe period: its monthly allowance counts from the purchase date (docustayPeriod.mjs), and an old Pay as you go / Pro period must not linger
+      WHERE tenant_id = $1 AND plan_key <> 'docustay_lifetime' RETURNING id`, [tenantId, customer]);
+  if (rows.length) await emit(tx, { tenantId, emittedBy: "settings", topic: "settings.subscription.updated", subjectType: "workbench_subscription", subjectId: rows[0].id, actor: "webhook:stripe",
+    payload: { planKey: "docustay_lifetime", plan_key: "docustay_lifetime", status: "active", change: "pro_started" } });   // planKey is what the bell and the notice read (R13 RT21-104)
+  if (rows.length && before?.stripe_subscription_id && ["docustay_payg", "docustay_pro"].includes(before.plan_key)) {
+    try { await (await import("../product/docustay.mjs")).endSubscriptionForLifetime(tx, { tenantId, subscriptionId: before.stripe_subscription_id, fromPlanKey: before.plan_key }); }
+    catch (e) { console.error(`docustay lifetime: the old subscription was not ended: ${e?.message ?? e}`); }
+    await tx.query(`UPDATE keystone.workbench_subscription SET stripe_subscription_id = NULL, status = 'active', cancel_at = NULL WHERE tenant_id = $1 AND plan_key = 'docustay_lifetime'`, [tenantId]);
+  }
+  return rows;
+}
 async function handleDocustayBillingEvent(tx, event, { tenantId }) {
   const d = event.data?.object ?? {};
   if (event.type === "checkout.session.completed") {
+    if (d.mode === "payment" && d.metadata?.docustay_kind === "lifetime") {
+      // Lifetime: one payment, no subscription. Paid → the workspace is on Lifetime for as long as Docustay runs the hosted service. Its drafts past the monthly allowance are billed through a drafts-only subscription made at the first overage.
+      if (d.payment_status !== "paid") return { applied: false, reason: "lifetime_not_paid_yet", type: event.type };
+      const rows = await applyLifetimePurchase(tx, { tenantId, customer: d.customer ?? null });
+      return { applied: rows.length > 0, type: event.type };
+    }
     if (d.mode !== "subscription") return { applied: false, reason: "not_a_subscription_checkout", type: event.type };
     await tx.query(
       `UPDATE keystone.workbench_subscription SET stripe_customer_id = COALESCE(stripe_customer_id, $2), stripe_subscription_id = COALESCE($3, stripe_subscription_id) WHERE tenant_id = $1`,
@@ -274,15 +313,24 @@ async function handleDocustayBillingEvent(tx, event, { tenantId }) {
   if (!forSubscription) return { applied: false, reason: "invoice_without_subscription", type: event.type };
   if (event.type === "invoice.paid") {
     const { rows } = await tx.query(
-      `UPDATE keystone.workbench_subscription SET status = 'active', past_due_since = NULL WHERE tenant_id = $1 AND plan_key = 'docustay_pro' AND status IN ('past_due','active') RETURNING id`, [tenantId]);
+      `UPDATE keystone.workbench_subscription SET status = 'active', past_due_since = NULL WHERE tenant_id = $1 AND plan_key IN ('docustay_pro','docustay_payg') AND status IN ('past_due','active') RETURNING id`, [tenantId]);
     // F1045: Docustay sends its own receipt (Stripe's receipt and invoice pages carry the Stripe account's business name). Once per paid invoice: this event id is recorded above, so a replay never sends twice.
     if (rows.length > 0 && Number(d.amount_paid) > 0 && d.billing_reason !== "subscription_create") await tellOwnerReceipt(tx, { tenantId, invoice: d }).catch((e) => console.error("docustay: could not email the receipt:", e?.message ?? e));
+    // PostHog: a paid MONTHLY RENEWAL (billing_reason subscription_cycle; a $0 renewal counts) is its own event: plan, the amount as a bucket, and the period it pays for. Never throws.
+    if (rows.length > 0 && d.billing_reason === "subscription_cycle") {
+      try {
+        const { docustayMoment } = await import("../product/posthogListener.mjs"), { amountBucket } = await import("../product/posthog.mjs");
+        const per = d.lines?.data?.[0]?.period, iso = (sec) => (Number.isFinite(Number(sec)) && Number(sec) > 0 ? new Date(Number(sec) * 1000).toISOString() : null);
+        const { rows: [ps] } = await tx.query(`SELECT plan_key FROM keystone.workbench_subscription WHERE tenant_id = $1`, [tenantId]);
+        await docustayMoment(tx, tenantId, "renewal_paid", { plan: (ps?.plan_key ?? "").replace(/^docustay_/, "") || null, amount_bucket: amountBucket(Number(d.amount_paid)), currency: d.currency ?? null, interval: "month", period_start: iso(per?.start), period_end: iso(per?.end) });
+      } catch { /* analytics never blocks billing */ }
+    }
     return { applied: rows.length > 0, type: event.type };
   }
   // invoice.payment_failed
   const { rows: [before] } = await tx.query(`SELECT past_due_since FROM keystone.workbench_subscription WHERE tenant_id = $1`, [tenantId]);
   const { rows } = await tx.query(
-    `UPDATE keystone.workbench_subscription SET status = 'past_due', past_due_since = COALESCE(past_due_since, now()) WHERE tenant_id = $1 AND plan_key = 'docustay_pro' RETURNING id`, [tenantId]);
+    `UPDATE keystone.workbench_subscription SET status = 'past_due', past_due_since = COALESCE(past_due_since, now()) WHERE tenant_id = $1 AND plan_key IN ('docustay_pro','docustay_payg') RETURNING id`, [tenantId]);
   if (rows.length === 0) return { applied: false, reason: "no_pro_subscription", type: event.type };
   if (!before?.past_due_since) await tellOwnerPaymentFailed(tx, { tenantId }).catch((e) => console.error("docustay: could not email the payment-failed notice:", e?.message ?? e));
   return { applied: true, type: event.type };
@@ -296,25 +344,26 @@ async function ownerRows(tx, tenantId) {
   return rows;
 }
 /** The receipt for one paid Pro invoice after the first (the first payment's receipt is in the Welcome email). From Docustay, to the workspace owner(s); once per paid invoice (this event id is recorded above). */
+async function planKeyOf(tx, tenantId) { const { rows: [r] } = await tx.query(`SELECT plan_key FROM keystone.workbench_subscription WHERE tenant_id = $1`, [tenantId]); return r?.plan_key ?? null; }
 async function tellOwnerReceipt(tx, { tenantId, invoice }) {
-  const owners = await ownerRows(tx, tenantId);
+  const owners = await ownerRows(tx, tenantId), planKey = await planKeyOf(tx, tenantId);
   for (const o of owners) {
-    const built = receiptEmail({ name: o.display_name, invoice, lang: await languageOfUser(tx, { tenantId, userId: o.id }) });
+    const built = receiptEmail({ name: o.display_name, invoice, planKey, lang: await languageOfUser(tx, { tenantId, userId: o.id }) });
     await mail.sendMail(tx, { tenantId, to: o.email, purpose: "platform", product: "docustay", subject: built.subject, text: built.text, html: built.html, idempotencyKey: `docustay-receipt:${invoice.id}:${o.email}` });
   }
   // the workspace's separate billing email (when set) gets the same receipt, once per invoice
   const copy = await billingCopyAddress(tx, { tenantId, already: owners.map((o) => o.email) });
-  if (copy) { const built = receiptEmail({ name: null, invoice, lang: owners[0] ? await languageOfUser(tx, { tenantId, userId: owners[0].id }) : "en" }); await mail.sendMail(tx, { tenantId, to: copy, purpose: "platform", product: "docustay", subject: built.subject, text: built.text, html: built.html, idempotencyKey: `docustay-receipt:${invoice.id}:${copy}` }); }
+  if (copy) { const built = receiptEmail({ name: null, invoice, planKey, lang: owners[0] ? await languageOfUser(tx, { tenantId, userId: owners[0].id }) : "en" }); await mail.sendMail(tx, { tenantId, to: copy, purpose: "platform", product: "docustay", subject: built.subject, text: built.text, html: built.html, idempotencyKey: `docustay-receipt:${invoice.id}:${copy}` }); }
   return { sent: owners.length };
 }
 
 /** One plain notice, from Docustay, to the workspace owner(s), once per failed-payment episode. It names no number of days and no other product. */
 async function tellOwnerPaymentFailed(tx, { tenantId }) {
-  const owners = await ownerRows(tx, tenantId);
+  const owners = await ownerRows(tx, tenantId), planKey = await planKeyOf(tx, tenantId);
   for (const o of owners) {
-    const built = billingEmail("payment_failed", { name: o.display_name, lang: await languageOfUser(tx, { tenantId, userId: o.id }) });
+    const built = billingEmail("payment_failed", { name: o.display_name, facts: { planKey }, lang: await languageOfUser(tx, { tenantId, userId: o.id }) });
     await mail.sendMail(tx, { tenantId, to: o.email, purpose: "platform", product: "docustay", subject: built.subject, text: built.text, html: built.html });
   }
   const copy = await billingCopyAddress(tx, { tenantId, already: owners.map((o) => o.email) });
-  if (copy) { const built = billingEmail("payment_failed", { name: null, lang: owners[0] ? await languageOfUser(tx, { tenantId, userId: owners[0].id }) : "en" }); await mail.sendMail(tx, { tenantId, to: copy, purpose: "platform", product: "docustay", subject: built.subject, text: built.text, html: built.html }); }
+  if (copy) { const built = billingEmail("payment_failed", { name: null, facts: { planKey }, lang: owners[0] ? await languageOfUser(tx, { tenantId, userId: owners[0].id }) : "en" }); await mail.sendMail(tx, { tenantId, to: copy, purpose: "platform", product: "docustay", subject: built.subject, text: built.text, html: built.html }); }
 }

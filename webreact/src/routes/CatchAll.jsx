@@ -17,6 +17,7 @@ import InvitePage from "./invite.jsx";
 import BookPage from "./book.jsx";
 import BookCoachPage from "./book/coachSlug.jsx";
 import SignPdfPage from "./signPdf.jsx";
+import DownloadPage from "./download.jsx";
 import VerifyPage from "./verify.jsx";
 import VerifyDocPage from "./verifyDoc.jsx";
 import SelfServePage from "./selfServe.jsx";
@@ -26,7 +27,7 @@ import SignPage from "./sign.jsx";
 import UnsubscribePage from "./u/token.jsx";
 import WaitlistClaimPage from "./waitlist/claim.jsx";
 
-const PUBLIC_PAGES = { invite: InvitePage, book: BookPage, "book-coach": BookCoachPage, sign: SignPage, "sign-pdf": SignPdfPage, verify: VerifyPage, "verify-doc": VerifyDocPage, "self-serve": SelfServePage, "tool-sign-pdf": ToolSignPdfPage, "tool-signature-maker": ToolSignatureMakerPage, unsubscribe: UnsubscribePage, "waitlist-claim": WaitlistClaimPage };
+const PUBLIC_PAGES = { invite: InvitePage, book: BookPage, "book-coach": BookCoachPage, sign: SignPage, "sign-pdf": SignPdfPage, download: DownloadPage, verify: VerifyPage, "verify-doc": VerifyDocPage, "self-serve": SelfServePage, "tool-sign-pdf": ToolSignPdfPage, "tool-signature-maker": ToolSignatureMakerPage, unsubscribe: UnsubscribePage, "waitlist-claim": WaitlistClaimPage };
 
 function PublicPage({ hit, search, navigate }) {
   const [data, setData] = useState(undefined);

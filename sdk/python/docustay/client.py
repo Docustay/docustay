@@ -86,10 +86,10 @@ class Docustay:
                 raise
 
     # -- documents ---------------------------------------------------------
-    def send_document(self, template_id: str, parties: list, *, title: Optional[str] = None, message: Optional[str] = None, subject: Optional[str] = None, language: Optional[str] = None, expiry_days: Optional[int] = None, metadata: Optional[dict] = None, external_id: Optional[str] = None, embedded: Optional[list] = None, idempotency_key: Optional[str] = None) -> dict:
+    def send_document(self, template_id: str, parties: list, *, title: Optional[str] = None, message: Optional[str] = None, subject: Optional[str] = None, expiry_days: Optional[int] = None, metadata: Optional[dict] = None, external_id: Optional[str] = None, embedded: Optional[list] = None, values: Optional[dict] = None, idempotency_key: Optional[str] = None) -> dict:
         """Send a template. `parties` is [{"seat": "signer_1", "name": "…", "email": "…"}]. Returns {"id", "state"}."""
         body = {"templateId": template_id, "parties": parties}
-        for k, v in (("title", title), ("message", message), ("subject", subject), ("language", language), ("expiryDays", expiry_days), ("metadata", metadata), ("externalId", external_id), ("embedded", embedded)):
+        for k, v in (("title", title), ("message", message), ("subject", subject), ("expiryDays", expiry_days), ("metadata", metadata), ("externalId", external_id), ("embedded", embedded), ("values", values)):
             if v is not None:
                 body[k] = v
         return self._request("POST", "/api/v1/documents/send", body=body, idempotency_key=idempotency_key)
@@ -145,18 +145,6 @@ class Docustay:
         """TEST MODE ONLY: sign one seat of a test document with sample answers, so an automated test can finish a signature. A live key is refused."""
         return self._request("POST", f"/api/v1/documents/{urllib.parse.quote(document_id)}/test-sign", body={"seat": seat}, idempotency_key=idempotency_key)
 
-    def list_email_templates(self, locale: Optional[str] = None) -> dict:
-        return self._request("GET", "/api/v1/email-templates", query={"locale": locale})
-
-    def save_email_template(self, kind: str, wording: dict, idempotency_key: Optional[str] = None) -> dict:
-        return self._request("PUT", f"/api/v1/email-templates/{urllib.parse.quote(kind)}", body=wording, idempotency_key=idempotency_key)
-
-    def reset_email_template(self, kind: str, locale: Optional[str] = None) -> dict:
-        return self._request("DELETE", f"/api/v1/email-templates/{urllib.parse.quote(kind)}", query={"locale": locale})
-
-    def preview_email_template(self, kind: str, wording: Optional[dict] = None, idempotency_key: Optional[str] = None) -> dict:
-        return self._request("POST", f"/api/v1/email-templates/{urllib.parse.quote(kind)}/preview", body=wording or {}, idempotency_key=idempotency_key)
-
     def list_emails(self, document_id: Optional[str] = None, to: Optional[str] = None, status: Optional[str] = None, kind: Optional[str] = None, limit: Optional[int] = None, cursor: Optional[str] = None) -> dict:
         return self._request("GET", "/api/v1/emails", query={"documentId": document_id, "to": to, "status": status, "kind": kind, "limit": limit, "cursor": cursor})
 
@@ -190,6 +178,10 @@ class Docustay:
 
     def fetch_relay_events(self, webhook_id: str, after: Optional[str] = None, wait: Optional[int] = None, limit: Optional[int] = None) -> dict:
         return self._request("GET", f"/api/v1/webhooks/{urllib.parse.quote(webhook_id)}/relay", query={"after": after, "wait": wait, "limit": limit})
+
+    def delete_draft(self, document_id: str) -> dict:
+        """Delete a draft that was never sent. A sent document answers 409: void it instead."""
+        return self._request("DELETE", f"/api/v1/documents/{urllib.parse.quote(document_id)}")
 
     def void_document(self, document_id: str, reason: Optional[str] = None, idempotency_key: Optional[str] = None) -> dict:
         return self._request("POST", f"/api/v1/documents/{urllib.parse.quote(document_id)}/void", body={"reason": reason} if reason else {}, idempotency_key=idempotency_key)
@@ -289,24 +281,13 @@ class Docustay:
     def payments_status(self) -> dict:
         return self._request("GET", "/api/v1/payments/status")
 
-    # ── Run 9: search, contracts and key dates, payments, automations ──
+    # ── Run 9: search, payments ──
     def search(self, q: str, *, per: Optional[int] = None) -> dict:
-        """The app's search: documents, templates, forms and people, best first."""
+        """The app's search: documents, templates and people, best first."""
         return self._request("GET", "/api/v1/search", query={"q": q, **({"per": per} if per else {})})
 
-    def list_contracts(self, *, q: Optional[str] = None, limit: Optional[int] = None) -> dict:
-        """Signed contracts with their key dates (start, end, notice, renewal) and value."""
-        return self._request("GET", "/api/v1/contracts", query={k: v for k, v in {"q": q, "limit": limit}.items() if v is not None})
-
-    def set_contract_date(self, document_id: str, kind: str, date: Optional[str] = None, *, amount_minor: Optional[int] = None, currency: Optional[str] = None) -> dict:
-        """Correct one key date by hand (kind: start, end, notice, renewal or value; date YYYY-MM-DD or None). The signed PDF never changes."""
-        body: dict = {"kind": kind, "date": date}
-        if amount_minor is not None: body["amountMinor"] = amount_minor
-        if currency: body["currency"] = currency
-        return self._request("POST", f"/api/v1/contracts/{urllib.parse.quote(document_id, safe='')}/dates", body=body)
-
     def list_payments(self, *, before: Optional[str] = None, limit: Optional[int] = None) -> dict:
-        """Payments taken through documents and forms, newest first, with this month's figures."""
+        """Payments taken through documents, newest first, with this month's figures."""
         return self._request("GET", "/api/v1/payments", query={k: v for k, v in {"before": before, "limit": limit}.items() if v is not None})
 
     def refund_payment(self, payment_id: str, reason: str, *, amount_minor: Optional[int] = None, idempotency_key: Optional[str] = None) -> dict:
@@ -315,18 +296,10 @@ class Docustay:
         if amount_minor is not None: body["amountMinor"] = amount_minor
         return self._request("POST", f"/api/v1/payments/{urllib.parse.quote(payment_id, safe='')}/refund", body=body, idempotency_key=idempotency_key)
 
-    def list_automations(self) -> dict:
-        """The automations built on the canvas, with on/off, run count and recent runs."""
-        return self._request("GET", "/api/v1/automations")
-
-    def set_automation_on(self, automation_id: str, on: bool) -> dict:
-        """Switch an automation on (Pro) or off."""
-        return self._request("POST", f"/api/v1/automations/{urllib.parse.quote(automation_id, safe='')}/enable", body={"on": bool(on)})
-
-    # ── the template library: the 54 built-in Document and Form templates (every plan) ──
-    def list_library_templates(self, kind: Optional[str] = None) -> dict:
-        """The built-in templates; kind is "document" or "form"."""
-        return self._request("GET", "/api/v1/templates/library", query={"kind": kind} if kind else None)
+    # ── the template library: the 54 built-in templates (every plan) ──
+    def list_library_templates(self) -> dict:
+        """The built-in templates."""
+        return self._request("GET", "/api/v1/templates/library")
 
     def get_library_template(self, slug: str) -> dict:
         """One built-in in full: its fields (who fills each one) and its guidance."""
@@ -339,33 +312,6 @@ class Docustay:
     def customize_library_template(self, slug: str, name: Optional[str] = None) -> dict:
         """Your own editable copy of a built-in, as a new template (counts toward Free's 5 new templates a month)."""
         return self._request("POST", f"/api/v1/templates/library/{urllib.parse.quote(slug, safe='')}/customize", body={"name": name} if name else {})
-
-    # ── forms (one link many people fill in; each response is a document) ──
-    def list_forms(self) -> dict:
-        return self._request("GET", "/api/v1/forms")
-
-    def list_form_templates(self) -> dict:
-        """The workspace's form templates (its own and the thirty built-in ones), with their default Publish settings."""
-        return self._request("GET", "/api/v1/forms/templates")
-
-    def get_form(self, form_id: str) -> dict:
-        return self._request("GET", f"/api/v1/forms/{urllib.parse.quote(form_id)}")
-
-    def list_form_responses(self, form_id: str, limit: Optional[int] = None, offset: Optional[int] = None) -> dict:
-        """Newest first; each response's id opens it with get_document()."""
-        q = {k: str(v) for k, v in (("limit", limit), ("offset", offset)) if v}
-        return self._request("GET", f"/api/v1/forms/{urllib.parse.quote(form_id)}/responses" + (("?" + urllib.parse.urlencode(q)) if q else ""))
-
-    def publish_form(self, template_id: str, slug: str, settings: Optional[dict] = None, enabled: bool = True) -> dict:
-        """Give a form template its public link and settings."""
-        return self._request("POST", "/api/v1/forms/publish", body={"templateId": template_id, "slug": slug, "settings": settings or {}, "enabled": enabled})
-
-    def set_form_open(self, form_id: str, open: bool) -> dict:
-        return self._request("POST", f"/api/v1/forms/{urllib.parse.quote(form_id)}/open", body={"open": bool(open)})
-
-    def unpublish_form(self, form_id: str) -> dict:
-        """The link stops working; the form template and every response are kept."""
-        return self._request("POST", f"/api/v1/forms/{urllib.parse.quote(form_id)}/unpublish", body={})
 
     # ── skills (plays), playbooks (packs) and drafts (Pro) ──
     def list_plays(self, kind: Optional[str] = None, category: Optional[str] = None) -> dict:
@@ -464,13 +410,19 @@ class Docustay:
         if ocr is False: body["ocr"] = False
         return self._request("POST", "/api/v1/documents/detect-fields", body=body)
 
-    # -- reports and teams -------------------------------------------------
-    def report(self, from_: Optional[str] = None, to: Optional[str] = None, team: Optional[str] = None) -> dict:
-        return self._request("GET", "/api/v1/reports", query={"from": from_, "to": to, "team": team})
-
+    # -- usage and teams ---------------------------------------------------
     def usage(self) -> dict:
-        """Documents sent this month and emails sent today, against the plan's limits."""
+        """Documents sent this allowance period (the billing period on a paid plan, the calendar month on Free; ``periodStart`` and ``periodEnd``) and emails sent today, against the plan's limits."""
         return self._request("GET", "/api/v1/usage")
+
+    def preflight(self, action: str, *, documents: int | None = None, people: int | None = None, bytes: int | None = None, item: str | None = None) -> dict:
+        """Ask BEFORE acting: may I, what does it cost, what are my options. ``action`` is one of ``send_document``, ``bulk_send`` (``documents``), ``invite_person`` / ``remove_person`` (``people``), ``ai_draft``, ``ai_edit``, ``ai_read_file``, ``create_template``, ``upload`` (``bytes``), ``use_feature`` (``item``) or ``connect_payments``. Reads only: nothing is sent, charged or stored. The answer has ``allowed``, ``cost["minor"]`` (whole cents), ``severity`` (none, info, warn, limit, blocked), ``reason`` (the refusal code the action would carry), ``options`` (cheapest first) and ``message``."""
+        body: dict = {"action": action}
+        if documents is not None: body["documents"] = documents
+        if people is not None: body["people"] = people
+        if bytes is not None: body["bytes"] = bytes
+        if item: body["item"] = item
+        return self._request("POST", "/api/v1/preflight", body=body)
 
     def list_teams(self) -> dict:
         return self._request("GET", "/api/v1/teams")
@@ -495,7 +447,12 @@ def verify_webhook(secret: str, headers: Any, body: "str | bytes", tolerance_sec
         raise ValueError("webhook timestamp outside the tolerance")
     raw = secret.removeprefix("whsec_") if hasattr(secret, "removeprefix") else (secret[6:] if secret.startswith("whsec_") else secret)
     raw = raw.replace("-", "+").replace("_", "/")
-    key = base64.b64decode(raw + "=" * (-len(raw) % 4))
+    try:
+        key = base64.b64decode(raw + "=" * (-len(raw) % 4), validate=True)
+    except ValueError:
+        key = b""
+    if not key:
+        raise ValueError("that webhook secret is not in the whsec_… form; copy it again from the endpoint's page")
     text = body if isinstance(body, str) else body.decode("utf-8")
     expected = base64.b64encode(hmac.new(key, f"{wid}.{ts}.{text}".encode(), hashlib.sha256).digest()).decode()
     for part in str(sig).split(" "):

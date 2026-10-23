@@ -14,7 +14,7 @@
   async function submit(e) {
     e.preventDefault(); problem = null;
     const need = await minPassword();
-    if (password.length < need) { problem = need === 8 ? t("Choose a password of at least 8 characters.") : t("Choose a password of at least 6 characters."); return; }
+    if (password.length < need) { problem = t("Choose a password of at least 8 characters."); return; }
     busy = true;
     try { await acceptInviteWithPassword({ token, email: info.email, password }); markSignedIn(); await goto("/documents", { invalidateAll: true }); }
     catch (err) { problem = err.message; } finally { busy = false; }
@@ -27,7 +27,7 @@
   <p class="mt-4 text-sm"><a class="text-brand" href="/login">{t("Sign in")}</a></p>
 {:else if info}
   <h1 class="text-2xl font-bold tracking-tight">{t("Join {name} on Docustay", { name: info.practiceName })}</h1>
-  <p class="mt-2 text-sm text-mute" data-testid="invite-about">{t("{who} invited you as {role}.", { who: info.inviterName, role: info.role === "admin" ? t("an admin") : t("a member") })}</p>
+  <p class="mt-2 text-sm text-mute" data-testid="invite-about">{t("{who} invited you as {role}.", { who: info.inviterName, role: (info.staffRole ?? info.role) === "admin" ? t("an admin") : t("a member") })}</p>
   {#if problem}<p class="mt-4 rounded-lg border border-bad-line bg-bad-bg px-3 py-2 text-sm text-bad" role="alert">{problem}</p>{/if}
   <form class="mt-5 space-y-4" onsubmit={submit} data-testid="invite-form">
     <div><label class="label" for="ie">{t("Email")}</label><input id="ie" class="field" type="email" value={info.email} readonly /></div>

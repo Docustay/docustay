@@ -27,8 +27,9 @@ const ID = "11111111-1111-4111-8111-111111111111", KEY = "dsl_" + "a".repeat(28)
 const get = async ({ key }) => key.endsWith("latest.tgz") ? { ok: true, body: Buffer.from("BUNDLE"), sha256: "x" } : { ok: false, status: 404 };
 const good = { key_hash: hash(KEY), install_id: null, expires_at: new Date(Date.now() + 864e5), revoked_at: null };
 test("delivery: a valid key gets the bundle (positive control)", async () => { const r = await deliverAddon(mkTx(good), { tenantId: "t", key: KEY, installId: ID }, { get }); assert.equal(r.body.toString(), "BUNDLE"); });
-test("delivery: unknown, revoked, expired and other-install keys all get the same refusal and no bytes", async () => {
-  for (const lic of [null, { ...good, revoked_at: new Date() }, { ...good, expires_at: new Date(Date.now() - 1000) }, { ...good, install_id: "22222222-2222-4222-8222-222222222222" }])
+test("delivery: unknown, revoked and expired keys all get the same refusal and no bytes", async () => {
+  for (const lic of [null, { ...good, revoked_at: new Date() }, { ...good, expires_at: new Date(Date.now() - 1000) }])
     await assert.rejects(deliverAddon(mkTx(lic), { tenantId: "t", key: KEY, installId: ID }, { get }), /not valid/);
 });
+test("delivery: a second install on the same key is NOT refused (21 Oct 2026: warn, never block)", async () => { const r = await deliverAddon(mkTx({ ...good, install_id: "22222222-2222-4222-8222-222222222222" }), { tenantId: "t", key: KEY, installId: ID }, { get }); assert.equal(r.body.toString(), "BUNDLE"); });
 test("delivery: no key at all is refused", async () => assert.rejects(deliverAddon(mkTx(good), { tenantId: "t", key: "", installId: ID }, { get }), /not valid/));

@@ -77,7 +77,7 @@ const row = (label, { periodic = false } = {}) =>
                   retrySeconds: periodic ? PERIODIC_RETRY_SECONDS : RETRY_SCHEDULE_SECONDS });
 
 /** Graphile priority per task (LOWER RUNS FIRST; everything not listed is 0). A signed copy never waits behind AI drafts, bulk sends, reminders or sweeps. */
-export const JOB_PRIORITY = Object.freeze({ archive_document_pdf: -20, dispatch_outbox: -10, document_ai_draft: -5, document_detect_page: -5, run_document_playbooks: -5 });   // Run 9: a playbook starts as a person finishes signing; the next document goes out ahead of the minute sweeps   // a person is watching an AI draft: ahead of sweeps, bulk sends and reminders (0), behind the sealed copy
+export const JOB_PRIORITY = Object.freeze({ archive_document_pdf: -20, dispatch_outbox: -10, document_ai_draft: -5, document_detect_page: -5 });   // the next document goes out ahead of the minute sweeps   // a person is watching an AI draft: ahead of sweeps, bulk sends and reminders (0), behind the sealed copy
 
 export const JOB_POLICY = Object.freeze({
   dispatch_outbox:            row("Delivering a practice's events to their listeners", { periodic: true }),
@@ -90,7 +90,6 @@ export const JOB_POLICY = Object.freeze({
   deliver_n8n:                row("Sending an event to n8n's inbound webhook"),
   retry_n8n:                  row("Re-sending a practice's failed n8n deliveries", { periodic: true }),
   archive_document_pdf:       row("Saving a signed document's PDF"),
-  run_document_playbooks:     row("Running an automation: starting it from a signed document, or carrying on after its wait"),
   seed_template_library:      row("Bringing each workspace's built-in templates up to the library's current version"),
   reencrypt_document_files:   row("Sealing each workspace's stored document files with its own key"),
   close_orphan_tasks:         row("Closing tasks whose subject is gone", { periodic: true }),

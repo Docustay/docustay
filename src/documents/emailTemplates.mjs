@@ -122,6 +122,20 @@ export const DOCUMENT_EMAIL_TEMPLATES = Object.freeze([
     },
   },
   {
+    // R13-D265: a signer passed their part on — the owner learns who signs now
+    key: "documents.delegated",
+    family: "documents",
+    name: "Passed on",
+    description: "Internal notice: a person passed their part of a document you sent to someone else.",
+    event: "documents.document.delegated",
+    recipients: "resolved from the event's own subject (falls back to practice staff)",
+    schema: z.object({ practiceName: z.string(), recipientName: z.string(), summary: z.string(), link: z.string() }),
+    liquid: {
+      subject: "{{ practiceName }}: {{ summary }}",
+      body: "Hello {{ recipientName }},\n\n{{ summary }}{% if link != '' %}\n\nOpen it: {{ link }}{% endif %}\n\n— {{ practiceName }}",
+    },
+  },
+  {
     key: "documents.bounced",
     family: "documents",
     name: "Email bounced",
@@ -171,32 +185,6 @@ export const DOCUMENT_EMAIL_TEMPLATES = Object.freeze([
     liquid: {
       subject: "{{ practiceName }}: {{ summary }}",
       body: "Hello {{ recipientName }},\n\n{{ summary }}\n\n— {{ practiceName }}",
-    },
-  },
-  {
-    key: "documents.key_date_due",
-    family: "documents",
-    name: "Renewal notice date",
-    description: "Internal notice (Pro): a signed contract's notice date is 30 or 7 days away.",
-    event: "documents.key_date.due",
-    recipients: "resolved from the event's own subject (falls back to practice staff)",
-    schema: z.object({ practiceName: z.string(), recipientName: z.string(), summary: z.string(), link: z.string() }),
-    liquid: {
-      subject: "{{ practiceName }}: {{ summary }}",
-      body: "Hello {{ recipientName }},\n\n{{ summary }} If the contract should not renew, this is the time to say so.{% if link != '' %}\n\nOpen it: {{ link }}{% endif %}\n\n— {{ practiceName }}",
-    },
-  },
-  {
-    key: "documents.playbook_ran",
-    family: "documents",
-    name: "An automation told you",
-    description: "Internal notice (Pro): an automation reached its \"tell me\" step.",
-    event: "documents.playbook.ran",
-    recipients: "resolved from the event's own subject (falls back to practice staff)",
-    schema: z.object({ practiceName: z.string(), recipientName: z.string(), summary: z.string(), link: z.string() }),
-    liquid: {
-      subject: "{{ practiceName }}: {{ summary }}",
-      body: "Hello {{ recipientName }},\n\n{{ summary }}{% if link != '' %}\n\nOpen it: {{ link }}{% endif %}\n\n— {{ practiceName }}",
     },
   },
   {

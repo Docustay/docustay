@@ -10,9 +10,7 @@ export const EXPLORE_PRO_URL = "https://docustay.app/pricing#pro";
 
 /** Which Pro item a tool call needs, if any. Pure. */
 export function proItemFor(name, input) {
-  void input;
-  if (name === "docustay.confirm.bulk_send") return "ai_bulk";
-  if (SCRIBE_ACTION_TOOLS.has(name)) return "scribe_actions";
+  void name; void input;   // v1 item 16: Scribe actions and list sends are on every plan; no tool needs Pro any more
   return null;
 }
 /** Run 9 (the maintainer, decision 2): Scribe ACTING for the person — sending, reminding, voiding, making a template, setting reminders — is Pro. Asking, reading, explaining, the checks, a copy or a draft from a
@@ -22,16 +20,8 @@ const SCRIBE_ACTION_TOOLS = new Set([...SCRIBE_ACTIONS].map((a) => `docustay.con
 
 /** The Pro items a person can ASK for in words, in the order they are tried. Pure regexes over the person's message (English; other wordings still meet the backstop). */
 const INTENTS = Object.freeze([
-  { item: "bulk_send", re: /\b(bulk[- ]?send|mass[- ]?(send|email)|send (out )?([a-z]+ ){0,4}to (a |my |the |this |that |our |all |everyone on )?(([a-z]+ )?list|csv|spreadsheet|mailing list|\d{2,} (people|clients|customers|contacts|recipients|signers|employees|staff|students|members|tenants|parents|volunteers))|send (it |this )?to (everyone|all) (on|in) (a |my |the )?(list|csv|spreadsheet)|(from|using) (a |my |the )?(csv|spreadsheet))\b/i },
   { item: "custom_plays", re: /\b(make|create|build|write|save|set up|add)\s+(me\s+)?(a |an |my |our )?(own |custom |new )?(play|playbook)s?\b(?!\s+(to|for) (make|create|draft))|\bmy own (plays?|playbooks?)\b/i },
-  { item: "recurring_payments", re: /\b(instal{1,2}ments?|payment plan|recurring (payment|charge|billing)s?|split (the |this )?payment|pay (it )?(in|over) (\d+|two|three|four|six|twelve) (months|payments|parts)|charge (them |the signer |him |her )?(every|each) (week|month|year)|subscription (payment|in the document|inside the document))\b/i },
-  { item: "auto_reminders", re: /\b(automatic|automated|auto)[- ]?remind(er|ers|ing)?\b|\bremind (them|people|signers) automatically\b/i },
-  { item: "team_roles", re: /\b(add|invite)\s+(a |my |another |more )?(team ?mates?|colleagues?|co-?workers?|staff|team members?|users?|people to (my|the|our) (team|workspace))\b|\bteam roles?\b/i },
-  { item: "hide_footer", re: /\b(remove|hide|turn off|get rid of|take off)\s+(the\s+)?(docustay\s+)?(footer|branding|"?sent with docustay"?)\b/i },
-  { item: "own_signing_domain", re: /\bsigning (links?|pages?) (on|from|at) (my|our) (own )?(domain|address|website)\b|\b(custom|own) signing domain\b|\bwhite[- ]?label\b/i },
   { item: "plays_api", re: /\bplays? (api|endpoint)s?\b|\bdrafts api\b/i },
-  // Run 9: asking Scribe to remind or void MANY at once is plainly an action; one-off wording ("send this") still meets the backstop on the card's tool
-  { item: "scribe_actions", re: /\bremind (everyone|everybody|all (of )?(the |my )?(people|signers|clients|tenants)?|them all)\b|\b(void|cancel) (all|every|these|those) (of )?(my |the )?(documents?|leases?|contracts?|agreements?)\b/i },
 ]);
 /** The first Pro item the words ask for, or null. Pure. */
 export function proIntent(text) {
@@ -42,24 +32,16 @@ export function proIntent(text) {
 
 /** What each Pro item is called, and what the person CAN do on their plan instead (each a message the chat sends, or a page). One list for the up-front answer and the backstop. */
 const PRO_ANSWERS = Object.freeze({
-  bulk_send: { what: "Sending one template to a list of people", instead: [{ label: "Send it to one person myself", link: "/create" }, { label: "Make a form with one link", prompt: "Make me a form that everyone on my list can fill in from one link." }] },
-  ai_bulk: { what: "Sending to a list from the chat", instead: [{ label: "Send it to one person myself", link: "/create" }, { label: "Make a form with one link", prompt: "Make me a form that everyone on my list can fill in from one link." }] },
   custom_plays: { what: "Your own plays and playbooks", instead: [{ label: "Use a built-in play", link: "/plays" }, { label: "Keep it as a template", prompt: "Help me make this into a template instead." }] },
-  recurring_payments: { what: "Installments and subscriptions inside a document", instead: [{ label: "Take a one-time payment", prompt: "Add a one-time payment to this document." }, { label: "Take a deposit", prompt: "Add a deposit to this document." }] },
-  auto_reminders: { what: "Automatic reminders", instead: [{ label: "See who has not signed", prompt: "Which of my documents are still waiting for a signature?" }, { label: "Open my documents", link: "/documents" }] },
-  team_roles: { what: "Adding people to your team, with roles", instead: [{ label: "Send a document to them instead", link: "/create" }] },
-  hide_footer: { what: "Removing the Docustay footer", instead: [{ label: "Add my logo", link: "/settings?tab=appearance" }] },
-  own_signing_domain: { what: "Signing links on your own domain", instead: [{ label: "Send email from my own domain", link: "/settings?tab=email" }] },
   plays_api: { what: "The Plays and drafts API", instead: [{ label: "Use the documents API", link: "/settings?tab=dev" }] },
-  scribe_actions: { what: "Scribe sending, reminding, voiding and making templates for you", instead: [{ label: "Show me who has not signed", prompt: "Which of my documents are still waiting for a signature?" }, { label: "Open my documents", link: "/documents" }] },
 });
-const ITEM_OF = Object.freeze({ bulk_send: "bulk_send", ai_bulk: "bulk_send" });   // the plan item each answer is checked against
+const ITEM_OF = Object.freeze({});   // the plan item each answer is checked against (none differ now)
 
 /** The card both layers show. Pure. */
 function proCard(item) {
   const a = PRO_ANSWERS[item] ?? { what: "This", instead: [] };
-  const body = `${a.what} is part of Docustay Pro.${a.instead.length ? " On your plan I can still:" : ""}`;
-  return { item, title: "This is part of Pro", body, instead: a.instead, link: EXPLORE_PRO_URL, linkLabel: "Explore Pro", external: true };
+  const body = `${a.what} is part of Docustay Pro and Lifetime.${a.instead.length ? " On your plan I can still:" : ""}`;
+  return { item, title: "This is part of Pro and Lifetime", body, instead: a.instead, link: EXPLORE_PRO_URL, linkLabel: "Explore Pro", external: true };
 }
 
 const entitledTo = async (db, tenantId, item) => {
@@ -74,6 +56,7 @@ export function limitCard(result) {
   const code = result?.code;
   const facts = { code, used: result.used ?? null, limit: result.limit ?? null, resetsAt: result.resetsAt ?? null };   // F1012: the browser words the card from these, in the person's language
   if (code === "plan_template_limit") return { ...facts, item: "unlimited_templates", title: "This month's new templates are used", body: String(result.error ?? ""), instead: [{ label: "Use one of my templates", link: "/templates" }, { label: "Make a one-off document", prompt: "Make this as a one-off document instead, not a template." }], link: EXPLORE_PRO_URL, linkLabel: "Explore Pro", external: true };
+  if (code === "plan_signer_limit") return { ...facts, item: "signer_limit", title: "This month's new signers are used", body: String(result.error ?? ""), instead: [{ label: "Send to someone I already sent to", link: "/contacts" }, { label: "See my usage", link: "/billing" }], link: EXPLORE_PRO_URL, linkLabel: "Explore Pro", external: true };
   if (code === "plan_document_limit") return { ...facts, item: "unlimited_documents", title: "This month's documents are used", body: String(result.error ?? ""), instead: [{ label: "See my usage", link: "/billing" }], link: EXPLORE_PRO_URL, linkLabel: "Explore Pro", external: true };
   return null;
 }

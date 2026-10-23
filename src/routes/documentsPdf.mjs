@@ -4,7 +4,20 @@
 // ★ Nothing here knows a document table: it all goes through the Documents front door.
 // ★ The public routes are SIGNER-scoped: a `pdf_signature` link opens a transaction whose viewer is the recipient's own party row (migration 0604). The link is spent LAST, on the write that completes their part —
 //   a failed signature never burns it; opening and saving never spend it.
+import { listTeammates, waitingOnMe } from "../documents/teamRecipients.mjs";
+import { pageThumb } from "../documents/thumbnail.mjs";
+import { liveStateInputs, liveStateBytes } from "../documents/pdfArchive.mjs";
+// the live picture of a document out for signing is drawn from a few pages at a time: keep the last drawn few (by their version key) so three page requests draw it once. No database handle is held while drawing.
+const liveCache = new Map();
+async function liveBytes(key, live) {
+  if (liveCache.has(key)) return liveCache.get(key);
+  const bytes = await liveStateBytes(live);
+  liveCache.set(key, bytes); while (liveCache.size > 12) liveCache.delete(liveCache.keys().next().value);
+  return bytes;
+}
+import { notInDocustay } from "../documents/notInDocustay.mjs";
 import { listLibrary, getLibraryTemplate, useBuiltin, customizeBuiltin, ensureBuiltin } from "../documents/frontDoor.mjs";
+import { enabledPackContents, packsFirst } from "../documents/plays/store.mjs";
 import { replaceDraftFile } from "../documents/engine/revise.mjs";
 import { forbidden, invalid, notFound } from "../http/errors.mjs";
 import { ports } from "../documents/ports.mjs";
@@ -19,7 +32,7 @@ import {
   listWorkspacePayments, sendPdfDocument, sendTestToSender, remindPdfParties, signNowLink, reassignParty, voidPdfDocument, trackPdfDocument,
   readFileBytes, createDetectJob, getDetectJob, cancelDetectJob, applyDetectJob, findFieldsOnDraft, splitPacket, embedOriginsForParty, createFromHtml, createTemplateFromStarter, starterCatalogue, shareDownloadLink, delegateAsParty, openDownload, sendDownloadCode, verifyDownloadCode, readDownload, fetchArchivedPdf, verifyFacts, evidencePackage, auditLogCsv, sendCodeForParty, verifyForParty, requestChangesAsParty, bulkSend, startPayment, confirmPayment, refundPayment, exportOrganization, personReport, erasePerson, listPdfTemplates, getPdfTemplate, readTemplateFile, updatePdfTemplateMeta, newPdfTemplateVersion, diffPdfTemplates, clonePdfTemplate, approvePdfTemplate, rejectPdfTemplate, retirePdfTemplate, uploadFileForField, readAttachmentForParty, removeAttachment, extendParty, decideAsApprover, acknowledgeAsViewer, assistAsParty, kioskTemplates, kioskStart, openForParty, openAsTest, savePartyProgress, signAsParty, declineAsParty, contentDisposition,
 } from "../documents/frontDoor.mjs";
-import { noteAccess, listAccess, accessCsv, sendCheckFor } from "../documents/frontDoor.mjs";
+import { noteAccess, listAccess, accessCsv, sendCheckFor, withSignedCopyLink } from "../documents/frontDoor.mjs";
 
 const SECTION = "/documents";
 const LINK_REFUSED_TEXT = "That link is not valid. It may have been used already, expired, or been cancelled — ask for a new one.";
@@ -39,7 +52,7 @@ const voidIt = (tx, a) => voidPdfDocument(tx, { tenantId: a.tenantId, instanceId
 const replaceFile = (tx, a) => replaceDraftFile(tx, { tenantId: a.tenantId, instanceId: need(a.instanceId, "instanceId"), withInstanceId: need(a.withInstanceId, "withInstanceId") });
 const sendAgain = (tx, a) => sendAgainPdf(tx, { tenantId: a.tenantId, instanceId: need(a.instanceId, "instanceId"), actorUserId: a.actorUserId ?? null });
 const discard = (tx, a) => deletePdfDraft(tx, { tenantId: a.tenantId, instanceId: need(a.instanceId, "instanceId") });
-const saveTemplate = (tx, a) => savePdfTemplate(tx, { tenantId: a.tenantId, instanceId: need(a.instanceId, "instanceId"), name: a.name ?? null, actorUserId: a.actorUserId ?? null, kind: a.kind === "form" ? "form" : "document" });
+const saveTemplate = (tx, a) => savePdfTemplate(tx, { tenantId: a.tenantId, instanceId: need(a.instanceId, "instanceId"), name: a.name ?? null, actorUserId: a.actorUserId ?? null, kind: "document" });
 const fromTemplate = (tx, a) => createPdfFromTemplate(tx, { tenantId: a.tenantId, templateId: need(a.templateId, "templateId"), title: a.title ?? null, actorUserId: a.actorUserId ?? null });
 
 const findFields = (tx, a) => findFieldsOnDraft(tx, { instanceId: need(a.instanceId, "instanceId") });
@@ -69,7 +82,7 @@ const dataReport = (tx, a) => personReport(tx, { email: need(a.email, "email") }
 const dataErase = (tx, a) => erasePerson(tx, { tenantId: a.tenantId, email: need(a.email, "email"), actorUserId: a.actorUserId ?? null });
 // §23.5.11 — a refund of a payment made while signing: the delete verb (an admin's act); the provider is asked first
 const refundIt = (tx, a) => refundPayment(tx, { tenantId: a.tenantId, paymentId: need(a.paymentId, "paymentId"), amountMinor: a.amountMinor ?? null, reason: a.reason, actorUserId: a.actorUserId ?? null });
-const kiosk = (tx, a) => kioskStart(tx, { tenantId: a.tenantId, actorUserId: a.actorUserId ?? null, templateId: need(a.templateId, "templateId"), name: a.name, email: a.email ?? null });
+const kiosk = async (tx, a) => { await notInDocustay(tx); return kioskStart(tx, { tenantId: a.tenantId, actorUserId: a.actorUserId ?? null, templateId: need(a.templateId, "templateId"), name: a.name, email: a.email ?? null }) };
 
 export const DOCUMENT_PDF_WRITES = Object.freeze([
   { path: "/api/documents/pdf/uploads", section: SECTION, fn: upStart, object: "document", action: "edit", subject: null, self: true },
@@ -150,11 +163,18 @@ export function registerDocumentPdfRoutes(app, { runTenantScoped, runSignerScope
   });
   // Run 9 Part 3.7 (Pay 3): the Payments page — every payment taken through a payment box, and this month's figures (documents the person may open only)
   read("/api/documents/payments", ({ db, tenantId, c }) => listWorkspacePayments(db, { tenantId, before: c.req.query("before") || null, limit: Number(c.req.query("limit") ?? 50) }));
-  read("/api/documents/pdf/recipients", ({ db, c }) => searchRecipients(db, { q: c.req.query("q") ?? "", limit: 8 }));
+  read("/api/documents/pdf/recipients", ({ db, c, principal }) => searchRecipients(db, { q: c.req.query("q") ?? "", limit: 12, selfId: principal.appUserId ?? null }));
+  // 21 Oct 2026 — sending to teammates: the people of this workspace (every role may see who they can send to), and what is waiting on the signed-in person
+  read("/api/documents/teammates", async ({ db, c, principal }) => ({ teammates: await listTeammates(db, { q: c.req.query("q") ?? "", limit: 50, selfId: principal.appUserId ?? null }) }));
+  read("/api/documents/waiting-on-me", async ({ db, principal }) => ({ documents: principal.appUserId ? await waitingOnMe(db, { userId: principal.appUserId }) : [] }));
   read("/api/documents/pdf/uploads/:uploadId", ({ db, c }) => uploadStatus(db, { uploadId: c.req.param("uploadId") }));
   // ★ fixed-name routes BEFORE `/:id`: Hono answers in registration order, and "export.zip" / "kiosk-templates" would otherwise be taken for a document id
   // Run 9 Part 4R: the built-in library of this workspace (each built-in, with this workspace's master id once it has one) and one built-in in full (its fields and its Scribe guidance)
-  read("/api/documents/library", ({ db, c }) => listLibrary(db, { kind: c.req.query("kind") || null }));
+  read("/api/documents/library", async ({ db, c }) => {   // R13-D336: the switched-on packs' templates first, for every list that shows the library (Templates, New document, Packs)
+    const out = await listLibrary(db, { kind: c.req.query("kind") || null });
+    const { templates } = await enabledPackContents(db);
+    return { ...out, templates: packsFirst(out.templates ?? [], templates, (t) => `builtin:${t.slug}`) };
+  });
   read("/api/documents/library/:slug", ({ db, c }) => getLibraryTemplate(db, { slug: c.req.param("slug"), use: c.req.query("use") || null }));
   // the starter templates are the same for everyone (the website shows them too): no workspace data, so no sign-in is asked for
   app.get("/api/documents/starters", async (c) => c.json({ starters: await starterCatalogue({ kind: c.req.query("kind") === "form" ? "form" : "document" }) }));
@@ -207,6 +227,27 @@ export function registerDocumentPdfRoutes(app, { runTenantScoped, runSignerScope
       return { bytes: r.body, title: doc.title };
     }, { bucket: "documents" });
     return c.body(out.bytes, 200, { "content-type": "application/pdf", "content-disposition": contentDisposition("attachment", `${out.title} (signed).pdf`), "cache-control": "private, no-store" });
+  });
+
+  // a page as a picture: the first page small for lists and galleries, or ?w=480|720&page=N for the document page's preview (COMBINED-STYLE-SPEC section 4); 204 when the document has no PDF page to draw (the web falls back to a drawn page)
+  app.get("/api/documents/pdf/:id/thumb.png", async (c) => {
+    const out = await runTenantScoped(c, async ({ db, principal, tenantId }) => {
+      await guard(db, principal, tenantId);
+      const doc = await getPdfDocument(db, { tenantId, instanceId: c.req.param("id") });
+      let bytes = null, key = null, live = null;
+      if (doc.state === "executed") { const r = await fetchArchivedPdf(db, { instanceId: doc.id }).catch(() => null); if (r) { bytes = r.body; key = `sealed:${doc.id}`; } }
+      // a document that is out for signing shows what it is NOW: the sender's answers and every signature so far on the pages, a pale mark on what is still waiting (it used to show the blank original)
+      if (!bytes && doc.state !== "draft" && doc.state !== "executed" && c.req.query("original") !== "1" && Number(c.req.query("w")) >= 480) live = await liveStateInputs(db, doc.id).catch(() => null);
+      if (live) { key = `live:${doc.id}:${live.version}`; return { live, key }; }
+      if (!bytes) { const f = (doc.files ?? []).find((x) => /pdf/i.test(x.mime ?? x.content_type ?? "") || /\.pdf$/i.test(x.name ?? "")); if (f) { const r = await readFileBytes(db, { fileId: f.id }); bytes = r.bytes; key = f.sha256 ? `sha:${f.sha256}` : `file:${f.id}`; } }
+      return bytes ? { bytes, key } : null;
+    }, { bucket: "documents" });
+    if (out?.live) { try { out.bytes = await liveBytes(out.key, out.live); } catch { out.bytes = null; } if (!out.bytes) return c.body(null, 204); }
+    if (!out) return c.body(null, 204);   // 204, not 404: a missing picture is normal (the web draws a page instead) and must not show as an error in the browser's console
+    const w = Number(c.req.query("w")), pg = Number(c.req.query("page"));
+    const png = await pageThumb(out.key, out.bytes, { width: [120, 240, 480, 720].includes(w) ? w : 240, page: Number.isInteger(pg) && pg >= 1 && pg <= 50 ? pg : 1 });
+    if (!png) return c.body(null, 204);
+    return c.body(png, 200, { "content-type": "image/png", "cache-control": out.live ? "private, max-age=60" : "private, max-age=3600" });
   });
 
   // ★ §23.5.1 — the evidence package (zip) and the audit log (CSV), staff only
@@ -278,10 +319,12 @@ export function registerDocumentPdfRoutes(app, { runTenantScoped, runSignerScope
       chosen: body?.amount ?? null, origin: returnOrigin(c, body?.returnOrigin) ?? "", returnPath: String(body?.returnPath ?? ""), embedded: body?.embedded === true })).then((r) => c.json(r, 200)));
   // Run 9 Part 3.7: when the payment completes a signature that was held for it, the link is spent here — the act that finished this person's part (a webhook that completed it first leaves the
   // link able only to show the signed document: the party is signed, so signing again is refused)
+  // R13-D266: the signature that completes the document answers with the signer's own link to the signed copy
+  const withDownload = (db, tenantId, redeemed, out) => withSignedCopyLink(db, { tenantId, leadId: redeemed.subjectId, partyId: redeemed.issuedTo, out });
   app.post("/api/public/pdf/payment/confirm", (c) => party(c, async ({ db, tenantId, redeemed, body }) => {
     const out = await confirmPayment(db, { tenantId, leadId: redeemed.subjectId, partyId: redeemed.issuedTo, fieldId: need(body?.fieldId, "fieldId") });
     if (out.hold?.signed && body?.presented) await spend(body.presented, redeemed.subjectId);
-    return out;
+    return out.hold?.completed ? { ...out, hold: await withDownload(db, tenantId, redeemed, out.hold) } : out;
   }).then((r) => c.json(r, 200)));
   app.post("/api/public/pdf/progress", (c) => party(c, ({ db, tenantId, redeemed, body }) =>
     savePartyProgress(db, { tenantId, leadId: redeemed.subjectId, partyId: redeemed.issuedTo, values: body?.values ?? {} })).then((r) => c.json(r, 200)));
@@ -293,7 +336,7 @@ export function registerDocumentPdfRoutes(app, { runTenantScoped, runSignerScope
       reason: body?.reason ?? null, signatureMethod: body?.signatureMethod ?? null, witness: body?.witness && typeof body.witness === "object" ? body.witness : null, language: typeof body?.language === "string" ? body.language.slice(0, 2).toLowerCase() : null,
     });
     if (!out.held) await spend(body?.presented, redeemed.subjectId);   // Run 9 Part 3.7: a signature HELD for its payment has not finished this person's part — the link stays live for the payment
-    return out;
+    return withDownload(db, tenantId, redeemed, out);
   }).then((r) => c.json(r, 201)));
 
   // Part 30 item 5 — the expirable download link to the signed copy (a link token of its own purpose; nothing here can sign or change anything)
@@ -311,9 +354,8 @@ export function registerDocumentPdfRoutes(app, { runTenantScoped, runSignerScope
 
   // Part 30 item 5 — a signer passes their turn to someone else (when the organisation allows it)
   app.post("/api/public/pdf/delegate", (c) => party(c, async ({ db, tenantId, redeemed, body }) => {
-    const out = await delegateAsParty(db, { tenantId, leadId: redeemed.subjectId, partyId: redeemed.issuedTo, name: body?.name, email: body?.email });
-    await spend(body?.presented, redeemed.subjectId);
-    return out;
+    // R13-D053: no spend() here. delegateAsParty mints the new link, which REVOKES this person's old one inside this same transaction; spending the old link on a second connection then waited on that row lock until the lock timeout (500), the delegation rolled back, and the invitation email had already gone out.
+    return delegateAsParty(db, { tenantId, leadId: redeemed.subjectId, partyId: redeemed.issuedTo, name: body?.name, email: body?.email });
   }).then((r) => c.json(r, 201)));
 
   app.post("/api/public/pdf/decline", (c) => party(c, async ({ db, tenantId, redeemed, body }) => {

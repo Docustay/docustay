@@ -25,6 +25,7 @@ import { verifyTurnstile, assertBotCheckConfigured } from "../http/turnstile.mjs
 import { formSubmitLimiter } from "../http/rateLimit.mjs";
 import { requestEmailCode, verifyEmailCode } from "../auth/emailCode.mjs";
 import { unsubscribeByToken } from "../product/lifecycle.mjs";
+import { assertMayStartFree } from "../product/docustayIntegrity.mjs";
 import { trackEvent } from "../product/analytics.mjs";
 import { localAuthEnabled, ensureLocalIdentity } from "../auth/localIdentity.mjs";
 // ★★★ TASK 12.3 — `12-signup-first-run-people.md` §2/§4/§3.5/§3.6. `POST /api/signup/questions`
@@ -279,6 +280,9 @@ export function registerSignupRoutes(app, { runTenantScoped } = {}) {
       if (body.listing.address && typeof body.listing.address === "string") tenantForRun.address = body.listing.address;
     }
 
+    // 21 Oct 2026 (pricing integrity): the web page says this is a Docustay workspace; one Free workspace per person, no temporary addresses (checked again when the workspace is switched on, so leaving this field out gains nothing)
+    if (body.product === "docustay") await withSignupConnection((db) => assertMayStartFree((sql, p) => db.query(sql, p), { email, alias: false }));
+
     const runId = await withSignupConnection(async (db) => {
       const id = await createRun(db, {
         slug: String(tenantForRun?.slug ?? "").toLowerCase(),
@@ -361,6 +365,10 @@ export function registerSignupRoutes(app, { runTenantScoped } = {}) {
     const email = typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
     if (!email) throw invalid("email is required");
     if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw invalid("Enter a valid email address.", { field: "email" });
+
+    // 21 Oct 2026 (pricing integrity): Docustay's Free plan is one workspace per person and never a temporary address. Asked BEFORE an identity is made or a code is sent. The exact same address is simply someone coming back (it signs in), so only another spelling
+    // of an address that already has a Free workspace is turned away here; the workspace itself is checked again when it is made.
+    if (body.product === "docustay" && process.env.KEYSTONE_SELF_HOST !== "1") await withSignupConnection((db) => assertMayStartFree((sql, p) => db.query(sql, p), { email, alias: true }));
 
     // ★ `auth/email-already-exists` is ORDINARY here — "use the existing identity", the SAME
     //   principle the password path already applies to the same Firebase error (§6,

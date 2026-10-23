@@ -22,8 +22,6 @@ export async function usageFor(db, { tenantId, userId = null, window, now = new 
        count(*) FILTER (WHERE status IN ('ok','error') AND created_at > $4::timestamptz - interval '1 minute')::int                              AS per_minute,
        count(*) FILTER (WHERE status IN ('ok','error') AND created_at > $4::timestamptz - interval '1 hour')::int                                AS per_hour,
        count(*) FILTER (WHERE status IN ('ok','error') AND created_at >= $6)::int                                                               AS per_day,
-       count(*) FILTER (WHERE feature = 'think_harder' AND status = 'ok' AND created_at >= $2 AND created_at < $3)::int                         AS think_month,
-       count(*) FILTER (WHERE feature = 'think_harder' AND status = 'ok' AND created_at >= $6)::int                                             AS think_day,
        count(*) FILTER (WHERE status <> 'ok' AND created_at > $4::timestamptz - interval '10 minutes')::int                                      AS failures,
        extract(epoch FROM max(created_at) FILTER (WHERE status <> 'ok' AND created_at > $4::timestamptz - interval '10 minutes')) * 1000        AS last_failure_ms
      FROM keystone.document_ai_usage_event
@@ -31,7 +29,7 @@ export async function usageFor(db, { tenantId, userId = null, window, now = new 
     [tenantId, w.start, w.end, now, userId, dayStart]);
   return {
     creditsUsed: num(r.credits_used), usdMicroUsed: num(r.usd_micro), userCreditsUsed: num(r.user_credits), users: num(r.users),
-    perMinute: num(r.per_minute), perHour: num(r.per_hour), perDay: num(r.per_day), thinkMonth: num(r.think_month), thinkDay: num(r.think_day),
+    perMinute: num(r.per_minute), perHour: num(r.per_hour), perDay: num(r.per_day),
     failuresInWindow: num(r.failures), lastFailureAt: r.last_failure_ms == null ? null : Math.round(Number(r.last_failure_ms)),
   };
 }
@@ -45,7 +43,7 @@ export async function breakdownFor(db, { tenantId, window, now = new Date() }) {
   const by = Object.fromEntries(rows.map((x) => [x.feature, { calls: x.calls, credits: Math.round(x.credits * 1000) / 1000 }]));
   const sum = (...ks) => ks.reduce((a, k) => ({ calls: a.calls + (by[k]?.calls ?? 0), credits: a.credits + (by[k]?.credits ?? 0) }), { calls: 0, credits: 0 });
   const round = (o) => ({ calls: o.calls, credits: Math.round(o.credits * 1000) / 1000 });
-  return { drafts: round(sum("draft")), edits: round(sum("edit")), file_reading: round(sum("file_read", "detect", "vision_check")), think_harder: round(sum("think_harder")), other: round(sum("chat", "play", "check", "review", "summary")) };
+  return { drafts: round(sum("draft")), edits: round(sum("edit")), file_reading: round(sum("file_read", "detect", "vision_check")), other: round(sum("chat", "play", "check", "review", "summary")) };
 }
 
 /** Write one ledger row. A call that failed after the provider read the request still cost real dollars (they count toward the caps), but it charges the person no credits; a refusal costs nothing. Never throws into the caller's work: a ledger that cannot be written is logged, and the call it describes has already happened. */

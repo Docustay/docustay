@@ -55,6 +55,7 @@ export const PUBLIC_ROUTES = [
   { id: "tool-sign-pdf", match: (p) => (p === "/tools/sign-pdf" ? {} : null), file: "routes/toolSignPdf.jsx", load: null },
   { id: "tool-signature-maker", match: (p) => (p === "/tools/signature-maker" ? {} : null), file: "routes/toolSignatureMaker.jsx", load: null },
   { id: "sign-pdf", match: (p) => (p === "/sign/pdf" ? {} : null), file: "routes/signPdf.jsx", load: null },
+  { id: "download", match: (p) => (p === "/download" ? {} : null), file: "routes/download.jsx", load: null },
   { id: "sign", match: (p) => (p === "/sign" ? {} : null), file: "routes/sign.jsx", load: null },
   {
     id: "unsubscribe", match: (p) => { const m = /^\/u\/([^/]+)$/.exec(p); return m ? { token: decodeURIComponent(m[1]) } : null; }, file: "routes/u/token.jsx",

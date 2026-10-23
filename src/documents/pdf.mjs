@@ -419,7 +419,7 @@ async function seal(bytes, { title, executedAt, productName = "Docustay" }) {
   let sealed = await signpdf.sign(withPlaceholder, signer, new Date(executedAt));
   let timestamped = true;
   try {
-    const stamped = await timestampPdf({ pdf: sealed, tsa: { url: tsaUrl() } });
+    const stamped = await timestampPdf({ pdf: sealed, tsa: { url: tsaUrl() }, omitModificationTime: false });
     sealed = stamped.pdf;
   } catch (err) {
     // A TSA outage must not block signing — the document is still validly SIGNED (the PKCS#7 seal), only without an independent timestamp. Logged, never thrown.
@@ -433,7 +433,7 @@ async function seal(bytes, { title, executedAt, productName = "Docustay" }) {
 /** B-3 (Run 6): add the independent trusted timestamp to a sealed copy that was sealed without one (the timestamp service did not answer). An incremental update after the seal, exactly what `seal` does inline; returns the new bytes, or null when the service still does not answer. */
 export async function addTrustedTimestamp(sealedBytes) {
   try {
-    const stamped = await timestampPdf({ pdf: sealedBytes, tsa: { url: tsaUrl() } });
+    const stamped = await timestampPdf({ pdf: sealedBytes, tsa: { url: tsaUrl() }, omitModificationTime: false });
     return Buffer.from(stamped.pdf);
   } catch (err) {
     console.error(`document TSA timestamp (re-stamp) failed (${tsaUrl()}): ${err.message}`);

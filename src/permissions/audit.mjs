@@ -202,6 +202,8 @@ export const ROUTE_ACTIONS = Object.freeze([
   //   work, not built as of this task) — listed here anyway because this is the frozen-name set.
   "loyalty.manage",
   "gift_card.manage",
+  // 21 Oct 2026: a RANK action (assertMay.mjs RANK_ACTIONS), not a role_action row: Admins and Owners may create, publish, archive, import and switch on plays and playbooks.
+  "play.manage",
 ]);
 
 /** Keep only the keys `AUDIT_FIELDS[action]` allows; everything else is dropped, not redacted. */

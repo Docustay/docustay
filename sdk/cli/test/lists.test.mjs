@@ -10,9 +10,3 @@ test("documents list prints a count of people when the API gives a number, and n
   const arr = await run({ "/api/v1/documents": { documents: [{ id: "d2", title: "NDA", state: "sent", parties: [{ name: "Ann" }, { email: "b@x.test" }] }], page: {} } }, ["documents", "list"]);
   assert.match(arr, /d2\s+sent\s+NDA\s+\(Ann, b@x\.test\)/);
 });
-test("automations list accepts a bare array and the older {automations}", async () => {
-  const bare = await run({ "/api/v1/automations": [{ id: "00000000-0000-0000-0000-000000000001", enabled: true, name: "Thank you", runCount: 3 }] }, ["automations", "list"]);
-  assert.match(bare, /on\s+ran 3×\s+Thank you/);
-  assert.match(await run({ "/api/v1/automations": [] }, ["automations", "list"]), /No automations yet/);
-  assert.match(await run({ "/api/v1/automations": { automations: [{ id: "00000000-0000-0000-0000-000000000002", enabled: false, name: "Old shape" }] } }, ["automations", "list"]), /off\s+ran 0×\s+Old shape/);
-});

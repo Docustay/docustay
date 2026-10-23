@@ -14,10 +14,11 @@ You need Docker with Compose for the whole app: `git clone`, `cd docustay`, `sh 
 
 ## Run the tests
 
-The unit tests need Node.js (the CI workflow in `.github/workflows/test.yml` runs Node 25 and is the reference; the app image runs Node 22) and need no database:
+The unit tests need Node.js (the CI workflow in `.github/workflows/test.yml` runs Node 26 and is the reference; the app image runs Node 22.23.4) and need no database. The web app in `docustay/web` has its own packages, which some tests load, so install both:
 
 ```sh
 npm ci
+npm ci --prefix docustay/web
 node --test test/docustay_*.test.mjs
 ```
 

@@ -119,6 +119,8 @@ export function parseTag(inner) {
       const ask = {}; for (const [k, key] of [["min", "min_minor"], ["max", "max_minor"], ["suggested", "suggested_minor"]]) if (attrs[k] !== undefined) { const m = minor(k); if (m === null) return { error: `${k} must be an amount from 0.50 to 999,999.99 (in the tag “${name}”)` }; ask[key] = m; }
       if (ask.min_minor !== undefined && ask.max_minor !== undefined && ask.min_minor > ask.max_minor) return { error: `min cannot be more than max (in the tag “${name}”)` };
       spec.amount_ask = ask;
+    } else if (attrs.amount !== undefined && /^custom\.[a-z0-9_]{1,40}$/.test(attrs.amount)) {   // v1 item 10: the sender sets the amount before sending (a custom value of this send)
+      spec.amount_from = attrs.amount;
     } else if (attrs.amount !== undefined) {
       const amt = Number(attrs.amount);
       if (!(amt > 0) || !Number.isFinite(amt)) return { error: `a payment needs amount=… in major units, for example amount=150.00 (in the tag “${name}”)` };

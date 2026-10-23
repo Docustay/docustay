@@ -313,7 +313,7 @@ export async function createWebhookEndpoint(tx, {
     throw new WebhookEndpointInvalid("an endpoint with no event types would receive nothing");
   }
   // Run 8 R8-69: a second endpoint for the same address answered the database's own "unique violation"; say it in words (the unique index stays the guard)
-  const { rowCount: taken } = await tx.query(`SELECT 1 FROM keystone.webhook_endpoint WHERE tenant_id = $1 AND lower(url) = lower($2)`, [tenantId, url]);
+  const { rowCount: taken } = await tx.query(`SELECT 1 FROM keystone.webhook_endpoint WHERE tenant_id = $1 AND lower(url) = lower($2) AND NOT (status = 'disabled' AND disabled_reason = 'removed')`, [tenantId, url]);
   if (taken) throw new AppError(ErrorKind.CONFLICT, "A webhook for this address already exists. Edit that one, or use a different address.", { detail: { field: "url", code: "webhook_url_taken" } });
   const envelope = sealSecret({ plaintext: secret, tenantId, purpose: "webhook_hmac" });
   const { rows } = await tx.query(
@@ -550,10 +550,19 @@ export async function deliverEvent({ pool, tenantId, endpoint, event, body, nowS
  * endpoint's failure counter is not touched: a test must never count toward disabling an endpoint. The body says `test: true`, so a receiver can tell it from a real event.
  * @returns {{ outcome: 'delivered'|'failed'|'timed_out'|'skipped', status: number|null, durationMs: number, responseExcerpt: string|null, error: string|null, topic: string, eventId: string }}
  */
+// R13-D197: a test send is listed under the webhook's deliveries (test: true), like Stripe's test events. One row, no payload.
+export async function recordTestSend(db, { tenantId, endpointId, out }) {
+  await db.query(`INSERT INTO keystone.webhook_test_send (tenant_id, endpoint_id, event_id, topic, status, response_status, error) VALUES ($1,$2,$3,$4,$5,$6,$7)`,
+    [tenantId, endpointId, out.eventId, out.topic, out.outcome, out.status, out.error ? String(out.error).slice(0, 1000) : null]);
+  return out;
+}
+
 export async function sendTestEvent({ tenantId, endpoint, topic = null, nowSeconds, resolveHost, tx = null }, { fetchImpl = globalThis.fetch } = {}) {
   const webhooksEnabled = await withTenant(tenantId, (tx) => flagIsOn(tx, "webhooks_enabled", tenantId));
   const eventId = randomUUID();
-  const chosen = topic && (endpoint.event_types ?? []).includes(topic) ? topic : (endpoint.event_types ?? [])[0] ?? "documents.document.executed";
+  // R13-D205: a topic the webhook does not listen to is refused by name, never swapped for another one
+  if (topic && !(endpoint.event_types ?? []).includes(topic)) throw new AppError(ErrorKind.VALIDATION, `this webhook does not listen to ${topic}; it listens to ${(endpoint.event_types ?? []).join(", ") || "no topics"}`, { detail: { field: "topic", allowed: endpoint.event_types ?? [] } });
+  const chosen = topic ?? (endpoint.event_types ?? [])[0] ?? "documents.document.executed";
   const base = { topic: chosen, eventId, status: null, durationMs: 0, responseExcerpt: null, error: null };
   if (!webhooksEnabled) return Object.freeze({ ...base, outcome: "skipped", error: SERVICE_DISABLED_REFUSAL });
   const body = JSON.stringify({

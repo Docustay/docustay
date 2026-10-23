@@ -1,6 +1,6 @@
 {
   "name": "@docustay2026/mcp",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Docustay MCP server: let an AI assistant send documents for signature and follow them. Runs on your machine with your own API key.",
   "type": "module",
   "license": "MIT",

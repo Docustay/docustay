@@ -162,7 +162,32 @@ export async function sendCountForPeriod(tx, { tenantId, periodStart, periodEnd 
     `SELECT COUNT(*)::int AS n FROM keystone.document_instance
       WHERE tenant_id = $1 AND sent_at >= $2 AND sent_at < $3 AND (package_lead_id IS NULL OR package_lead_id = id) AND NOT is_test
         AND NOT (coalesce(source_channel, '') = 'form' AND executed_at IS NULL AND coalesce((SELECT p.status FROM keystone.document_party p WHERE p.instance_id = document_instance.id AND p.action_role = 'signer' ORDER BY p.position LIMIT 1), '') NOT IN ('signed','approved'))`, [tenantId, periodStart, periodEnd]);
-  return (rows[0]?.n ?? 0) + (fp?.n ?? 0);
+  // 21 Oct 2026 (pricing integrity): a sent document that was later DELETED (deleting a Contact deletes its unsigned sent documents) still counts: a line stays when it goes (migration 0769), so deleting cannot reset the month
+  const { rows: [tomb] } = await tx.query(`SELECT count(*)::int AS n FROM keystone.document_send_tombstone WHERE tenant_id = $1 AND sent_at >= $2 AND sent_at < $3 AND counted`, [tenantId, periodStart, periodEnd]);
+  return (rows[0]?.n ?? 0) + (fp?.n ?? 0) + (tomb?.n ?? 0);
+}
+/** FREE SIGNERS (the maintainer, 21 Oct 2026): the distinct email addresses this workspace has sent a document to in the period. A practice (test) send counts nobody; a team member who is a recipient (an internal send) counts nobody;
+ *  the same person on several documents counts once. Read from the parties of the documents sent in the window, so a resend to someone already counted adds nothing. No table of its own. */
+export async function signersInPeriod(tx, { tenantId, periodStart, periodEnd }) {
+  const { rows } = await tx.query(
+    `SELECT DISTINCT lower(p.email) AS email FROM keystone.document_party p JOIN keystone.document_instance i ON i.id = p.instance_id
+      WHERE i.tenant_id = $1 AND i.sent_at >= $2 AND i.sent_at < $3 AND NOT i.is_test AND p.email IS NOT NULL AND p.email <> ''
+        AND NOT EXISTS (SELECT 1 FROM keystone.app_user u WHERE u.tenant_id = i.tenant_id AND u.role = 'staff' AND u.lifecycle_status <> 'former' AND lower(u.email) = lower(p.email))`, [tenantId, periodStart, periodEnd]);
+  // and the people of documents that were deleted after they were sent (the tombstone keeps their addresses, never a name or a file)
+  const { rows: gone } = await tx.query(
+    `SELECT DISTINCT e AS email FROM keystone.document_send_tombstone t, unnest(t.emails) AS e
+      WHERE t.tenant_id = $1 AND t.sent_at >= $2 AND t.sent_at < $3
+        AND NOT EXISTS (SELECT 1 FROM keystone.app_user u WHERE u.tenant_id = t.tenant_id AND u.role = 'staff' AND u.lifecycle_status <> 'former' AND lower(u.email) = e)`, [tenantId, periodStart, periodEnd]);
+  return [...new Set([...rows.map((r) => r.email), ...gone.map((r) => r.email)])];
+}
+/** Of these addresses, the ones that would be NEW signers this period: not a team member, not already counted. Lower-cased and de-duplicated. */
+export async function newSignersAmong(tx, { tenantId, emails, periodStart, periodEnd }) {
+  const wanted = [...new Set((emails ?? []).map((e) => String(e ?? "").trim().toLowerCase()).filter(Boolean))];
+  if (!wanted.length) return { used: (await signersInPeriod(tx, { tenantId, periodStart, periodEnd })).length, fresh: [] };
+  const counted = new Set(await signersInPeriod(tx, { tenantId, periodStart, periodEnd }));
+  const { rows } = await tx.query(`SELECT lower(email) AS email FROM keystone.app_user WHERE tenant_id = $1 AND role = 'staff' AND lifecycle_status <> 'former' AND lower(email) = ANY($2::text[])`, [tenantId, wanted]);
+  const team = new Set(rows.map((r) => r.email));
+  return { used: counted.size, fresh: wanted.filter((e) => !counted.has(e) && !team.has(e)) };
 }
 /** Run 8: the Free plan's monthly template cap reads the island's insert-only ledger through this door (see templateCap.mjs). */
 export { templateCreationsInPeriod } from "./templateCap.mjs";
@@ -354,6 +379,13 @@ export async function instanceNotificationFacts(tx, { tenantId, instanceId }) {
   const { rows } = await tx.query(
     `SELECT * FROM keystone.document_notification_facts($1, $2)`,
     [tenantId, instanceId]);
+  return rows[0] ?? null;
+}
+
+/** PH1 (17 Oct 2026): who created the document, when it was sent and executed, and whether it is a test — for the PostHog outbox listener.
+ *  Same no-viewer reasoning as `instanceCreatedBy`, via `keystone.document_analytics_facts()` (migration 0757). No title, content or party. */
+export async function instanceAnalyticsFacts(tx, { tenantId, instanceId }) {
+  const { rows } = await tx.query(`SELECT * FROM keystone.document_analytics_facts($1, $2)`, [tenantId, instanceId]);
   return rows[0] ?? null;
 }
 

@@ -5,6 +5,8 @@ description: Send a document for signature from JavaScript, with a program that 
 
 # Send a document for signature from JavaScript
 
+Sign PDF API in JavaScript: a short program that sends a template for signature, run against Docustay with a test key before it was published. Set DOCUSTAY_API_KEY and DOCUSTAY_TEMPLATE_ID.
+
 `npm install @docustay2026/sdk`
 
 The package has no dependencies and needs Node 18 or newer. It makes one Idempotency-Key for each call and reuses it on every retry, so a network retry never sends the document twice. It is an ES module, so use import, or a .mjs file.

@@ -4,30 +4,33 @@
   import { onMount } from "svelte";
   import { api } from "$lib/api.js";
   import { t } from "$lib/i18n/index.svelte.js";
+  import { plan, loadPlan, entitled } from "$lib/pro/plan.svelte.js";
   let { documents = null } = $props();   // the Documents page already loaded its rows; the list is reused, not fetched twice
   let hidden = $state(true), tpl = $state(null), team = $state(null), failed = $state(false);
   const KEY = "docustay-firstrun-off";
   onMount(async () => {
     try { hidden = localStorage.getItem(KEY) === "1"; } catch { hidden = false; }
     if (hidden) return;
-    const [a, b] = await Promise.all([api("/api/documents/pdf/templates?q=&retired=false&kind=document"), api("/api/list/people/team")]);
+    const [a, b] = await Promise.all([api("/api/documents/pdf/templates?q=&retired=false&kind=document"), api("/api/list/people/team"), loadPlan()]);
     if (!a.ok || !b.ok) { failed = true; return; }
     tpl = (a.json.templates ?? []).length; team = (b.json.rows ?? []).length;
   });
+  const canInvite = $derived(plan.loaded && entitled("team_roles") === true);
   const sent = $derived(documents === null ? null : documents.some((r) => r.state && r.state !== "draft"));
   const steps = $derived([
     { id: "send", done: sent, label: t("Send a document"), hint: t("Upload a PDF, place the fields, send it."), href: "/create?mode=document&upload=1", go: t("Send") },
     { id: "template", done: tpl === null ? null : tpl > 0, label: t("Make a template"), hint: t("Save a document you send often so it is one click next time."), href: "/templates", go: t("Open templates") },
-    { id: "team", done: team === null ? null : team > 1, label: t("Invite a teammate"), hint: t("Anyone you add can send and track documents with you."), href: "/people", go: t("Invite") },
+    // R13-D013: inviting is a Pro item (`team_roles`); a Free owner is not told to do what the plan does not allow. Nothing is shown until the plan is known.
+    ...(canInvite ? [{ id: "team", done: team === null ? null : team > 1, label: t("Invite a teammate"), hint: t("Anyone you add can send and track documents with you."), href: "/contacts", go: t("Invite") }] : []),
   ]);
   const doneCount = $derived(steps.filter((s) => s.done).length);
-  const ready = $derived(!failed && !hidden && steps.every((s) => s.done !== null));
+  const ready = $derived(!failed && !hidden && plan.loaded && steps.every((s) => s.done !== null));
   const dismiss = () => { hidden = true; try { localStorage.setItem(KEY, "1"); } catch { /* ignore */ } };
 </script>
-{#if ready && doneCount < 3}
+{#if ready && doneCount < steps.length}
 <section class="fr" aria-label={t("Getting started")} data-testid="first-run">
-  <header><h2>{t("Getting started")}</h2><span class="n" aria-live="polite">{doneCount} / 3</span>
-    <div class="bar" aria-hidden="true"><i style:width="{(doneCount / 3) * 100}%"></i></div>
+  <header><h2>{t("Getting started")}</h2><span class="n" aria-live="polite">{doneCount} / {steps.length}</span>
+    <div class="bar" aria-hidden="true"><i style:width="{(doneCount / steps.length) * 100}%"></i></div>
     <button type="button" class="x" onclick={dismiss} aria-label={t("Hide getting started")} data-testid="first-run-dismiss">×</button></header>
   <ol>{#each steps as s (s.id)}
     <li class:done={s.done} data-testid={`first-run-${s.id}`}>

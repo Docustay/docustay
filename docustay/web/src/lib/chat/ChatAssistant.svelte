@@ -24,7 +24,6 @@
   import StepsBlock from "./ui/StepsBlock.svelte";
   import PromptInput from "./ui/PromptInput.svelte";
   import AiUsageBar from "$lib/ai/AiUsageBar.svelte";
-  import ThinkHarder from "$lib/ai/ThinkHarder.svelte";
   import { StickToBottom } from "./ui/stickToBottom.svelte.js";
   import { proSheet } from "$lib/pro/proSheet.svelte.js";
   import { botText } from "./cardWords.js";
@@ -42,9 +41,7 @@
     if (/\/documents\/[^/]+\/edit/.test(p) || p.startsWith("/create/flow")) return [t("Make the wording friendlier"), t("Why can't I send this yet?"), t("Add a second signer"), t("What can you do?")];
     if (/^\/documents\/[^/]+$/.test(p)) return [t("Who has not signed yet?"), t("Remind the people who are waiting"), t("Summarise this document"), t("What can you do?")];
     if (p.startsWith("/templates")) return [t("Make me a test document from a template"), t("Make a template for a services agreement"), t("How do I use a template?"), t("What can you do?")];
-    if (p.startsWith("/forms")) return [t("Make me a job application form"), t("Who has filled in my form?"), t("How do I share a form?"), t("What can you do?")];
     if (p.startsWith("/settings") || p.startsWith("/billing")) return [t("How do I connect Stripe?"), t("How do I send from my own domain?"), t("Where do I change my logo?"), t("What can you do?")];
-    if (p.startsWith("/reports")) return [t("What is waiting on someone?"), t("What did I send last week?"), t("How much AI have I used?"), t("What can you do?")];
     return [t("Can you create a test document with signers ready to send?"), t("What is waiting on someone?"), t("How do I connect Stripe?"), t("What can you do?")];
   });
   // the shape this layout takes at this width
@@ -157,7 +154,7 @@
         <div class="relative min-h-0 grow body">
           <div class="chat-log" bind:this={log} role="log" aria-live="polite" aria-busy={ARIA_BUSY} aria-label={t("Conversation")} data-testid="chat-log">
             {#if !usable}
-              <div class="notice warn" data-testid="chat-unavailable">{chat.status?.reason === "who" ? t("Only some people in this workspace may use the assistant.") : chat.status?.reason === "provider" ? t("The assistant is not available with this workspace's AI provider.") : chat.status?.reason === "key" ? t("The assistant needs an AI key before it can answer. An owner or admin can add this workspace's own key in the AI settings.") : t("The assistant is switched off for this workspace.")} <a href="/settings?tab=ai" class="underline">{t("Open the AI settings")}</a></div>
+              <div class="notice warn" data-testid="chat-unavailable">{chat.status?.reason === "who" ? t("Only some people in this workspace may use the assistant.") : chat.status?.reason === "provider" ? t("The assistant works with Anthropic (Claude) only. Choose Anthropic as the AI provider in the AI settings to use it.") : chat.status?.reason === "key" ? t("The assistant needs an AI key before it can answer. An owner or admin can add this workspace's own key in the AI settings.") : t("The assistant is switched off for this workspace.")} <a href="/settings?tab=ai" class="underline">{t("Open the AI settings")}</a></div>
             {:else if !chat.messages.length}
               <div class="empty" data-testid="chat-empty">
                 <p class="hi">{t("Hi, I'm {name}.", { name })}</p><p class="text-mute">{t("I can make a document or a form with its signers, change one, check it, tell you what is waiting, and show a card to send it. You press the button; I never send by myself.")}</p>
@@ -199,14 +196,13 @@
           <button class="btn quiet !min-h-0 !py-1" type="button" data-testid="chat-undo" onclick={() => { const p = chat.messages.flatMap((m) => m.proposals).find((x) => x.id === chat.undoToast.proposalId); if (p) chat.undo(p); }}>{t("Undo")}</button></div>
       {/if}
       </div>
-      {#snippet think()}<ThinkHarder bind:checked={chat.thinkHarder} testid="chat-think" compact />{/snippet}
       {#if shape === "command"}
-        <PromptInput variant="dark" bind:value={input} bind:box busy={chat.busy} disabled={!usable} {name} attached={chat.attached} placeholder={t("Ask {name}… (⌘I)", { name })} foot={null} extra={usable ? think : null} onsend={send} onstop={() => chat.abort()} onrecall={(i) => chat.recall(i)} onattach={usable ? attach : null} />
+        <PromptInput variant="dark" bind:value={input} bind:box busy={chat.busy} disabled={!usable} {name} attached={chat.attached} placeholder={t("Ask {name}… (⌘I)", { name })} foot={null} onsend={send} onstop={() => chat.abort()} onrecall={(i) => chat.recall(i)} onattach={usable ? attach : null} />
       {:else if shape === "float"}
-        <PromptInput variant="soft" bind:value={input} bind:box busy={chat.busy} disabled={!usable} {name} attached={chat.attached} placeholder={building ? t("Change something…") : ""} foot={t("{name} drafts; nothing is sent until you do.", { name })} extra={usable ? think : null} onsend={send} onstop={() => chat.abort()} onrecall={(i) => chat.recall(i)} onattach={usable ? attach : null} />
+        <PromptInput variant="soft" bind:value={input} bind:box busy={chat.busy} disabled={!usable} {name} attached={chat.attached} placeholder={building ? t("Change something…") : ""} foot={t("{name} drafts; nothing is sent until you do.", { name })} onsend={send} onstop={() => chat.abort()} onrecall={(i) => chat.recall(i)} onattach={usable ? attach : null} />
       {:else}
         <PromptInput bind:value={input} bind:box busy={chat.busy} disabled={!usable} {name} attached={chat.attached} placeholder={building ? t("Change something…") : ""} foot={null} onsend={send} onstop={() => chat.abort()} onrecall={(i) => chat.recall(i)} onattach={usable ? attach : null} />
-        {#if usable}<div class="usage" data-testid="chat-usage">{@render think()}<AiUsageBar compact /></div>{/if}
+        {#if usable}<div class="usage" data-testid="chat-usage"><AiUsageBar compact /></div>{/if}
       {/if}
       </div>
     </div>
@@ -242,7 +238,6 @@
   .pill-shrunk .bdot { background: #8585fd; }
   .hbtn { min-height: 40px !important; min-width: 40px; padding: 0 !important; display: inline-grid; place-items: center; border-radius: 10px; }
   .float .hbtn { min-height: 34px !important; min-width: 34px; }
-  .chat-panel :global([data-testid="chat-think-row"] [data-part="label"]) { white-space: nowrap; font-size: 12.5px; }
   .hbtn.soft { background: #f4f4f7; } :global(:root[data-theme="dark"]) .hbtn.soft { background: var(--tint); }
   .hstop { min-height: 32px !important; padding: 0 12px !important; font-size: 13px; }
   .body { display: flex; flex-direction: column; }

@@ -1,6 +1,6 @@
 ---
 title: Payment plan agreement template
-description: A free payment plan agreement template. Set the amounts and the dates, and the first payment can be collected as the document is signed.
+description: A free payment plan agreement template. Write the amounts and the dates into the agreement, and collect a deposit as the document is signed with one payment field.
 ---
 
 # Payment plan agreement template
@@ -18,10 +18,10 @@ Use it when a client will pay in parts. It lists each payment and its date.
 
 - Write each amount and its date.
 - Say what happens when a payment is late.
-- Connect your Stripe account to take the first payment.
+- Connect your Stripe account to take a deposit as it is signed.
 
 ## The facts
 
 - 3 pages
-- 30 fields
-- About 12 minutes to fill in
+- 29 fields
+- About 11 minutes to fill in

@@ -19,7 +19,6 @@ import { verifySignedPdf } from "./verifyPdf.mjs";
 import { getDocumentSetting } from "./settings.mjs";
 import { signatureIdOf } from "./signingPolicy.mjs";
 import { recordAuditEvent } from "./auditTrail.mjs";
-import { readKeyDates } from "./keyDates.mjs";
 
 /** Executed uploaded documents that still have no sealed copy a quarter of an hour after they were executed — the worker queues the archive again (migration 0701 lets the viewer-less sweep see exactly these). */
 export async function staleUnarchivedDocuments(tx) {
@@ -68,7 +67,14 @@ export async function restampSealedCopy(tx, { tenantId, instanceId }) {
 
 const iso = (v) => (v instanceof Date ? v.toISOString() : v ?? null);
 
-async function flattenedFor(tx, memberId, { showSignatureId = false, isTest = false } = {}) {
+/** R13-D325/D326: the lines the signed-copy settings put on every page of the document itself (the certificate gets them from the document view). */
+export function pageChromeFor(settings, brand, documentId) {
+  const top = settings["signed_copy.letterhead"] && brand?.practiceName ? [brand.practiceName, settings["signed_copy.address_line"]].filter(Boolean).join("  ·  ") : null;
+  const bottom = [settings["signed_copy.show_document_id"] ? `Document ID ${documentId}` : null, settings["signed_copy.footer_text"] || null].filter(Boolean).join("  ·  ") || null;
+  return top || bottom ? { top, bottom } : null;
+}
+
+async function flattenedFor(tx, memberId, { showSignatureId = false, isTest = false, pageChrome = null } = {}) {
   const { rows: [m] } = await tx.query(`SELECT id, title, template_body_snapshot FROM keystone.document_instance WHERE id = $1`, [memberId]);
   const body = parsePdfBodyData(m.template_body_snapshot);
   const { bytes: original } = await readFileBytes(tx, { fileId: body.file.file_id });
@@ -93,9 +99,31 @@ async function flattenedFor(tx, memberId, { showSignatureId = false, isTest = fa
   for (const f of body.fields) if (f.locked && f.default != null && plain[f.id] == null) plain[f.id] = String(f.default);
   const hidden = hiddenNow({ fields: body.fields, pages: body.page_rules ?? [] }, plain);
   const shown = body.fields.filter((f) => !hidden.fields.has(f.id));
-  const bytes = await flattenOntoOriginal(original, shown, values, { signatureIds, testWatermark: isTest, dropPages: hidden.pages });
+  const bytes = await flattenOntoOriginal(original, shown, values, { signatureIds, testWatermark: isTest, dropPages: hidden.pages, pageChrome });
   return { id: m.id, title: m.title, pageCount: body.file.page_count - [...hidden.pages].filter((n) => n <= body.file.page_count).length, bytes, originalSha256: body.file.sha256, hiddenPages: [...hidden.pages].sort((a, b) => a - b) };
 }
+
+/**
+ * THE LIVE VIEW of a document that is out for signing (the Document tab): the original pages with the sender's answers and everything signed so far drawn on them, and a pale mark on every box
+ * still waiting. Read here (inside the caller's transaction); drawn by `liveStateBytes` after the connection is given back. Never stored and never the sealed copy: the seal alone is the record.
+ */
+export async function liveStateInputs(tx, instanceId) {
+  const { rows: [m] } = await tx.query(`SELECT id, template_body_snapshot FROM keystone.document_instance WHERE id = $1`, [instanceId]);
+  if (!m?.template_body_snapshot) return null;
+  const body = parsePdfBodyData(m.template_body_snapshot);
+  const { bytes: original } = await readFileBytes(tx, { fileId: body.file.file_id });
+  const { rows } = await tx.query(`SELECT field_id, value, mark_image, created_at FROM keystone.document_field_value WHERE instance_id = $1`, [instanceId]);
+  const values = new Map(rows.map((r) => [r.field_id, { value: r.value, mark: r.mark_image }]));
+  for (const f of body.fields.filter((x) => x.type === "file")) { const v = values.get(f.id); if (v?.value) values.set(f.id, { value: "File attached", mark: null }); }
+  // what the sender locked in before sending (their own answers) shows from the start; a signer's later answer replaces nothing (a locked box cannot be changed)
+  const plain = Object.fromEntries([...values].map(([k, v]) => [k, v.value]));
+  for (const f of body.fields) if (f.locked && f.default != null && String(f.default).trim() !== "" && plain[f.id] == null) { plain[f.id] = String(f.default); values.set(f.id, { value: String(f.default), mark: null }); }
+  const hidden = hiddenNow({ fields: body.fields, pages: body.page_rules ?? [] }, plain);
+  const shown = body.fields.filter((f) => !hidden.fields.has(f.id));
+  const last = rows.reduce((t, r) => Math.max(t, new Date(r.created_at).getTime() || 0), 0);
+  return { original, shown, values, dropPages: hidden.pages, version: `${rows.length}.${last}` };
+}
+export const liveStateBytes = (i) => flattenOntoOriginal(i.original, i.shown, i.values, { dropPages: i.dropPages, markWaiting: true });
 
 export async function archivePdfDocument(tx, { tenantId, instanceId, instance, signatures }) {
   const P = await ports();
@@ -113,10 +141,10 @@ export async function archivePdfDocument(tx, { tenantId, instanceId, instance, s
   const flattened = [];
   const showSignatureId = (await getDocumentSetting(tx, "signing.show_signature_id")) === true;
   const { rows: [tst] } = await tx.query(`SELECT is_test FROM keystone.document_instance WHERE id = $1`, [leadId]);
-  for (const m of members) flattened.push(await flattenedFor(tx, m.id, { showSignatureId, isTest: tst?.is_test === true }));
+  const { settings, brand, logoBytes, zone, publicBase } = await chromeInputsFor(tx, { tenantId, templateId: null });
+  for (const m of members) flattened.push(await flattenedFor(tx, m.id, { showSignatureId, isTest: tst?.is_test === true, pageChrome: pageChromeFor(settings, brand, m.id) }));
   const idx = flattened.findIndex((f) => f.id === instanceId);
 
-  const { settings, brand, logoBytes, zone, publicBase } = await chromeInputsFor(tx, { tenantId, templateId: null });
   const { rows: sigRows } = await tx.query(`SELECT * FROM keystone.signature_record WHERE instance_id = $1 ORDER BY signer_order`, [instanceId]);
   const leadInstance = isLead ? instance : (await tx.query(`SELECT id, title, state, executed_at, sent_at, created_by, original_sha256 FROM keystone.document_instance WHERE id = $1`, [leadId])).rows[0];
   const leadSignatures = isLead ? signatures : (await tx.query(`SELECT * FROM keystone.signature_record WHERE instance_id = $1 ORDER BY signer_order`, [leadId])).rows;
@@ -182,31 +210,8 @@ export async function archivePdfDocument(tx, { tenantId, instanceId, instance, s
     // each person's copy is written in their own language (the sender's choice if forced, else theirs)
     recipients = []; for (const p of rows) recipients.push({ partyId: p.id, name: p.name, email: p.email, language: (await languageFor(tx, { sendOptions: ld?.opts, party: p })).language });
   }
-  // Run 7: a FORM response follows the form's own two email switches — the person's confirmation is their signed copy (left out when "Email the person a confirmation" is off), and the owner gets
-  // one short "new response" notice (formNotice) instead of a second copy of every response.
-  const form = await formFactsOf(tx, leadId);
-  if (form && tst?.is_test !== true) {
-    if (!form.confirmRespondent) recipients = recipients.filter((r) => r.partyId !== form.respondentPartyId);
-    else if (form.respondentPartyId && !recipients.some((r) => r.partyId === form.respondentPartyId)) {   // the form's own switch wins over the workspace's "email the signed copy"
-      const { rows: [p] } = await tx.query(`SELECT id, name, email, signer_language FROM keystone.document_party WHERE id = $1 AND email IS NOT NULL`, [form.respondentPartyId]);
-      if (p) recipients.push({ partyId: p.id, name: p.name, email: p.email, language: (await languageFor(tx, { sendOptions: ld?.opts, party: p })).language });
-    }
-    copyEnabled = false;   // the sender (the owner) is not mailed a copy; the notice below is theirs
-  }
   // when the workspace sends signed copies as links, the sender's own copy is a link too: it is issued against the first signer's row, as "share a download link" does
   // Run 9 Part 3.4 (R9-h): the sealed document's date and amount boxes go into the contract repository (idempotent; a person's correction is never overwritten)
-  await readKeyDates(tx, { tenantId, instanceId });
   const ownerParty = (await tx.query(`SELECT id FROM keystone.document_party WHERE instance_id = $1 AND action_role IN ('signer','approver') ORDER BY position, created_at LIMIT 1`, [leadId])).rows[0]?.id ?? null;
-  return { ownerPartyId: ownerParty, objectKey: stored.key, bucket: P.files.bucket(), sha256: digest, byteSize: pdf.bytes.length, reused, bytes: pdf.bytes, certificateBytes, title: instance.title, signatures, recipients, copyEnabled, leadId, downloadDays: Number(await getDocumentSetting(tx, "download.link_days")) || 0, pdf: true, language: certLanguage, formNotice: form?.notifyOwner ? { leadId } : null };
-}
-
-/** A form response's email switches, or null when the document is not a form response. */
-async function formFactsOf(tx, leadId) {
-  const { rows: [r] } = await tx.query(
-    `SELECT t.form_settings AS s, (SELECT p.id FROM keystone.document_party p WHERE p.instance_id = i.id AND p.action_role = 'signer' ORDER BY p.position LIMIT 1) AS party
-       FROM keystone.document_instance i JOIN keystone.document_template t ON t.family_id = COALESCE(i.form_id, (SELECT x.family_id FROM keystone.document_template x WHERE x.id = i.template_id))
-      WHERE i.id = $1 AND i.source_channel = 'form' ORDER BY t.version DESC LIMIT 1`, [leadId]);
-  if (!r) return null;
-  const s = r.s ?? {};
-  return { notifyOwner: s.notifyOwner !== false, confirmRespondent: s.confirmRespondent !== false, respondentPartyId: r.party };
+  return { ownerPartyId: ownerParty, objectKey: stored.key, bucket: P.files.bucket(), sha256: digest, byteSize: pdf.bytes.length, reused, bytes: pdf.bytes, certificateBytes, title: instance.title, signatures, recipients, copyEnabled, leadId, downloadDays: Number(await getDocumentSetting(tx, "download.link_days")) || 0, pdf: true, language: certLanguage };
 }

@@ -10,7 +10,7 @@ A document made in test mode is a practice run:
 
 - It is emailed **only to the person who sent it**, with `[TEST]` in the subject.
 - Its pages carry a TEST watermark.
-- It is left out of usage, billing and reports.
+- It is left out of usage and billing.
 - Signing it records nothing as a real signature event.
 
 ## Three ways in
@@ -27,21 +27,42 @@ Use test mode to check your whole flow before anything real is sent: that your t
 
 ## A short run-through
 
-Send with a test key and open the email:
+Put your test key (it starts `dsk_test_`) in `DOCUSTAY_API_KEY`, the same variable every other page uses, and the id of one of your templates in place of `TEMPLATE_ID` (`GET /api/v1/documents/templates` lists them). Send, and open the email:
 
 ```bash
-curl -X POST https://docustay.app/api/v1/documents/send \
-  -H "Authorization: Bearer $DOCUSTAY_TEST_KEY" \
+curl -X POST https://app.docustay.app/api/v1/documents/send \
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY" \
   -H "Idempotency-Key: $(uuidgen)" -H "Content-Type: application/json" \
   -d '{ "templateId": "TEMPLATE_ID", "parties": [{ "seat": "signer_1", "name": "Practice Person", "email": "someone@example.com" }] }'
 ```
 
-The answer is the same shape as a live send (it does not carry a `test` field); fetching the document afterwards shows `"test": true`. The email arrives in your own inbox, not someone@example.com's. Sign it, then fetch the document:
+The answer is the same shape as a live send (it does not carry a `test` field); fetching the document afterwards shows `"test": true`. The email arrives in your own inbox, not someone@example.com's. Sign it, then fetch the document, with the `id` the send answered in place of `DOCUMENT_ID`:
 
 ```bash
-curl https://docustay.app/api/v1/documents/DOCUMENT_ID -H "Authorization: Bearer $DOCUSTAY_TEST_KEY"
+curl https://app.docustay.app/api/v1/documents/DOCUMENT_ID -H "Authorization: Bearer $DOCUSTAY_API_KEY"
 ```
 
 ## What test mode does not do
 
 It does not test payments against real cards. A document made in test mode is marked as a practice run on its pages and in the API (`test: true`), and it is left out of your usage, so you can practise as much as you like.
+
+## Checking your webhook receiver without a real signature
+
+Test documents fire the same webhooks as live ones, so you can prove your receiver end to end. From your laptop, forward events to your own server and ask for a sample:
+
+```bash
+npx docustay listen --forward-to http://localhost:3000/webhooks --events documents.document.executed
+npx docustay trigger --topic documents.document.executed
+```
+
+`listen` prints the secret to use and forwards real, signed events. To check one signature by hand, save the delivery's exact body to `body.json` and give `verify` that file, the three `webhook-*` headers of the same delivery and the secret `listen` printed:
+
+```bash
+npx docustay verify --secret whsec_… --id MSG_ID --timestamp TIMESTAMP --signature "v1,…" --body body.json
+```
+
+The recent email log is also available from the command line with `docustay logs --emails`, and in the app under Developers → Email events.
+
+## Moving to live
+
+When the practice run works, change one thing: the key. Nothing in the request changes. Live documents count toward your monthly allowance on Free and are emailed to the real signers.

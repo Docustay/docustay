@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "Docustay API",
-    "description": "Send documents for signature and follow them, from your own software.\n\n**Authentication.** Send `Authorization: Bearer <key>`. Make keys in Settings → Developers → API keys and give each only the scopes it needs (there are 35 in all): `accounts:read`, `accounts:write`, `booking:read`, `booking:write`, `documents:read`, `documents:write`, `growth:read`, `growth:write`, `items:read`, `items:write`, `lead:write`, `money:read`, `money:write`, `network:read`, `network:write`, `notifications:read`, `notifications:write`, `people:read`, `people:write`, `platform:read`, `platform:write`, `records:read`, `records:write`, `settings:read`, `settings:write`, `plays:read`, `plays:write`, `drafts:write`, `templates:read`, `templates:write`, `webhooks:read`, `webhooks:write`, `reports:read`, `account:read`, `embedded:write`. A key that starts `dsk_test_` works in **test mode**: documents it sends are practice runs (emailed only to the sender, stamped TEST, never counted or billed), it can only see and act on test documents (any other document answers `404`), and it can sign them itself with `POST /api/v1/documents/{id}/test-sign`. A key can also be limited to a list of addresses, given an expiry, or made **draft-only**.\n\n**Draft-only keys.** A draft-only key can make and edit drafts but cannot send. Asking it to send answers `202` with an `approval`, the document stays a draft, and a person approves or declines in Settings → Developers → Approvals. Keys can also have a daily limit of drafts and sends; past it you get `429`.\n\n**Payments.** A template may contain payment fields (text tag `type=payment` with one of `amount`, `formula`, `price` or `link`). The signer pays on Stripe's hosted page; the money goes to your own connected Stripe account; Docustay's fee is 2% on the Free plan and 0% on Pro, plus Stripe's own fees. The document's `payments` list shows each payment, its receipt and the fee. Card details never reach Docustay.\n\n**Idempotency.** Requests that create a document or a template, or send one, need an `Idempotency-Key` header (8–200 characters). Repeating a request with the same key and body returns the first answer instead of doing it twice.\n\n**Your own reference.** Documents and templates take `externalId` (your id for it) and `metadata` (up to 20 short key/value pairs). List with `externalId=` or `metadata[key]=value` to find them again, and both come back in webhooks.\n\n**Errors.** Every error is `{ \"error\": { \"kind\", \"message\", \"requestId\", \"retryable\" } }`. `kind` is one of `invalid`, `unauthenticated`, `forbidden`, `not_found`, `conflict`, `rate_limited`, `dependency`, `timeout`. Quote the `requestId` to support, or search it in Settings → Developers → API log. **Plan limits** are `403 forbidden` with `error.detail.code`: `plan_document_limit` (the plan's documents this month are used; a form counts the first time it is published, and every signed response counts) or `plan_template_limit` (Free: 5 new templates a month, documents and forms together; a new version of a template you have does not count). Both carry `detail.used`, `detail.limit` and `detail.resetsAt` (the first of next month, UTC). Everything already made keeps working. Pro and self-hosted installs have no template limit.\n\n**Rate limits.** Each key has its own per-minute budget. Every answer carries `RateLimit-Limit`, `RateLimit-Remaining` and `RateLimit-Reset` (seconds); over the budget you get `429` with a `Retry-After` header.\n\n**Versions.** Every answer carries `Docustay-Version`, a date. A change that could break a caller gets a new date and is announced in the changelog before it ships; additions (a new field, a new route) are not breaking and do not change the date.\n\n**Pagination.** Lists take `limit` (1–200) and `cursor`; the answer carries `page.nextCursor` (null on the last page).\n\n**Signing links.** No response contains a signing link or access code, with one exception you control: a seat you send in `embedded` can be given an embedded signing session (`POST /api/v1/documents/{id}/embed-session`), a one-hour link for a frame on a website you listed. A key can start and follow a signature, and put your own signer in front of the form for seats you marked yourself; it cannot sign for anyone.",
+    "description": "Send documents for signature and follow them, from your own software.\n\n**Authentication.** Send `Authorization: Bearer <key>`. Make keys in Settings → Developers → API keys and give each only the scopes it needs (there are 12 in all): `documents:read`, `documents:write`, `people:read`, `plays:read`, `plays:write`, `drafts:write`, `templates:read`, `templates:write`, `webhooks:read`, `webhooks:write`, `account:read`, `embedded:write`. A key that starts `dsk_test_` works in **test mode**: documents it sends are practice runs (emailed only to the sender, stamped TEST, never counted or billed), it can only see and act on test documents (any other document answers `404`), and it can sign them itself with `POST /api/v1/documents/{id}/test-sign`. A key can also be limited to a list of addresses, given an expiry, or made **draft-only**.\n\n**Draft-only keys.** A draft-only key can make and edit drafts but cannot send. Asking it to send answers `202` with an `approval`, the document stays a draft, and a person approves or declines in Settings → Developers → Approvals. Keys can also have a daily limit of drafts and sends; past it you get `429`.\n\n**Payments.** A template may contain payment fields (text tag `type=payment` with a set `amount`, optionally a `deposit`, or an amount you give when you send it with `amount=custom.<name>`). The signer pays on Stripe's hosted page; the money goes to your own connected Stripe account; Docustay's fee is 2% on the Free plan and 0% on Pro, plus Stripe's own fees. The document's `payments` list shows each payment, its receipt and the fee. Card details never reach Docustay.\n\n**Idempotency.** Requests that create a document or a template, or send one, need an `Idempotency-Key` header (8–200 characters). Repeating a request with the same key and body returns the first answer instead of doing it twice.\n\n**Your own reference.** Documents and templates take `externalId` (your id for it) and `metadata` (up to 20 short key/value pairs). List with `externalId=` or `metadata[key]=value` to find them again, and both come back in webhooks.\n\n**Errors.** Every error is `{ \"error\": { \"kind\", \"message\", \"requestId\", \"retryable\" } }`. `kind` is one of `invalid`, `unauthenticated`, `forbidden`, `not_found`, `conflict`, `rate_limited`, `dependency`, `timeout`. Quote the `requestId` to support, or search it in Settings → Developers → API log. **Plan limits** are `403 forbidden` with `error.detail.code`: `plan_document_limit` (the plan's documents this month are used), `plan_signer_limit` (Free: 15 different signers a month; sending again to someone already sent to this month never counts) or `plan_template_limit` (Free: 5 and Pay as you go: 25 new templates a month; a new version of a template you have does not count). All carry `detail.used`, `detail.limit` and `detail.resetsAt` (the first of next month, UTC). Everything already made keeps working. Pro, Lifetime and self-hosted installs have no template or signer limit.\n\n**Rate limits.** Each key has its own per-minute budget. Every answer carries `RateLimit-Limit`, `RateLimit-Remaining` and `RateLimit-Reset` (seconds); over the budget you get `429` with a `Retry-After` header.\n\n**Versions.** Every answer carries `Docustay-Version`, a date. A change that could break a caller gets a new date and is announced in the changelog before it ships; additions (a new field, a new route) are not breaking and do not change the date.\n\n**Pagination.** Lists take `limit` (1–200) and `cursor`; the answer carries `page.nextCursor` (null on the last page).\n\n**Signing links.** No response contains a signing link or access code, with one exception you control: a seat you send in `embedded` can be given an embedded signing session (`POST /api/v1/documents/{id}/embed-session`), a one-hour link for a frame on a website you listed. A key can start and follow a signature, and put your own signer in front of the form for seats you marked yourself; it cannot sign for anyone.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "auth": {
@@ -81,7 +81,7 @@
                   "key": "state",
                   "value": "",
                   "disabled": true,
-                  "description": ""
+                  "description": "Only documents in this state; any other value is refused."
                 },
                 {
                   "key": "limit",
@@ -141,7 +141,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": {\n    \"subject\": \"string\",\n    \"message\": \"string\",\n    \"replyTo\": \"person@example.com\",\n    \"senderName\": \"string\",\n    \"locale\": \"string\"\n  },\n  \"metadata\": {\n    \"crmDealId\": \"D-1042\"\n  },\n  \"externalId\": \"contract-2026-0042\",\n  \"title\": \"string\",\n  \"source\": {},\n  \"people\": [\n    {\n      \"externalId\": \"contract-2026-0042\",\n      \"metadata\": {\n        \"crmDealId\": \"D-1042\"\n      },\n      \"name\": \"string\",\n      \"email\": \"person@example.com\",\n      \"role\": \"string\",\n      \"action\": \"signer\",\n      \"order\": 1\n    }\n  ],\n  \"facts\": {},\n  \"variableValues\": {},\n  \"paper\": \"letter\",\n  \"send\": {\n    \"replyTo\": \"person@example.com\",\n    \"senderName\": \"string\",\n    \"subject\": \"string\",\n    \"message\": \"string\",\n    \"expiryDays\": 0,\n    \"reminderDays\": [\n      1\n    ],\n    \"signingOrder\": \"any\",\n    \"language\": \"string\",\n    \"internalNote\": \"string\",\n    \"requireDeclineReason\": false\n  },\n  \"description\": \"string\",\n  \"sendNow\": false\n}",
+              "raw": "{\n  \"email\": {\n    \"subject\": \"string\",\n    \"message\": \"string\",\n    \"replyTo\": \"person@example.com\",\n    \"senderName\": \"string\"\n  },\n  \"metadata\": {\n    \"crmDealId\": \"D-1042\"\n  },\n  \"externalId\": \"contract-2026-0042\",\n  \"title\": \"string\",\n  \"source\": {},\n  \"people\": [\n    {\n      \"externalId\": \"contract-2026-0042\",\n      \"metadata\": {\n        \"crmDealId\": \"D-1042\"\n      },\n      \"name\": \"string\",\n      \"email\": \"person@example.com\",\n      \"role\": \"string\",\n      \"action\": \"signer\",\n      \"order\": 1\n    }\n  ],\n  \"facts\": {},\n  \"variableValues\": {},\n  \"paper\": \"letter\",\n  \"send\": {\n    \"replyTo\": \"person@example.com\",\n    \"senderName\": \"string\",\n    \"subject\": \"string\",\n    \"message\": \"string\",\n    \"expiryDays\": 0,\n    \"reminderDays\": [\n      1\n    ],\n    \"signingOrder\": \"any\",\n    \"internalNote\": \"string\",\n    \"requireDeclineReason\": false\n  },\n  \"description\": \"string\",\n  \"sendNow\": false\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -161,6 +161,39 @@
               }
             ],
             "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/documents/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "documents",
+                ":id"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "6f1c1f0e-7a0c-4d1d-9b5e-2f0a7b1c3d4e",
+                  "description": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete a draft that was never sent",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "description": "Removes a draft and its files. A document that was sent cannot be deleted: void it instead (`POST /api/v1/documents/{id}/void`), which keeps its record.",
             "url": {
               "raw": "{{baseUrl}}/api/v1/documents/:id",
               "host": [
@@ -253,7 +286,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"templateId\": \"6f1c1f0e-7a0c-4d1d-9b5e-2f0a7b1c3d4e\",\n  \"email\": {\n    \"subject\": \"string\",\n    \"message\": \"string\",\n    \"replyTo\": \"person@example.com\",\n    \"senderName\": \"string\",\n    \"locale\": \"string\"\n  },\n  \"metadata\": {\n    \"crmDealId\": \"D-1042\"\n  },\n  \"externalId\": \"contract-2026-0042\",\n  \"title\": \"string\",\n  \"message\": \"string\",\n  \"subject\": \"string\",\n  \"language\": \"en\",\n  \"expiryDays\": 1,\n  \"embedded\": [\n    \"string\"\n  ],\n  \"parties\": [\n    {\n      \"seat\": \"string\",\n      \"name\": \"string\",\n      \"email\": \"person@example.com\",\n      \"externalId\": \"contract-2026-0042\",\n      \"metadata\": {\n        \"crmDealId\": \"D-1042\"\n      }\n    }\n  ]\n}",
+              "raw": "{\n  \"templateId\": \"6f1c1f0e-7a0c-4d1d-9b5e-2f0a7b1c3d4e\",\n  \"email\": {\n    \"subject\": \"string\",\n    \"message\": \"string\",\n    \"replyTo\": \"person@example.com\",\n    \"senderName\": \"string\"\n  },\n  \"metadata\": {\n    \"crmDealId\": \"D-1042\"\n  },\n  \"externalId\": \"contract-2026-0042\",\n  \"title\": \"string\",\n  \"message\": \"string\",\n  \"subject\": \"string\",\n  \"expiryDays\": 1,\n  \"values\": {\n    \"effective_date\": \"2026-11-01\"\n  },\n  \"embedded\": [\n    \"string\"\n  ],\n  \"parties\": [\n    {\n      \"seat\": \"string\",\n      \"name\": \"string\",\n      \"email\": \"person@example.com\",\n      \"externalId\": \"contract-2026-0042\",\n      \"metadata\": {\n        \"crmDealId\": \"D-1042\"\n      }\n    }\n  ]\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -274,9 +307,14 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Idempotency-Key",
+                "value": "{{$guid}}",
+                "description": "8–200 characters; a retry with the same key and body does not repeat the action."
               }
             ],
-            "description": "Starts a draft and answers at once with a job id; poll `GET /api/v1/documents/ai/jobs/{id}`. The draft is a suggestion for a person to read; nothing is saved or sent. Refused plainly when AI drafting is switched off for the workspace or a limit is reached.",
+            "description": "Starts a draft and answers at once with a job id; poll `GET /api/v1/documents/ai/jobs/{id}`. Send an `Idempotency-Key` header to make a retry safe: the same key and body answer the first job and spend no second draft. The draft is a suggestion for a person to read; nothing is saved or sent. Refused plainly when AI drafting is switched off for the workspace or a limit is reached.",
             "url": {
               "raw": "{{baseUrl}}/api/v1/documents/ai/draft",
               "host": [
@@ -549,7 +587,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"seat\": \"signer_1\"\n}",
+              "raw": "{\n  \"seat\": \"signer_1\",\n  \"decline\": false,\n  \"reason\": \"string\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -741,6 +779,10 @@
                 "value": "application/json"
               },
               {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
                 "key": "Idempotency-Key",
                 "value": "{{$guid}}",
                 "description": "8–200 characters; a retry with the same key and body does not repeat the action."
@@ -767,6 +809,15 @@
                   "description": ""
                 }
               ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"values\": {\n    \"effective_date\": \"2026-11-01\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             }
           }
         },
@@ -875,7 +926,7 @@
           }
         },
         {
-          "name": "Search documents, templates, forms and people",
+          "name": "Search documents, templates and people",
           "request": {
             "method": "GET",
             "header": [
@@ -884,7 +935,7 @@
                 "value": "application/json"
               }
             ],
-            "description": "The same search as ⌘K in the app: documents by title or signer, templates, forms and people, best first, grouped. `per` is how many of each kind (1 to 20, default 6).",
+            "description": "The same search as ⌘K in the app: documents by title or signer, templates and people, best first, grouped. `per` is how many of each kind (1 to 20, default 6).",
             "url": {
               "raw": "{{baseUrl}}/api/v1/search",
               "host": [
@@ -1063,7 +1114,7 @@
                 "value": "application/json"
               }
             ],
-            "description": "The built-in Document templates (`kind=document`) and Form templates (`kind=form`): title, summary, seats, field counts and the questions its guidance asks. `templateId` is your workspace's copy once it has been used. Empty when the workspace hides the library.",
+            "description": "The built-in templates: title, summary, seats, field counts and the questions its guidance asks. `templateId` is your workspace's copy once it has been used. Empty when the workspace hides the library.",
             "url": {
               "raw": "{{baseUrl}}/api/v1/templates/library",
               "host": [
@@ -1293,7 +1344,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": {\n    \"subject\": \"string\",\n    \"message\": \"string\",\n    \"replyTo\": \"person@example.com\",\n    \"senderName\": \"string\",\n    \"locale\": \"string\"\n  },\n  \"metadata\": {\n    \"crmDealId\": \"D-1042\"\n  },\n  \"externalId\": \"contract-2026-0042\",\n  \"title\": \"string\",\n  \"people\": [\n    {\n      \"externalId\": \"contract-2026-0042\",\n      \"metadata\": {\n        \"crmDealId\": \"D-1042\"\n      },\n      \"name\": \"string\",\n      \"email\": \"person@example.com\",\n      \"role\": \"string\",\n      \"action\": \"signer\",\n      \"order\": 1\n    }\n  ],\n  \"variableValues\": {},\n  \"facts\": {},\n  \"send\": {\n    \"replyTo\": \"person@example.com\",\n    \"senderName\": \"string\",\n    \"subject\": \"string\",\n    \"message\": \"string\",\n    \"expiryDays\": 0,\n    \"reminderDays\": [\n      1\n    ],\n    \"signingOrder\": \"any\",\n    \"language\": \"string\",\n    \"internalNote\": \"string\",\n    \"requireDeclineReason\": false\n  },\n  \"sendNow\": false\n}",
+              "raw": "{\n  \"email\": {\n    \"subject\": \"string\",\n    \"message\": \"string\",\n    \"replyTo\": \"person@example.com\",\n    \"senderName\": \"string\"\n  },\n  \"metadata\": {\n    \"crmDealId\": \"D-1042\"\n  },\n  \"externalId\": \"contract-2026-0042\",\n  \"title\": \"string\",\n  \"people\": [\n    {\n      \"externalId\": \"contract-2026-0042\",\n      \"metadata\": {\n        \"crmDealId\": \"D-1042\"\n      },\n      \"name\": \"string\",\n      \"email\": \"person@example.com\",\n      \"role\": \"string\",\n      \"action\": \"signer\",\n      \"order\": 1\n    }\n  ],\n  \"variableValues\": {},\n  \"facts\": {},\n  \"send\": {\n    \"replyTo\": \"person@example.com\",\n    \"senderName\": \"string\",\n    \"subject\": \"string\",\n    \"message\": \"string\",\n    \"expiryDays\": 0,\n    \"reminderDays\": [\n      1\n    ],\n    \"signingOrder\": \"any\",\n    \"internalNote\": \"string\",\n    \"requireDeclineReason\": false\n  },\n  \"sendNow\": false\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1340,7 +1391,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"description\": \"string\",\n  \"clientDescription\": \"string\",\n  \"message\": \"string\",\n  \"send\": {\n    \"replyTo\": \"person@example.com\",\n    \"senderName\": \"string\",\n    \"subject\": \"string\",\n    \"message\": \"string\",\n    \"expiryDays\": 0,\n    \"reminderDays\": [\n      1\n    ],\n    \"signingOrder\": \"any\",\n    \"language\": \"string\",\n    \"internalNote\": \"string\",\n    \"requireDeclineReason\": false\n  }\n}",
+              "raw": "{\n  \"description\": \"string\",\n  \"clientDescription\": \"string\",\n  \"message\": \"string\",\n  \"send\": {\n    \"replyTo\": \"person@example.com\",\n    \"senderName\": \"string\",\n    \"subject\": \"string\",\n    \"message\": \"string\",\n    \"expiryDays\": 0,\n    \"reminderDays\": [\n      1\n    ],\n    \"signingOrder\": \"any\",\n    \"internalNote\": \"string\",\n    \"requireDeclineReason\": false\n  }\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1364,7 +1415,7 @@
                 "value": "application/json"
               }
             ],
-            "description": "Documents sent this calendar month (UTC), new templates made this month and emails sent today, with the plan's limits. `limit` is null when the plan has no limit (Pro has no template limit; a self-hosted install has no limits).",
+            "description": "Documents sent this period, AI drafts, new templates made this period and emails sent today, with the plan's limits, plus what the period costs so far on a plan with per-unit prices (`billing`). The period is the billing period on Pay as you go, Pro and Lifetime (`periodStart` to `periodEnd`, UTC; everything resets on `periodEnd`) and the UTC calendar month on Free. `limit` is null when the plan has no limit (Pro has no template limit; a self-hosted install has no limits).",
             "url": {
               "raw": "{{baseUrl}}/api/v1/usage",
               "host": [
@@ -1381,7 +1432,46 @@
           }
         },
         {
-          "name": "AI credits used against your plan",
+          "name": "Ask what an action would do to your plan, before doing it",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "description": "Answers, for one action, whether it is allowed (`allowed`), what it costs this time in whole cents (`cost.minor`, 0 inside the allowance; for `invite_person` it is a monthly amount, `cost.prorated`), where the meter stands and where it will stand (`meter`, `afterThis`), how loud the moment is (`severity`: `none`, `info` from 50 percent of the meter, `warn` from 80, `limit` at 100 while still allowed, `blocked` when the action would be refused), the stable refusal code the action would carry (`reason`, the same codes the refusals use: `plan_document_limit`, `plan_people_limit`, `plan_template_limit`, `plan_pro_required`, `budget_reached`, `ai_limit_credits`, `too_big`), the options that would let you go on with their prices (`options`, cheapest first) and one plain sentence (`message`). Every number is read from the one price list and your workspace's own counts; nothing is changed. The refusals the other routes return carry the same `options` and `severity` in `error.detail`.",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/preflight",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "preflight"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"action\": \"send_document\",\n  \"documents\": 1,\n  \"people\": 1,\n  \"recipients\": [\n    \"string\"\n  ],\n  \"bytes\": 0,\n  \"item\": \"string\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "AI drafts used against your plan",
           "request": {
             "method": "GET",
             "header": [
@@ -1390,7 +1480,7 @@
                 "value": "application/json"
               }
             ],
-            "description": "The AI allowance for the current period: credits included, used and remaining, when it resets, and the split by kind of work. `mode` is `own_key` (you bring your own provider key, so nothing is metered) or `unmetered` (self-hosted).",
+            "description": "The AI allowance for the current period: drafts included, used and remaining, when it resets, and the split by kind of work. `mode` is `own_key` (you bring your own provider key, so nothing is metered) or `unmetered` (self-hosted).",
             "url": {
               "raw": "{{baseUrl}}/api/v1/ai/usage",
               "host": [
@@ -1437,56 +1527,6 @@
       ]
     },
     {
-      "name": "Reports",
-      "item": [
-        {
-          "name": "Counts of what was sent and completed",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "description": "Real documents only — documents made in test mode are never counted. Dates are in the workspace's own time zone; `to` is inclusive; the default window is the last 30 days.",
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/reports",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "reports"
-              ],
-              "query": [
-                {
-                  "key": "from",
-                  "value": "",
-                  "disabled": true,
-                  "description": ""
-                },
-                {
-                  "key": "to",
-                  "value": "",
-                  "disabled": true,
-                  "description": ""
-                },
-                {
-                  "key": "team",
-                  "value": "",
-                  "disabled": true,
-                  "description": ""
-                }
-              ],
-              "variable": []
-            }
-          }
-        }
-      ]
-    },
-    {
       "name": "Teams",
       "item": [
         {
@@ -1520,172 +1560,6 @@
     {
       "name": "Email",
       "item": [
-        {
-          "name": "The workspace's email wording",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "description": "",
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/email-templates",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "email-templates"
-              ],
-              "query": [
-                {
-                  "key": "locale",
-                  "value": "",
-                  "disabled": true,
-                  "description": ""
-                }
-              ],
-              "variable": []
-            }
-          }
-        },
-        {
-          "name": "Set the wording of one email",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "description": "Variables look like `{{document.title}}`; each message type accepts only its own (see GET). A blank field means the standard wording.",
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/email-templates/:kind",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "email-templates",
-                ":kind"
-              ],
-              "query": [],
-              "variable": [
-                {
-                  "key": "kind",
-                  "value": "invitation",
-                  "description": "invitation, reminder, completed, declined, voided, expired, code or receipt"
-                }
-              ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"locale\": \"string\",\n  \"subject\": \"string\",\n  \"preview\": \"string\",\n  \"body\": \"string\",\n  \"buttonLabel\": \"string\",\n  \"footer\": \"string\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "Back to the standard wording",
-          "request": {
-            "method": "DELETE",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "description": "",
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/email-templates/:kind",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "email-templates",
-                ":kind"
-              ],
-              "query": [
-                {
-                  "key": "locale",
-                  "value": "",
-                  "disabled": true,
-                  "description": ""
-                }
-              ],
-              "variable": [
-                {
-                  "key": "kind",
-                  "value": "invitation",
-                  "description": "invitation, reminder, completed, declined, voided, expired, code or receipt"
-                }
-              ]
-            }
-          }
-        },
-        {
-          "name": "Preview an email with made-up names",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "description": "",
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/email-templates/:kind/preview",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "email-templates",
-                ":kind",
-                "preview"
-              ],
-              "query": [],
-              "variable": [
-                {
-                  "key": "kind",
-                  "value": "invitation",
-                  "description": "invitation, reminder, completed, declined, voided, expired, code or receipt"
-                }
-              ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"locale\": \"string\",\n  \"subject\": \"string\",\n  \"preview\": \"string\",\n  \"body\": \"string\",\n  \"buttonLabel\": \"string\",\n  \"footer\": \"string\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
         {
           "name": "The log of email about your documents",
           "request": {
@@ -1724,13 +1598,13 @@
                   "key": "status",
                   "value": "",
                   "disabled": true,
-                  "description": ""
+                  "description": "Only emails in this state; any other value is refused (R13-D205)."
                 },
                 {
                   "key": "kind",
                   "value": "",
                   "disabled": true,
-                  "description": ""
+                  "description": "Only emails of this kind; any other value is refused (R13-D346)."
                 },
                 {
                   "key": "limit",
@@ -2174,7 +2048,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"template\": \"string\",\n  \"title\": \"string\",\n  \"people\": [\n    {\n      \"name\": \"string\",\n      \"email\": \"person@example.com\",\n      \"role\": \"string\",\n      \"action\": \"signer\"\n    }\n  ],\n  \"answers\": {},\n  \"useDefaults\": false\n}",
+              "raw": "{\n  \"template\": \"string\",\n  \"title\": \"string\",\n  \"people\": [\n    {\n      \"name\": \"string\",\n      \"email\": \"person@example.com\",\n      \"role\": \"string\",\n      \"action\": \"signer\"\n    }\n  ],\n  \"answers\": {},\n  \"values\": {},\n  \"useDefaults\": false\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -2221,276 +2095,12 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"answers\": {},\n  \"useDefaults\": false\n}",
+              "raw": "{\n  \"answers\": {},\n  \"values\": {},\n  \"useDefaults\": false\n}",
               "options": {
                 "raw": {
                   "language": "json"
                 }
               }
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "Forms",
-      "item": [
-        {
-          "name": "List forms",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "description": "Every form template in the workspace: its link name, whether it is open, its response count and whether it has closed (a closing date or a response limit).",
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/forms",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "forms"
-              ],
-              "query": [],
-              "variable": []
-            }
-          }
-        },
-        {
-          "name": "List form templates",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "description": "The built-in form templates (the thirty from the template library) and your own: name, summary, who it is for, whether a team member counter-signs, and its default Publish settings.",
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/forms/templates",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "forms",
-                "templates"
-              ],
-              "query": [],
-              "variable": []
-            }
-          }
-        },
-        {
-          "name": "Get a form",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "description": "One form: its link (`/f/<workspace>/<slug>`), settings, response count and whether it is open.",
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/forms/:id",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "forms",
-                ":id"
-              ],
-              "query": [],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "6f1c1f0e-7a0c-4d1d-9b5e-2f0a7b1c3d4e",
-                  "description": ""
-                }
-              ]
-            }
-          }
-        },
-        {
-          "name": "List a form's responses",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "description": "Newest first. Each response is a document: its id opens it with GET /api/v1/documents/{id}. `limit` is 1 to 500.",
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/forms/:id/responses",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "forms",
-                ":id",
-                "responses"
-              ],
-              "query": [
-                {
-                  "key": "limit",
-                  "value": "",
-                  "disabled": true,
-                  "description": ""
-                },
-                {
-                  "key": "offset",
-                  "value": "",
-                  "disabled": true,
-                  "description": ""
-                }
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "6f1c1f0e-7a0c-4d1d-9b5e-2f0a7b1c3d4e",
-                  "description": ""
-                }
-              ]
-            }
-          }
-        },
-        {
-          "name": "Publish a form",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Idempotency-Key",
-                "value": "{{$guid}}",
-                "description": "8–200 characters; a retry with the same key and body does not repeat the action."
-              }
-            ],
-            "description": "Gives a form template its public link and settings (or changes them). `slug` is 4 to 60 letters, numbers and dashes. The template must be approved and have one person who fills it in, plus at most one team member who counter-signs (`settings.counterSign`).",
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/forms/publish",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "forms",
-                "publish"
-              ],
-              "query": [],
-              "variable": []
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"templateId\": \"6f1c1f0e-7a0c-4d1d-9b5e-2f0a7b1c3d4e\",\n  \"slug\": \"string\",\n  \"settings\": {\n    \"verifyEmail\": false,\n    \"copyTo\": \"person@example.com\",\n    \"expiresAt\": \"string\",\n    \"responseLimit\": 1,\n    \"intro\": \"string\",\n    \"thankYou\": \"string\",\n    \"fillAgain\": false,\n    \"embedSites\": [\n      \"string\"\n    ],\n    \"notifyOwner\": false,\n    \"confirmRespondent\": false,\n    \"counterSign\": {\n      \"on\": false,\n      \"userId\": \"6f1c1f0e-7a0c-4d1d-9b5e-2f0a7b1c3d4e\"\n    }\n  },\n  \"enabled\": false\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "Open or close a form",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "description": "`open: false` keeps the link but says the form is not taking responses.",
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/forms/:id/open",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "forms",
-                ":id",
-                "open"
-              ],
-              "query": [],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "6f1c1f0e-7a0c-4d1d-9b5e-2f0a7b1c3d4e",
-                  "description": ""
-                }
-              ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"open\": false\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "Unpublish a form",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "description": "The link stops working. The form template, its settings and every response are kept; publish it again at any time.",
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/forms/:id/unpublish",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "forms",
-                ":id",
-                "unpublish"
-              ],
-              "query": [],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "6f1c1f0e-7a0c-4d1d-9b5e-2f0a7b1c3d4e",
-                  "description": ""
-                }
-              ]
             }
           }
         }
@@ -2643,7 +2253,7 @@
                 "description": "8–200 characters; a retry with the same key and body does not repeat the action."
               }
             ],
-            "description": "Sends a sample signed event (`test: true` in its payload) to the webhook now and returns the receiver's answer. Nothing is stored and failures here never count toward disabling the webhook. Nothing is created, so no Idempotency-Key is needed: repeating the call just sends another test.",
+            "description": "Sends a sample signed event (`test: true` in its payload) to the webhook now and returns the receiver's answer. The send is listed under the webhook's deliveries with `test: true`; failures here never count toward disabling the webhook and are never retried. Nothing is created, so no Idempotency-Key is needed: repeating the call just sends another test.",
             "url": {
               "raw": "{{baseUrl}}/api/v1/webhooks/:id/test",
               "host": [
@@ -2733,7 +2343,7 @@
                 "value": "application/json"
               }
             ],
-            "description": "",
+            "description": "Real deliveries and test sends (`test: true`, from `POST /webhooks/{id}/test`) together.",
             "url": {
               "raw": "{{baseUrl}}/api/v1/webhooks/:id/deliveries",
               "host": [
@@ -2908,101 +2518,10 @@
       ]
     },
     {
-      "name": "Contracts",
-      "item": [
-        {
-          "name": "List signed contracts with their key dates",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "description": "Every signed document with the dates read from its boxes at signing — start, end, notice, renewal — and its value, with where each came from (`source`: a box, or a person's correction). Filter with `q` (title or person).",
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/contracts",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "contracts"
-              ],
-              "query": [
-                {
-                  "key": "q",
-                  "value": "",
-                  "disabled": true,
-                  "description": ""
-                },
-                {
-                  "key": "limit",
-                  "value": "",
-                  "disabled": true,
-                  "description": ""
-                }
-              ],
-              "variable": []
-            }
-          }
-        },
-        {
-          "name": "Correct a contract's key date",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "description": "Sets one key date (or the value) on a signed document by hand. The signed PDF never changes; the correction is kept as the person's, and renewal reminders follow it. `date` is YYYY-MM-DD; `null` clears it.",
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/contracts/:id/dates",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "contracts",
-                ":id",
-                "dates"
-              ],
-              "query": [],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "6f1c1f0e-7a0c-4d1d-9b5e-2f0a7b1c3d4e",
-                  "description": ""
-                }
-              ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"kind\": \"start\",\n  \"date\": \"string\",\n  \"amountMinor\": 0,\n  \"currency\": \"string\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        }
-      ]
-    },
-    {
       "name": "Payments",
       "item": [
         {
-          "name": "List payments taken through documents and forms",
+          "name": "List payments taken through documents",
           "request": {
             "method": "GET",
             "header": [
@@ -3084,84 +2603,6 @@
             "body": {
               "mode": "raw",
               "raw": "{\n  \"amountMinor\": 1,\n  \"reason\": \"string\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "Automations",
-      "item": [
-        {
-          "name": "List automations",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "description": "Each automation built on the canvas: when it starts (a signed document from a template or form), its steps, whether it is on, how many times it ran and its recent runs. (`GET /api/v1/playbooks` lists packs: bundles of skills and templates.)",
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/automations",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "automations"
-              ],
-              "query": [],
-              "variable": []
-            }
-          }
-        },
-        {
-          "name": "Switch an automation on or off",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "description": "`on: true` switches it on (Pro): from then on, each matching signed document starts a run. `on: false` stops new runs, and a run that is waiting stops when its wait ends, without sending its reminder.",
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/automations/:id/enable",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "automations",
-                ":id",
-                "enable"
-              ],
-              "query": [],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "6f1c1f0e-7a0c-4d1d-9b5e-2f0a7b1c3d4e",
-                  "description": ""
-                }
-              ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"on\": false\n}",
               "options": {
                 "raw": {
                   "language": "json"

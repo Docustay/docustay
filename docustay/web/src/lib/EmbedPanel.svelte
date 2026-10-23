@@ -8,12 +8,12 @@
   let origin = $state("https://app.example.com"), seat = $state("signer_1"), copied = $state(null);
   const safe = $derived(/^https:\/\/[a-z0-9.-]+(:\d+)?$/i.test(origin.trim()) || /^http:\/\/localhost(:\d+)?$/i.test(origin.trim()));
   const server = $derived(`curl -X POST ${base}/api/v1/documents/DOCUMENT_ID/embed-session \\
-  -H "Authorization: Bearer $DOCUSTAY_KEY" -H "Content-Type: application/json" \\
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY" -H "Content-Type: application/json" \\
   -d '{ "seat": "${seat.trim() || "signer_1"}", "origin": "${origin.trim()}" }'`);
   const page = $derived(`<script type="module" src="${base}/embed/index.js"><\/script>\n<docustay-sign url="URL_FROM_THE_ANSWER" height="720"></docustay-sign>`);
   async function copy(k, text) { try { await navigator.clipboard.writeText(text); copied = k; setTimeout(() => (copied = null), 1800); } catch { copied = null; } }
 </script>
-<div class="max-w-3xl space-y-6">
+<div class=" space-y-6">
   <section><h2 class="text-xl font-semibold">{t("Embedding")}</h2><p class="mt-1 text-sm text-mute">{t("Show the signing form inside your own website or app. Only the websites you list below can frame it, and the form only talks to them. Embedding is included in every plan.")}</p></section>
   <SettingsForm only={["embed"]} bare />
   <section><h3 class="text-lg font-semibold">{t("Snippet builder")}</h3>

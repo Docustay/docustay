@@ -10,7 +10,7 @@
 </script>
 <ul class="lg" aria-label="Sample events" {@attach whenVisible(vis)}>{#each rows as r (r.t + r.n)}<li class={r.n === 2 ? "red" : ""}><code>{EV[r.n]}</code><span>{r.t}</span><em>{r.n === 4 ? "waiting" : "delivered"}</em></li>{/each}</ul>
 <style>
-  .lg { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; } .lg li { display: grid; grid-template-columns: 1fr auto auto; gap: 14px; align-items: center; border: 1px solid #2a2a2c; background: #131315; padding: 10px 14px; } .lg li.red { border-color: #8585fd; }
-  code { font: 500 12.5px/1 var(--font-mono); color: #f4f2ec; } span, em { font: 500 11px/1 var(--font-mono); color: #8c877e; font-style: normal; letter-spacing: .06em; } em { color: #7bd88f; text-transform: uppercase; }
-  @media (max-width: 600px) { .lg li { grid-template-columns: 1fr auto; } .lg em { display: none; } code { font-size: 11px; } }
+  .lg { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; } .lg li { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 14px; align-items: center; border: 1px solid var(--hairline); background: #ffffff; padding: 10px 14px; } .lg li.red { border-color: rgb(90 58 193 / 0.5); }
+  code { font: 500 12.5px/1 var(--font-mono); color: var(--tx-1); } span, em { font: 500 11px/1 var(--font-mono); color: #8c877e; font-style: normal; letter-spacing: .06em; } em { color: #1c7448; text-transform: uppercase; }
+  @media (max-width: 600px) { .lg li { grid-template-columns: minmax(0, 1fr) auto; } .lg em { display: none; } code { font-size: 11px; } }
 </style>

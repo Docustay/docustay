@@ -227,6 +227,8 @@ export async function recognizeApiToken(authorization) {
 
 /** ★ Installed at boot so the token path resolves through `keystone.resolve_api_token`. */
 export function installApiTokenResolver(fn) { apiTokenResolver = fn; }
+/** Whether a real (database) key resolver is installed; without one (a bare test app) the routes' own in-memory check decides. */
+export const apiTokenResolverInstalled = () => apiTokenResolver !== null;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // P1.11 — WEBHOOK PATH

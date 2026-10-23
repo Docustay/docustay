@@ -29,7 +29,7 @@ People sign in with a password, an emailed code or a passkey. Everyone can turn 
 
 Signed documents are sealed with a digital signature.
 
-Secrets we store for you (webhook signing secrets, a custom mail server's password, two-step secrets) are sealed with AES-256-GCM under a key kept apart from the database. Requests are rate-limited. Signing links are single-purpose tokens that are not kept in the address bar after load.
+Secrets we store for you (webhook signing secrets, two-step secrets) are sealed with AES-256-GCM under a key kept apart from the database. Requests are rate-limited. Signing links are single-purpose tokens that are not kept in the address bar after load.
 
 Every file we store for a workspace (uploaded PDFs, the signed and sealed copies, certificates and printed templates) is encrypted with AES-256-GCM before it is written to storage, under a data key that belongs to that workspace alone. Each workspace's key is itself sealed under a platform key kept outside the database, and a file is bound to its workspace and its place in storage, so a file copied into another workspace, or to another path, does not open. Keys can be rotated: a background job moves a workspace's files onto the new key, and the old key is kept so an older backup still opens. A restored copy of the database together with a copy of the storage opens the files; either one alone does not, and neither does the database with a different platform key.
 
@@ -38,6 +38,12 @@ Server logs leave out email addresses and credentials. A dependency check runs b
 The database is backed up every day to a separate storage location, and those backups are deleted after 30 days. We do not currently test restores on a schedule. When a backup is restored, the recorded deletions are carried out again, so a deleted person or workspace does not come back.
 
 Not yet: no outside audit, certification or penetration test has been done and none is claimed. There is no bug-bounty programme. The file encryption above does not cover the database itself (that depends on the disk the host provides), staff photos, brand logos or data exports, and the platform key protects the workspace keys only as well as the place it is kept.
+
+## People, roles and two-step sign-in, from one screen.
+
+Two-step sign-in is offered to everyone; an owner can require it for the whole team, and sessions can be listed and ended.
+
+**Roles.** Each person has the access you assign.
 
 ## Keys, scopes and signed webhooks.
 
@@ -61,11 +67,23 @@ The hosted service runs in the United States on Railway. You cannot yet choose a
 
 A signed document is kept for the period you set, or indefinitely if you leave it empty, and cannot be deleted one by one inside that period. Unsigned drafts are yours to delete. The API call log is kept 30 days.
 
-Take it with you. Download any signed copy as a PDF. Export a document's audit log, the workspace's audit log, the people list and each form's responses as CSV. Read everything through the API.
+Take it with you. Download any signed copy as a PDF. Export a document's audit log, the workspace's audit log, and the people list as CSV. Read everything through the API.
 
 Removing it. A member can delete their own account, with a 14-day cooling-off period. An owner can delete the whole workspace, with a 7-day cooling-off period; then everything in it is removed. Backups are deleted after 30 days, and recorded deletions are carried out again after a restore. A record that a deletion happened is kept as a hash, a date and a request id, with no names or addresses.
 
 We do not sell data. We do not use your documents to train a model.
+
+## Where each kind of data is kept.
+
+| Data | Kept at | Also handled by | How long |
+| --- | --- | --- | --- |
+| Documents, PDFs and field values | Railway (US) | Anthropic, only when a person uses an AI feature | While your workspace exists |
+| Audit trail and certificates | Railway (US) | No one else | With the document |
+| Sign-in identity | Google (Firebase) | No one else | Until the account is deleted |
+| Emails | Resend | No one else | Resend's send log |
+| Payments | Stripe | No one else | Stripe's own records |
+| Product analytics | PostHog | No one else | Set by PostHog's retention for our project |
+| Backups | A separate storage location | No one else | 30 days |
 
 ## Docustay is not for protected health information yet.
 
@@ -79,9 +97,17 @@ Running it yourself? The self-host hardening guide is the checklist for sensitiv
 
 ## What is inside a signed PDF.
 
-- [The record](/product/proof): Every signature is a row in an append-only record whose hash covers the one before it.
-- [The seal](/product/proof): A detached PKCS#7 digital signature over the whole file; any later change makes it fail.
-- [The certificate](/product/proof): The last page lists each person, the time and address of each act and the SHA-256 fingerprint.
+- [The record](/features/proof): Every signature is a row in an append-only record whose hash covers the one before it.
+- [The seal](/features/proof): A detached PKCS#7 digital signature over the whole file; any later change makes it fail.
+- [The certificate](/features/proof): The last page lists each person, the time and address of each act and the SHA-256 fingerprint.
+
+## Each signature's hash covers the one before it.
+
+Change one record and every later hash stops matching.
+
+**Who and when.** The seat, name, email, time, address and browser.
+
+**What was agreed.** The wording the person agreed to.
 
 ## A trusted time, and a check anyone can run.
 
@@ -93,19 +119,28 @@ Anyone can drop a signed PDF on the verify page. It reads the seal and the finge
 
 This is a simple electronic signature with a strong evidence record and a tamper-evident seal. It is not a qualified electronic signature and does not check anyone's identity beyond their email address or an access code you share.
 
-## Seven companies.
+## Sign it, seal it, check it.
+
+When the last person signs, the PDF gets a digital signature over the whole file. Anyone can drop the copy on the verify page, with no account.
+
+**Seal.** A digital signature over every finished PDF.
+
+**Check.** The verify page reads the file in your browser; it is not uploaded.
+
+## Eight companies.
 
 - **Railway**: Application and database hosting. All data you store.
 - **Google Cloud and Firebase**: Sign-in and supporting infrastructure. Account email and sign-in identifiers.
 - **Stripe**: Payments and billing. Billing details and payment references; card numbers go to Stripe directly.
 - **Resend**: Sending email. Recipient email address and the message.
 - **Anthropic**: The AI model behind Scribe and Find fields with AI. The text or page pictures of a document, only when a person uses an AI feature, and only for that request.
-- **Cloudflare**: Bot check on the sign-up page and public forms. The visitor's address and browser.
+- **Cloudflare**: Bot check on the sign-up page. The visitor's address and browser.
+- **PostHog**: Product analytics. Events about how the website and the service are used, such as pages viewed, a plan change or a send, tied to an account id. Never document content.
 - **A public time-stamp authority (DigiCert by default)**: Trusted timestamp on a signed file. A hash of the document only, never its contents.
 
 ## Told before it changes.
 
-Services you connect yourself, such as your own AI key, your own mail server or a mailbox you link, are your choice and are not Docustay sub-processors. When this list changes we update this page and tell workspace owners before the change takes effect.
+Services you connect yourself, such as your own Stripe account, or your own mail server on a self-hosted install, are your choice and are not Docustay sub-processors. When this list changes we update this page and tell workspace owners before the change takes effect.
 
 ## Write to us; we read every report.
 
@@ -137,7 +172,7 @@ Not a signature. Each signature's hash covers the one before it, so a change bre
 
 **Does test mode appear?**
 
-Test documents are marked TEST, mailed only to the sender and left out of reports.
+Test documents are marked TEST, mailed only to the sender and left out of usage and billing.
 
 **Can I check a signed PDF?**
 
@@ -154,4 +189,4 @@ Yes. Drop it on the verify page. It needs no account.
 
 - [Legal validity](/trust/legal-validity)
 - [Self-host hardening](/docs/self-host-hardening)
-- [Proof](/product/proof)
+- [Proof](/features/proof)

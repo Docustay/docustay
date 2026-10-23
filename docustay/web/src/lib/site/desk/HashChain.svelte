@@ -21,8 +21,8 @@
   <button type="button" class="reset" onclick={() => { texts = [...base]; hashes = [...orig]; }}>Put it back</button>
 </div>
 <style>
-  .hc { display: grid; gap: 6px; max-width: 520px; } .ar { text-align: center; color: #8f8a80; font: 500 14px/1 var(--font-mono); }
-  .blk { border: 1.2px solid rgb(244 242 236 / .7); padding: 12px 14px; display: grid; gap: 6px; background: rgb(244 242 236 / .03); } .blk.bad { border-color: #8585fd; background: rgb(133 133 253 / .1); }
-  .k { display: block; font: 500 10px/1 var(--font-mono); letter-spacing: .12em; color: #8f8a80; margin-bottom: 6px; } input { width: 100%; background: transparent; border: 0; border-bottom: 1px dashed #3a3a3d; color: #f4f2ec; font: 500 15px/1.4 var(--font-sans); padding: 2px 0 5px; }
-  .h { font: 500 12px/1 var(--font-mono); color: #a8a39a; } .st { font: 500 10px/1 var(--font-mono); letter-spacing: .1em; color: #7bd88f; } .bad .st { color: #8585fd; } .reset { justify-self: start; margin-top: 10px; background: none; border: 1px solid #3a3a3d; color: #f4f2ec; border-radius: 6px; padding: 9px 14px; font: 500 13px/1 var(--font-sans); cursor: pointer; min-height: 40px; }
+  .hc { display: grid; gap: 6px; max-width: 520px; } .ar { text-align: center; color: var(--tx-3); font: 500 14px/1 var(--font-mono); }
+  .blk { border: 1.2px solid rgb(244 242 236 / .7); padding: 12px 14px; display: grid; gap: 6px; background: rgb(22 22 29 / 0.03); } .blk.bad { border-color: rgb(90 58 193 / 0.5); background: rgb(90 58 193 / 0.05); }
+  .k { display: block; font: 500 10px/1 var(--font-mono); letter-spacing: .12em; color: var(--tx-3); margin-bottom: 6px; } input { width: 100%; background: transparent; border: 0; border-bottom: 1px dashed var(--hairline); color: var(--tx-1); font: 500 15px/1.4 var(--font-sans); padding: 2px 0 5px; }
+  .h { font: 500 12px/1 var(--font-mono); color: var(--tx-3); } .st { font: 500 10px/1 var(--font-mono); letter-spacing: .1em; color: #1c7448; } .bad .st { color: var(--v-700); } .reset { justify-self: start; margin-top: 10px; background: none; border: 1px solid var(--hairline); color: var(--tx-1); border-radius: 6px; padding: 9px 14px; font: 500 13px/1 var(--font-sans); cursor: pointer; min-height: 40px; }
 </style>

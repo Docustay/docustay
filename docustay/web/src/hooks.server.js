@@ -1,7 +1,8 @@
 // Docustay's web app talks to ONE backend, server-side, so the browser sees a single origin (no CORS) and no backend hostname ever reaches a customer's browser, email or network tab.
-import { hostMayServe, redirectFor } from "$lib/hostGuard.js";
+import { hostMayServe, redirectFor, isSiteHost } from "$lib/hostGuard.js";
 import { movedTo } from "$lib/site/redirects.js";
 const API = (process.env.DOCUSTAY_API_URL || "http://localhost:8080").replace(/\/+$/, "");
+if (process.env.NODE_ENV === "production" || process.env.RAILWAY_ENVIRONMENT_NAME) { const h = new URL(API); console.log(`[proxy] API upstream ${h.protocol}//${h.host}`); if (/^(127\.|localhost|\[?::1)/.test(h.hostname) && process.env.RAILWAY_ENVIRONMENT_NAME) console.error(`[proxy] WARNING: DOCUSTAY_API_URL points at ${h.host}, a loopback address, on a hosted service: every /api call will fail`); }
 const PASS = ["cookie", "content-type", "idempotency-key", "accept", "user-agent", "x-qa-token", "authorization", "stripe-signature"];
 
 // Part 30 item 0 — the headers every response carries (the app server used to send none of them; measured 4 Oct 2026).
@@ -32,32 +33,22 @@ async function squeeze(res, event) {
     return new Response(body, { status: res.status, headers: h });
   } catch { return res; }
 }
-import { SITE_LANGS, RTL } from "$lib/site/l10n-langs.js";
-// the page's language and direction go on <html> in the server's own HTML (the static shell says lang="en"): a screen reader and a search engine read the right language, and Arabic is mirrored before the first paint
-const langOf = (pathname) => { const first = pathname.split("/")[1]; return first !== "en" && SITE_LANGS.includes(first) ? first : null; };
 // a shared link needs its own title and description: copied from the page's <title> and meta description into Open Graph and Twitter tags (every page already sets those two)
 const esc = (x) => x.replace(/"/g, "&quot;");
 const social = (html) => { if (html.includes('property="og:title"')) return html; const t = html.match(/<title>([^<]*)<\/title>/)?.[1], d = html.match(/<meta name="description" content="([^"]*)"/)?.[1]; if (!t) return html; return html.replace(/<meta name="twitter:card"[^>]*>/, (m) => `${m}<meta property="og:title" content="${esc(t)}" /><meta name="twitter:title" content="${esc(t)}" />${d ? `<meta property="og:description" content="${d}" /><meta name="twitter:description" content="${d}" />` : ""}`); };
 import { surfaceOf, preferenceFrom, serverTheme } from "$lib/theme/surface.js";
+import { siteGraph, jsonldScript } from "$lib/site/jsonld.js";
+// structured data (Organization, WebSite and the page itself) goes into the <head> of every public-site page, built here from the path, title and description
+const structured = (html, event) => { try { if (!event.route?.id?.startsWith("/(site)") || html.includes('"@id":"https://docustay.app/#organization"')) return html; const t = html.match(/<title>([^<]*)<\/title>/)?.[1], d = html.match(/<meta name="description" content="([^"]*)"/)?.[1]; if (!t) return html; const dec = (x) => x.replace(/&quot;/g, '"').replace(/&amp;/g, "&").replace(/&#39;/g, "'").replace(/&lt;/g, "<").replace(/&gt;/g, ">"); return html.replace("</head>", `${jsonldScript(siteGraph({ path: event.url.pathname, title: dec(t), description: dec(d ?? ""), hasCrumbs: html.includes('"BreadcrumbList"') }))}</head>`); } catch { return html; } };
 // the look goes on <html> in the server's own HTML: data-theme from the saved Appearance (light by default; "system" is resolved by the pre-paint script in app.html) and data-surface from the route (the marketing site is always dark, the signing page always light and friendly)
 const withLang = (event) => {
-  const l = langOf(event.url.pathname);
   let cookie = ""; try { cookie = event.request.headers.get("cookie") ?? ""; } catch { /* prerendering */ }
   const surface = surfaceOf(event.route?.id, event.url.pathname);
   const look = ` data-theme="${serverTheme(preferenceFrom(cookie))}"${surface ? ` data-surface="${surface}"` : ""}`;
-  const lang = l ? `${l === "zh" ? "zh-Hans" : l === "pt" ? "pt-BR" : l}` : "en";
-  return { transformPageChunk: ({ html }) => social(html.replace('<html lang="en">', `<html lang="${lang}"${l && RTL.includes(l) ? ' dir="rtl"' : ""}${look}>`)) };
-};
-// R10-60: the two old console addresses are areas of Settings. The page-level redirect (routes/(app)/console/*/+page.js) needs the whole app loaded first; answering it here is one round trip, so a link to either lands on Settings at once.
-export const consoleRedirect = (url) => {
-  if (url.pathname !== "/console/platform" && url.pathname !== "/console/developers") return null;   // (reading the query string on a prerendered page is an error, so only these two paths ever touch it)
-  const tab = url.searchParams.get("tab");
-  if (url.pathname === "/console/platform") return `/settings?tab=${!tab || tab === "overview" ? "team" : encodeURIComponent(tab)}`;
-  if (url.pathname === "/console/developers") return `/settings?tab=${!tab || tab === "overview" ? "dev" : tab === "developer" ? "keys" : encodeURIComponent(tab)}`;
-  return null;
+  // the website is English only (browsers translate pages for people): <html lang="en"> as the static shell says, plus the look
+  return { transformPageChunk: ({ html }) => structured(social(html.replace('<html lang="en">', `<html lang="en"${look}>`)), event) };
 };
 export async function handle({ event, resolve: baseResolve }) {
-  const to = consoleRedirect(event.url); if (to) return hardened(new Response(null, { status: 307, headers: { location: to } }), event);
   const resolve = (e, opts) => baseResolve(e, opts ?? withLang(e));
   const res = await handleInner({ event, resolve });
   return hardened(await squeeze(event.url.pathname === "/sign/pdf" ? stripeOnSigning(res) : event.url.pathname === "/signup" || event.url.pathname === "/login" ? googleOnEntry(res) : res, event), event);
@@ -89,8 +80,11 @@ export function googleOnEntry(res) {
 async function handleInner({ event, resolve }) {
   const { pathname } = event.url;
   let search = ""; try { search = event.url.search; } catch { /* prerendering has no query string, and reading it throws */ }
+  // R13-D255: a doubled slash (docustay.app//features/) was a 404; a page address with one goes to the same address with single slashes. API calls are left as sent.
+  if (pathname.includes("//") && !pathname.startsWith("/api/") && (event.request.method === "GET" || event.request.method === "HEAD")) return new Response(null, { status: 301, headers: { location: pathname.replace(/\/{2,}/g, "/") + search } });
   const moved = redirectFor(event.url.host, pathname); if (moved) return new Response(null, { status: /^www\./i.test(event.url.hostname) ? 301 : 302, headers: { location: moved.startsWith("/") ? moved + search : moved + search } });
-  const renamed = movedTo(pathname); if (renamed) { const [to, hash] = renamed.split("#"); return new Response(null, { status: 301, headers: { location: to + search + (hash ? `#${hash}` : "") } }); }   // an old public address of the marketing site
+  // /templates is the workspace list everywhere except the public site address (where it is an old address of the template hub)
+  const renamed = pathname === "/templates" && !isSiteHost(event.url.host) ? null : movedTo(pathname); if (renamed) { const [to, hash] = renamed.split("#"); return new Response(null, { status: 301, headers: { location: to + search + (hash ? `#${hash}` : "") } }); }   // an old public address of the marketing site
   // A self-hosted install has no public site and no public sign-up: "/" goes to first-run setup (until the owner exists) or to the workspace, and /signup goes to sign-in.
   if (process.env.DOCUSTAY_SELF_HOST === "1") {
     if (pathname === "/signup" || pathname === "/signup/") return new Response(null, { status: 302, headers: { location: "/login" } });
@@ -100,10 +94,10 @@ async function handleInner({ event, resolve }) {
     }
   }
   if (!hostMayServe(event.url.hostname, pathname)) return new Response("Not found", { status: 404 });   // a customer's own hostname answers only the public pages
+  if (pathname === "/people" || pathname.startsWith("/people/")) return new Response(null, { status: 301, headers: { location: `/contacts${pathname.slice("/people".length)}${event.url.search}` } });   // People is now Contacts (21 Oct 2026); the old address and any bookmark or email still work
   if (pathname === "/docs" || pathname === "/docs/") return new Response(null, { status: 308, headers: { location: "/docs/index" } });   // a real redirect (the docs index page lives at /docs/index)
   if (pathname === "/sign/pdf" && event.url.searchParams.get("embed") === "1") return embedded(event, resolve);
   if (pathname === "/embed/builder" || pathname === "/embed/scribe") return builderFrame(event, resolve);
-  if (pathname.startsWith("/f/") && event.url.searchParams.get("embed") === "1") return formFrame(event, resolve);
   const connector = pathname === "/mcp" || pathname.startsWith("/.well-known/oauth-");   // the hosted connector: MCP and its discovery documents live on the API
   if (!pathname.startsWith("/api/") && !connector) return resolve(event);
   const headers = new Headers();
@@ -120,6 +114,8 @@ async function handleInner({ event, resolve }) {
   let sent = 0;
   try { const payload = hasBody ? Buffer.from(await event.request.arrayBuffer()) : undefined; sent = payload?.length ?? 0; upstream = await fetch(`${API}${pathname}${search}`, { method: event.request.method, headers, body: payload, redirect: "manual" }); }
   catch (e) {
+    // never swallow the real reason: a stale or unreachable upstream address failed silently for a day (15 Oct 2026, DOCUSTAY_API_URL=http://127.0.0.1:9). Host and error code only, no path query, no headers.
+    console.error(`[proxy] upstream failed: ${event.request.method} ${pathname} -> ${new URL(API).host}: ${e?.cause?.code ?? e?.code ?? e?.name} ${String(e?.cause?.message ?? e?.message ?? "").slice(0, 120)}`);
     // the API answers 413 and closes the connection while a large body is still being sent; the sender then sees a reset, not the answer (measured: a 5 MB JSON body came back 502 in a busy run). Say what happened.
     if (sent > 1_000_000 && /UND_ERR_SOCKET|ECONNRESET|EPIPE/.test(String(e?.cause?.code ?? e?.code ?? ""))) return new Response(JSON.stringify({ error: { kind: "validation", message: "request body too large", retryable: false } }), { status: 413, headers: { "content-type": "application/json" } }); return new Response(JSON.stringify({ error: { kind: "dependency", message: "The service behind this page did not answer. Please try again in a moment.", retryable: true } }), { status: 502, headers: { "content-type": "application/json", "retry-after": "5" } }); }   // a backend that is down is a 502 with a plain message, never an unhandled 500
   const out = new Headers();
@@ -138,25 +134,6 @@ async function embedded(event, resolve) {
     if (t) {
       const r = await fetch(`${API}/api/public/pdf/embed-origins`, { method: "POST", headers: { "content-type": "application/json", "idempotency-key": `emb-${Date.now()}-${Math.random().toString(36).slice(2)}` }, body: JSON.stringify({ presented: t }) });
       if (r.ok) origins = ((await r.json()).origins ?? []).filter((o) => ORIGIN.test(o));
-    }
-  } catch { /* keep none */ }
-  if (!origins.length) return res;
-  const h = new Headers(res.headers), csp = h.get("content-security-policy");
-  if (csp) h.set("content-security-policy", csp.replace(/frame-ancestors[^;]*/i, `frame-ancestors ${origins.join(" ")}`));
-  h.delete("x-frame-options");
-  return new Response(res.body, { status: res.status, statusText: res.statusText, headers: h });
-}
-
-// Run 7 — a public FORM shown inside a customer's page: framed ONLY by the websites that form lists (its "Websites that may show the form" setting); anything else keeps frame-ancestors 'none'.
-async function formFrame(event, resolve) {
-  const res = await resolve(event);
-  const parts = event.url.pathname.split("/").filter(Boolean);   // ["f", org, form] or ["f", form] on a customer's own hostname
-  const org = parts.length >= 3 ? parts[1] : "-", slug = parts.length >= 3 ? parts[2] : parts[1];
-  let origins = [];
-  try {
-    if (slug) {
-      const r = await fetch(`${API}/api/public/forms/${encodeURIComponent(org)}/${encodeURIComponent(slug)}`, { headers: { accept: "application/json", host: event.url.host } });
-      if (r.ok) origins = ((await r.json()).embedSites ?? []).filter((o) => ORIGIN.test(o));
     }
   } catch { /* keep none */ }
   if (!origins.length) return res;

@@ -14,7 +14,7 @@ async function assertMayView(tx) { if (!(await mayView(tx))) throw forbidden("re
 export async function listCustomers(tx) {
   await assertMayView(tx);
   const { rows } = await tx.query(`SELECT * FROM keystone.docustay_workspaces() ORDER BY created_at DESC`);
-  return rows.map((r) => ({ workspaceId: r.tenant_id, slug: r.slug, name: r.name, createdAt: r.created_at, plan: r.plan_key === "docustay_pro" ? "Pro" : "Free", status: r.status, interval: r.billing_interval, founders: r.founders_price === true,
+  return rows.map((r) => ({ workspaceId: r.tenant_id, slug: r.slug, name: r.name, createdAt: r.created_at, plan: ({ docustay_pro: "Pro", docustay_payg: "Pay as you go", docustay_lifetime: "Lifetime" })[r.plan_key] ?? "Free", status: r.status, interval: r.billing_interval, founders: r.founders_price === true,
     owner: { name: r.owner_name, email: r.owner_email }, stripeCustomerId: r.stripe_customer_id, renewsAt: r.current_period_end, paymentProblem: r.past_due_since != null, people: r.people, documentsThisMonth: r.documents_this_month }));
 }
 

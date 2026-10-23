@@ -82,7 +82,7 @@ export const BUILTIN_ROLES = Object.freeze([
   {
     key: "owner",
     label: "Owner",
-    description: "Full access to everything in the practice, including settings and billing.",
+    description: "Full access to everything in the workspace, including settings, billing and deleting the workspace.",
     // ★ `note`, `report`, `message`, `goal` and `audit` are ownerless: `view/everything`, not
     //   `delete/everything` — an Owner may see every note, report, message, goal and audit row in
     //   the practice, but "delete" answers a question these five have no per-row concept of.
@@ -94,7 +94,7 @@ export const BUILTIN_ROLES = Object.freeze([
   {
     key: "admin",
     label: "Admin",
-    description: "Runs the practice day to day. Everything except changing practice settings.",
+    description: "Runs the workspace day to day: everyone's records, the team, settings, billing and keys. Cannot delete the workspace or take a refund (those stay with the Owner).",
     // ★ An admin may EDIT settings — running the practice day to day includes the booking policy —
     //   but `setting` is ownerless so the only two legal scopes are everything and none (0066's
     //   `role_permission_setting_scope`, generalised by 0182's trigger).
@@ -110,8 +110,8 @@ export const BUILTIN_ROLES = Object.freeze([
   },
   {
     key: "member",
-    label: `Coach`,
-    description: "Sees and works their own caseload. The practice's catalogue is visible but read-only.",
+    label: `Member`,
+    description: "Sees and works their own records. The workspace's catalogue is visible but read-only.",
     actions: COACH_ACTIONS,
     permissions: complete({
       person: EDIT_OWN,

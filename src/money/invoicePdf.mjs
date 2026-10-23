@@ -100,10 +100,19 @@ function formatMoney(minorUnits, currency) {
   }
 }
 
+// ★ FOUND LIVE in the browser, 2 Oct 2026 — the form's own due-date label ("Due October 9")
+//   disagreed with this PDF's "Date due" by exactly one day ("Oct 8"). Both read the SAME
+//   `invoice.due_at` (midnight UTC on the intended calendar day — InvoiceEditor.jsx's
+//   `addDaysLocal` + `new Date(dueAt).toISOString()`); `toLocaleDateString` with no `timeZone`
+//   renders in the VIEWER's own zone, so anyone west of UTC sees the previous day. A due date (and
+//   an issue date) is a calendar day, not an instant — it must render the same regardless of who
+//   is looking at it, exactly the reasoning the form's own `formatDateStringLong` (F816) already
+//   established for the SAME class of date. Rendering in UTC explicitly is what makes this PDF and
+//   the form's own label agree, no matter what timezone the browser or the server is in.
 function formatDate(isoString) {
   if (!isoString) return "—";
   const d = new Date(isoString);
-  return d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+  return d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric", timeZone: "UTC" });
 }
 
 /**

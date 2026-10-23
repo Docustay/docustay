@@ -1,10 +1,11 @@
 <script>
-  import Success from "$lib/fx/Success.svelte";
+  import { handleRefusal } from "$lib/pro/planPrompt.svelte.js";
+  import { scrollMainTo } from "$lib/ui/scroll.js";
   import { stepIn } from "$lib/ui/transitions.js";
   // Run 7 part 8: each step slides in from the side it came from (the container is animated, nothing remounts)
   const STEP_ORDER = ["people", "fill", "prepare", "details", "check", "save", "publish"];
   let lastStep = null;
-  const stepMotion = (el) => { const now = step; if (lastStep && lastStep !== now && typeof window !== "undefined") requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: "instant" }));   /* Run 10 (R10-50): each step opens at its top */
+  const stepMotion = (el) => { const now = step; if (lastStep && lastStep !== now && typeof window !== "undefined") requestAnimationFrame(() => scrollMainTo(0));   /* Run 10 (R10-50): each step opens at its top */
     if (lastStep && lastStep !== now) stepIn(el, STEP_ORDER.indexOf(now) >= STEP_ORDER.indexOf(lastStep) ? 1 : -1); lastStep = now; };
   import PageSkel from "$lib/ui/PageSkel.svelte";
   // THE WRITTEN-DOCUMENT FLOW (Start → Who signs → Prepare, then the document exists and Details, Check and Send follow on its own page). The same screens serve a ready-made, a blank page and an AI draft;
@@ -16,6 +17,7 @@
   import { t } from "$lib/i18n/index.svelte.js";
   import { toast } from "$lib/ui/toast.js";
   import FlowSteps from "$lib/flow/FlowSteps.svelte";
+  import PageHeader from "$lib/ui/PageHeader.svelte";
   import PeopleStep from "$lib/editor/PeopleStep.svelte";
   import Pick from "$lib/ui/Pick.svelte";
   import { previewHtml } from "$lib/flow/flowPreview.js";
@@ -23,13 +25,11 @@
   import { REMINDER_CHOICES } from "$lib/flow/flowDefinition.js";
   import { rolesOf, rewriteRoles, uniqueWord, personFacts, variablesOf } from "$lib/flow/roles.js";
   import { chatBridge } from "$lib/chat/bridge.js";
-  import { VISITOR_PREVIEWS } from "$lib/flow/flowDefinition.js";
   import { entitled, loadPlan } from "$lib/pro/plan.svelte.js";
 
   const ENGINE = "/api/documents/engine";
   const q = page.url.searchParams;
-  const isForm = q.get("mode") === "form";   // ★ Run 7: a FORM template — its own type, chosen at the way in; the same steps, then Publish (the link, the embed)
-  const mode = q.get("mode") === "template" || isForm ? "template" : "document";
+  const mode = q.get("mode") === "template" ? "template" : "document";
   const templateParam = q.get("template"), slugParam = q.get("slug"), jobParam = q.get("job");
   const BLANK = { type: "doc", content: [{ type: "paragraph" }] };
   const val = (r) => r.json?.data ?? r.json;
@@ -46,14 +46,8 @@
   // on the questions step the floating assistant can read the template and propose answers (it applies them here)
   $effect(() => { if (step !== "fill") return; return chatBridge.register({ getSource: () => prep?.getSource?.(), getValues: () => $state.snapshot(varValues), applyValues: (v) => (varValues = { ...varValues, ...v }), apply: (s) => prep?.setSource?.(s) }); });
   let prep = $state({}), changeNote = $state(""), tplDefaults = $state(null);
-  let tpl = $state({ aiRules: "", internal: "", about: "", subject: "", message: "", reminders: "3_7", expiry: 30, language: "auto" });
+  let tpl = $state({ aiRules: "", internal: "", about: "", subject: "", message: "", reminders: "3_7", expiry: 30 });
   let chk = $state(null), chkView = $state("see_it"), chkAs = $state("");
-  // the form's own Publish options, its link name, the optional counter-signer, and what Publish answered
-  let formS = $state({ verifyEmail: false, copyTo: null, expiresAt: null, responseLimit: null, intro: null, thankYou: null, fillAgain: false, embedSites: [], notifyOwner: true, confirmRespondent: true });
-  // ★ P10-A-4: the template the first Publish click saved is reused by every retry while nothing was edited, so a failed Publish never leaves another copy behind
-  let savedFor = null, needsApproval = $state(false);
-  const sigOf = () => JSON.stringify([name.trim(), edits, $state.snapshot(tpl), $state.snapshot(people), counter.on]);
-  let formSlug = $state(""), counter = $state({ on: false, userId: null }), published = $state(null), slugTried = $state(false), visitorWidth = $state("phone");
   const docState = $derived({ parties: people.map((p) => ({ ...p })), sendOptions, suggestedSeats: [] });
 
   // A DRAFT THAT SURVIVES A REFRESH: until Next on Prepare the document exists only in this browser, so what has been typed is kept here (one slot per way of starting) and offered again on return.
@@ -108,7 +102,7 @@
         // EDITING or customizing a template: Who signs opens with its roles (R10-33), the role word as the row's name, not one empty row
         if (mode === "template" && !people.length) people = rolesOf(doc).map((w, i) => ({ role: `signer_${i + 1}`, name: w, email: null, phone: null, action_role: "signer", external_ref: null, expires_at: null, reminder_days: null, assists_role: null, step: i + 1, roleWord: w }));
         const days = JSON.stringify(sd.reminders?.on ? sd.reminders.days : []);
-        tpl = { aiRules: tplDefaults.aiRules ?? "", internal: tplDefaults.description ?? "", about: tplDefaults.clientDescription ?? "", subject: sd.subject ?? "", message: tplDefaults.message ?? sd.message ?? "", reminders: REMINDER_CHOICES.find((x) => JSON.stringify(x.days) === days)?.id ?? "3_7", expiry: sd.expiry_days ?? 30, language: sd.language ?? "auto" };
+        tpl = { aiRules: tplDefaults.aiRules ?? "", internal: tplDefaults.description ?? "", about: tplDefaults.clientDescription ?? "", subject: sd.subject ?? "", message: tplDefaults.message ?? sd.message ?? "", reminders: REMINDER_CHOICES.find((x) => JSON.stringify(x.days) === days)?.id ?? "3_7", expiry: sd.expiry_days ?? 30 };
         sendOptions = { ...sendOptions, ...(sd.order ? { order: sd.order } : {}), plays };
       }
     }
@@ -120,16 +114,6 @@
     loading = false;
   }
   onMount(load);
-  onMount(async () => {
-    if (!isForm) return;
-    if (templateParam) {   // editing a form: its current settings and link
-      const r = await api(`/api/documents/forms/${encodeURIComponent(templateParam)}`);
-      if (r.ok) { const f = val(r); formS = { ...formS, ...(f.settings ?? {}) }; formSlug = f.slug ?? ""; if (f.settings?.counterSign?.on) counter = { on: true, userId: f.settings.counterSign.userId ?? null }; }
-    } else {   // a new form starts from the workspace's Forms defaults (Settings → Forms)
-      const r = await api("/api/documents/settings"); const v = Object.fromEntries((r.ok ? (r.json.groups ?? []).flatMap((g) => g.fields) : []).map((f) => [f.key, f.value]));
-      formS = { ...formS, verifyEmail: !!v["forms.verify_email"], fillAgain: !!v["forms.fill_again"], notifyOwner: v["forms.notify_owner"] !== false, confirmRespondent: v["forms.confirm_respondent"] !== false, copyTo: v["forms.copy_to"] || null, embedSites: String(v["forms.embed_sites"] ?? "").split(/[\s,]+/).filter(Boolean) };
-    }
-  });
   beforeNavigate((nav) => { if (dirty && !nav.willUnload && !confirm(t("You have unsaved changes. Leave without saving?"))) nav.cancel(); });
   const onUnload = (e) => { if (dirty) { e.preventDefault(); e.returnValue = ""; } };
 
@@ -194,72 +178,25 @@
     attempted = true; if (!name.trim()) { problem = t("Give it a name first."); return; }
     busy = true; problem = null;
     const src = prep.getSource();
-    if (isForm && savedFor && savedFor.sig === sigOf()) { busy = false; return publishNow(savedFor.id); }   // retry: nothing changed, so the copy saved by the first click is the one published
     const r = templateParam
       ? await api(`${ENGINE}/templates/version`, { method: "POST", body: { templateId: templateParam, source: src, requireSignature: false, ...(changeNote.trim() ? { changeNote: changeNote.trim() } : {}) } })
-      : await api(`${ENGINE}/templates`, { method: "POST", body: { name: name.trim(), source: src, profile: "typeset", origin: "written", paper, requireSignature: false, kind: isForm ? "form" : "document" } });
-    if (!r.ok && isForm && templateParam && /Nothing has changed/.test(r.error ?? "")) { busy = false; savedFor = { id: templateParam, sig: sigOf() }; return publishNow(templateParam); }   // only the Publish options changed: no new version
-    if (!r.ok) { busy = false; problem = r.error ?? t("That could not be saved."); return; }
+      : await api(`${ENGINE}/templates`, { method: "POST", body: { name: name.trim(), source: src, profile: "typeset", origin: "written", paper, requireSignature: false, kind: "document" } });
+    if (!r.ok) { busy = false; if (await handleRefusal(r, { action: "create_template" })) return; problem = r.error ?? t("That could not be saved."); return; }
     const saved = val(r);
-    if (isForm) savedFor = { id: saved.templateId, sig: sigOf() };
     const rem = REMINDER_CHOICES.find((x) => x.id === tpl.reminders);
     const plays = Object.fromEntries(people.filter((p) => p.roleWord).map((p) => [p.roleWord, { plays: sendOptions.plays?.[p.role] ?? "at_send", ...(sendOptions.plays?.[p.role] === "fixed" ? { name: p.name || undefined, email: p.email || undefined } : {}) }]));
-    const sd = { ...(tpl.subject ? { subject: tpl.subject } : {}), ...(tpl.message ? { message: tpl.message } : {}), ...(rem?.days?.length ? { reminders: { on: true, days: rem.days } } : { reminders: { on: false, days: [3] } }), expiry_days: tpl.expiry, ...(tpl.language !== "auto" ? { language: tpl.language } : {}), order: sendOptions.order ?? "parallel", plays };
+    const sd = { ...(tpl.subject ? { subject: tpl.subject } : {}), ...(tpl.message ? { message: tpl.message } : {}), ...(rem?.days?.length ? { reminders: { on: true, days: rem.days } } : { reminders: { on: false, days: [3] } }), expiry_days: tpl.expiry, order: sendOptions.order ?? "parallel", plays };
     const d = await api(`${ENGINE}/templates/defaults`, { method: "POST", body: { templateId: saved.templateId, description: tpl.internal, clientDescription: tpl.about, message: tpl.message, sendDefaults: sd, aiRules: tpl.aiRules } });
     busy = false;
     if (!d.ok) { problem = d.error ?? t("The template was saved but its defaults were not."); return; }
-    if (isForm) return publishNow(saved.templateId);
     dirty = false; clearDraft(); toast(t("Template saved."), "ok"); await goto("/templates");
-  }
-  // ★ Run 7: Publish REALLY publishes — the form template is saved, then its link and options are set in the same click; the page then shows the link and the embed snippet
-  // The same sentences the server's publish refuses with (src/documents/forms.mjs): a counter-signer with nowhere to sign, a choice field with no choices, a closing date already past
-  const noChoices = (label) => t("“{label}” has no choices. Add its choices, or remove the field.", { label });
-  function formProblems(doc) {
-    const out = [], counterWord = counter.on ? (people[1]?.roleWord ?? people[1]?.name ?? "").trim().toLowerCase() : null;
-    let counterSigns = false;
-    const visit = (n) => {
-      if (!n || typeof n !== "object") return;
-      if (n.type === "fieldTag") {
-        const a = n.attrs ?? {}, ty = String(a.type ?? "text");
-        if (["dropdown", "multiselect", "select", "radio"].includes(ty) && !String(a.options ?? "").split(/[|;,\n]/).some((x) => x.trim())) out.push(noChoices(a.label || a.name || ty));
-        if (counterWord && ty === "signature" && String(a.role ?? "").trim().toLowerCase() === counterWord) counterSigns = true;
-      }
-      if (n.type === "signatureBlock" && counterWord) for (const sl of n.attrs?.slots ?? []) if (String(sl.role ?? "").trim().toLowerCase() === counterWord) counterSigns = true;
-      if (Array.isArray(n.content)) n.content.forEach(visit);
-    };
-    visit(doc);
-    if (counterWord && !counterSigns) out.unshift(t("The team member who counter-signs has nowhere to sign. Add a signature field for them, or turn counter-sign off."));
-    return out;
-  }
-  const closesPast = () => { const d = String(formS.expiresAt ?? "").slice(0, 10); if (!d) return false; const n = new Date(); return d < `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, "0")}-${String(n.getDate()).padStart(2, "0")}`; };
-  async function approveAndPublish() {
-    if (!savedFor?.id) return;
-    busy = true; const r = await api("/api/documents/pdf/templates/approve", { method: "POST", body: { templateId: savedFor.id } }); busy = false;
-    if (!r.ok) { problem = r.error ?? t("That did not work."); return; }
-    needsApproval = false; problem = null; return publishNow(savedFor.id);
-  }
-  const SLUG_OK = /^[a-z0-9][a-z0-9-]{2,58}[a-z0-9]$/;
-  async function publishNow(templateId) {
-    busy = true;
-    const r = await api("/api/documents/forms/publish", { method: "POST", body: { templateId, slug: formSlug.trim().toLowerCase(), settings: { ...$state.snapshot(formS), counterSign: counter.on ? { on: true, userId: counter.userId } : null } } });
-    busy = false;
-    if (!r.ok) {
-      needsApproval = /needs an owner or admin to approve/.test(r.error ?? "");
-      problem = needsApproval ? t("This form needs an owner or admin to approve it before it can be published. It is saved and waiting for approval on Templates.") : (r.error ?? t("The form was saved but not published. Open it from Forms to publish it."));
-      return;
-    }
-    needsApproval = false;
-    const f = val(r); dirty = false; clearDraft();
-    published = { id: f.id, link: `${location.origin}/f/${f.orgSlug ?? "-"}/${f.slug}`, sites: f.settings?.embedSites ?? [] };
-    toast(t("Your form is live."), "ok");
   }
   async function toCheck() {   // the template's preview: the real engine check, drawn per role
     busy = true; const r = await api(`${ENGINE}/check`, { method: "POST", body: { source: prep.getSource(), profile: "typeset", requireSignature: false } }); busy = false;
     chk = r.ok ? val(r) : { errors: [r.error ?? t("The check could not run.")], html: "", roles: [] };
-    if (isForm) chk = { ...chk, errors: [...(chk.errors ?? []), ...formProblems(prep.getSource())] };
     step = "check";
   }
-  const TPL_ORDER = isForm ? ["people", "prepare", "details", "check", "publish"] : ["people", "prepare", "details", "check", "save"];
+  const TPL_ORDER = ["people", "prepare", "details", "check", "save"];
   let peopleTried = $state(false);
   const EMAIL_OK = /^[^\s@<>"]+@[^\s@<>"]+\.[^\s@<>"]+$/;
   const vars = $derived(useMode ? variablesOf(source) : []);
@@ -276,14 +213,7 @@
     if (step === "people") return enterPrepare();
     if (step === "prepare") { step = "details"; return; }
     if (step === "details") return toCheck();
-    if (step === "check") { step = isForm ? "publish" : "save"; return; }
-    if (isForm) {
-      slugTried = true;
-      if (!SLUG_OK.test(formSlug.trim().toLowerCase())) { problem = t("Give the form a link name first: 4–60 letters, numbers and dashes."); return; }
-      if (counter.on && !counter.userId) { problem = t("Choose who counter-signs, on the Who fills it step."); return; }
-      if (closesPast()) { problem = t("The closing date has already passed."); return; }
-      const fp = formProblems(prep.getSource()); if (fp.length) { problem = fp[0]; return; }
-    }
+    if (step === "check") { step = "save"; return; }
     return saveTemplate();
   };
   const back = () => { if (step === "prepare" && prep.getSource) source = prep.getSource(); if (useMode && step === "prepare" && vars.length) { step = "fill"; return; } if (mode !== "template") { step = "people"; return; } step = TPL_ORDER[Math.max(0, TPL_ORDER.indexOf(step) - 1)]; };
@@ -294,19 +224,18 @@
 <svelte:head><title>{name || t("New document")} · Docustay</title></svelte:head>
 <svelte:window onbeforeunload={onUnload} />
 {#if resumed}<div class="notice info mb-3 flex flex-wrap items-center gap-3" data-testid="flow-resumed"><span>{t("Continuing your unsaved draft.")}</span><button class="btn !min-h-9 !py-1" onclick={startAgain} data-testid="flow-start-again">{t("Start again")}</button></div>{/if}
-<FlowSteps current={step} mode={useMode ? "use" : isForm ? "form" : mode} hide={useMode && !vars.length ? ["fill"] : []} onpick={(id) => { if (id === "start") goto(`/create?mode=${isForm ? "form" : mode}`); else if (published) return; else if (id === "people") { if (step === "prepare" && prep.getSource) source = prep.getSource(); step = "people"; } else if (id === "fill" && useMode) { if (step === "prepare" && prep.getSource) source = prep.getSource(); step = "fill"; } else if (id === "prepare") { if (step === "people") enterPrepare(); else step = "prepare"; } }} />
+<PageHeader title={mode === "template" ? t("New document template") : t("New document")} back={{ href: mode === "template" ? "/templates" : "/documents", label: mode === "template" ? t("Templates") : t("All documents") }}>{#snippet filters()}<FlowSteps current={step} mode={useMode ? "use" : mode} hide={useMode && !vars.length ? ["fill"] : []} onpick={(id) => { if (id === "start") goto(`/create?mode=${mode}`); else if (id === "people") { if (step === "prepare" && prep.getSource) source = prep.getSource(); step = "people"; } else if (id === "fill" && useMode) { if (step === "prepare" && prep.getSource) source = prep.getSource(); step = "fill"; } else if (id === "prepare") { if (step === "people") enterPrepare(); else step = "prepare"; } }} />{/snippet}</PageHeader>
 {#if capped}<div class="mt-3 mb-4" data-testid="flow-template-cap">{#await import("$lib/pro/TemplateUsage.svelte") then { default: TemplateUsage }}<TemplateUsage  />{/await}</div>{/if}
 {#if loading}<PageSkel kind="flow" testid="flow-loading" />{:else}
   <div class="flex flex-wrap items-center gap-3">
     <input class="field !w-full min-w-0 text-lg font-semibold sm:!w-auto sm:flex-1" bind:value={name} oninput={() => (dirty = true)} placeholder={mode === "template" ? t("Template name") : t("Document title")} aria-label={mode === "template" ? t("Template name") : t("Document title")} data-testid="w-name" />
     {#if step !== "people"}<button class="btn" onclick={back} data-testid="flow-back">{t("Back")}</button>{/if}
-    {#if !published}<button class="btn primary" disabled={busy} onclick={next} data-testid="flow-next">{step === "save" ? t("Save template") : step === "publish" ? t("Publish") : t("Next")}</button>{/if}
+    <button class="btn primary" disabled={busy} onclick={next} data-testid="flow-next">{step === "save" ? t("Save template") : t("Next")}</button>
   </div>
-  {#if problem}<p class="mt-3 text-bad" role="alert" data-testid="flow-problem">{problem}</p>{/if}
-  {#if needsApproval && savedFor?.id}<p class="mt-2"><button class="btn" disabled={busy} onclick={approveAndPublish} data-testid="flow-approve-publish">{t("Approve it now and publish")}</button> <span class="text-xs text-mute">{t("Only an owner or admin can approve.")}</span></p>{/if}
+  {#if problem}<p class="mt-3 text-bad" role="alert" data-testid="flow-problem">{problem}{#if /Address line/.test(problem)} <a class="underline" href="/settings?tab=appearance" data-testid="flow-problem-settings">{t("Open Settings")}</a>{/if}</p>{/if}
   {#if ai}
     <div class="notice info mt-3" role="status" data-testid="w-ai-panel">
-      <p class="font-semibold" data-testid="w-ai-finished">{isForm ? t("{name} finished your form. Review it, AI can make mistakes.", { name: ai.agent }) : t("{name} finished your document. Review it, AI can make mistakes.", { name: ai.agent })}</p>
+      <p class="font-semibold" data-testid="w-ai-finished">{t("{name} finished your document. Review it, AI can make mistakes.", { name: ai.agent })}</p>
       {#if ai.items.length}
         <p class="mt-2 text-sm">{t("What {name} assumed, and what to check. Tick each line once you have read it.", { name: ai.agent })}</p>
         <ul class="mt-2 grid gap-1 text-sm">{#each ai.items as it, i}<li><label class="flex items-start gap-2"><input type="checkbox" class="mt-1" bind:checked={ticks[i]} data-testid={`w-ai-tick-${i}`} /><span>{#if it.kind === "careful"}<b class="mr-1">{t("Check this carefully")}:</b>{/if}{#if it.kind === "question"}<b class="mr-1">{t("Question")}:</b>{/if}{it.text}</span></label></li>{/each}</ul>
@@ -315,44 +244,24 @@
     {#if attempted && !allTicked}<p class="mt-3 text-bad" role="alert" data-testid="w-ai-untick">{t("Tick each line above once you have read it.")}</p>{/if}
   {/if}
   <div class="mt-4" {@attach stepMotion}>
-    {#if step === "people" && isForm}
-      {#await import("$lib/forms/FormPeople.svelte") then { default: FormPeople }}<FormPeople bind:people bind:counter onchange={() => (dirty = true)} />{/await}
-    {:else if step === "people"}
+    {#if step === "people"}
       <PeopleStep doc={docState} attempted={peopleTried} onChange={changePeople} mode={mode === "template" ? "template" : "flow"} />
     {:else}
       {#if step === "fill"}{#await import("$lib/flow/FillDetails.svelte") then { default: FillDetails }}<FillDetails {vars} bind:values={varValues} tried={varsTried} />{/await}{/if}
       <div class:hidden={step !== "prepare"}>{#key mode}{#await import("$lib/flow/PrepareWritten.svelte") then { default: PrepareWritten }}<PrepareWritten initial={source} initialCustom={savedCustom} {people} {mode} onchange={() => { dirty = true; edits++; }} bind:api={prep} />{/await}{/key}</div>
       {#if step === "details"}{#await import("$lib/flow/TemplateDetails.svelte") then { default: TemplateDetails }}<TemplateDetails bind:tpl />{/await}
       {:else if step === "check"}
-        <div class="grid gap-4 md:grid-cols-[18rem_minmax(0,1fr)]" data-testid="template-check">
+        <div class="pg-split pg-split-left" style="--aside: 20rem" data-testid="template-check">
           <div class="space-y-3">
             {#if (chk?.errors ?? []).length}{#each chk.errors as e}<p class="text-sm text-bad">{msg(e)}</p>{/each}{:else}<p class="text-sm">{t("Nothing to fix.")}</p>{/if}
             {#each chk?.warnings ?? [] as w}<p class="text-sm text-mute">{msg(w)}</p>{/each}
             <div class="flex gap-1.5">{#each [["see_it", "As they will see it"], ["as_signed", "As signed"], ["after_signing", "After signing"]] as [id, label]}<button class="btn !min-h-10 !px-3 {chkView === id ? 'primary' : ''}" onclick={() => (chkView = id)} data-testid={`tc-view-${id}`}>{id === "see_it" ? t("As they will see it") : id === "as_signed" ? t("As signed") : t("After signing")}</button>{/each}</div>
             <Pick options={[{ value: "", label: t("Everyone") }, ...tplRoles.map((r, i) => ({ value: r, label: r, dot: SEAT_COLOURS[i % SEAT_COLOURS.length] }))]} value={chkAs} onchange={(v) => (chkAs = v)} label={t("View as")} testid="tc-viewas" />
           </div>
-          {#if isForm}
-            <div class="grid gap-2" data-testid="tc-visitor">
-              <div class="flex gap-1.5" role="group" aria-label={t("Preview size")}>{#each VISITOR_PREVIEWS as v (v.id)}<button class="btn !min-h-10 !px-3 {visitorWidth === v.id ? 'primary' : ''}" aria-pressed={visitorWidth === v.id} onclick={() => (visitorWidth = v.id)} data-testid={`tc-visitor-${v.id}`}>{v.id === "phone" ? t("Phone") : t("Desktop")}</button>{/each}</div>
-              <div class="mx-auto w-full rounded-xl border border-line bg-tint p-3" style="max-width:{(VISITOR_PREVIEWS.find((v) => v.id === visitorWidth)?.width ?? 390) + 26}px">
-                <div class="rounded-lg bg-card p-4"><p class="font-semibold">{name || t("Your form")}</p>{#if formS.intro}<p class="mt-1 text-sm text-mute" data-testid="tc-visitor-intro">{formS.intro}</p>{/if}<p class="mt-3 text-xs text-mute">{t("They type their name and email, then fill in and sign:")}</p></div>
-                <iframe title={t("Preview")} class="mt-2 h-[560px] w-full rounded-lg border border-line bg-white" sandbox="" srcdoc={chkSrc} data-testid="tc-frame"></iframe>
-              </div>
-            </div>
-          {:else}<iframe title={t("Preview")} class="h-[560px] w-full rounded-xl border border-line bg-white" sandbox="" srcdoc={chkSrc} data-testid="tc-frame"></iframe>{/if}
+          <iframe title={t("Preview")} class="h-[560px] w-full rounded-xl border border-line bg-white" sandbox="" srcdoc={chkSrc} data-testid="tc-frame"></iframe>
         </div>
-      {:else if step === "publish"}
-        {#if published}
-          <div class="grid max-w-[860px] gap-4" data-testid="form-published">
-            <Success title={t("Your form is live.")} line={t("Share the link, or put the form on your website.")} testid="form-live">{#await import("$lib/forms/FormShare.svelte") then { default: FormShare }}<FormShare link={published.link} sites={published.sites} />{/await}</Success>
-            <div class="flex flex-wrap gap-2"><a class="btn primary" href={`/forms?open=${published.id}`} data-testid="form-go-forms">{t("See it in Forms")}</a><a class="btn" href={published.link} target="_blank" rel="noopener">{t("Open the form")}</a></div>
-          </div>
-        {:else}
-          {#if templateParam}<input class="field mb-3 max-w-md" bind:value={changeNote} placeholder={t("What changed? (optional)")} aria-label={t("What changed?")} data-testid="w-note" />{/if}
-          {#await import("$lib/forms/FormPublish.svelte") then { default: FormPublish }}<FormPublish bind:s={formS} bind:slug={formSlug} tried={slugTried} />{/await}
-        {/if}
       {:else if step === "save"}
-        <div class="max-w-md space-y-3" data-testid="template-save">
+        <div class="space-y-3" data-testid="template-save">
           <p class="text-sm text-mute">{templateParam ? t("This saves a new version. Documents already sent are not changed.") : t("This saves the template. You can send documents from it any time.")}</p>
           {#if templateParam}<input class="field" bind:value={changeNote} placeholder={t("What changed? (optional)")} aria-label={t("What changed?")} data-testid="w-note" />{/if}
         </div>

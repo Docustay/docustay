@@ -11,7 +11,7 @@
   const KEYCOLS = [{ key: "name", label: t("Key") }, { key: "calls", label: t("Calls"), align: "right" }, { key: "errors", label: t("Errors"), align: "right" }];
   const ROUTECOLS = [{ key: "route", label: t("Route") }, { key: "calls", label: t("Calls"), align: "right" }, { key: "errors", label: t("Errors"), align: "right" }];
 </script>
-<div class="max-w-3xl space-y-5">
+<div class=" space-y-5">
   <div class="flex flex-wrap items-center justify-between gap-3"><h2 class="text-lg font-semibold">{t("Usage report")}</h2>
     <select class="field !w-auto !py-1" bind:value={days} onchange={load} aria-label={t("Usage report")} data-testid="usage-days">{#each [7, 14, 30] as n}<option value={n}>{t("{n, plural, one {# day} other {# days}}", { n })}</option>{/each}</select></div>
   {#if problem}<p class="text-sm text-bad" role="alert">{problem}</p>

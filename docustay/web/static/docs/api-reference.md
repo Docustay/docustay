@@ -5,17 +5,17 @@ Generated from the OpenAPI 3.1 document at `/api/openapi.json`; do not edit by h
 
 Send documents for signature and follow them, from your own software.
 
-**Authentication.** Send `Authorization: Bearer <key>`. Make keys in Settings → Developers → API keys and give each only the scopes it needs (there are 35 in all): `accounts:read`, `accounts:write`, `booking:read`, `booking:write`, `documents:read`, `documents:write`, `growth:read`, `growth:write`, `items:read`, `items:write`, `lead:write`, `money:read`, `money:write`, `network:read`, `network:write`, `notifications:read`, `notifications:write`, `people:read`, `people:write`, `platform:read`, `platform:write`, `records:read`, `records:write`, `settings:read`, `settings:write`, `plays:read`, `plays:write`, `drafts:write`, `templates:read`, `templates:write`, `webhooks:read`, `webhooks:write`, `reports:read`, `account:read`, `embedded:write`. A key that starts `dsk_test_` works in **test mode**: documents it sends are practice runs (emailed only to the sender, stamped TEST, never counted or billed), it can only see and act on test documents (any other document answers `404`), and it can sign them itself with `POST /api/v1/documents/{id}/test-sign`. A key can also be limited to a list of addresses, given an expiry, or made **draft-only**.
+**Authentication.** Send `Authorization: Bearer <key>`. Make keys in Settings → Developers → API keys and give each only the scopes it needs (there are 12 in all): `documents:read`, `documents:write`, `people:read`, `plays:read`, `plays:write`, `drafts:write`, `templates:read`, `templates:write`, `webhooks:read`, `webhooks:write`, `account:read`, `embedded:write`. A key that starts `dsk_test_` works in **test mode**: documents it sends are practice runs (emailed only to the sender, stamped TEST, never counted or billed), it can only see and act on test documents (any other document answers `404`), and it can sign them itself with `POST /api/v1/documents/{id}/test-sign`. A key can also be limited to a list of addresses, given an expiry, or made **draft-only**.
 
 **Draft-only keys.** A draft-only key can make and edit drafts but cannot send. Asking it to send answers `202` with an `approval`, the document stays a draft, and a person approves or declines in Settings → Developers → Approvals. Keys can also have a daily limit of drafts and sends; past it you get `429`.
 
-**Payments.** A template may contain payment fields (text tag `type=payment` with one of `amount`, `formula`, `price` or `link`). The signer pays on Stripe's hosted page; the money goes to your own connected Stripe account; Docustay's fee is 2% on the Free plan and 0% on Pro, plus Stripe's own fees. The document's `payments` list shows each payment, its receipt and the fee. Card details never reach Docustay.
+**Payments.** A template may contain payment fields (text tag `type=payment` with a set `amount`, optionally a `deposit`, or an amount you give when you send it with `amount=custom.<name>`). The signer pays on Stripe's hosted page; the money goes to your own connected Stripe account; Docustay's fee is 2% on the Free plan and 0% on Pro, plus Stripe's own fees. The document's `payments` list shows each payment, its receipt and the fee. Card details never reach Docustay.
 
 **Idempotency.** Requests that create a document or a template, or send one, need an `Idempotency-Key` header (8–200 characters). Repeating a request with the same key and body returns the first answer instead of doing it twice.
 
 **Your own reference.** Documents and templates take `externalId` (your id for it) and `metadata` (up to 20 short key/value pairs). List with `externalId=` or `metadata[key]=value` to find them again, and both come back in webhooks.
 
-**Errors.** Every error is `{ "error": { "kind", "message", "requestId", "retryable" } }`. `kind` is one of `invalid`, `unauthenticated`, `forbidden`, `not_found`, `conflict`, `rate_limited`, `dependency`, `timeout`. Quote the `requestId` to support, or search it in Settings → Developers → API log. **Plan limits** are `403 forbidden` with `error.detail.code`: `plan_document_limit` (the plan's documents this month are used; a form counts the first time it is published, and every signed response counts) or `plan_template_limit` (Free: 5 new templates a month, documents and forms together; a new version of a template you have does not count). Both carry `detail.used`, `detail.limit` and `detail.resetsAt` (the first of next month, UTC). Everything already made keeps working. Pro and self-hosted installs have no template limit.
+**Errors.** Every error is `{ "error": { "kind", "message", "requestId", "retryable" } }`. `kind` is one of `invalid`, `unauthenticated`, `forbidden`, `not_found`, `conflict`, `rate_limited`, `dependency`, `timeout`. Quote the `requestId` to support, or search it in Settings → Developers → API log. **Plan limits** are `403 forbidden` with `error.detail.code`: `plan_document_limit` (the plan's documents this month are used), `plan_signer_limit` (Free: 15 different signers a month; sending again to someone already sent to this month never counts) or `plan_template_limit` (Free: 5 and Pay as you go: 25 new templates a month; a new version of a template you have does not count). All carry `detail.used`, `detail.limit` and `detail.resetsAt` (the first of next month, UTC). Everything already made keeps working. Pro, Lifetime and self-hosted installs have no template or signer limit.
 
 **Rate limits.** Each key has its own per-minute budget. Every answer carries `RateLimit-Limit`, `RateLimit-Remaining` and `RateLimit-Reset` (seconds); over the budget you get `429` with a `Retry-After` header.
 
@@ -39,7 +39,7 @@ Answers:
 
 ```bash
 curl https://app.docustay.app/api/v1/documents/templates \
-  -H "Authorization: Bearer $DOCUSTAY_KEY"
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY"
 ```
 
 ## GET /api/v1/documents
@@ -50,7 +50,7 @@ Filter by your own reference: `externalId=…`, and `metadata[key]=value` (repea
 
 | Parameter | In | Required | Notes |
 |---|---|---|---|
-| `state` | query | no | string |
+| `state` | query | no | Only documents in this state; any other value is refused. |
 | `limit` | query | no | integer |
 | `cursor` | query | no | string |
 | `externalId` | query | no | Only documents with this `externalId`. |
@@ -65,7 +65,7 @@ Answers:
 
 ```bash
 curl https://app.docustay.app/api/v1/documents \
-  -H "Authorization: Bearer $DOCUSTAY_KEY"
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY"
 ```
 
 ## POST /api/v1/documents
@@ -82,7 +82,7 @@ Request body (JSON):
 
 | Field | Type | Required | Notes |
 |---|---|---|---|
-| `email` | object | no | Your own wording for the emails about THIS document. The workspace's saved wording (Settings → Email templates) applies underneath; what you give here wins. |
+| `email` | object | no | Your own wording for the emails about THIS document. What you give here is used for this document. |
 | `metadata` | object | no | Your own key-value text (up to 20 keys; keys 1–40 letters, digits, dot, dash or underscore; values up to 500 characters). Returned in every response and every webhook for this document; never shown to a signer. |
 | `externalId` | string | no | Your own id for this thing, so you can match it to your records. Filter lists with `externalId=`. |
 | `title` | string | yes |  |
@@ -105,10 +105,10 @@ Answers:
 
 ```bash
 curl -X POST https://app.docustay.app/api/v1/documents \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" \
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY" \
   -H "Idempotency-Key: $(uuidgen)" \
   -H "Content-Type: application/json" \
-  -d '{"email":{"subject":"Example","message":"Example","replyTo":"jo@example.com","senderName":"string","locale":"string"},"metadata":{"crmDealId":"D-1042"},"externalId":"contract-2026-0042","title":"Example","source":"string","people":[{"externalId":"contract-2026-0042","metadata":{"crmDealId":"D-1042"},"name":"Example","email":"jo@example.com","role":"Signer","action":"signer","order":0}],"facts":"string","variableValues":"string","paper":"letter","send":{"replyTo":"jo@example.com","senderName":"string","subject":"Example","message":"Example","expiryDays":"string","reminderDays":[0],"signingOrder":"any","language":"en","internalNote":"string","requireDeclineReason":false},"description":"string","sendNow":false}'
+  -d '{"email":{"subject":"Example","message":"Example","replyTo":"jo@example.com","senderName":"string"},"metadata":{"crmDealId":"D-1042"},"externalId":"contract-2026-0042","title":"Example","source":{},"people":[{"externalId":"contract-2026-0042","metadata":{"crmDealId":"D-1042"},"name":"Example","email":"jo@example.com","role":"Signer","action":"signer","order":1}],"facts":{},"variableValues":{},"paper":"letter","send":{"replyTo":"jo@example.com","senderName":"string","subject":"Example","message":"Example","expiryDays":0,"reminderDays":[1],"signingOrder":"any","internalNote":"string","requireDeclineReason":false},"description":"string","sendNow":false}'
 ```
 
 ## GET /api/v1/documents/{id}
@@ -130,7 +130,29 @@ Answers:
 
 ```bash
 curl https://app.docustay.app/api/v1/documents/DOCUMENT_ID \
-  -H "Authorization: Bearer $DOCUSTAY_KEY"
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY"
+```
+
+## DELETE /api/v1/documents/{id}
+
+**Delete a draft that was never sent**
+
+Removes a draft and its files. A document that was sent cannot be deleted: void it instead (`POST /api/v1/documents/{id}/void`), which keeps its record.
+
+| Parameter | In | Required | Notes |
+|---|---|---|---|
+| `id` | path | yes | string |
+
+Answers:
+
+- `200` Deleted.
+- `401` No or bad key.
+- `404` No such document.
+- `409` The document was sent; void it instead.
+
+```bash
+curl -X DELETE https://app.docustay.app/api/v1/documents/DOCUMENT_ID \
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY"
 ```
 
 ## GET /api/v1/documents/{id}/signed.pdf
@@ -152,7 +174,7 @@ Answers:
 
 ```bash
 curl https://app.docustay.app/api/v1/documents/DOCUMENT_ID/signed.pdf \
-  -H "Authorization: Bearer $DOCUSTAY_KEY"
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY"
 ```
 
 ## POST /api/v1/documents/send
@@ -170,14 +192,14 @@ Request body (JSON):
 | Field | Type | Required | Notes |
 |---|---|---|---|
 | `templateId` | string | yes |  |
-| `email` | object | no | Your own wording for the emails about THIS document. The workspace's saved wording (Settings → Email templates) applies underneath; what you give here wins. |
+| `email` | object | no | Your own wording for the emails about THIS document. What you give here is used for this document. |
 | `metadata` | object | no | Your own key-value text (up to 20 keys; keys 1–40 letters, digits, dot, dash or underscore; values up to 500 characters). Returned in every response and every webhook for this document; never shown to a signer. |
 | `externalId` | string | no | Your own id for this thing, so you can match it to your records. Filter lists with `externalId=`. |
 | `title` | string | no |  |
 | `message` | string or null | no |  |
 | `subject` | string | no |  |
-| `language` | `en` · `es` · `fr` · `de` · `pt` · `it` · `nl` · `pl` · `tr` · `ru` · `ar` · `ja` · `zh` · `ko` | no |  |
 | `expiryDays` | integer | no |  |
+| `values` | object | no | The boxes the sender fills in ("Filled in by: Sender") and the template's send-time amounts, by key: a box's label in lower case with underscores ("Effective date" → `effective_date`). A send that leaves one empty answers 400 naming it. |
 | `embedded` | array of string | no | Seats signed inside your own app instead of by emailed link (for example ["signer_1"]). Nobody is emailed for these seats: you ask for a session with POST /api/v1/documents/{id}/embed-session and show it on a website you listed under Settings → Developers → Embedding. |
 | `parties` | array of object | yes | One entry for each seat of the template (see GET /api/v1/documents/templates). |
 
@@ -191,10 +213,10 @@ Answers:
 
 ```bash
 curl -X POST https://app.docustay.app/api/v1/documents/send \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" \
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY" \
   -H "Idempotency-Key: $(uuidgen)" \
   -H "Content-Type: application/json" \
-  -d '{"templateId":"6f1c1f0e-7a0c-4d1d-9b5e-2f0a7b1c3d4e","email":{"subject":"Example","message":"Example","replyTo":"jo@example.com","senderName":"string","locale":"string"},"metadata":{"crmDealId":"D-1042"},"externalId":"contract-2026-0042","title":"Example","message":"Example","subject":"Example","language":"en","expiryDays":0,"embedded":["string"],"parties":[{"seat":"signer_1","name":"Example","email":"jo@example.com","externalId":"contract-2026-0042","metadata":{"crmDealId":"D-1042"}}]}'
+  -d '{"templateId":"6f1c1f0e-7a0c-4d1d-9b5e-2f0a7b1c3d4e","email":{"subject":"Example","message":"Example","replyTo":"jo@example.com","senderName":"string"},"metadata":{"crmDealId":"D-1042"},"externalId":"contract-2026-0042","title":"Example","message":"Example","subject":"Example","expiryDays":1,"values":{"effective_date":"2026-11-01"},"embedded":["string"],"parties":[{"seat":"signer_1","name":"Example","email":"jo@example.com","externalId":"contract-2026-0042","metadata":{"crmDealId":"D-1042"}}]}'
 ```
 
 ## POST /api/v1/templates/html
@@ -227,7 +249,7 @@ Answers:
 
 ```bash
 curl -X POST https://app.docustay.app/api/v1/templates/html \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" \
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY" \
   -H "Idempotency-Key: $(uuidgen)" \
   -H "Content-Type: application/json" \
   -d '{"metadata":{"crmDealId":"D-1042"},"externalId":"contract-2026-0042","name":"Example","html":"string","paper":"letter"}'
@@ -265,7 +287,7 @@ Answers:
 
 ```bash
 curl -X POST https://app.docustay.app/api/v1/templates/file \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" \
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY" \
   -H "Idempotency-Key: $(uuidgen)" \
   -H "Content-Type: application/json" \
   -d '{"metadata":{"crmDealId":"D-1042"},"externalId":"contract-2026-0042","name":"Example","fileName":"string","file":"string","fields":"tags","minConfidence":0}'
@@ -302,17 +324,17 @@ Answers:
 
 ```bash
 curl -X POST https://app.docustay.app/api/v1/templates/source \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" \
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY" \
   -H "Idempotency-Key: $(uuidgen)" \
   -H "Content-Type: application/json" \
-  -d '{"metadata":{"crmDealId":"D-1042"},"externalId":"contract-2026-0042","name":"Example","source":"string","profile":"typeset","paper":"letter"}'
+  -d '{"metadata":{"crmDealId":"D-1042"},"externalId":"contract-2026-0042","name":"Example","source":{},"profile":"typeset","paper":"letter"}'
 ```
 
 ## POST /api/v1/documents/ai/draft
 
 **Ask for an AI-written draft**
 
-Starts a draft and answers at once with a job id; poll `GET /api/v1/documents/ai/jobs/{id}`. The draft is a suggestion for a person to read; nothing is saved or sent. Refused plainly when AI drafting is switched off for the workspace or a limit is reached.
+Starts a draft and answers at once with a job id; poll `GET /api/v1/documents/ai/jobs/{id}`. Send an `Idempotency-Key` header to make a retry safe: the same key and body answer the first job and spend no second draft. The draft is a suggestion for a person to read; nothing is saved or sent. Refused plainly when AI drafting is switched off for the workspace or a limit is reached.
 
 Request body (JSON):
 
@@ -332,10 +354,10 @@ Answers:
 
 ```bash
 curl -X POST https://app.docustay.app/api/v1/documents/ai/draft \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" \
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY" \
   -H "Idempotency-Key: $(uuidgen)" \
   -H "Content-Type: application/json" \
-  -d '{"prompt":"string","brief":{"type":"string","kind":"string","answers":"string","final":"string","payment":{"collect":true,"amount":"1500","currency":"usd","payer_role":"string","description":"string","schedule_note":"string"}},"mode":"template"}'
+  -d '{"prompt":"string","brief":{"type":"string","kind":"string","answers":{},"final":"string","payment":{"collect":true,"amount":"1500","currency":"usd","payer_role":"string","description":"string","schedule_note":"string"}},"mode":"template"}'
 ```
 
 ## GET /api/v1/documents/ai/jobs/{id}
@@ -357,14 +379,14 @@ Answers:
 
 ```bash
 curl https://app.docustay.app/api/v1/documents/ai/jobs/JOB_ID \
-  -H "Authorization: Bearer $DOCUSTAY_KEY"
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY"
 ```
 
 ## GET /api/v1/usage
 
 **Documents, templates and emails used against your plan**
 
-Documents sent this calendar month (UTC), new templates made this month and emails sent today, with the plan's limits. `limit` is null when the plan has no limit (Pro has no template limit; a self-hosted install has no limits).
+Documents sent this period, AI drafts, new templates made this period and emails sent today, with the plan's limits, plus what the period costs so far on a plan with per-unit prices (`billing`). The period is the billing period on Pay as you go, Pro and Lifetime (`periodStart` to `periodEnd`, UTC; everything resets on `periodEnd`) and the UTC calendar month on Free. `limit` is null when the plan has no limit (Pro has no template limit; a self-hosted install has no limits).
 
 Answers:
 
@@ -376,7 +398,40 @@ Answers:
 
 ```bash
 curl https://app.docustay.app/api/v1/usage \
-  -H "Authorization: Bearer $DOCUSTAY_KEY"
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY"
+```
+
+## POST /api/v1/preflight
+
+**Ask what an action would do to your plan, before doing it**
+
+Answers, for one action, whether it is allowed (`allowed`), what it costs this time in whole cents (`cost.minor`, 0 inside the allowance; for `invite_person` it is a monthly amount, `cost.prorated`), where the meter stands and where it will stand (`meter`, `afterThis`), how loud the moment is (`severity`: `none`, `info` from 50 percent of the meter, `warn` from 80, `limit` at 100 while still allowed, `blocked` when the action would be refused), the stable refusal code the action would carry (`reason`, the same codes the refusals use: `plan_document_limit`, `plan_people_limit`, `plan_template_limit`, `plan_pro_required`, `budget_reached`, `ai_limit_credits`, `too_big`), the options that would let you go on with their prices (`options`, cheapest first) and one plain sentence (`message`). Every number is read from the one price list and your workspace's own counts; nothing is changed. The refusals the other routes return carry the same `options` and `severity` in `error.detail`.
+
+Request body (JSON):
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `action` | `send_document` · `bulk_send` · `invite_person` · `remove_person` · `ai_draft` · `ai_edit` · `ai_read_file` · `create_template` · `upload` · `use_feature` · `connect_payments` | yes | What you are about to do: `send_document`, `bulk_send` (with `documents`), `invite_person` or `remove_person` (with `people`), `ai_draft`, `ai_edit`, `ai_read_file`, `create_template`, `upload` (with `bytes`), `use_feature` (with `item`) or `connect_payments`. |
+| `documents` | integer | no |  |
+| `people` | integer | no |  |
+| `recipients` | array of string | no | For `send_document`: the email addresses you are about to send to, so a Free workspace is told how many of them are new signers this month (anyone already sent to this month, and your own team, do not count). |
+| `bytes` | integer | no |  |
+| `item` | string | no | For `use_feature`: the plan-bound item, for example `custom_plays`. |
+
+Answers:
+
+- `200` The answer.
+- `400` The request is not valid. `message` says which field and why.
+- `401` The key is missing, wrong, revoked, or lacks the scope. Every credential failure gets this same answer.
+- `403` The key is valid but not allowed to do this (a plan limit, or the action is not permitted for keys).
+- `429` Too many requests. Wait `Retry-After` seconds, then try again.
+
+```bash
+curl -X POST https://app.docustay.app/api/v1/preflight \
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY" \
+  -H "Idempotency-Key: $(uuidgen)" \
+  -H "Content-Type: application/json" \
+  -d '{"action":"send_document","documents":1,"people":1,"recipients":["string"],"bytes":0,"item":"string"}'
 ```
 
 ## POST /api/v1/documents/detect-fields
@@ -404,7 +459,7 @@ Answers:
 
 ```bash
 curl -X POST https://app.docustay.app/api/v1/documents/detect-fields \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" \
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY" \
   -H "Idempotency-Key: $(uuidgen)" \
   -H "Content-Type: application/json" \
   -d '{"fileName":"string","file":"string","minConfidence":0,"ocr":false}'
@@ -412,9 +467,9 @@ curl -X POST https://app.docustay.app/api/v1/documents/detect-fields \
 
 ## GET /api/v1/ai/usage
 
-**AI credits used against your plan**
+**AI drafts used against your plan**
 
-The AI allowance for the current period: credits included, used and remaining, when it resets, and the split by kind of work. `mode` is `own_key` (you bring your own provider key, so nothing is metered) or `unmetered` (self-hosted).
+The AI allowance for the current period: drafts included, used and remaining, when it resets, and the split by kind of work. `mode` is `own_key` (you bring your own provider key, so nothing is metered) or `unmetered` (self-hosted).
 
 Answers:
 
@@ -426,18 +481,18 @@ Answers:
 
 ```bash
 curl https://app.docustay.app/api/v1/ai/usage \
-  -H "Authorization: Bearer $DOCUSTAY_KEY"
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY"
 ```
 
 ## GET /api/v1/templates/library
 
 **List the built-in templates**
 
-The built-in Document templates (`kind=document`) and Form templates (`kind=form`): title, summary, seats, field counts and the questions its guidance asks. `templateId` is your workspace's copy once it has been used. Empty when the workspace hides the library.
+The built-in templates: title, summary, seats, field counts and the questions its guidance asks. `templateId` is your workspace's copy once it has been used. Empty when the workspace hides the library.
 
 | Parameter | In | Required | Notes |
 |---|---|---|---|
-| `kind` | query | no | `document` · `form` |
+| `kind` | query | no | `document` |
 
 Answers:
 
@@ -450,7 +505,7 @@ Answers:
 
 ```bash
 curl https://app.docustay.app/api/v1/templates/library \
-  -H "Authorization: Bearer $DOCUSTAY_KEY"
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY"
 ```
 
 ## GET /api/v1/templates/library/{slug}
@@ -474,7 +529,7 @@ Answers:
 
 ```bash
 curl https://app.docustay.app/api/v1/templates/library/LIBRARY_SLUG \
-  -H "Authorization: Bearer $DOCUSTAY_KEY"
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY"
 ```
 
 ## POST /api/v1/templates/library/{slug}/documents
@@ -504,7 +559,7 @@ Answers:
 
 ```bash
 curl -X POST https://app.docustay.app/api/v1/templates/library/LIBRARY_SLUG/documents \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" \
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY" \
   -H "Idempotency-Key: $(uuidgen)" \
   -H "Content-Type: application/json" \
   -d '{"title":"Example"}'
@@ -537,7 +592,7 @@ Answers:
 
 ```bash
 curl -X POST https://app.docustay.app/api/v1/templates/library/LIBRARY_SLUG/customize \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" \
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY" \
   -H "Idempotency-Key: $(uuidgen)" \
   -H "Content-Type: application/json" \
   -d '{"name":"Example"}'
@@ -562,7 +617,7 @@ Answers:
 
 ```bash
 curl https://app.docustay.app/api/v1/templates/TEMPLATE_ID \
-  -H "Authorization: Bearer $DOCUSTAY_KEY"
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY"
 ```
 
 ## GET /api/v1/documents/{id}/audit-log.csv
@@ -584,7 +639,7 @@ Answers:
 
 ```bash
 curl https://app.docustay.app/api/v1/documents/DOCUMENT_ID/audit-log.csv \
-  -H "Authorization: Bearer $DOCUSTAY_KEY"
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY"
 ```
 
 ## POST /api/v1/documents/{id}/remind
@@ -613,7 +668,7 @@ Answers:
 
 ```bash
 curl -X POST https://app.docustay.app/api/v1/documents/DOCUMENT_ID/remind \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" \
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY" \
   -H "Idempotency-Key: $(uuidgen)" \
   -H "Content-Type: application/json" \
   -d '{"seat":"signer_1"}'
@@ -648,35 +703,10 @@ Answers:
 
 ```bash
 curl -X POST https://app.docustay.app/api/v1/documents/DOCUMENT_ID/embed-session \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" \
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY" \
   -H "Idempotency-Key: $(uuidgen)" \
   -H "Content-Type: application/json" \
   -d '{"seat":"signer_1","origin":"https://app.example.com"}'
-```
-
-## GET /api/v1/reports
-
-**Counts of what was sent and completed**
-
-Real documents only — documents made in test mode are never counted. Dates are in the workspace's own time zone; `to` is inclusive; the default window is the last 30 days.
-
-| Parameter | In | Required | Notes |
-|---|---|---|---|
-| `from` | query | no | string |
-| `to` | query | no | string |
-| `team` | query | no | string |
-
-Answers:
-
-- `200` The report.
-- `400` The request is not valid. `message` says which field and why.
-- `401` The key is missing, wrong, revoked, or lacks the scope. Every credential failure gets this same answer.
-- `403` The key is valid but not allowed to do this (a plan limit, or the action is not permitted for keys).
-- `429` Too many requests. Wait `Retry-After` seconds, then try again.
-
-```bash
-curl https://app.docustay.app/api/v1/reports \
-  -H "Authorization: Bearer $DOCUSTAY_KEY"
 ```
 
 ## GET /api/v1/teams
@@ -693,124 +723,7 @@ Answers:
 
 ```bash
 curl https://app.docustay.app/api/v1/teams \
-  -H "Authorization: Bearer $DOCUSTAY_KEY"
-```
-
-## GET /api/v1/email-templates
-
-**The workspace's email wording**
-
-| Parameter | In | Required | Notes |
-|---|---|---|---|
-| `locale` | query | no | string |
-
-Answers:
-
-- `200` The eight message types with the standard and the saved wording.
-- `400` The request is not valid. `message` says which field and why.
-- `401` The key is missing, wrong, revoked, or lacks the scope. Every credential failure gets this same answer.
-- `403` The key is valid but not allowed to do this (a plan limit, or the action is not permitted for keys).
-- `429` Too many requests. Wait `Retry-After` seconds, then try again.
-
-```bash
-curl https://app.docustay.app/api/v1/email-templates \
-  -H "Authorization: Bearer $DOCUSTAY_KEY"
-```
-
-## PUT /api/v1/email-templates/{kind}
-
-**Set the wording of one email**
-
-Variables look like `{{document.title}}`; each message type accepts only its own (see GET). A blank field means the standard wording.
-
-| Parameter | In | Required | Notes |
-|---|---|---|---|
-| `kind` | path | yes | invitation, reminder, completed, declined, voided, expired, code or receipt |
-
-Request body (JSON):
-
-| Field | Type | Required | Notes |
-|---|---|---|---|
-| `locale` | string | no |  |
-| `subject` | string or null | no |  |
-| `preview` | string or null | no |  |
-| `body` | string or null | no |  |
-| `buttonLabel` | string or null | no |  |
-| `footer` | string or null | no |  |
-
-Answers:
-
-- `200` The saved wording.
-- `400` The request is not valid. `message` says which field and why.
-- `401` The key is missing, wrong, revoked, or lacks the scope. Every credential failure gets this same answer.
-- `403` The key is valid but not allowed to do this (a plan limit, or the action is not permitted for keys).
-- `404` Not found: nothing with that id or name in this workspace (something in another workspace answers exactly the same).
-- `429` Too many requests. Wait `Retry-After` seconds, then try again.
-
-```bash
-curl -X PUT https://app.docustay.app/api/v1/email-templates/EMAIL_TEMPLATE_KIND \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{"locale":"string","subject":"Example","preview":"string","body":"string","buttonLabel":"string","footer":"string"}'
-```
-
-## DELETE /api/v1/email-templates/{kind}
-
-**Back to the standard wording**
-
-| Parameter | In | Required | Notes |
-|---|---|---|---|
-| `kind` | path | yes | invitation, reminder, completed, declined, voided, expired, code or receipt |
-| `locale` | query | no | string |
-
-Answers:
-
-- `200` The standard wording again.
-- `400` The request is not valid. `message` says which field and why.
-- `401` The key is missing, wrong, revoked, or lacks the scope. Every credential failure gets this same answer.
-- `403` The key is valid but not allowed to do this (a plan limit, or the action is not permitted for keys).
-- `404` Not found: nothing with that id or name in this workspace (something in another workspace answers exactly the same).
-- `429` Too many requests. Wait `Retry-After` seconds, then try again.
-
-```bash
-curl -X DELETE https://app.docustay.app/api/v1/email-templates/EMAIL_TEMPLATE_KIND \
-  -H "Authorization: Bearer $DOCUSTAY_KEY"
-```
-
-## POST /api/v1/email-templates/{kind}/preview
-
-**Preview an email with made-up names**
-
-| Parameter | In | Required | Notes |
-|---|---|---|---|
-| `kind` | path | yes | invitation, reminder, completed, declined, voided, expired, code or receipt |
-
-Request body (JSON):
-
-| Field | Type | Required | Notes |
-|---|---|---|---|
-| `locale` | string | no |  |
-| `subject` | string or null | no |  |
-| `preview` | string or null | no |  |
-| `body` | string or null | no |  |
-| `buttonLabel` | string or null | no |  |
-| `footer` | string or null | no |  |
-
-Answers:
-
-- `200` Subject, preview line, body and the HTML.
-- `400` The request is not valid. `message` says which field and why.
-- `401` The key is missing, wrong, revoked, or lacks the scope. Every credential failure gets this same answer.
-- `403` The key is valid but not allowed to do this (a plan limit, or the action is not permitted for keys).
-- `404` Not found: nothing with that id or name in this workspace (something in another workspace answers exactly the same).
-- `429` Too many requests. Wait `Retry-After` seconds, then try again.
-
-```bash
-curl -X POST https://app.docustay.app/api/v1/email-templates/EMAIL_TEMPLATE_KIND/preview \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" \
-  -H "Idempotency-Key: $(uuidgen)" \
-  -H "Content-Type: application/json" \
-  -d '{"locale":"string","subject":"Example","preview":"string","body":"string","buttonLabel":"string","footer":"string"}'
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY"
 ```
 
 ## GET /api/v1/emails
@@ -823,8 +736,8 @@ Every email sent about a document, to a person named on it: kind, subject, statu
 |---|---|---|---|
 | `documentId` | query | no | string |
 | `to` | query | no | string |
-| `status` | query | no | string |
-| `kind` | query | no | string |
+| `status` | query | no | Only emails in this state; any other value is refused (R13-D205). |
+| `kind` | query | no | Only emails of this kind; any other value is refused (R13-D346). |
 | `limit` | query | no | integer |
 | `cursor` | query | no | string |
 
@@ -838,7 +751,7 @@ Answers:
 
 ```bash
 curl https://app.docustay.app/api/v1/emails \
-  -H "Authorization: Bearer $DOCUSTAY_KEY"
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY"
 ```
 
 ## POST /api/v1/documents/{id}/test-sign
@@ -856,10 +769,12 @@ Request body (JSON):
 | Field | Type | Required | Notes |
 |---|---|---|---|
 | `seat` | string | yes | The seat to sign, for example `signer_1`. |
+| `decline` | boolean | no | Decline the seat instead of signing it: the document becomes `declined` and `documents.document.declined` fires, as when a person declines. |
+| `reason` | string | no | With `decline`, the reason the sender sees. |
 
 Answers:
 
-- `200` Signed.
+- `200` Signed, or declined with `decline: true`.
 - `400` The request is not valid. `message` says which field and why.
 - `401` The key is missing, wrong, revoked, or lacks the scope. Every credential failure gets this same answer.
 - `403` The key is valid but not allowed to do this (a plan limit, or the action is not permitted for keys).
@@ -868,10 +783,10 @@ Answers:
 
 ```bash
 curl -X POST https://app.docustay.app/api/v1/documents/DOCUMENT_ID/test-sign \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" \
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY" \
   -H "Idempotency-Key: $(uuidgen)" \
   -H "Content-Type: application/json" \
-  -d '{"seat":"signer_1"}'
+  -d '{"seat":"signer_1","decline":false,"reason":"Example"}'
 ```
 
 ## POST /api/v1/documents/{id}/void
@@ -899,7 +814,7 @@ Answers:
 
 ```bash
 curl -X POST https://app.docustay.app/api/v1/documents/DOCUMENT_ID/void \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" \
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY" \
   -H "Idempotency-Key: $(uuidgen)" \
   -H "Content-Type: application/json" \
   -d '{"reason":"Example"}'
@@ -930,10 +845,10 @@ Answers:
 
 ```bash
 curl -X POST https://app.docustay.app/api/v1/documents/check \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" \
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY" \
   -H "Idempotency-Key: $(uuidgen)" \
   -H "Content-Type: application/json" \
-  -d '{"source":"string","facts":"string","people":[{"externalId":"contract-2026-0042","metadata":{"crmDealId":"D-1042"},"name":"Example","email":"jo@example.com","role":"Signer","action":"signer","order":0}],"variableValues":"string","requireSignature":false,"forTemplate":false}'
+  -d '{"source":{},"facts":{},"people":[{"externalId":"contract-2026-0042","metadata":{"crmDealId":"D-1042"},"name":"Example","email":"jo@example.com","role":"Signer","action":"signer","order":1}],"variableValues":{},"requireSignature":false,"forTemplate":false}'
 ```
 
 ## GET /api/v1/documents/{id}/source
@@ -955,7 +870,7 @@ Answers:
 
 ```bash
 curl https://app.docustay.app/api/v1/documents/DOCUMENT_ID/source \
-  -H "Authorization: Bearer $DOCUSTAY_KEY"
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY"
 ```
 
 ## POST /api/v1/documents/{id}/revise
@@ -989,10 +904,10 @@ Answers:
 
 ```bash
 curl -X POST https://app.docustay.app/api/v1/documents/DOCUMENT_ID/revise \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" \
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY" \
   -H "Idempotency-Key: $(uuidgen)" \
   -H "Content-Type: application/json" \
-  -d '{"source":"string","facts":"string","variableValues":"string","roleMap":"string"}'
+  -d '{"source":{},"facts":{},"variableValues":{},"roleMap":{}}'
 ```
 
 ## POST /api/v1/documents/{id}/send
@@ -1006,6 +921,12 @@ Sends a draft made with `POST /api/v1/documents`. The same checks as the screen'
 | `id` | path | yes | string |
 | `Idempotency-Key` | header | yes | A unique value for this request (8–200 characters, for example a UUID). Repeating the request with the same key and body returns the first answer instead of doing it twice. |
 
+Request body (JSON):
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `values` | object | no | The boxes the sender fills in ("Filled in by: Sender") and the template's send-time amounts, by key: a box's label in lower case with underscores ("Effective date" → `effective_date`). A send that leaves one empty answers 400 naming it. |
+
 Answers:
 
 - `201` Sent.
@@ -1018,8 +939,10 @@ Answers:
 
 ```bash
 curl -X POST https://app.docustay.app/api/v1/documents/DOCUMENT_ID/send \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" \
-  -H "Idempotency-Key: $(uuidgen)"
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY" \
+  -H "Idempotency-Key: $(uuidgen)" \
+  -H "Content-Type: application/json" \
+  -d '{"values":{"effective_date":"2026-11-01"}}'
 ```
 
 ## POST /api/v1/templates/{id}/documents
@@ -1037,7 +960,7 @@ Request body (JSON):
 
 | Field | Type | Required | Notes |
 |---|---|---|---|
-| `email` | object | no | Your own wording for the emails about THIS document. The workspace's saved wording (Settings → Email templates) applies underneath; what you give here wins. |
+| `email` | object | no | Your own wording for the emails about THIS document. What you give here is used for this document. |
 | `metadata` | object | no | Your own key-value text (up to 20 keys; keys 1–40 letters, digits, dot, dash or underscore; values up to 500 characters). Returned in every response and every webhook for this document; never shown to a signer. |
 | `externalId` | string | no | Your own id for this thing, so you can match it to your records. Filter lists with `externalId=`. |
 | `title` | string | no |  |
@@ -1058,10 +981,10 @@ Answers:
 
 ```bash
 curl -X POST https://app.docustay.app/api/v1/templates/TEMPLATE_ID/documents \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" \
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY" \
   -H "Idempotency-Key: $(uuidgen)" \
   -H "Content-Type: application/json" \
-  -d '{"email":{"subject":"Example","message":"Example","replyTo":"jo@example.com","senderName":"string","locale":"string"},"metadata":{"crmDealId":"D-1042"},"externalId":"contract-2026-0042","title":"Example","people":[{"externalId":"contract-2026-0042","metadata":{"crmDealId":"D-1042"},"name":"Example","email":"jo@example.com","role":"Signer","action":"signer","order":0}],"variableValues":"string","facts":"string","send":{"replyTo":"jo@example.com","senderName":"string","subject":"Example","message":"Example","expiryDays":"string","reminderDays":[0],"signingOrder":"any","language":"en","internalNote":"string","requireDeclineReason":false},"sendNow":false}'
+  -d '{"email":{"subject":"Example","message":"Example","replyTo":"jo@example.com","senderName":"string"},"metadata":{"crmDealId":"D-1042"},"externalId":"contract-2026-0042","title":"Example","people":[{"externalId":"contract-2026-0042","metadata":{"crmDealId":"D-1042"},"name":"Example","email":"jo@example.com","role":"Signer","action":"signer","order":1}],"variableValues":{},"facts":{},"send":{"replyTo":"jo@example.com","senderName":"string","subject":"Example","message":"Example","expiryDays":0,"reminderDays":[1],"signingOrder":"any","internalNote":"string","requireDeclineReason":false},"sendNow":false}'
 ```
 
 ## POST /api/v1/templates/{id}/defaults
@@ -1092,10 +1015,10 @@ Answers:
 
 ```bash
 curl -X POST https://app.docustay.app/api/v1/templates/TEMPLATE_ID/defaults \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" \
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY" \
   -H "Idempotency-Key: $(uuidgen)" \
   -H "Content-Type: application/json" \
-  -d '{"description":"string","clientDescription":"string","message":"Example","send":{"replyTo":"jo@example.com","senderName":"string","subject":"Example","message":"Example","expiryDays":"string","reminderDays":[0],"signingOrder":"any","language":"en","internalNote":"string","requireDeclineReason":false}}'
+  -d '{"description":"string","clientDescription":"string","message":"Example","send":{"replyTo":"jo@example.com","senderName":"string","subject":"Example","message":"Example","expiryDays":0,"reminderDays":[1],"signingOrder":"any","internalNote":"string","requireDeclineReason":false}}'
 ```
 
 ## POST /api/v1/documents/ai/edit
@@ -1123,10 +1046,10 @@ Answers:
 
 ```bash
 curl -X POST https://app.docustay.app/api/v1/documents/ai/edit \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" \
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY" \
   -H "Idempotency-Key: $(uuidgen)" \
   -H "Content-Type: application/json" \
-  -d '{"request":"string","source":"string","mode":"template","variables":[{"key":"string","label":"string","kind":"text"}]}'
+  -d '{"request":"string","source":{},"mode":"template","variables":[{"key":"string","label":"string","kind":"text"}]}'
 ```
 
 ## POST /api/v1/documents/ai/jobs/{id}/cancel
@@ -1148,7 +1071,7 @@ Answers:
 
 ```bash
 curl -X POST https://app.docustay.app/api/v1/documents/ai/jobs/JOB_ID/cancel \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" \
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY" \
   -H "Idempotency-Key: $(uuidgen)"
 ```
 
@@ -1168,7 +1091,7 @@ Answers:
 
 ```bash
 curl https://app.docustay.app/api/v1/ai/wizard \
-  -H "Authorization: Bearer $DOCUSTAY_KEY"
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY"
 ```
 
 ## GET /api/v1/payments/status
@@ -1187,7 +1110,7 @@ Answers:
 
 ```bash
 curl https://app.docustay.app/api/v1/payments/status \
-  -H "Authorization: Bearer $DOCUSTAY_KEY"
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY"
 ```
 
 ## GET /api/v1/plays
@@ -1211,7 +1134,7 @@ Answers:
 
 ```bash
 curl https://app.docustay.app/api/v1/plays \
-  -H "Authorization: Bearer $DOCUSTAY_KEY"
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY"
 ```
 
 ## POST /api/v1/plays
@@ -1236,7 +1159,7 @@ Answers:
 
 ```bash
 curl -X POST https://app.docustay.app/api/v1/plays \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" \
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY" \
   -H "Idempotency-Key: $(uuidgen)" \
   -H "Content-Type: application/json" \
   -d '{"source":"string"}'
@@ -1261,7 +1184,7 @@ Answers:
 
 ```bash
 curl https://app.docustay.app/api/v1/plays/PLAY_NAME \
-  -H "Authorization: Bearer $DOCUSTAY_KEY"
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY"
 ```
 
 ## DELETE /api/v1/plays/{name}
@@ -1283,7 +1206,7 @@ Answers:
 
 ```bash
 curl -X DELETE https://app.docustay.app/api/v1/plays/PLAY_NAME \
-  -H "Authorization: Bearer $DOCUSTAY_KEY"
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY"
 ```
 
 ## POST /api/v1/plays/test
@@ -1308,7 +1231,7 @@ Answers:
 
 ```bash
 curl -X POST https://app.docustay.app/api/v1/plays/test \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" \
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY" \
   -H "Idempotency-Key: $(uuidgen)" \
   -H "Content-Type: application/json" \
   -d '{"source":"string"}'
@@ -1339,7 +1262,7 @@ Answers:
 
 ```bash
 curl -X POST https://app.docustay.app/api/v1/plays/PLAY_NAME/publish \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" \
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY" \
   -H "Idempotency-Key: $(uuidgen)" \
   -H "Content-Type: application/json" \
   -d '{"version":0}'
@@ -1370,7 +1293,7 @@ Answers:
 
 ```bash
 curl -X POST https://app.docustay.app/api/v1/plays/PLAY_NAME/duplicate \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" \
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY" \
   -H "Idempotency-Key: $(uuidgen)" \
   -H "Content-Type: application/json" \
   -d '{"as":"string"}'
@@ -1392,7 +1315,7 @@ Answers:
 
 ```bash
 curl https://app.docustay.app/api/v1/playbooks \
-  -H "Authorization: Bearer $DOCUSTAY_KEY"
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY"
 ```
 
 ## POST /api/v1/playbooks
@@ -1421,10 +1344,10 @@ Answers:
 
 ```bash
 curl -X POST https://app.docustay.app/api/v1/playbooks \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" \
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY" \
   -H "Idempotency-Key: $(uuidgen)" \
   -H "Content-Type: application/json" \
-  -d '{"name":"Example","title":"Example","description":"string","plays":["string"],"templates":["string"]}'
+  -d '{"name":"string","title":"Example","description":"string","plays":["string"],"templates":["string"]}'
 ```
 
 ## POST /api/v1/playbooks/{name}/enable
@@ -1452,7 +1375,7 @@ Answers:
 
 ```bash
 curl -X POST https://app.docustay.app/api/v1/playbooks/PLAYBOOK_NAME/enable \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" \
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY" \
   -H "Idempotency-Key: $(uuidgen)" \
   -H "Content-Type: application/json" \
   -d '{"enabled":false}'
@@ -1472,6 +1395,7 @@ Request body (JSON):
 | `title` | string | no |  |
 | `people` | array of object | yes |  |
 | `answers` | object | no |  |
+| `values` | object | no | Send-time amounts the template's words need, by key (a `needs_input` answer lists them under `values`), e.g. `{ "deposit": "$500" }`. |
 | `useDefaults` | boolean | no |  |
 
 Answers:
@@ -1484,10 +1408,10 @@ Answers:
 
 ```bash
 curl -X POST https://app.docustay.app/api/v1/drafts \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" \
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY" \
   -H "Idempotency-Key: $(uuidgen)" \
   -H "Content-Type: application/json" \
-  -d '{"template":"string","title":"Example","people":[{"name":"Example","email":"jo@example.com","role":"Signer","action":"signer"}],"answers":"string","useDefaults":false}'
+  -d '{"template":"string","title":"Example","people":[{"name":"Example","email":"jo@example.com","role":"Signer","action":"signer"}],"answers":{},"values":{},"useDefaults":false}'
 ```
 
 ## POST /api/v1/drafts/{draftRef}/answers
@@ -1503,6 +1427,7 @@ Request body (JSON):
 | Field | Type | Required | Notes |
 |---|---|---|---|
 | `answers` | object | yes |  |
+| `values` | object | no | Send-time amounts the template's words need, by key (a `needs_input` answer lists them under `values`), e.g. `{ "deposit": "$500" }`. |
 | `useDefaults` | boolean | no |  |
 
 Answers:
@@ -1516,201 +1441,10 @@ Answers:
 
 ```bash
 curl -X POST https://app.docustay.app/api/v1/drafts/DRAFT_DRAFTREF/answers \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" \
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY" \
   -H "Idempotency-Key: $(uuidgen)" \
   -H "Content-Type: application/json" \
-  -d '{"answers":"string","useDefaults":false}'
-```
-
-## GET /api/v1/forms
-
-**List forms**
-
-Every form template in the workspace: its link name, whether it is open, its response count and whether it has closed (a closing date or a response limit).
-
-Answers:
-
-- `200` List forms
-- `400` The request is not valid. `message` says which field and why.
-- `401` The key is missing, wrong, revoked, or lacks the scope. Every credential failure gets this same answer.
-- `403` The key is valid but not allowed to do this (a plan limit, or the action is not permitted for keys).
-- `404` No such form.
-- `409` A conflict, for example the link name is already used by another form.
-- `429` Too many requests. Wait `Retry-After` seconds, then try again.
-
-```bash
-curl https://app.docustay.app/api/v1/forms \
-  -H "Authorization: Bearer $DOCUSTAY_KEY"
-```
-
-## GET /api/v1/forms/templates
-
-**List form templates**
-
-The built-in form templates (the thirty from the template library) and your own: name, summary, who it is for, whether a team member counter-signs, and its default Publish settings.
-
-Answers:
-
-- `200` List form templates
-- `400` The request is not valid. `message` says which field and why.
-- `401` The key is missing, wrong, revoked, or lacks the scope. Every credential failure gets this same answer.
-- `403` The key is valid but not allowed to do this (a plan limit, or the action is not permitted for keys).
-- `404` No such form.
-- `409` A conflict, for example the link name is already used by another form.
-- `429` Too many requests. Wait `Retry-After` seconds, then try again.
-
-```bash
-curl https://app.docustay.app/api/v1/forms/templates \
-  -H "Authorization: Bearer $DOCUSTAY_KEY"
-```
-
-## GET /api/v1/forms/{id}
-
-**Get a form**
-
-One form: its link (`/f/<workspace>/<slug>`), settings, response count and whether it is open.
-
-| Parameter | In | Required | Notes |
-|---|---|---|---|
-| `id` | path | yes | string |
-
-Answers:
-
-- `200` Get a form
-- `400` The request is not valid. `message` says which field and why.
-- `401` The key is missing, wrong, revoked, or lacks the scope. Every credential failure gets this same answer.
-- `403` The key is valid but not allowed to do this (a plan limit, or the action is not permitted for keys).
-- `404` No such form.
-- `409` A conflict, for example the link name is already used by another form.
-- `429` Too many requests. Wait `Retry-After` seconds, then try again.
-
-```bash
-curl https://app.docustay.app/api/v1/forms/FORM_ID \
-  -H "Authorization: Bearer $DOCUSTAY_KEY"
-```
-
-## GET /api/v1/forms/{id}/responses
-
-**List a form's responses**
-
-Newest first. Each response is a document: its id opens it with GET /api/v1/documents/{id}. `limit` is 1 to 500.
-
-| Parameter | In | Required | Notes |
-|---|---|---|---|
-| `id` | path | yes | string |
-| `limit` | query | no | integer |
-| `offset` | query | no | integer or null |
-
-Answers:
-
-- `200` List a form's responses
-- `400` The request is not valid. `message` says which field and why.
-- `401` The key is missing, wrong, revoked, or lacks the scope. Every credential failure gets this same answer.
-- `403` The key is valid but not allowed to do this (a plan limit, or the action is not permitted for keys).
-- `404` No such form.
-- `409` A conflict, for example the link name is already used by another form.
-- `429` Too many requests. Wait `Retry-After` seconds, then try again.
-
-```bash
-curl https://app.docustay.app/api/v1/forms/FORM_ID/responses \
-  -H "Authorization: Bearer $DOCUSTAY_KEY"
-```
-
-## POST /api/v1/forms/publish
-
-**Publish a form**
-
-Gives a form template its public link and settings (or changes them). `slug` is 4 to 60 letters, numbers and dashes. The template must be approved and have one person who fills it in, plus at most one team member who counter-signs (`settings.counterSign`).
-
-| Parameter | In | Required | Notes |
-|---|---|---|---|
-| `Idempotency-Key` | header | yes | A unique value for this request (8–200 characters, for example a UUID). Repeating the request with the same key and body returns the first answer instead of doing it twice. |
-
-Request body (JSON):
-
-| Field | Type | Required | Notes |
-|---|---|---|---|
-| `templateId` | string | yes |  |
-| `slug` | string | yes |  |
-| `settings` | object | no |  |
-| `enabled` | boolean | no |  |
-
-Answers:
-
-- `200` Publish a form
-- `400` The request is not valid. `message` says which field and why.
-- `401` The key is missing, wrong, revoked, or lacks the scope. Every credential failure gets this same answer.
-- `403` The key is valid but not allowed to do this (a plan limit, or the action is not permitted for keys).
-- `404` No such form.
-- `409` A conflict, for example the link name is already used by another form.
-- `429` Too many requests. Wait `Retry-After` seconds, then try again.
-
-```bash
-curl -X POST https://app.docustay.app/api/v1/forms/publish \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" \
-  -H "Idempotency-Key: $(uuidgen)" \
-  -H "Content-Type: application/json" \
-  -d '{"templateId":"6f1c1f0e-7a0c-4d1d-9b5e-2f0a7b1c3d4e","slug":"mutual-nda","settings":{"verifyEmail":false,"copyTo":"jo@example.com","expiresAt":"string","responseLimit":"string","intro":"string","thankYou":"string","fillAgain":false,"embedSites":["https://example.com/hook"],"notifyOwner":false,"confirmRespondent":false,"counterSign":{"on":false,"userId":"6f1c1f0e-7a0c-4d1d-9b5e-2f0a7b1c3d4e"}},"enabled":false}'
-```
-
-## POST /api/v1/forms/{id}/open
-
-**Open or close a form**
-
-`open: false` keeps the link but says the form is not taking responses.
-
-| Parameter | In | Required | Notes |
-|---|---|---|---|
-| `id` | path | yes | string |
-
-Request body (JSON):
-
-| Field | Type | Required | Notes |
-|---|---|---|---|
-| `open` | boolean | yes |  |
-
-Answers:
-
-- `200` Open or close a form
-- `400` The request is not valid. `message` says which field and why.
-- `401` The key is missing, wrong, revoked, or lacks the scope. Every credential failure gets this same answer.
-- `403` The key is valid but not allowed to do this (a plan limit, or the action is not permitted for keys).
-- `404` No such form.
-- `409` A conflict, for example the link name is already used by another form.
-- `429` Too many requests. Wait `Retry-After` seconds, then try again.
-
-```bash
-curl -X POST https://app.docustay.app/api/v1/forms/FORM_ID/open \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" \
-  -H "Idempotency-Key: $(uuidgen)" \
-  -H "Content-Type: application/json" \
-  -d '{"open":false}'
-```
-
-## POST /api/v1/forms/{id}/unpublish
-
-**Unpublish a form**
-
-The link stops working. The form template, its settings and every response are kept; publish it again at any time.
-
-| Parameter | In | Required | Notes |
-|---|---|---|---|
-| `id` | path | yes | string |
-
-Answers:
-
-- `200` Unpublish a form
-- `400` The request is not valid. `message` says which field and why.
-- `401` The key is missing, wrong, revoked, or lacks the scope. Every credential failure gets this same answer.
-- `403` The key is valid but not allowed to do this (a plan limit, or the action is not permitted for keys).
-- `404` No such form.
-- `409` A conflict, for example the link name is already used by another form.
-- `429` Too many requests. Wait `Retry-After` seconds, then try again.
-
-```bash
-curl -X POST https://app.docustay.app/api/v1/forms/FORM_ID/unpublish \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" \
-  -H "Idempotency-Key: $(uuidgen)"
+  -d '{"answers":{},"values":{},"useDefaults":false}'
 ```
 
 ## GET /api/v1/webhooks/topics
@@ -1727,7 +1461,7 @@ Answers:
 
 ```bash
 curl https://app.docustay.app/api/v1/webhooks/topics \
-  -H "Authorization: Bearer $DOCUSTAY_KEY"
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY"
 ```
 
 ## GET /api/v1/webhooks
@@ -1744,7 +1478,7 @@ Answers:
 
 ```bash
 curl https://app.docustay.app/api/v1/webhooks \
-  -H "Authorization: Bearer $DOCUSTAY_KEY"
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY"
 ```
 
 ## POST /api/v1/webhooks
@@ -1772,7 +1506,7 @@ Answers:
 
 ```bash
 curl -X POST https://app.docustay.app/api/v1/webhooks \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" \
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY" \
   -H "Idempotency-Key: $(uuidgen)" \
   -H "Content-Type: application/json" \
   -d '{"url":"https://example.com/hook","relay":false,"name":"Example","eventTypes":["string"]}'
@@ -1797,14 +1531,14 @@ Answers:
 
 ```bash
 curl -X DELETE https://app.docustay.app/api/v1/webhooks/WEBHOOK_ID \
-  -H "Authorization: Bearer $DOCUSTAY_KEY"
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY"
 ```
 
 ## POST /api/v1/webhooks/{id}/test
 
 **Send a test event**
 
-Sends a sample signed event (`test: true` in its payload) to the webhook now and returns the receiver's answer. Nothing is stored and failures here never count toward disabling the webhook. Nothing is created, so no Idempotency-Key is needed: repeating the call just sends another test.
+Sends a sample signed event (`test: true` in its payload) to the webhook now and returns the receiver's answer. The send is listed under the webhook's deliveries with `test: true`; failures here never count toward disabling the webhook and are never retried. Nothing is created, so no Idempotency-Key is needed: repeating the call just sends another test.
 
 | Parameter | In | Required | Notes |
 |---|---|---|---|
@@ -1827,7 +1561,7 @@ Answers:
 
 ```bash
 curl -X POST https://app.docustay.app/api/v1/webhooks/WEBHOOK_ID/test \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" \
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY" \
   -H "Idempotency-Key: $(uuidgen)" \
   -H "Content-Type: application/json" \
   -d '{"topic":"string"}'
@@ -1860,15 +1594,17 @@ Answers:
 
 ```bash
 curl -X POST https://app.docustay.app/api/v1/webhooks/WEBHOOK_ID/rotate \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" \
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY" \
   -H "Idempotency-Key: $(uuidgen)" \
   -H "Content-Type: application/json" \
-  -d '{"windowHours":0}'
+  -d '{"windowHours":1}'
 ```
 
 ## GET /api/v1/webhooks/{id}/deliveries
 
 **Recent deliveries**
+
+Real deliveries and test sends (`test: true`, from `POST /webhooks/{id}/test`) together.
 
 | Parameter | In | Required | Notes |
 |---|---|---|---|
@@ -1885,7 +1621,7 @@ Answers:
 
 ```bash
 curl https://app.docustay.app/api/v1/webhooks/WEBHOOK_ID/deliveries \
-  -H "Authorization: Bearer $DOCUSTAY_KEY"
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY"
 ```
 
 ## GET /api/v1/webhooks/{id}/relay
@@ -1912,7 +1648,7 @@ Answers:
 
 ```bash
 curl https://app.docustay.app/api/v1/webhooks/WEBHOOK_ID/relay \
-  -H "Authorization: Bearer $DOCUSTAY_KEY"
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY"
 ```
 
 ## POST /api/v1/embedded/builder-session
@@ -1939,7 +1675,7 @@ Answers:
 
 ```bash
 curl -X POST https://app.docustay.app/api/v1/embedded/builder-session \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" \
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY" \
   -H "Idempotency-Key: $(uuidgen)" \
   -H "Content-Type: application/json" \
   -d '{"origin":"https://app.example.com","name":"Example"}'
@@ -1969,7 +1705,7 @@ Answers:
 
 ```bash
 curl -X POST https://app.docustay.app/api/v1/embedded/scribe-session \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" \
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY" \
   -H "Idempotency-Key: $(uuidgen)" \
   -H "Content-Type: application/json" \
   -d '{"origin":"https://app.example.com","name":"Example"}'
@@ -1977,9 +1713,9 @@ curl -X POST https://app.docustay.app/api/v1/embedded/scribe-session \
 
 ## GET /api/v1/search
 
-**Search documents, templates, forms and people**
+**Search documents, templates and people**
 
-The same search as ⌘K in the app: documents by title or signer, templates, forms and people, best first, grouped. `per` is how many of each kind (1 to 20, default 6).
+The same search as ⌘K in the app: documents by title or signer, templates and people, best first, grouped. `per` is how many of each kind (1 to 20, default 6).
 
 | Parameter | In | Required | Notes |
 |---|---|---|---|
@@ -1988,7 +1724,7 @@ The same search as ⌘K in the app: documents by title or signer, templates, for
 
 Answers:
 
-- `200` Search documents, templates, forms and people
+- `200` Search documents, templates and people
 - `400` The request is not valid. `message` says which field and why.
 - `401` The key is missing, wrong, revoked, or lacks the scope. Every credential failure gets this same answer.
 - `403` The key is valid but not allowed to do this (a plan limit, or the action is not permitted for keys).
@@ -1996,72 +1732,12 @@ Answers:
 
 ```bash
 curl https://app.docustay.app/api/v1/search?q=example \
-  -H "Authorization: Bearer $DOCUSTAY_KEY"
-```
-
-## GET /api/v1/contracts
-
-**List signed contracts with their key dates**
-
-Every signed document with the dates read from its boxes at signing — start, end, notice, renewal — and its value, with where each came from (`source`: a box, or a person's correction). Filter with `q` (title or person).
-
-| Parameter | In | Required | Notes |
-|---|---|---|---|
-| `q` | query | no | string |
-| `limit` | query | no | integer |
-
-Answers:
-
-- `200` List signed contracts with their key dates
-- `400` The request is not valid. `message` says which field and why.
-- `401` The key is missing, wrong, revoked, or lacks the scope. Every credential failure gets this same answer.
-- `403` The key is valid but not allowed to do this (a plan limit, or the action is not permitted for keys).
-- `429` Too many requests. Wait `Retry-After` seconds, then try again.
-
-```bash
-curl https://app.docustay.app/api/v1/contracts \
-  -H "Authorization: Bearer $DOCUSTAY_KEY"
-```
-
-## POST /api/v1/contracts/{id}/dates
-
-**Correct a contract's key date**
-
-Sets one key date (or the value) on a signed document by hand. The signed PDF never changes; the correction is kept as the person's, and renewal reminders follow it. `date` is YYYY-MM-DD; `null` clears it.
-
-| Parameter | In | Required | Notes |
-|---|---|---|---|
-| `id` | path | yes | string |
-
-Request body (JSON):
-
-| Field | Type | Required | Notes |
-|---|---|---|---|
-| `kind` | `start` · `end` · `notice` · `renewal` · `value` | yes |  |
-| `date` | string or null | no |  |
-| `amountMinor` | integer or null | no |  |
-| `currency` | string or null | no |  |
-
-Answers:
-
-- `200` Correct a contract's key date
-- `400` The request is not valid. `message` says which field and why.
-- `401` The key is missing, wrong, revoked, or lacks the scope. Every credential failure gets this same answer.
-- `403` The key is valid but not allowed to do this (a plan limit, or the action is not permitted for keys).
-- `404` Not found: nothing with that id or name in this workspace (something in another workspace answers exactly the same).
-- `429` Too many requests. Wait `Retry-After` seconds, then try again.
-
-```bash
-curl -X POST https://app.docustay.app/api/v1/contracts/CONTRACT_ID/dates \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" \
-  -H "Idempotency-Key: $(uuidgen)" \
-  -H "Content-Type: application/json" \
-  -d '{"kind":"start","date":"string","amountMinor":"string","currency":"string"}'
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY"
 ```
 
 ## GET /api/v1/payments
 
-**List payments taken through documents and forms**
+**List payments taken through documents**
 
 Newest first: who paid, for which document, the amount, status (`paid`, `waiting` — signed, the signature kept while they pay — `started`, `refunded`, `partially_refunded`, `disputed`), and this month's figures (`month.stripeFee` is Stripe's own fees, `month.stripeFeePending` the payments Stripe has not settled yet). Page with `before` (the `next` of the previous page).
 
@@ -2072,7 +1748,7 @@ Newest first: who paid, for which document, the amount, status (`paid`, `waiting
 
 Answers:
 
-- `200` List payments taken through documents and forms
+- `200` List payments taken through documents
 - `400` The request is not valid. `message` says which field and why.
 - `401` The key is missing, wrong, revoked, or lacks the scope. Every credential failure gets this same answer.
 - `403` The key is valid but not allowed to do this (a plan limit, or the action is not permitted for keys).
@@ -2080,7 +1756,7 @@ Answers:
 
 ```bash
 curl https://app.docustay.app/api/v1/payments \
-  -H "Authorization: Bearer $DOCUSTAY_KEY"
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY"
 ```
 
 ## POST /api/v1/payments/{id}/refund
@@ -2113,60 +1789,8 @@ Answers:
 
 ```bash
 curl -X POST https://app.docustay.app/api/v1/payments/PAYMENT_ID/refund \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" \
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY" \
   -H "Idempotency-Key: $(uuidgen)" \
   -H "Content-Type: application/json" \
-  -d '{"amountMinor":0,"reason":"Example"}'
-```
-
-## GET /api/v1/automations
-
-**List automations**
-
-Each automation built on the canvas: when it starts (a signed document from a template or form), its steps, whether it is on, how many times it ran and its recent runs. (`GET /api/v1/playbooks` lists packs: bundles of skills and templates.)
-
-Answers:
-
-- `200` List automations
-- `400` The request is not valid. `message` says which field and why.
-- `401` The key is missing, wrong, revoked, or lacks the scope. Every credential failure gets this same answer.
-- `403` The key is valid but not allowed to do this (a plan limit, or the action is not permitted for keys).
-- `429` Too many requests. Wait `Retry-After` seconds, then try again.
-
-```bash
-curl https://app.docustay.app/api/v1/automations \
-  -H "Authorization: Bearer $DOCUSTAY_KEY"
-```
-
-## POST /api/v1/automations/{id}/enable
-
-**Switch an automation on or off**
-
-`on: true` switches it on (Pro): from then on, each matching signed document starts a run. `on: false` stops new runs, and a run that is waiting stops when its wait ends, without sending its reminder.
-
-| Parameter | In | Required | Notes |
-|---|---|---|---|
-| `id` | path | yes | string |
-
-Request body (JSON):
-
-| Field | Type | Required | Notes |
-|---|---|---|---|
-| `on` | boolean | yes |  |
-
-Answers:
-
-- `200` Switch an automation on or off
-- `400` The request is not valid. `message` says which field and why.
-- `401` The key is missing, wrong, revoked, or lacks the scope. Every credential failure gets this same answer.
-- `403` The key is valid but not allowed to do this (a plan limit, or the action is not permitted for keys).
-- `404` Not found: nothing with that id or name in this workspace (something in another workspace answers exactly the same).
-- `429` Too many requests. Wait `Retry-After` seconds, then try again.
-
-```bash
-curl -X POST https://app.docustay.app/api/v1/automations/AUTOMATION_ID/enable \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" \
-  -H "Idempotency-Key: $(uuidgen)" \
-  -H "Content-Type: application/json" \
-  -d '{"on":false}'
+  -d '{"amountMinor":1,"reason":"Example"}'
 ```

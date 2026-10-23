@@ -1,5 +1,6 @@
 // Part 29 step 3 (A6) — the two public doors a self-hosted Docustay install talks to: the licence check and the anonymous usage ping. Both live in the platform organisation. The request address is used for the rate limit
 // only and is never written anywhere (the ping stores a random install id, a version and five counts).
+import { PRICES } from "../product/docustayPrices.mjs";
 import { invalid, configurationStatement } from "../http/errors.mjs";
 import { withTenant } from "../db/index.mjs";
 import { resolvePublicTenantId } from "../booking/publicBooking.mjs";
@@ -9,7 +10,6 @@ import { checkLicense, recordPing } from "../product/docustayLicense.mjs";
 import { deliverAddon } from "../product/docustayAddonDelivery.mjs";
 import { startSelfhostCheckout } from "../product/docustay.mjs";
 import { cleanUsageReport } from "../product/docustaySelfhost.mjs";
-import { cleanSuggestion, addSuggestion, abuseKey } from "../product/translationSuggestions.mjs";
 
 /** The platform organisation (the one the licence check and the usage ping live in). When this deployment has none, the answer is a plain 503 configuration statement, never a bare 500 (D-020). `resolve` is injectable for the test. */
 export async function requirePlatformTenant(resolve, slug) {
@@ -25,24 +25,28 @@ export function registerPublicDocustayRoutes(app) {
   // B5 — the pricing page reads this, so page and product cannot disagree. Cached; no emails-per-day (not shown).
   app.get("/api/public/docustay/plans", (c) => {
     c.header("cache-control", "public, max-age=300");
-    const [free, pro] = docustayPlans();
+    const byKey = (k) => { const x = docustayPlans().find((q) => q.key === k); if (!x) throw new Error(`plans: ${k} missing`); return x; };   // by KEY, never by position (17 Oct 2026: a positional read swapped Pay as you go and Pro)
+    const free = byKey("docustay_free"), payg = byKey("docustay_payg"), pro = byKey("docustay_pro"), life = byKey("docustay_lifetime");
     return c.json({ currency: "usd",
-      free: { name: free.name, docsPerMonth: free.docsPerMonth, templatesPerMonth: free.templatesPerMonth },
-      pro: { name: pro.name, monthlyMinor: pro.priceMinor, foundersMonthlyMinor: pro.foundersPriceMinor, ...(annualEnabled() ? { yearlyMinor: pro.yearlyPriceMinor, foundersYearlyMinor: pro.foundersYearlyPriceMinor } : {}), docsPerMonth: pro.docsPerMonth, items: ["unlimited documents", "unlimited templates", "automated reminders", "bulk send", "team roles", "no Docustay footer", "signing links on your own domain"] },
+      free: { key: free.key, name: free.name, docsPerMonth: free.docsPerMonth, templatesPerMonth: free.templatesPerMonth, draftsPerMonth: free.aiDraftsPerMonth, feeBps: free.feeBps, bulkCap: free.bulkCap },
+      payg: { key: payg.key, name: payg.name, personMonthlyMinor: payg.personMonthlyMinor, docsIncluded: payg.docsPerMonth, docOverMinor: payg.docOverMinor, draftsIncluded: payg.aiDraftsPerMonth, draftOverMinor: payg.draftOverMinor, feeBps: payg.feeBps },
+      pro: { key: pro.key, name: pro.name, monthlyMinor: pro.priceMinor, foundersMonthlyMinor: pro.foundersPriceMinor, ...(annualEnabled() ? { yearlyMinor: pro.yearlyPriceMinor, foundersYearlyMinor: pro.foundersYearlyPriceMinor } : {}), docsPerMonth: pro.docsPerMonth, draftsIncluded: pro.aiDraftsPerMonth, draftOverMinor: pro.draftOverMinor, feeBps: pro.feeBps, items: ["unlimited documents", "unlimited templates", "unlimited team members", "unlimited signers", "your own plays and playbooks", "the Plays API", "100 MB uploads"] },
+      lifetime: { key: life.key, name: life.name, oneTimeMinor: life.oneTimeMinor, firstWorkspaces: PRICES.lifetime.firstWorkspaces, draftsIncluded: life.aiDraftsPerMonth, draftOverMinor: life.draftOverMinor, feeBps: life.feeBps },
+      budget: { defaultMinor: PRICES.budget.defaultMinor, alertPercents: PRICES.budget.alertPercents, earlyInvoiceMinor: PRICES.budget.earlyInvoiceMinor },
       foundersUntil: foundersUntil().toISOString(), foundersOpen: foundersOpen() });
   });
   app.post("/api/public/docustay/license", async (c) => {
     c.header("cache-control", "no-store");
     formSubmitLimiter("docustay_license", c.get("clientIp") ?? null, { limit: 60 });
     const b = await body(c); const tenantId = await platformTenant();
-    return c.json(await withTenant(tenantId, (tx) => checkLicense(tx, { tenantId, key: b.key, installId: b.installId }), { userId: null }));
+    return c.json(await withTenant(tenantId, (tx) => checkLicense(tx, { tenantId, key: b.key, installId: b.installId, role: b.role, version: b.version }), { userId: null }));
   });
   // Operation Live 5.1.4 — the closed Pro add-on: a valid key for this install gets the bundle; every other key gets the licence route's plain refusal
   app.post("/api/public/docustay/addon", async (c) => {
     c.header("cache-control", "no-store");
     formSubmitLimiter("docustay_addon", c.get("clientIp") ?? null, { limit: 20 });
     const b = await body(c); const tenantId = await platformTenant();
-    const r = await withTenant(tenantId, (tx) => deliverAddon(tx, { tenantId, key: b.key, installId: b.installId, version: b.version ?? null }), { userId: null });
+    const r = await withTenant(tenantId, (tx) => deliverAddon(tx, { tenantId, key: b.key, installId: b.installId, version: b.version ?? null, role: b.role }), { userId: null });
     c.header("content-type", "application/gzip"); c.header("x-addon-sha256", r.sha256);
     return c.body(r.body);
   });
@@ -66,12 +70,5 @@ export function registerPublicDocustayRoutes(app) {
     const b = await body(c); const tenantId = await platformTenant();
     const r = cleanUsageReport(b.report ?? b);
     return c.json(await withTenant(tenantId, (tx) => recordPing(tx, { tenantId, installId: r.installId, version: r.version, counts: r.counts }), { userId: null }));
-  });
-  // Part 31 follow-up — "Suggest a better translation": anyone can send one; only the named viewers can read it. Per-address limit here, a daily cap per address (hashed) in the table, a hidden field and a minimum time on the form.
-  app.post("/api/public/docustay/translation-suggestions", async (c) => {
-    c.header("cache-control", "no-store");
-    formSubmitLimiter("docustay_translation_suggestion", c.get("clientIp") ?? null, { limit: 6 });
-    const b = await body(c); const row = cleanSuggestion(b); const tenantId = await platformTenant();
-    return c.json(await withTenant(tenantId, (tx) => addSuggestion(tx, { tenantId, row, abuse: abuseKey(c.get("clientIp") ?? null) }), { userId: null }));
   });
 }

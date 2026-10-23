@@ -12,10 +12,11 @@ function block(selector) {
 }
 const SETS = {
   light: block(":root {\n  color-scheme: light;\n  --paper"),
-  dark: block(':root[data-theme="dark"], :root[data-surface="site"] {'),
+  dark: block(':root[data-theme="dark"] {\n  color-scheme: dark;'),
+  // the marketing site has its own LIGHT set since the cream restyle (16 Oct 2026, specs/SITE-CREAM-RESTYLE.md); it no longer shares the dark one
+  site: block(':root[data-surface="site"] {\n  color-scheme: light;'),
   signing: block(':root[data-surface="signing"] {'),
 };
-SETS.site = SETS.dark;
 
 function parse(v) {
   v = v.trim();
@@ -36,16 +37,20 @@ const PAIRS = [
   ["text-2", "paper", 4.5], ["text-2", "card", 4.5],
   ["mute", "paper", 4.5], ["mute", "card", 4.5], ["mute", "tint", 4.5], ["mute", "sidebar", 4.5],
   ["faint", "paper", 4.5], ["faint", "card", 4.5],
-  ["brand", "paper", 4.5], ["brand", "card", 4.5], ["brand-ink", "brand", 4.5], ["brand-ink", "brand-hover", 4.5],
+  ["brand-ink", "brand", 4.5], ["brand-ink", "brand-hover", 4.5],
   ["ok", "paper", 4.5], ["warn", "paper", 4.5], ["bad", "paper", 4.5], ["info", "paper", 4.5],
   ["ok", "ok-bg", 4.5], ["warn", "warn-bg", 4.5], ["bad", "bad-bg", 4.5], ["info", "info-bg", 4.5],
   ["accent", "paper", 3, "focus ring and large accents"],
+  // COMBINED STYLE (19 Oct 2026): link text (dark mode keeps a lighter violet for text; the fill stays the spec accent), the accent-tinted wash, the seal ink on its ground, third-level text on rows
+  ["link", "paper", 4.5, "", ["light", "dark"]], ["link", "card", 4.5, "", ["light", "dark"]], ["link", "tint", 4.5, "", ["light", "dark"]], ["accent-ink", "accent-soft", 4.5, "", ["light", "dark"]], ["accent-ink", "paper", 4.5, "", ["light", "dark"]], ["seal", "card", 4.5, "", ["light", "dark"]], ["faint", "tint", 4.5, "", ["light", "dark"]], ["faint", "sidebar", 4.5, "", ["light", "dark"]], ["text-2", "tint", 4.5, "", ["light", "dark"]], ["mute", "paper-ground", 4.5, "paper pages", ["light", "dark"]],
+  ["brand", "paper", 4.5, "", ["site", "signing"]], ["brand", "card", 4.5, "", ["site", "signing"]],
 ];
 let bad = 0, total = 0;
 function check(set, name, vars) {
   const bg0 = parse(vars.paper);
   const solid = (tok) => over(parse(vars[tok]), tok === "paper" ? { r: 255, g: 255, b: 255, a: 1 } : bg0);
-  for (const [fg, bg, min] of PAIRS) {
+  for (const [fg, bg, min, , only] of PAIRS) {
+    if (only && !only.includes(name)) continue;
     if (vars[fg] === undefined || vars[bg] === undefined) { console.log(`FAIL  ${name}: token missing (${fg} or ${bg})`); bad++; continue; }
     const B = solid(bg), F = over(parse(vars[fg]), B), r = ratio(F, B); total++;
     if (r < min) { console.log(`FAIL  ${name}: ${fg} on ${bg} = ${r.toFixed(2)}:1 (needs ${min})`); bad++; }

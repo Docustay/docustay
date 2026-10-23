@@ -3,6 +3,7 @@
   // (email → six-digit code → this same workspace becomes a real Free account). Shown only while the workspace is a demo; nothing renders for anyone else.
   import { t, whenText } from "$lib/i18n/index.svelte.js";
   import { api } from "$lib/api.js";
+  import { appEvent } from "$lib/appEvents.js";
   import { plan, loadPlan } from "$lib/pro/plan.svelte.js";
   import Dialog from "$lib/ui/Dialog.svelte";
   import CodeBoxes from "$lib/entry/CodeBoxes.svelte";
@@ -25,7 +26,7 @@
   async function check(v) {
     problem = null; bad = false; step = "verifying";
     const r = await api("/api/demo/keep/confirm", { method: "POST", body: { email, code: v, policy, lang: i18n.lang } });
-    if (r.ok) { step = "done"; setTimeout(() => location.assign("/documents"), 900); return; }
+    if (r.ok) { step = "done"; await appEvent("demo_keep_complete"); await appEvent("signup_complete", { via: "demo_keep" }); setTimeout(() => location.assign("/documents"), 900); return; }
     problem = r.error ?? r.json?.error?.message ?? t("Could not finish. Try again.");
     const c = r.json?.error?.detail?.code;
     if (r.status === 403) { bad = true; code = ""; step = "code"; await tick(); boxes?.focus(); setTimeout(() => (bad = false), 500); }
@@ -48,7 +49,7 @@
     {#if inboxState === "loading"}<p class="text-sm text-mute" role="status">{t("Loading…")}</p>
     {:else if inboxState === "error"}<p class="text-sm text-bad" role="alert">{t("Could not load the inbox. Try again.")}</p>
     {:else if !messages.length}<p class="text-sm text-mute" data-testid="demo-inbox-empty">{t("Nothing yet. Send a document and its signing email appears here.")}</p>
-    {:else}<ul class="grid gap-3" data-testid="demo-inbox-list">{#each messages as m (m.id)}<li class="rounded-xl border border-line p-3 text-sm"><p class="font-semibold">{m.subject}</p><p class="text-mute">{t("To")} {m.to} · {when(m.created_at)}</p>{#if m.link}<p class="mt-2"><a class="btn primary" href={m.link} target="_blank" rel="noopener">{t("Open the signing page")}</a></p>{/if}</li>{/each}</ul>{/if}
+    {:else}<ul class="grid gap-3" data-testid="demo-inbox-list">{#each messages as m (m.id)}<li class="rounded-xl border border-line p-3 text-sm"><p class="font-semibold">{m.subject}</p><p class="text-mute">{t("To")} {m.to} · {when(m.created_at)}</p>{#if m.link}<p class="mt-2"><a class="btn primary" href={m.link} data-testid="demo-inbox-sign">{t("Open the signing page")}</a></p>{/if}</li>{/each}</ul>{/if}
   </Dialog>
   <Dialog bind:open={keepOpen} title={t("Keep my work")} description={t("Create a free account and this workspace becomes yours: what you made stays, the sample documents go.")} testid="demo-keep-dialog">
     {#if step === "done"}

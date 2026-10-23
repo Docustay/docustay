@@ -8,7 +8,7 @@ process.env.DOCUSTAY_POSTAL_ADDRESS = "1 Test Street, Castro Valley, CA 94546";
 let pass = 0, fail = 0;
 const t = (n, f) => { try { f(); console.log("PASS", n); pass++; } catch (e) { console.log("FAIL", n, "-", e.message); fail++; } };
 const must = (c, m) => { if (!c) throw new Error(m); };
-t("14 languages are present", () => must(BILLING_LANGS.length === 14 && BILLING_LANGS.every((l) => BILLING[l]), BILLING_LANGS.join()));
+t("English is the only language (Docustay v1)", () => must(BILLING_LANGS.length === 1 && BILLING_LANGS[0] === "en" && BILLING.en && Object.keys(BILLING).length === 1, BILLING_LANGS.join()));
 t("every language carries every key, and no key is left empty (English is a fallback for unknown languages, not for gaps)", () => {
   for (const l of BILLING_LANGS) { const miss = BILLING_KEYS.filter((k) => typeof BILLING[l][k] !== "string" || !BILLING[l][k].trim()); must(miss.length === 0, `${l} lacks ${miss.join()}`); const extra = Object.keys(BILLING[l]).filter((k) => !BILLING_KEYS.includes(k)); must(extra.length === 0, `${l} has unknown ${extra.join()}`); }
 });

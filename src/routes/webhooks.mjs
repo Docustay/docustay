@@ -34,6 +34,8 @@ import { noteEmailDelivery } from "../documents/frontDoor.mjs";
 import { recordMailEvent } from "../mail/index.mjs";
 import { grantInvoiceCredits } from "../money/creditGrant.mjs";
 import { handleWebhook } from "../paths/index.mjs";
+import { callOutside } from "../http/outside.mjs";
+import { stripeSecretFor } from "../product/stripeFor.mjs";
 import { handlePaymentWebhook, HANDLED_EVENTS } from "../payments/webhook.mjs";
 // ★★★ Task 6.5 (spec 06 §5, §2.7 row 6) — the platform's OWN subscription mirror, a SECOND applier on
 //     the same 'stripe' provider door, chosen by event type below. See `billing/webhook.mjs`'s own
@@ -92,7 +94,7 @@ const DIRECT_TENANT_ID = Object.freeze({
     if (typeof id !== "string" || !id) return null;
     return withCredentialLookup(async (db) => (await db.query(`SELECT keystone.mail_message_tenant($1) AS t`, [id])).rows[0]?.t ?? null).catch(() => null);
   },
-  stripe: (body) => {
+  stripe: async (body) => {
     if (body?.account) return null;
     // (an invoice carries its subscription's metadata under subscription_details / parent.subscription_details — Part 29)
     const o = body?.data?.object ?? {};
@@ -102,9 +104,25 @@ const DIRECT_TENANT_ID = Object.freeze({
     //   NoTenantContext, and the platform's own side — the payment row, the invoice marked paid, the credit grant — never ran; only the mirror saw it.
     //   Same trust as the other keys: a platform-account object, after signature verification, carrying the id WE stamped.
     const practice = typeof m.practice_id === "string" && /^[0-9a-f-]{36}$/i.test(m.practice_id) ? m.practice_id : null;
-    return m.workbench_tenant_id ?? m.keystone_tenant_id ?? m.tenantId ?? practice ?? null;
+    const direct = m.workbench_tenant_id ?? m.keystone_tenant_id ?? m.tenantId ?? practice ?? null;
+    if (direct) return direct;
+    // 21 Oct 2026 (pricing integrity): a dispute on a PLATFORM-account payment (a Docustay plan payment) carries only its charge. The charge, or its customer, carries the workspace id WE stamped.
+    if (typeof body?.type === "string" && body.type.startsWith("charge.dispute.") && typeof o.charge === "string") return planDisputeTenant(o.charge);
+    return null;
   },
 });
+/** The workspace a platform-account charge belongs to: the id stamped on the charge, else on its customer. Reads Docustay's own Stripe account; null when it cannot be found (another product's charge, an outage): the event is then handled as it always was. */
+async function planDisputeTenant(chargeId) {
+  try {
+    const key = stripeSecretFor("docustay"); if (!key || !/^ch_|^py_/.test(chargeId)) return null;
+    const get = async (path) => { const r = await callOutside("stripe", `https://api.stripe.com/v1${path}`, { method: "GET", headers: { Authorization: `Bearer ${key}` } }, { timeoutMs: 10_000 }); return r.ok ? r.body : null; };
+    const ch = await get(`/charges/${encodeURIComponent(chargeId)}`); if (!ch) return null;
+    const idOf = (m) => m?.workbench_tenant_id ?? m?.keystone_tenant_id ?? null;
+    if (idOf(ch.metadata)) return idOf(ch.metadata);
+    const cust = typeof ch.customer === "string" ? await get(`/customers/${encodeURIComponent(ch.customer)}`) : null;
+    return idOf(cust?.metadata);
+  } catch { return null; }
+}
 
 /**
  * ★★★ EMAIL DELIVERY EVENTS — THE HALF THAT MAKES `notification_delivery.status` MEAN SOMETHING.
@@ -400,9 +418,20 @@ export function registerWebhookRoutes(app) {
             const obj = body?.data?.object; const subId = String(body.type).startsWith("invoice.") ? obj?.subscription : obj?.id;
             if (typeof subId === "string" && subId) { const d = await asPracticeOwner(tx, tenantId, () => recordSubscriptionEvent(tx, { tenantId, subscriptionId: subId })); if (d.reason !== "not_a_document_payment") return { ...d, stripe_mirror: mirrorResult }; }
           }
+          // 21 Oct 2026 (payments screen): a payout to a Docustay workspace's bank paid or failed. The Activity list records it; a failure emails the Owners.
+          if (body?.account && /^payout\.(paid|failed)$/.test(String(body?.type ?? "")) && body?.data?.object?.id) {
+            const { rows: [tn] } = await tx.query(`SELECT product FROM keystone.tenant WHERE id = $1`, [tenantId]);
+            if (tn?.product === "docustay") { const d = await asPracticeOwner(tx, tenantId, async () => (await import("../product/docustayStripeNotices.mjs")).onPayoutEvent(tx, { tenantId, type: body.type, payout: body.data.object })); return { ...d, reason: d.reason ?? "payout_recorded", stripe_mirror: mirrorResult }; }
+          }
+          // 21 Oct 2026 (pricing integrity, decision 8): a dispute on a payment for a Docustay PLAN (platform account, no `account` field): a LOST one pauses the workspace and tells the Owners
+          if (!body?.account && /^charge\.dispute\./.test(String(body?.type ?? "")) && body?.data?.object?.id) {
+            const { rows: [tn] } = await tx.query(`SELECT product FROM keystone.tenant WHERE id = $1`, [tenantId]);
+            if (tn?.product === "docustay") return { ...(await (await import("../product/docustayDisputes.mjs")).onPlanPaymentDispute(tx, { tenantId, type: body.type, dispute: body.data.object })), stripe_mirror: mirrorResult };
+          }
           // Run 9 Part 3.7 (Pay3): a dispute on a document payment — re-read from Stripe and shown; disputes are answered in Stripe. Anything not ours falls through to the practice handler as before.
           if (body?.account && /^charge\.dispute\.(created|updated|closed|funds_withdrawn|funds_reinstated)$/.test(String(body?.type ?? "")) && typeof body?.data?.object?.id === "string") {
             const d = await asPracticeOwner(tx, tenantId, () => recordDisputeEvent(tx, { tenantId, disputeId: body.data.object.id, intentHint: typeof body.data.object.payment_intent === "string" ? body.data.object.payment_intent : null }));
+            if (d.reason !== "not_a_document_payment" && body.type === "charge.dispute.created") { try { await asPracticeOwner(tx, tenantId, async () => (await import("../product/docustayStripeNotices.mjs")).onDisputeOpened(tx, { tenantId, dispute: body.data.object })); } catch { /* the email never fails the webhook */ } }
             if (d.reason !== "not_a_document_payment") return { ...d, stripe_mirror: mirrorResult };
           }
           // Run 9 Part 3.7: Stripe attaches a charge's balance transaction (its fee) after the payment; charge.updated is the prompt to re-read the Session and record the fee Stripe gives.

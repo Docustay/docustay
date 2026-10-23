@@ -37,5 +37,5 @@ An assistant registers itself, sends you to a Docustay page to approve, and exch
 
 ```bash
 curl -s https://app.docustay.app/api/v1/documents \
-  -H "Authorization: Bearer $DOCUSTAY_KEY"   # the draft-only key the approval made
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY"   # the draft-only key the approval made
 ```

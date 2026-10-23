@@ -17,13 +17,14 @@
     pad = new SignaturePadLib(canvas, { penColor: "#111", minWidth: 1, maxWidth: 2.8 });
     return () => pad?.off();
   });
-  function done() {
+  async function done() {
     problem = null; let url = null;
     if (!allowTyped && tab !== "draw") tab = "draw";   // D-002: typed signatures are off for this organisation
     if (tab === "draw") { if (!pad || pad.isEmpty()) { problem = P.drawFirst(nm); return; } url = fit(canvas); }
     else { if (!typed.trim()) { problem = P.typeFirst; return; }
+      try { await document.fonts?.load('italic 90px "Newsreader Variable"'); } catch { /* the serif fallback is used */ }
       const c = document.createElement("canvas"); c.width = W; c.height = H; const g = c.getContext("2d"); g.fillStyle = "#111"; g.textBaseline = "middle"; let size = 90;
-      do { g.font = `${size}px "Snell Roundhand","Segoe Script","Brush Script MT",cursive`; size -= 4; } while (g.measureText(typed).width > W - 40 && size > 20);
+      do { g.font = `italic ${size}px "Newsreader Variable","Newsreader Fallback",Georgia,"Times New Roman",serif`; size -= 4; } while (g.measureText(typed).width > W - 40 && size > 20);
       g.fillText(typed.trim(), 20, H / 2); url = fit(c); }
     if (!url) { problem = P.tooBig; return; }
     if (remember && keep && tab === "draw") { try { localStorage.setItem(KEY, url); } catch { /* private window: the signature simply is not remembered */ } }
@@ -33,10 +34,10 @@
   const forget = () => { try { localStorage.removeItem(KEY); } catch { /* nothing to forget */ } saved = null; };
 </script>
 <div class="space-y-3">
-  {#if allowTyped}<div class="flex gap-2"><button type="button" class="btn !py-1.5 {tab === 'draw' ? 'primary' : ''}" onclick={() => (tab = "draw")}>{P.draw}</button><button type="button" class="btn !py-1.5 {tab === 'type' ? 'primary' : ''}" onclick={() => (tab = "type")}>{P.type}</button></div>{/if}
+  {#if allowTyped}<div class="flex gap-5 border-b border-line">{#each [["draw", P.draw], ["type", P.type]] as [k, lbl]}<button type="button" class="-mb-px min-h-11 border-b-2 px-0.5 text-[14px] font-medium sm:min-h-9 {tab === k ? 'border-brand text-ink' : 'border-transparent text-mute hover:text-ink'}" aria-pressed={tab === k} onclick={() => (tab = k)}>{lbl}</button>{/each}</div>{/if}
   {#if saved}<div class="flex items-center gap-2 rounded-lg border border-line bg-tint p-2"><img src={saved} alt={label === "initials" ? P.savedInitials : P.savedSignature} class="h-10" /><button type="button" class="btn primary !py-1.5" onclick={useSaved}>{label === "initials" ? P.useSavedInitials : P.useSavedSignature}</button><button type="button" class="text-xs underline" onclick={forget}>{P.forget}</button></div>{/if}
   {#if tab === "draw"}<canvas bind:this={canvas} class="h-40 w-full touch-none rounded-lg border border-line bg-card" aria-label={P.drawHere(nm)}></canvas>
-  {:else}<input class="field" bind:value={typed} placeholder={P.yourName} aria-label={P.yourName} />{/if}
+  {:else}<input class="field" bind:value={typed} placeholder={P.yourName} aria-label={P.yourName} /><p class="paper-serif flex h-24 items-center overflow-hidden whitespace-nowrap border-b border-line-strong px-1 text-[44px] italic leading-none" aria-hidden="true" data-testid="sig-type-preview">{typed}</p>{/if}
   {#if problem}<p class="text-sm text-bad" role="alert">{problem}</p>{/if}
   {#if remember && tab === "draw"}<label class="flex items-center gap-2 text-xs text-mute"><input type="checkbox" bind:checked={keep} />{label === "initials" ? P.rememberInitials : P.rememberSignature}</label>{/if}
   <div class="flex justify-end gap-2"><button type="button" class="btn" onclick={onCancel}>{P.cancel}</button><button type="button" class="btn primary" onclick={done}>{P.use(nm)}</button></div>

@@ -1,9 +1,9 @@
 {
  "services-agreement": {
   "sha": "62c4e6c7d72a556f",
-  "pdfSha": "53d8ac0078257110",
+  "pdfSha": "937518ed2970d242",
   "pages": 8,
-  "bytes": 105974,
+  "bytes": 253981,
   "roles": [
    {
     "key": "signer_1",
@@ -825,9 +825,9 @@
  },
  "mutual-nda": {
   "sha": "c5b41c080173fc14",
-  "pdfSha": "790a09b3fb1ce607",
+  "pdfSha": "1fe4b2e97b9b6125",
   "pages": 3,
-  "bytes": 59281,
+  "bytes": 110163,
   "roles": [
    {
     "key": "signer_1",
@@ -1213,9 +1213,9 @@
  },
  "contractor-agreement": {
   "sha": "646713af19853d05",
-  "pdfSha": "8fa3adf69cddc92d",
+  "pdfSha": "65e311e02acc5c6a",
   "pages": 4,
-  "bytes": 67803,
+  "bytes": 131329,
   "roles": [
    {
     "key": "signer_1",
@@ -1236,7 +1236,7 @@
     "page": 1,
     "x": 0.27328,
     "y": 0.12595,
-    "w": 0.2451,
+    "w": 0.24509,
     "h": 0.02273,
     "sender": true
    },
@@ -1247,9 +1247,9 @@
     "role": "signer_2",
     "required": true,
     "page": 1,
-    "x": 0.56373,
+    "x": 0.56371,
     "y": 0.12595,
-    "w": 0.2451,
+    "w": 0.24509,
     "h": 0.02273
    },
    {
@@ -1260,8 +1260,8 @@
     "required": true,
     "page": 1,
     "x": 0.11765,
-    "y": 0.20739,
-    "w": 0.2451,
+    "y": 0.20738,
+    "w": 0.24509,
     "h": 0.02273,
     "sender": true
    },
@@ -1272,9 +1272,9 @@
     "role": "signer_1",
     "required": true,
     "page": 1,
-    "x": 0.57598,
-    "y": 0.20739,
-    "w": 0.2451,
+    "x": 0.57597,
+    "y": 0.20738,
+    "w": 0.24509,
     "h": 0.02273,
     "sender": true
    },
@@ -1287,7 +1287,7 @@
     "page": 1,
     "x": 0.11765,
     "y": 0.23106,
-    "w": 0.2451,
+    "w": 0.24509,
     "h": 0.02273,
     "sender": true
    },
@@ -1298,9 +1298,9 @@
     "role": "signer_2",
     "required": true,
     "page": 1,
-    "x": 0.53676,
+    "x": 0.53675,
     "y": 0.23106,
-    "w": 0.2451,
+    "w": 0.24509,
     "h": 0.02273
    },
    {
@@ -1312,7 +1312,7 @@
     "page": 1,
     "x": 0.11765,
     "y": 0.25473,
-    "w": 0.2451,
+    "w": 0.24509,
     "h": 0.02273
    },
    {
@@ -1323,8 +1323,8 @@
     "required": true,
     "page": 1,
     "x": 0.17034,
-    "y": 0.33902,
-    "w": 0.68627,
+    "y": 0.33901,
+    "w": 0.68626,
     "h": 0.06818,
     "sender": true
    },
@@ -1335,9 +1335,9 @@
     "role": "signer_1",
     "required": true,
     "page": 1,
-    "x": 0.46324,
-    "y": 0.55587,
-    "w": 0.2451,
+    "x": 0.46323,
+    "y": 0.55586,
+    "w": 0.24509,
     "h": 0.02273,
     "options": [
      "a fixed fee",
@@ -1355,8 +1355,8 @@
     "required": true,
     "page": 1,
     "x": 0.17034,
-    "y": 0.57955,
-    "w": 0.2451,
+    "y": 0.57953,
+    "w": 0.24509,
     "h": 0.02273,
     "sender": true
    },
@@ -1367,9 +1367,9 @@
     "role": "signer_1",
     "required": true,
     "page": 1,
-    "x": 0.44853,
-    "y": 0.60985,
-    "w": 0.2451,
+    "x": 0.44852,
+    "y": 0.60984,
+    "w": 0.24509,
     "h": 0.02273,
     "options": [
      "monthly",
@@ -1387,8 +1387,8 @@
     "required": true,
     "page": 1,
     "x": 0.35784,
-    "y": 0.63352,
-    "w": 0.2451,
+    "y": 0.63351,
+    "w": 0.24509,
     "h": 0.02273,
     "options": [
      "7 days",
@@ -1404,9 +1404,9 @@
     "role": "signer_1",
     "required": true,
     "page": 2,
-    "x": 0.60172,
-    "y": 0.26705,
-    "w": 0.2451,
+    "x": 0.6017,
+    "y": 0.26704,
+    "w": 0.24509,
     "h": 0.02273,
     "options": [
      "7 days",
@@ -1422,9 +1422,9 @@
     "role": "signer_1",
     "required": true,
     "page": 3,
-    "x": 0.33211,
+    "x": 0.3321,
     "y": 0.24905,
-    "w": 0.2451,
+    "w": 0.24509,
     "h": 0.02273,
     "options": [
      "Yes",
@@ -1440,8 +1440,8 @@
     "required": true,
     "page": 3,
     "x": 0.17034,
-    "y": 0.5464,
-    "w": 0.2451,
+    "y": 0.54639,
+    "w": 0.24509,
     "h": 0.02273,
     "options": [
      "Alabama",
@@ -1505,8 +1505,8 @@
     "required": true,
     "page": 4,
     "x": 0.11765,
-    "y": 0.4678,
-    "w": 0.2451,
+    "y": 0.46779,
+    "w": 0.24509,
     "h": 0.02273
    },
    {
@@ -1517,8 +1517,8 @@
     "required": true,
     "page": 4,
     "x": 0.11765,
-    "y": 0.52746,
-    "w": 0.2451,
+    "y": 0.52745,
+    "w": 0.24509,
     "h": 0.02273
    },
    {
@@ -1529,8 +1529,8 @@
     "required": true,
     "page": 4,
     "x": 0.11765,
-    "y": 0.5928,
-    "w": 0.27819,
+    "y": 0.59279,
+    "w": 0.27818,
     "h": 0.05303
    },
    {
@@ -1541,7 +1541,7 @@
     "required": true,
     "page": 4,
     "x": 0.11765,
-    "y": 0.68182,
+    "y": 0.6818,
     "w": 0.15686,
     "h": 0.02273
    },
@@ -1552,9 +1552,9 @@
     "role": "signer_2",
     "required": true,
     "page": 4,
-    "x": 0.5,
-    "y": 0.4678,
-    "w": 0.2451,
+    "x": 0.50122,
+    "y": 0.46779,
+    "w": 0.24509,
     "h": 0.02273
    },
    {
@@ -1564,9 +1564,9 @@
     "role": "signer_2",
     "required": true,
     "page": 4,
-    "x": 0.5,
-    "y": 0.52746,
-    "w": 0.2451,
+    "x": 0.50122,
+    "y": 0.52745,
+    "w": 0.24509,
     "h": 0.02273
    },
    {
@@ -1576,9 +1576,9 @@
     "role": "signer_2",
     "required": true,
     "page": 4,
-    "x": 0.5,
-    "y": 0.5928,
-    "w": 0.27819,
+    "x": 0.50122,
+    "y": 0.59279,
+    "w": 0.27695,
     "h": 0.05303
    },
    {
@@ -1588,8 +1588,8 @@
     "role": "signer_2",
     "required": true,
     "page": 4,
-    "x": 0.5,
-    "y": 0.68182,
+    "x": 0.50122,
+    "y": 0.6818,
     "w": 0.15686,
     "h": 0.02273
    },
@@ -1693,9 +1693,9 @@
  },
  "vendor-agreement": {
   "sha": "c60a4932f0721cb1",
-  "pdfSha": "9bf359e2ce0b23ae",
+  "pdfSha": "e45d903a5b9880c0",
   "pages": 6,
-  "bytes": 92766,
+  "bytes": 201092,
   "roles": [
    {
     "key": "signer_1",
@@ -1837,7 +1837,7 @@
     "role": "signer_1",
     "required": true,
     "page": 1,
-    "x": 0.41667,
+    "x": 0.41789,
     "y": 0.83807,
     "w": 0.2451,
     "h": 0.02273,
@@ -2407,9 +2407,9 @@
  },
  "statement-of-work": {
   "sha": "2a298cea77120294",
-  "pdfSha": "22e8f242c92341d8",
+  "pdfSha": "b096cc4d1dbd2df3",
   "pages": 6,
-  "bytes": 87328,
+  "bytes": 182563,
   "roles": [
    {
     "key": "signer_1",
@@ -3480,9 +3480,9 @@
  },
  "photo-release": {
   "sha": "4225401a18c3303d",
-  "pdfSha": "3ba4e90ab16553f6",
+  "pdfSha": "c92e8fa51f6afb3c",
   "pages": 2,
-  "bytes": 49652,
+  "bytes": 71911,
   "roles": [
    {
     "key": "signer_1",
@@ -3696,9 +3696,9 @@
  },
  "permission-slip": {
   "sha": "ecd30ac6121cab6a",
-  "pdfSha": "d80327883047afd2",
+  "pdfSha": "c8e097393e246e77",
   "pages": 2,
-  "bytes": 47302,
+  "bytes": 66600,
   "roles": [
    {
     "key": "signer_1",
@@ -3963,9 +3963,9 @@
  },
  "event-waiver": {
   "sha": "dd053938d3be7f77",
-  "pdfSha": "50b327d44016749c",
+  "pdfSha": "6ba936867e9a2127",
   "pages": 2,
-  "bytes": 47904,
+  "bytes": 59613,
   "roles": [
    {
     "key": "signer_1",
@@ -4141,9 +4141,9 @@
  },
  "media-consent-minors": {
   "sha": "d164eb68cce35a18",
-  "pdfSha": "8b22d5c1fef3e616",
+  "pdfSha": "d7998886255af6a7",
   "pages": 3,
-  "bytes": 50990,
+  "bytes": 88299,
   "roles": [
    {
     "key": "signer_1",
@@ -4391,9 +4391,9 @@
  },
  "consent-to-treatment": {
   "sha": "158e9f5152a8f25a",
-  "pdfSha": "a6dd6d2024e0f6eb",
+  "pdfSha": "ba54d9ca306b9330",
   "pages": 3,
-  "bytes": 52506,
+  "bytes": 87245,
   "roles": [
    {
     "key": "signer_1",
@@ -4699,9 +4699,9 @@
  },
  "intake-form": {
   "sha": "2ee3ce07ef423cd9",
-  "pdfSha": "15f2fd9197c8fe7e",
+  "pdfSha": "0df639a27de0fffc",
   "pages": 3,
-  "bytes": 52428,
+  "bytes": 85002,
   "roles": [
    {
     "key": "signer_1",
@@ -4968,7 +4968,7 @@
     "role": "signer_1",
     "required": false,
     "page": 2,
-    "x": 0.3701,
+    "x": 0.37132,
     "y": 0.72822,
     "w": 0.2451,
     "h": 0.02273
@@ -5049,9 +5049,9 @@
  },
  "volunteer-agreement": {
   "sha": "777a230e2a1f2e7b",
-  "pdfSha": "e180513e1d3ece22",
+  "pdfSha": "e7fc26e222784e1b",
   "pages": 3,
-  "bytes": 55692,
+  "bytes": 97737,
   "roles": [
    {
     "key": "signer_1",
@@ -5350,9 +5350,9 @@
  },
  "offer-letter": {
   "sha": "ca3963badca55e2f",
-  "pdfSha": "82f35c12dca2fe4d",
+  "pdfSha": "2588ec07e8410366",
   "pages": 3,
-  "bytes": 54232,
+  "bytes": 75954,
   "roles": [
    {
     "key": "signer_1",
@@ -5775,9 +5775,9 @@
  },
  "non-solicitation-acknowledgement": {
   "sha": "51744c2972cbadd8",
-  "pdfSha": "6140b2bf953643c2",
+  "pdfSha": "516a67cafcdffefb",
   "pages": 3,
-  "bytes": 58648,
+  "bytes": 87167,
   "roles": [
    {
     "key": "signer_1",
@@ -6024,9 +6024,9 @@
  },
  "onboarding-pack": {
   "sha": "3f16654090cce5a9",
-  "pdfSha": "673335aac1c71be0",
+  "pdfSha": "e954fba13d925a48",
   "pages": 6,
-  "bytes": 82560,
+  "bytes": 214503,
   "roles": [
    {
     "key": "signer_1",
@@ -6684,9 +6684,9 @@
  },
  "rental-application": {
   "sha": "2907ffe87170a71f",
-  "pdfSha": "ebf689900a7e83b4",
+  "pdfSha": "73871fc97f465a2d",
   "pages": 4,
-  "bytes": 55724,
+  "bytes": 101247,
   "roles": [
    {
     "key": "signer_1",
@@ -7237,9 +7237,9 @@
  },
  "lease-addendum": {
   "sha": "983998c392a628f6",
-  "pdfSha": "cd713a3b6ceeda47",
+  "pdfSha": "5cc9910216c55553",
   "pages": 3,
-  "bytes": 52327,
+  "bytes": 77020,
   "roles": [
    {
     "key": "signer_1",
@@ -7621,9 +7621,9 @@
  },
  "invoice-approval": {
   "sha": "e13be41a39029ddd",
-  "pdfSha": "e5f24baae77beabf",
+  "pdfSha": "109fc211369e7e0c",
   "pages": 2,
-  "bytes": 47070,
+  "bytes": 68295,
   "roles": [
    {
     "key": "signer_1",
@@ -7927,9 +7927,9 @@
  },
  "change-order": {
   "sha": "1a52ed5e0670a8fd",
-  "pdfSha": "cce07948ca4754b8",
+  "pdfSha": "70c7e5247f0288cf",
   "pages": 3,
-  "bytes": 60661,
+  "bytes": 85962,
   "roles": [
    {
     "key": "signer_1",
@@ -8260,9 +8260,9 @@
  },
  "equipment-loan": {
   "sha": "d0d34e6215146ae3",
-  "pdfSha": "6bde7e4450f8f4ca",
+  "pdfSha": "fa785e77bb63d34d",
   "pages": 3,
-  "bytes": 55807,
+  "bytes": 90969,
   "roles": [
    {
     "key": "signer_1",
@@ -8638,9 +8638,9 @@
  },
  "referral-agreement": {
   "sha": "8ac1a53e440e2e35",
-  "pdfSha": "e356c38dd386926d",
+  "pdfSha": "4c11d209f4c12018",
   "pages": 3,
-  "bytes": 54049,
+  "bytes": 87199,
   "roles": [
    {
     "key": "signer_1",
@@ -8921,9 +8921,9 @@
  },
  "mutual-release": {
   "sha": "7deb8a87e03ef708",
-  "pdfSha": "d8f994ce9bf23a9a",
+  "pdfSha": "79d8179f901d2894",
   "pages": 3,
-  "bytes": 55651,
+  "bytes": 88489,
   "roles": [
    {
     "key": "signer_1",
@@ -9227,10 +9227,10 @@
   ]
  },
  "payment-plan-agreement": {
-  "sha": "189342be7c87bf3b",
-  "pdfSha": "dac59221bcdd29e0",
+  "sha": "2b5d2ceae3fb3725",
+  "pdfSha": "33c53fb9d63e3282",
   "pages": 3,
-  "bytes": 66509,
+  "bytes": 101782,
   "roles": [
    {
     "key": "signer_1",
@@ -9475,28 +9475,15 @@
     "sender": true
    },
    {
-    "id": "FirstInstallment",
-    "type": "text",
-    "label": "First installment (USD)",
-    "role": "signer_2",
-    "required": true,
-    "page": 1,
-    "x": 0.44363,
-    "y": 0.80871,
-    "w": 0.2451,
-    "h": 0.02273,
-    "sender": true
-   },
-   {
     "id": "Pay_first_installment",
     "type": "payment",
     "label": "Pay first installment",
     "role": "signer_2",
     "required": true,
     "page": 1,
-    "x": 0.49387,
-    "y": 0.83239,
-    "w": 0.21201,
+    "x": 0.46936,
+    "y": 0.8267,
+    "w": 0.21324,
     "h": 0.03314
    },
    {
@@ -9699,10 +9686,10 @@
   ]
  },
  "deposit-agreement": {
-  "sha": "009a7793b4cabad3",
-  "pdfSha": "de07c29f14728177",
+  "sha": "9ce8091d3df8f079",
+  "pdfSha": "fa866bb17fe652b3",
   "pages": 3,
-  "bytes": 54421,
+  "bytes": 90849,
   "roles": [
    {
     "key": "signer_1",
@@ -9766,28 +9753,15 @@
     "sender": true
    },
    {
-    "id": "Deposit",
-    "type": "text",
-    "label": "Deposit (USD)",
-    "role": "signer_2",
-    "required": true,
-    "page": 1,
-    "x": 0.34926,
-    "y": 0.47917,
-    "w": 0.2451,
-    "h": 0.02273,
-    "sender": true
-   },
-   {
     "id": "Pay_deposit",
     "type": "payment",
     "label": "Pay deposit",
     "role": "signer_2",
     "required": true,
     "page": 1,
-    "x": 0.38971,
-    "y": 0.50284,
-    "w": 0.21324,
+    "x": 0.29044,
+    "y": 0.49716,
+    "w": 0.21201,
     "h": 0.0322
    },
    {
@@ -9798,7 +9772,7 @@
     "required": true,
     "page": 1,
     "x": 0.4375,
-    "y": 0.58617,
+    "y": 0.58049,
     "w": 0.2451,
     "h": 0.02273,
     "options": [
@@ -9815,7 +9789,7 @@
     "required": true,
     "page": 1,
     "x": 0.56618,
-    "y": 0.6714,
+    "y": 0.66572,
     "w": 0.2451,
     "h": 0.02273,
     "options": [
@@ -9833,7 +9807,7 @@
     "required": true,
     "page": 1,
     "x": 0.17034,
-    "y": 0.69413,
+    "y": 0.68845,
     "w": 0.2451,
     "h": 0.02273,
     "sender": true
@@ -9846,7 +9820,7 @@
     "required": true,
     "page": 1,
     "x": 0.17034,
-    "y": 0.82292,
+    "y": 0.81723,
     "w": 0.2451,
     "h": 0.02273,
     "sender": true
@@ -10010,6 +9984,7494 @@
     "page": 3,
     "x": 0.5,
     "y": 0.34375,
+    "w": 0.15686,
+    "h": 0.02273
+   }
+  ]
+ },
+ "contact-and-inquiry": {
+  "sha": "0aa4c22a60e21572",
+  "pdfSha": "cfa200d94bbcf80a",
+  "pages": 1,
+  "bytes": 35068,
+  "roles": [
+   {
+    "key": "signer_1",
+    "label": "Visitor"
+   }
+  ],
+  "fields": [
+   {
+    "id": "Full_name",
+    "type": "text",
+    "label": "Full name",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.19975,
+    "y": 0.22633,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Email",
+    "type": "text",
+    "label": "Email",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.16667,
+    "y": 0.25663,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Phone",
+    "type": "text",
+    "label": "Phone",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.17034,
+    "y": 0.28788,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Topic",
+    "type": "dropdown",
+    "label": "Topic",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.24387,
+    "y": 0.35511,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "A question",
+     "A quote or estimate",
+     "Support with something you already have",
+     "Feedback",
+     "Something else"
+    ]
+   },
+   {
+    "id": "Subject",
+    "type": "text",
+    "label": "Subject",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.17892,
+    "y": 0.38542,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Message",
+    "type": "text",
+    "label": "Message",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.18627,
+    "y": 0.41572,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Reply_by",
+    "type": "dropdown",
+    "label": "Reply by",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.29167,
+    "y": 0.49148,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Email",
+     "Phone",
+     "Either"
+    ]
+   },
+   {
+    "id": "Attachment",
+    "type": "file",
+    "label": "Attachment",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.30392,
+    "y": 0.52273,
+    "w": 0.2451,
+    "h": 0.02462
+   },
+   {
+    "id": "Privacy",
+    "type": "checkbox",
+    "label": "I understand that what I enter here is stored by the organization that published this form and used only for the purpose",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.55492,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "Visitor_signature",
+    "type": "signature",
+    "label": "Visitor signature",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.66856,
+    "w": 0.27819,
+    "h": 0.05303
+   },
+   {
+    "id": "Visitor_date_signed",
+    "type": "date_signed",
+    "label": "Visitor date signed",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.74242,
+    "w": 0.15686,
+    "h": 0.02273
+   }
+  ]
+ },
+ "event-registration": {
+  "sha": "da10451112eeb687",
+  "pdfSha": "64bc51d3ba4ffc3e",
+  "pages": 2,
+  "bytes": 36010,
+  "roles": [
+   {
+    "key": "signer_1",
+    "label": "Attendee"
+   }
+  ],
+  "fields": [
+   {
+    "id": "Full_name",
+    "type": "text",
+    "label": "Full name",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.19975,
+    "y": 0.22633,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Email",
+    "type": "text",
+    "label": "Email",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.16667,
+    "y": 0.25663,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Phone",
+    "type": "text",
+    "label": "Phone",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.17034,
+    "y": 0.28788,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Organization",
+    "type": "text",
+    "label": "Organization",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.28064,
+    "y": 0.35511,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Ticket_type",
+    "type": "dropdown",
+    "label": "Ticket type",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.32353,
+    "y": 0.38542,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "General",
+     "Member",
+     "Student",
+     "Speaker or guest",
+     "Volunteer"
+    ]
+   },
+   {
+    "id": "Sessions",
+    "type": "multiselect",
+    "label": "Sessions",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.3076,
+    "y": 0.41572,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Morning session",
+     "Afternoon session",
+     "Evening session",
+     "Workshop",
+     "Networking"
+    ]
+   },
+   {
+    "id": "Guests",
+    "type": "text",
+    "label": "Guests",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.39216,
+    "y": 0.44602,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Dietary_needs",
+    "type": "text",
+    "label": "Dietary needs",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.22917,
+    "y": 0.51326,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Access_needs",
+    "type": "text",
+    "label": "Access needs",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.56155,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Emergency_contact",
+    "type": "text",
+    "label": "Emergency contact name and phone",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.35539,
+    "y": 0.63826,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Event_rules",
+    "type": "checkbox",
+    "label": "I will follow the event's rules and the instructions of the organizers and venue staff.",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.66856,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "Photos",
+    "type": "checkbox",
+    "label": "I understand that general photographs of the event may be taken. I will tell the organizers on the day if I do not want ",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.69413,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "Privacy",
+    "type": "checkbox",
+    "label": "I understand that what I enter here is stored by the organization that published this form and used only for the purpose",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.73769,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "Attendee_signature",
+    "type": "signature",
+    "label": "Attendee signature",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.14867,
+    "w": 0.27819,
+    "h": 0.05303
+   },
+   {
+    "id": "Attendee_date_signed",
+    "type": "date_signed",
+    "label": "Attendee date signed",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.22254,
+    "w": 0.15686,
+    "h": 0.02273
+   }
+  ]
+ },
+ "rsvp": {
+  "sha": "1ae77ccaf335b795",
+  "pdfSha": "de1fcef2d79709b1",
+  "pages": 1,
+  "bytes": 32998,
+  "roles": [
+   {
+    "key": "signer_1",
+    "label": "Guest"
+   }
+  ],
+  "fields": [
+   {
+    "id": "Full_name",
+    "type": "text",
+    "label": "Full name",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.19975,
+    "y": 0.22633,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Email",
+    "type": "text",
+    "label": "Email",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.16667,
+    "y": 0.25663,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Attending",
+    "type": "dropdown",
+    "label": "Attending",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.24755,
+    "y": 0.32386,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Yes",
+     "I will be there",
+     "Sorry",
+     "I cannot come",
+     "Not sure yet"
+    ]
+   },
+   {
+    "id": "Party_size",
+    "type": "text",
+    "label": "Party size",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.4902,
+    "y": 0.3911,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Meal",
+    "type": "dropdown",
+    "label": "Meal choice",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.21446,
+    "y": 0.42235,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Standard",
+     "Vegetarian",
+     "Vegan",
+     "Children's meal",
+     "No meal"
+    ]
+   },
+   {
+    "id": "Dietary_needs",
+    "type": "text",
+    "label": "Dietary needs",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.31985,
+    "y": 0.45265,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Note",
+    "type": "text",
+    "label": "Note",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.50095,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Plans",
+    "type": "checkbox",
+    "label": "I will tell the host if my plans change.",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.5767,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "Guest_signature",
+    "type": "signature",
+    "label": "Guest signature",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.67235,
+    "w": 0.27819,
+    "h": 0.05303
+   },
+   {
+    "id": "Guest_date_signed",
+    "type": "date_signed",
+    "label": "Guest date signed",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.74621,
+    "w": 0.15686,
+    "h": 0.02273
+   }
+  ]
+ },
+ "volunteer-application": {
+  "sha": "6d69ad85cf5547f2",
+  "pdfSha": "ace8de7e04ad759b",
+  "pages": 2,
+  "bytes": 42116,
+  "roles": [
+   {
+    "key": "signer_1",
+    "label": "Applicant"
+   },
+   {
+    "key": "signer_2",
+    "label": "Coordinator"
+   }
+  ],
+  "fields": [
+   {
+    "id": "Full_name",
+    "type": "text",
+    "label": "Full name",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.19975,
+    "y": 0.24432,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Email",
+    "type": "text",
+    "label": "Email",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.16667,
+    "y": 0.27462,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Phone",
+    "type": "text",
+    "label": "Phone",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.17034,
+    "y": 0.30492,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Street_address",
+    "type": "text",
+    "label": "Street address",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.23039,
+    "y": 0.33617,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "City",
+    "type": "text",
+    "label": "City",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.15319,
+    "y": 0.36648,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "State_or_region",
+    "type": "text",
+    "label": "State or region",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.23407,
+    "y": 0.39678,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Postal_code",
+    "type": "text",
+    "label": "ZIP or postal code",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.2598,
+    "y": 0.42708,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Interests",
+    "type": "multiselect",
+    "label": "Areas of interest",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.24877,
+    "y": 0.49432,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Events",
+     "Administration",
+     "Outreach",
+     "Fundraising",
+     "Practical help",
+     "Mentoring",
+     "Anything needed"
+    ]
+   },
+   {
+    "id": "Motivation",
+    "type": "text",
+    "label": "Why you would like to volunteer",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.54356,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Days",
+    "type": "multiselect",
+    "label": "Days available",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.15931,
+    "y": 0.65625,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Monday",
+     "Tuesday",
+     "Wednesday",
+     "Thursday",
+     "Friday",
+     "Saturday",
+     "Sunday"
+    ]
+   },
+   {
+    "id": "Times",
+    "type": "multiselect",
+    "label": "Times available",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.16912,
+    "y": 0.68655,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Mornings",
+     "Afternoons",
+     "Evenings"
+    ]
+   },
+   {
+    "id": "Start_date",
+    "type": "text",
+    "label": "Earliest start date",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.25735,
+    "y": 0.71686,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Experience",
+    "type": "text",
+    "label": "Relevant experience",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.80208,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Languages",
+    "type": "text",
+    "label": "Languages",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.28554,
+    "y": 0.87784,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "CV",
+    "type": "file",
+    "label": "CV or résumé",
+    "role": "signer_1",
+    "required": false,
+    "page": 2,
+    "x": 0.24142,
+    "y": 0.09091,
+    "w": 0.2451,
+    "h": 0.02557
+   },
+   {
+    "id": "Reference_1",
+    "type": "text",
+    "label": "Reference one",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.48039,
+    "y": 0.16098,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Reference_2",
+    "type": "text",
+    "label": "Reference two",
+    "role": "signer_1",
+    "required": false,
+    "page": 2,
+    "x": 0.48039,
+    "y": 0.19129,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Code",
+    "type": "checkbox",
+    "label": "If I am accepted, I will follow the organization's volunteer code of conduct and its safety and privacy policies.",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.22159,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "Checks",
+    "type": "checkbox",
+    "label": "I understand that some roles need further checks before I start, and that the organization will explain any check and as",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.26515,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "Accurate",
+    "type": "checkbox",
+    "label": "The information I have given is true and complete to the best of my knowledge.",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.30871,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "Privacy",
+    "type": "checkbox",
+    "label": "I understand that what I enter here is stored by the organization that published this form and used only for the purpose",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.33428,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "Applicant_signature",
+    "type": "signature",
+    "label": "Applicant signature",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.44697,
+    "w": 0.27819,
+    "h": 0.05303
+   },
+   {
+    "id": "Applicant_date_signed",
+    "type": "date_signed",
+    "label": "Applicant date signed",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.52083,
+    "w": 0.15686,
+    "h": 0.02273
+   },
+   {
+    "id": "Coordinator_decision",
+    "type": "dropdown",
+    "label": "Decision",
+    "role": "signer_2",
+    "required": true,
+    "page": 2,
+    "x": 0.18873,
+    "y": 0.60795,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Accepted",
+     "Accepted for another role",
+     "Not accepted at this time"
+    ]
+   },
+   {
+    "id": "Coordinator_note",
+    "type": "text",
+    "label": "Note",
+    "role": "signer_2",
+    "required": false,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.65625,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Coordinator_signature",
+    "type": "signature",
+    "label": "Coordinator signature",
+    "role": "signer_2",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.74053,
+    "w": 0.27819,
+    "h": 0.05303
+   },
+   {
+    "id": "Coordinator_date_signed",
+    "type": "date_signed",
+    "label": "Coordinator date signed",
+    "role": "signer_2",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.81439,
+    "w": 0.15686,
+    "h": 0.02273
+   }
+  ]
+ },
+ "job-application": {
+  "sha": "539c25d4732d3708",
+  "pdfSha": "7b74351cb77f1dea",
+  "pages": 2,
+  "bytes": 41509,
+  "roles": [
+   {
+    "key": "signer_1",
+    "label": "Applicant"
+   }
+  ],
+  "fields": [
+   {
+    "id": "Full_name",
+    "type": "text",
+    "label": "Full name",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.19975,
+    "y": 0.22633,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Email",
+    "type": "text",
+    "label": "Email",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.16667,
+    "y": 0.25663,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Phone",
+    "type": "text",
+    "label": "Phone",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.17034,
+    "y": 0.28788,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Street_address",
+    "type": "text",
+    "label": "Street address",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.23039,
+    "y": 0.31818,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "City",
+    "type": "text",
+    "label": "City",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.15319,
+    "y": 0.34848,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "State_or_region",
+    "type": "text",
+    "label": "State or region",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.23407,
+    "y": 0.37879,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Postal_code",
+    "type": "text",
+    "label": "ZIP or postal code",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.2598,
+    "y": 0.41004,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Position",
+    "type": "text",
+    "label": "Position",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.34559,
+    "y": 0.47727,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Work_type",
+    "type": "dropdown",
+    "label": "Type of work",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.22304,
+    "y": 0.50758,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Full time",
+     "Part time",
+     "Temporary",
+     "Either"
+    ]
+   },
+   {
+    "id": "Available_from",
+    "type": "text",
+    "label": "Available from",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.29412,
+    "y": 0.53788,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Right_to_work",
+    "type": "dropdown",
+    "label": "Right to work",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.4902,
+    "y": 0.56818,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Yes",
+     "No"
+    ]
+   },
+   {
+    "id": "Recent_role",
+    "type": "text",
+    "label": "Most recent employer and role",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.35907,
+    "y": 0.63542,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Recent_dates",
+    "type": "text",
+    "label": "Dates",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.16422,
+    "y": 0.66667,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Duties",
+    "type": "text",
+    "label": "Main duties",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.71496,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Other_experience",
+    "type": "text",
+    "label": "Other experience",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.80871,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Qualification",
+    "type": "text",
+    "label": "Highest qualification",
+    "role": "signer_1",
+    "required": false,
+    "page": 2,
+    "x": 0.28431,
+    "y": 0.11553,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Skills",
+    "type": "text",
+    "label": "Skills and certificates",
+    "role": "signer_1",
+    "required": false,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.16383,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "CV",
+    "type": "file",
+    "label": "CV or résumé",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.26716,
+    "y": 0.23958,
+    "w": 0.2451,
+    "h": 0.02557
+   },
+   {
+    "id": "Cover_letter",
+    "type": "file",
+    "label": "Cover letter",
+    "role": "signer_1",
+    "required": false,
+    "page": 2,
+    "x": 0.22672,
+    "y": 0.27273,
+    "w": 0.2451,
+    "h": 0.02557
+   },
+   {
+    "id": "Reference_1",
+    "type": "text",
+    "label": "Reference one",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.48162,
+    "y": 0.3428,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Reference_2",
+    "type": "text",
+    "label": "Reference two",
+    "role": "signer_1",
+    "required": false,
+    "page": 2,
+    "x": 0.48162,
+    "y": 0.37311,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Contact_references",
+    "type": "checkbox",
+    "label": "The employer may contact my references if I am shortlisted.",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.40436,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "Adjustments",
+    "type": "text",
+    "label": "Adjustments",
+    "role": "signer_1",
+    "required": false,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.4839,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Accurate",
+    "type": "checkbox",
+    "label": "The information I have given is true and complete to the best of my knowledge.",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.55966,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "Privacy",
+    "type": "checkbox",
+    "label": "I understand that what I enter here is stored by the organization that published this form and used only for the purpose",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.58523,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "Applicant_signature",
+    "type": "signature",
+    "label": "Applicant signature",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.69886,
+    "w": 0.27819,
+    "h": 0.05303
+   },
+   {
+    "id": "Applicant_date_signed",
+    "type": "date_signed",
+    "label": "Applicant date signed",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.77273,
+    "w": 0.15686,
+    "h": 0.02273
+   }
+  ]
+ },
+ "new-hire-information": {
+  "sha": "3b86026b0856f162",
+  "pdfSha": "046a9e6c3788cce6",
+  "pages": 2,
+  "bytes": 38150,
+  "roles": [
+   {
+    "key": "signer_1",
+    "label": "New team member"
+   }
+  ],
+  "fields": [
+   {
+    "id": "Full_name",
+    "type": "text",
+    "label": "Full name",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.19975,
+    "y": 0.24432,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Email",
+    "type": "text",
+    "label": "Email",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.16667,
+    "y": 0.27462,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Phone",
+    "type": "text",
+    "label": "Phone",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.17034,
+    "y": 0.30492,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Street_address",
+    "type": "text",
+    "label": "Street address",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.23039,
+    "y": 0.33617,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "City",
+    "type": "text",
+    "label": "City",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.15319,
+    "y": 0.36648,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "State_or_region",
+    "type": "text",
+    "label": "State or region",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.23407,
+    "y": 0.39678,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Postal_code",
+    "type": "text",
+    "label": "ZIP or postal code",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.2598,
+    "y": 0.42708,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Preferred_name",
+    "type": "text",
+    "label": "Preferred name",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.32475,
+    "y": 0.49432,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Pronouns",
+    "type": "text",
+    "label": "Pronouns",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.19608,
+    "y": 0.52557,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Start_date",
+    "type": "text",
+    "label": "Start date",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.19608,
+    "y": 0.55587,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Role",
+    "type": "text",
+    "label": "Role",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.15564,
+    "y": 0.58617,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Manager",
+    "type": "text",
+    "label": "Manager",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.18995,
+    "y": 0.61648,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Emergency_name",
+    "type": "text",
+    "label": "Emergency contact name",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.16667,
+    "y": 0.68371,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Emergency_relationship",
+    "type": "text",
+    "label": "Relationship",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.21936,
+    "y": 0.71496,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Emergency_phone",
+    "type": "text",
+    "label": "Emergency contact phone",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.17034,
+    "y": 0.74527,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Size",
+    "type": "dropdown",
+    "label": "Size",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.31005,
+    "y": 0.8125,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "XS",
+     "S",
+     "M",
+     "L",
+     "XL",
+     "XXL",
+     "Not needed"
+    ]
+   },
+   {
+    "id": "Equipment",
+    "type": "multiselect",
+    "label": "Equipment",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.31618,
+    "y": 0.8428,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Laptop",
+     "Phone",
+     "Keys or access card",
+     "Tools",
+     "Safety gear",
+     "None"
+    ]
+   },
+   {
+    "id": "Dietary",
+    "type": "text",
+    "label": "Dietary needs",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.36397,
+    "y": 0.87311,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Settle_in",
+    "type": "text",
+    "label": "Anything that would help",
+    "role": "signer_1",
+    "required": false,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.1089,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Photo",
+    "type": "file",
+    "label": "Photo",
+    "role": "signer_1",
+    "required": false,
+    "page": 2,
+    "x": 0.34069,
+    "y": 0.18466,
+    "w": 0.2451,
+    "h": 0.02557
+   },
+   {
+    "id": "Accurate",
+    "type": "checkbox",
+    "label": "The information I have given is true and complete to the best of my knowledge.",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.2178,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "Privacy",
+    "type": "checkbox",
+    "label": "I understand that what I enter here is stored by the organization that published this form and used only for the purpose",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.24337,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "New_team_member_signature",
+    "type": "signature",
+    "label": "New team member signature",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.35606,
+    "w": 0.27819,
+    "h": 0.05303
+   },
+   {
+    "id": "New_team_member_date_signed",
+    "type": "date_signed",
+    "label": "New team member date signed",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.42992,
+    "w": 0.15686,
+    "h": 0.02273
+   }
+  ]
+ },
+ "emergency-contact": {
+  "sha": "b5e4ca4349569993",
+  "pdfSha": "68e1546f8058e50c",
+  "pages": 2,
+  "bytes": 34323,
+  "roles": [
+   {
+    "key": "signer_1",
+    "label": "Person"
+   }
+  ],
+  "fields": [
+   {
+    "id": "Full_name",
+    "type": "text",
+    "label": "Full name",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.19975,
+    "y": 0.24432,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Email",
+    "type": "text",
+    "label": "Email",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.16667,
+    "y": 0.27462,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Phone",
+    "type": "text",
+    "label": "Phone",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.17034,
+    "y": 0.30492,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Contact_1_name",
+    "type": "text",
+    "label": "First contact name",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.16667,
+    "y": 0.37216,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Contact_1_relationship",
+    "type": "text",
+    "label": "Relationship",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.27206,
+    "y": 0.40341,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Contact_1_mobile",
+    "type": "text",
+    "label": "Mobile phone",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.22794,
+    "y": 0.43371,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Contact_1_other",
+    "type": "text",
+    "label": "Other phone",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.21936,
+    "y": 0.46402,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Contact_1_email",
+    "type": "text",
+    "label": "Email",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.16667,
+    "y": 0.49432,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Contact_2_name",
+    "type": "text",
+    "label": "Second contact name",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.16667,
+    "y": 0.56155,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Contact_2_relationship",
+    "type": "text",
+    "label": "Relationship",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.27206,
+    "y": 0.5928,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Contact_2_phone",
+    "type": "text",
+    "label": "Phone",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.17034,
+    "y": 0.62311,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Contact_language",
+    "type": "text",
+    "label": "Preferred language",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.35784,
+    "y": 0.69034,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Emergency_note",
+    "type": "text",
+    "label": "Note",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.73864,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Permission",
+    "type": "checkbox",
+    "label": "My contacts know that I have given their details for this purpose.",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.81439,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "Person_signature",
+    "type": "signature",
+    "label": "Person signature",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.14867,
+    "w": 0.27819,
+    "h": 0.05303
+   },
+   {
+    "id": "Person_date_signed",
+    "type": "date_signed",
+    "label": "Person date signed",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.22254,
+    "w": 0.15686,
+    "h": 0.02273
+   }
+  ]
+ },
+ "customer-feedback-survey": {
+  "sha": "eaab936228e0012b",
+  "pdfSha": "191cc27192bddc4a",
+  "pages": 1,
+  "bytes": 36968,
+  "roles": [
+   {
+    "key": "signer_1",
+    "label": "Customer"
+   }
+  ],
+  "fields": [
+   {
+    "id": "Full_name",
+    "type": "text",
+    "label": "Name",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.16667,
+    "y": 0.22633,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Email",
+    "type": "text",
+    "label": "Email",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.16667,
+    "y": 0.25663,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Visit_date",
+    "type": "text",
+    "label": "Date",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.35294,
+    "y": 0.32386,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Overall",
+    "type": "dropdown",
+    "label": "Overall satisfaction",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.37132,
+    "y": 0.35511,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Very satisfied",
+     "Satisfied",
+     "Neither",
+     "Dissatisfied",
+     "Very dissatisfied"
+    ]
+   },
+   {
+    "id": "Recommend",
+    "type": "dropdown",
+    "label": "Likely to recommend",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.51225,
+    "y": 0.38542,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "0",
+     "1",
+     "2",
+     "3",
+     "4",
+     "5",
+     "6",
+     "7",
+     "8",
+     "9",
+     "10"
+    ]
+   },
+   {
+    "id": "Went_well",
+    "type": "text",
+    "label": "What went well",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.43371,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Do_better",
+    "type": "text",
+    "label": "What could be better",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.52746,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Used",
+    "type": "multiselect",
+    "label": "Parts used",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.31618,
+    "y": 0.60322,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "In person",
+     "Online",
+     "By phone",
+     "Delivery",
+     "Support"
+    ]
+   },
+   {
+    "id": "Contact_me",
+    "type": "checkbox",
+    "label": "You may contact me about my feedback.",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.67045,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "Quote",
+    "type": "checkbox",
+    "label": "You may quote my comments, without my name, in your own materials.",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.69602,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "Customer_signature",
+    "type": "signature",
+    "label": "Customer signature",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.79167,
+    "w": 0.27819,
+    "h": 0.05303
+   },
+   {
+    "id": "Customer_date_signed",
+    "type": "date_signed",
+    "label": "Customer date signed",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.86553,
+    "w": 0.15686,
+    "h": 0.02273
+   }
+  ]
+ },
+ "order-form": {
+  "sha": "5ded7e7f42fdee3a",
+  "pdfSha": "3562a06149b8bfc3",
+  "pages": 2,
+  "bytes": 36089,
+  "roles": [
+   {
+    "key": "signer_1",
+    "label": "Customer"
+   },
+   {
+    "key": "signer_2",
+    "label": "Seller"
+   }
+  ],
+  "fields": [
+   {
+    "id": "Full_name",
+    "type": "text",
+    "label": "Full name",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.19975,
+    "y": 0.24432,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Email",
+    "type": "text",
+    "label": "Email",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.16667,
+    "y": 0.27462,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Phone",
+    "type": "text",
+    "label": "Phone",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.17034,
+    "y": 0.30492,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Street_address",
+    "type": "text",
+    "label": "Street address",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.23039,
+    "y": 0.33617,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "City",
+    "type": "text",
+    "label": "City",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.15319,
+    "y": 0.36648,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "State_or_region",
+    "type": "text",
+    "label": "State or region",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.23407,
+    "y": 0.39678,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Postal_code",
+    "type": "text",
+    "label": "ZIP or postal code",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.2598,
+    "y": 0.42708,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Item_1",
+    "type": "text",
+    "label": "Item 1",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.25123,
+    "y": 0.49432,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Quantity_1",
+    "type": "text",
+    "label": "Quantity 1",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.18995,
+    "y": 0.52557,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Item_2",
+    "type": "text",
+    "label": "Item 2",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.25123,
+    "y": 0.55587,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Quantity_2",
+    "type": "text",
+    "label": "Quantity 2",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.18995,
+    "y": 0.58617,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Item_3",
+    "type": "text",
+    "label": "Item 3",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.25123,
+    "y": 0.61648,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Quantity_3",
+    "type": "text",
+    "label": "Quantity 3",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.18995,
+    "y": 0.64773,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Order_notes",
+    "type": "text",
+    "label": "Order notes",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.69602,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Delivery",
+    "type": "dropdown",
+    "label": "Delivery or collection",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.28922,
+    "y": 0.80871,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Deliver to my address",
+     "Deliver to another address",
+     "I will collect"
+    ]
+   },
+   {
+    "id": "Delivery_address",
+    "type": "text",
+    "label": "Delivery address",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.34314,
+    "y": 0.83902,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Needed_by",
+    "type": "text",
+    "label": "Needed by",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.27083,
+    "y": 0.86932,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Terms",
+    "type": "checkbox",
+    "label": "I agree to the seller's terms of sale, and I understand the order is confirmed only when the seller confirms it and the ",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.09091,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "Customer_signature",
+    "type": "signature",
+    "label": "Customer signature",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.2036,
+    "w": 0.27819,
+    "h": 0.05303
+   },
+   {
+    "id": "Customer_date_signed",
+    "type": "date_signed",
+    "label": "Customer date signed",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.27746,
+    "w": 0.15686,
+    "h": 0.02273
+   },
+   {
+    "id": "Seller_decision",
+    "type": "dropdown",
+    "label": "Decision",
+    "role": "signer_2",
+    "required": true,
+    "page": 2,
+    "x": 0.18873,
+    "y": 0.36458,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Confirmed",
+     "Confirmed with changes",
+     "Cannot fulfil"
+    ]
+   },
+   {
+    "id": "Seller_note",
+    "type": "text",
+    "label": "Note",
+    "role": "signer_2",
+    "required": false,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.41288,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Seller_signature",
+    "type": "signature",
+    "label": "Seller signature",
+    "role": "signer_2",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.49716,
+    "w": 0.27819,
+    "h": 0.05303
+   },
+   {
+    "id": "Seller_date_signed",
+    "type": "date_signed",
+    "label": "Seller date signed",
+    "role": "signer_2",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.57102,
+    "w": 0.15686,
+    "h": 0.02273
+   }
+  ]
+ },
+ "change-of-contact-details": {
+  "sha": "8c028701033e8c4e",
+  "pdfSha": "e6457f6a13c4536e",
+  "pages": 1,
+  "bytes": 35308,
+  "roles": [
+   {
+    "key": "signer_1",
+    "label": "Person"
+   }
+  ],
+  "fields": [
+   {
+    "id": "Current_name",
+    "type": "text",
+    "label": "Name on our records",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.35417,
+    "y": 0.22633,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Current_email",
+    "type": "text",
+    "label": "Email on our records",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.3223,
+    "y": 0.25663,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Reference",
+    "type": "text",
+    "label": "Reference number",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.4326,
+    "y": 0.28788,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "New_name",
+    "type": "text",
+    "label": "New name",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.20343,
+    "y": 0.35511,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "New_email",
+    "type": "text",
+    "label": "New email",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.20343,
+    "y": 0.38542,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "New_phone",
+    "type": "text",
+    "label": "New phone",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.20956,
+    "y": 0.41572,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "New_street",
+    "type": "text",
+    "label": "New street address",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.26838,
+    "y": 0.44602,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "New_city",
+    "type": "text",
+    "label": "City",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.15319,
+    "y": 0.47727,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "New_postal_code",
+    "type": "text",
+    "label": "ZIP or postal code",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.2598,
+    "y": 0.50758,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Effective",
+    "type": "text",
+    "label": "Effective date",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.32475,
+    "y": 0.53788,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Confirm",
+    "type": "checkbox",
+    "label": "These are my own details, and I am asking for my record to be changed.",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.60511,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "Person_signature",
+    "type": "signature",
+    "label": "Person signature",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.70076,
+    "w": 0.27819,
+    "h": 0.05303
+   },
+   {
+    "id": "Person_date_signed",
+    "type": "date_signed",
+    "label": "Person date signed",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.77367,
+    "w": 0.15686,
+    "h": 0.02273
+   }
+  ]
+ },
+ "appointment-request": {
+  "sha": "0f75b11442e4df66",
+  "pdfSha": "d2b5b76833a3f708",
+  "pages": 1,
+  "bytes": 35278,
+  "roles": [
+   {
+    "key": "signer_1",
+    "label": "Visitor"
+   }
+  ],
+  "fields": [
+   {
+    "id": "Full_name",
+    "type": "text",
+    "label": "Full name",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.19975,
+    "y": 0.22633,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Email",
+    "type": "text",
+    "label": "Email",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.16667,
+    "y": 0.25663,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Phone",
+    "type": "text",
+    "label": "Phone",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.17034,
+    "y": 0.28788,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Service",
+    "type": "text",
+    "label": "Service or reason",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.22794,
+    "y": 0.35511,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Date_1",
+    "type": "text",
+    "label": "First choice of date",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.26838,
+    "y": 0.38542,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Date_2",
+    "type": "text",
+    "label": "Second choice of date",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.28922,
+    "y": 0.41572,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Time",
+    "type": "dropdown",
+    "label": "Preferred time",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.23529,
+    "y": 0.44602,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Morning",
+     "Midday",
+     "Afternoon",
+     "Evening",
+     "Any time"
+    ]
+   },
+   {
+    "id": "Where",
+    "type": "dropdown",
+    "label": "In person or online",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.27083,
+    "y": 0.47727,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "In person",
+     "Online",
+     "Either"
+    ]
+   },
+   {
+    "id": "Notes",
+    "type": "text",
+    "label": "Notes",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.52557,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Cancel",
+    "type": "checkbox",
+    "label": "I will let you know as soon as I can if I need to change or cancel.",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.63826,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "Privacy",
+    "type": "checkbox",
+    "label": "I understand that what I enter here is stored by the organization that published this form and used only for the purpose",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.66383,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "Visitor_signature",
+    "type": "signature",
+    "label": "Visitor signature",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.77652,
+    "w": 0.27819,
+    "h": 0.05303
+   },
+   {
+    "id": "Visitor_date_signed",
+    "type": "date_signed",
+    "label": "Visitor date signed",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.85038,
+    "w": 0.15686,
+    "h": 0.02273
+   }
+  ]
+ },
+ "facility-booking-request": {
+  "sha": "e0886fa4595720f9",
+  "pdfSha": "526476fa734609b8",
+  "pages": 2,
+  "bytes": 40592,
+  "roles": [
+   {
+    "key": "signer_1",
+    "label": "Requester"
+   },
+   {
+    "key": "signer_2",
+    "label": "Facilities"
+   }
+  ],
+  "fields": [
+   {
+    "id": "Full_name",
+    "type": "text",
+    "label": "Full name",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.19975,
+    "y": 0.22633,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Email",
+    "type": "text",
+    "label": "Email",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.16667,
+    "y": 0.25663,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Phone",
+    "type": "text",
+    "label": "Phone",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.17034,
+    "y": 0.28788,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Group",
+    "type": "text",
+    "label": "Organization or group",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.29289,
+    "y": 0.35511,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Room",
+    "type": "text",
+    "label": "Room or facility",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.24632,
+    "y": 0.38542,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Booking_date",
+    "type": "text",
+    "label": "Date",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.15686,
+    "y": 0.41572,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Start_time",
+    "type": "text",
+    "label": "Start time",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.19853,
+    "y": 0.44602,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "End_time",
+    "type": "text",
+    "label": "End time",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.1924,
+    "y": 0.47727,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Repeat",
+    "type": "dropdown",
+    "label": "Repeat",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.17402,
+    "y": 0.50758,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Just once",
+     "Every week",
+     "Every two weeks",
+     "Every month"
+    ]
+   },
+   {
+    "id": "Purpose",
+    "type": "text",
+    "label": "Purpose",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.18505,
+    "y": 0.53788,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Attendees",
+    "type": "text",
+    "label": "Number of people",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.26103,
+    "y": 0.61364,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Layout",
+    "type": "dropdown",
+    "label": "Layout",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.17525,
+    "y": 0.64489,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Rows",
+     "Boardroom",
+     "Classroom",
+     "Small groups",
+     "Open floor",
+     "No preference"
+    ]
+   },
+   {
+    "id": "Equipment",
+    "type": "multiselect",
+    "label": "Equipment",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.26838,
+    "y": 0.67519,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Screen or projector",
+     "Microphone",
+     "Whiteboard",
+     "Tables and chairs",
+     "Kitchen",
+     "None"
+    ]
+   },
+   {
+    "id": "House_rules",
+    "type": "checkbox",
+    "label": "I will follow the house rules, leave the space as I found it, and pay for any damage my group causes.",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.70549,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "Requester_signature",
+    "type": "signature",
+    "label": "Requester signature",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.14867,
+    "w": 0.27819,
+    "h": 0.05303
+   },
+   {
+    "id": "Requester_date_signed",
+    "type": "date_signed",
+    "label": "Requester date signed",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.22254,
+    "w": 0.15686,
+    "h": 0.02273
+   },
+   {
+    "id": "Facilities_decision",
+    "type": "dropdown",
+    "label": "Decision",
+    "role": "signer_2",
+    "required": true,
+    "page": 2,
+    "x": 0.18873,
+    "y": 0.30966,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Approved",
+     "Approved with changes",
+     "Not available"
+    ]
+   },
+   {
+    "id": "Facilities_note",
+    "type": "text",
+    "label": "Note",
+    "role": "signer_2",
+    "required": false,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.35795,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Facilities_signature",
+    "type": "signature",
+    "label": "Facilities signature",
+    "role": "signer_2",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.44223,
+    "w": 0.27819,
+    "h": 0.05303
+   },
+   {
+    "id": "Facilities_date_signed",
+    "type": "date_signed",
+    "label": "Facilities date signed",
+    "role": "signer_2",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.5161,
+    "w": 0.15686,
+    "h": 0.02273
+   }
+  ]
+ },
+ "suggestions-and-ideas": {
+  "sha": "42ba24d7242250fd",
+  "pdfSha": "07af2168261c9b1c",
+  "pages": 1,
+  "bytes": 32626,
+  "roles": [
+   {
+    "key": "signer_1",
+    "label": "Contributor"
+   }
+  ],
+  "fields": [
+   {
+    "id": "Full_name",
+    "type": "text",
+    "label": "Name",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.16667,
+    "y": 0.22633,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Email",
+    "type": "text",
+    "label": "Email",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.16667,
+    "y": 0.25663,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Idea_title",
+    "type": "text",
+    "label": "Title",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.21324,
+    "y": 0.32386,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Idea",
+    "type": "text",
+    "label": "The idea",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.1875,
+    "y": 0.35511,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Problem",
+    "type": "text",
+    "label": "The problem",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.44886,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Helps",
+    "type": "multiselect",
+    "label": "Who it helps",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.26348,
+    "y": 0.52462,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Customers or visitors",
+     "Staff or volunteers",
+     "Members",
+     "The community",
+     "Everyone"
+    ]
+   },
+   {
+    "id": "Effort",
+    "type": "dropdown",
+    "label": "Effort",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.39583,
+    "y": 0.55492,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Small",
+     "Medium",
+     "Large",
+     "Not sure"
+    ]
+   },
+   {
+    "id": "Supporting_file",
+    "type": "file",
+    "label": "Supporting file",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.34436,
+    "y": 0.58523,
+    "w": 0.2451,
+    "h": 0.02557
+   },
+   {
+    "id": "Help",
+    "type": "checkbox",
+    "label": "I would like to help make this happen.",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.6553,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "Use",
+    "type": "checkbox",
+    "label": "The organization may use, change and share this idea without paying me.",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.68087,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "Contributor_signature",
+    "type": "signature",
+    "label": "Contributor signature",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.77652,
+    "w": 0.27819,
+    "h": 0.05303
+   },
+   {
+    "id": "Contributor_date_signed",
+    "type": "date_signed",
+    "label": "Contributor date signed",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.84943,
+    "w": 0.15686,
+    "h": 0.02273
+   }
+  ]
+ },
+ "vehicle-inspection-checklist": {
+  "sha": "da9c3e54778165d4",
+  "pdfSha": "b4393fbba14ab1c4",
+  "pages": 2,
+  "bytes": 39650,
+  "roles": [
+   {
+    "key": "signer_1",
+    "label": "Driver"
+   },
+   {
+    "key": "signer_2",
+    "label": "Supervisor"
+   }
+  ],
+  "fields": [
+   {
+    "id": "Full_name",
+    "type": "text",
+    "label": "Driver's name",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.22917,
+    "y": 0.24432,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Email",
+    "type": "text",
+    "label": "Email",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.16667,
+    "y": 0.27462,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Vehicle",
+    "type": "text",
+    "label": "Vehicle",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.39951,
+    "y": 0.30492,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Check_type",
+    "type": "dropdown",
+    "label": "Check type",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.20833,
+    "y": 0.33617,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Before use",
+     "After use",
+     "Weekly check"
+    ]
+   },
+   {
+    "id": "Odometer",
+    "type": "text",
+    "label": "Odometer reading",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.26348,
+    "y": 0.36648,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Fuel",
+    "type": "dropdown",
+    "label": "Fuel or charge",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.27328,
+    "y": 0.39678,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Full",
+     "Three quarters",
+     "Half",
+     "Quarter",
+     "Low"
+    ]
+   },
+   {
+    "id": "Lights",
+    "type": "dropdown",
+    "label": "Lights",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.28554,
+    "y": 0.46402,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "OK",
+     "Needs attention"
+    ]
+   },
+   {
+    "id": "Tires",
+    "type": "dropdown",
+    "label": "Tires",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.25245,
+    "y": 0.49432,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "OK",
+     "Needs attention"
+    ]
+   },
+   {
+    "id": "Brakes",
+    "type": "dropdown",
+    "label": "Brakes",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.17402,
+    "y": 0.52557,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "OK",
+     "Needs attention"
+    ]
+   },
+   {
+    "id": "Mirrors",
+    "type": "dropdown",
+    "label": "Mirrors and windows",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.34926,
+    "y": 0.55587,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "OK",
+     "Needs attention"
+    ]
+   },
+   {
+    "id": "Fluids",
+    "type": "dropdown",
+    "label": "Fluids and warning lights",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.36029,
+    "y": 0.58617,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "OK",
+     "Needs attention"
+    ]
+   },
+   {
+    "id": "Belts",
+    "type": "dropdown",
+    "label": "Seat belts",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.19485,
+    "y": 0.61648,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "OK",
+     "Needs attention"
+    ]
+   },
+   {
+    "id": "Safety_kit",
+    "type": "dropdown",
+    "label": "Safety kit",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.60784,
+    "y": 0.64773,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Yes",
+     "Something missing"
+    ]
+   },
+   {
+    "id": "Damage",
+    "type": "text",
+    "label": "Damage or problems",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.69602,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Damage_photos",
+    "type": "file",
+    "label": "Photos",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.29044,
+    "y": 0.77178,
+    "w": 0.2451,
+    "h": 0.02557
+   },
+   {
+    "id": "Safe",
+    "type": "checkbox",
+    "label": "To the best of my knowledge the answers above are correct, and I have reported every problem I found.",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.80492,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "Driver_signature",
+    "type": "signature",
+    "label": "Driver signature",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.14867,
+    "w": 0.27819,
+    "h": 0.05303
+   },
+   {
+    "id": "Driver_date_signed",
+    "type": "date_signed",
+    "label": "Driver date signed",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.22254,
+    "w": 0.15686,
+    "h": 0.02273
+   },
+   {
+    "id": "Supervisor_decision",
+    "type": "dropdown",
+    "label": "Decision",
+    "role": "signer_2",
+    "required": true,
+    "page": 2,
+    "x": 0.18873,
+    "y": 0.30966,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Fit to drive",
+     "Fit to drive after repair",
+     "Not fit to drive"
+    ]
+   },
+   {
+    "id": "Supervisor_note",
+    "type": "text",
+    "label": "Note",
+    "role": "signer_2",
+    "required": false,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.35795,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Supervisor_signature",
+    "type": "signature",
+    "label": "Supervisor signature",
+    "role": "signer_2",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.44223,
+    "w": 0.27819,
+    "h": 0.05303
+   },
+   {
+    "id": "Supervisor_date_signed",
+    "type": "date_signed",
+    "label": "Supervisor date signed",
+    "role": "signer_2",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.5161,
+    "w": 0.15686,
+    "h": 0.02273
+   }
+  ]
+ },
+ "incident-report": {
+  "sha": "c8db2c5a7f747175",
+  "pdfSha": "1f4ef802c40a2483",
+  "pages": 3,
+  "bytes": 40326,
+  "roles": [
+   {
+    "key": "signer_1",
+    "label": "Reporter"
+   },
+   {
+    "key": "signer_2",
+    "label": "Supervisor"
+   }
+  ],
+  "fields": [
+   {
+    "id": "Full_name",
+    "type": "text",
+    "label": "Full name",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.19975,
+    "y": 0.24432,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Email",
+    "type": "text",
+    "label": "Email",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.16667,
+    "y": 0.27462,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Phone",
+    "type": "text",
+    "label": "Phone",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.17034,
+    "y": 0.30492,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Incident_date",
+    "type": "text",
+    "label": "Date",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.27451,
+    "y": 0.37216,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Incident_time",
+    "type": "text",
+    "label": "Time",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.16176,
+    "y": 0.40341,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Location",
+    "type": "text",
+    "label": "Location",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.26961,
+    "y": 0.43371,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Incident_type",
+    "type": "dropdown",
+    "label": "Type",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.24755,
+    "y": 0.46402,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Injury",
+     "Near miss",
+     "Damage to property",
+     "Security or safety concern",
+     "Behavior",
+     "Other"
+    ]
+   },
+   {
+    "id": "Description",
+    "type": "text",
+    "label": "Description",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.51231,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "People_involved",
+    "type": "text",
+    "label": "People involved",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.60701,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Injury",
+    "type": "dropdown",
+    "label": "Anyone hurt",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.25858,
+    "y": 0.7197,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Yes",
+     "No"
+    ]
+   },
+   {
+    "id": "First_aid",
+    "type": "text",
+    "label": "Help given",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.76799,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Damage",
+    "type": "text",
+    "label": "Damage",
+    "role": "signer_1",
+    "required": false,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.1089,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Immediate_action",
+    "type": "text",
+    "label": "Immediate action",
+    "role": "signer_1",
+    "required": false,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.23958,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Witnesses",
+    "type": "text",
+    "label": "Witnesses",
+    "role": "signer_1",
+    "required": false,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.33333,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Evidence",
+    "type": "file",
+    "label": "Photos or documents",
+    "role": "signer_1",
+    "required": false,
+    "page": 2,
+    "x": 0.29044,
+    "y": 0.40909,
+    "w": 0.2451,
+    "h": 0.02557
+   },
+   {
+    "id": "Prevention",
+    "type": "text",
+    "label": "Prevention",
+    "role": "signer_1",
+    "required": false,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.46023,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Accurate",
+    "type": "checkbox",
+    "label": "The information I have given is true and complete to the best of my knowledge.",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.53598,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "Reporter_signature",
+    "type": "signature",
+    "label": "Reporter signature",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.63163,
+    "w": 0.27819,
+    "h": 0.05303
+   },
+   {
+    "id": "Reporter_date_signed",
+    "type": "date_signed",
+    "label": "Reporter date signed",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.70549,
+    "w": 0.15686,
+    "h": 0.02273
+   },
+   {
+    "id": "Supervisor_decision",
+    "type": "dropdown",
+    "label": "Decision",
+    "role": "signer_2",
+    "required": true,
+    "page": 3,
+    "x": 0.18873,
+    "y": 0.11553,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Reviewed",
+     "no further action",
+     "Reviewed",
+     "action taken",
+     "Escalated"
+    ]
+   },
+   {
+    "id": "Supervisor_note",
+    "type": "text",
+    "label": "Note",
+    "role": "signer_2",
+    "required": false,
+    "page": 3,
+    "x": 0.11765,
+    "y": 0.16383,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Supervisor_signature",
+    "type": "signature",
+    "label": "Supervisor signature",
+    "role": "signer_2",
+    "required": true,
+    "page": 3,
+    "x": 0.11765,
+    "y": 0.24811,
+    "w": 0.27819,
+    "h": 0.05303
+   },
+   {
+    "id": "Supervisor_date_signed",
+    "type": "date_signed",
+    "label": "Supervisor date signed",
+    "role": "signer_2",
+    "required": true,
+    "page": 3,
+    "x": 0.11765,
+    "y": 0.32197,
+    "w": 0.15686,
+    "h": 0.02273
+   }
+  ]
+ },
+ "time-off-request": {
+  "sha": "259df742b033d0ac",
+  "pdfSha": "8fba7127e9acc10b",
+  "pages": 2,
+  "bytes": 36452,
+  "roles": [
+   {
+    "key": "signer_1",
+    "label": "Employee"
+   },
+   {
+    "key": "signer_2",
+    "label": "Manager"
+   }
+  ],
+  "fields": [
+   {
+    "id": "Full_name",
+    "type": "text",
+    "label": "Full name",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.19975,
+    "y": 0.22633,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Email",
+    "type": "text",
+    "label": "Email",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.16667,
+    "y": 0.25663,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Team",
+    "type": "text",
+    "label": "Team",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.28064,
+    "y": 0.28788,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Leave_type",
+    "type": "dropdown",
+    "label": "Type of leave",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.16054,
+    "y": 0.35511,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Vacation",
+     "Sick leave",
+     "Personal",
+     "Family",
+     "Unpaid",
+     "Other"
+    ]
+   },
+   {
+    "id": "First_day",
+    "type": "text",
+    "label": "First day",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.18995,
+    "y": 0.38542,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Last_day",
+    "type": "text",
+    "label": "Last day",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.18627,
+    "y": 0.41572,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Part_days",
+    "type": "text",
+    "label": "Part days",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.19363,
+    "y": 0.44602,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Total_days",
+    "type": "text",
+    "label": "Total days",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.19975,
+    "y": 0.47727,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Cover",
+    "type": "text",
+    "label": "Cover",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.3223,
+    "y": 0.50758,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Note",
+    "type": "text",
+    "label": "Note",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.55587,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Handover",
+    "type": "checkbox",
+    "label": "I will hand over or finish urgent work before I go.",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.63163,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "Employee_signature",
+    "type": "signature",
+    "label": "Employee signature",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.72727,
+    "w": 0.27819,
+    "h": 0.05303
+   },
+   {
+    "id": "Employee_date_signed",
+    "type": "date_signed",
+    "label": "Employee date signed",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.80114,
+    "w": 0.15686,
+    "h": 0.02273
+   },
+   {
+    "id": "Manager_decision",
+    "type": "dropdown",
+    "label": "Decision",
+    "role": "signer_2",
+    "required": true,
+    "page": 2,
+    "x": 0.18873,
+    "y": 0.11553,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Approved",
+     "Approved with changes",
+     "Not approved"
+    ]
+   },
+   {
+    "id": "Manager_note",
+    "type": "text",
+    "label": "Note",
+    "role": "signer_2",
+    "required": false,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.16383,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Manager_signature",
+    "type": "signature",
+    "label": "Manager signature",
+    "role": "signer_2",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.24811,
+    "w": 0.27819,
+    "h": 0.05303
+   },
+   {
+    "id": "Manager_date_signed",
+    "type": "date_signed",
+    "label": "Manager date signed",
+    "role": "signer_2",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.32197,
+    "w": 0.15686,
+    "h": 0.02273
+   }
+  ]
+ },
+ "expense-reimbursement": {
+  "sha": "e48bc4237b76e83d",
+  "pdfSha": "ad87e95175b054d3",
+  "pages": 2,
+  "bytes": 39268,
+  "roles": [
+   {
+    "key": "signer_1",
+    "label": "Claimant"
+   },
+   {
+    "key": "signer_2",
+    "label": "Approver"
+   }
+  ],
+  "fields": [
+   {
+    "id": "Full_name",
+    "type": "text",
+    "label": "Full name",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.19975,
+    "y": 0.24432,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Email",
+    "type": "text",
+    "label": "Email",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.16667,
+    "y": 0.27462,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Budget",
+    "type": "text",
+    "label": "Team or budget",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.30515,
+    "y": 0.30492,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Item_1",
+    "type": "text",
+    "label": "Item 1",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.28676,
+    "y": 0.37216,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Item_1_date",
+    "type": "text",
+    "label": "Item 1 date",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.15686,
+    "y": 0.40341,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Item_1_amount",
+    "type": "text",
+    "label": "Item 1 amount",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.18505,
+    "y": 0.43371,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Item_2",
+    "type": "text",
+    "label": "Item 2",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.28676,
+    "y": 0.46402,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Item_2_date",
+    "type": "text",
+    "label": "Item 2 date",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.15686,
+    "y": 0.49432,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Item_2_amount",
+    "type": "text",
+    "label": "Item 2 amount",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.18505,
+    "y": 0.52557,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Item_3",
+    "type": "text",
+    "label": "Item 3",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.28676,
+    "y": 0.55587,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Item_3_date",
+    "type": "text",
+    "label": "Item 3 date",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.15686,
+    "y": 0.58617,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Item_3_amount",
+    "type": "text",
+    "label": "Item 3 amount",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.18505,
+    "y": 0.61648,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Total",
+    "type": "text",
+    "label": "Total",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.22672,
+    "y": 0.64773,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Receipts",
+    "type": "file",
+    "label": "Receipts",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.1875,
+    "y": 0.67803,
+    "w": 0.2451,
+    "h": 0.02557
+   },
+   {
+    "id": "More_receipts",
+    "type": "file",
+    "label": "More receipts",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.22794,
+    "y": 0.71117,
+    "w": 0.2451,
+    "h": 0.02557
+   },
+   {
+    "id": "Genuine",
+    "type": "checkbox",
+    "label": "These expenses were paid by me for the organization's purposes, have not been claimed before and are not being paid back",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.74432,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "Claimant_signature",
+    "type": "signature",
+    "label": "Claimant signature",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.14867,
+    "w": 0.27819,
+    "h": 0.05303
+   },
+   {
+    "id": "Claimant_date_signed",
+    "type": "date_signed",
+    "label": "Claimant date signed",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.22254,
+    "w": 0.15686,
+    "h": 0.02273
+   },
+   {
+    "id": "Approver_decision",
+    "type": "dropdown",
+    "label": "Decision",
+    "role": "signer_2",
+    "required": true,
+    "page": 2,
+    "x": 0.18873,
+    "y": 0.30966,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Approved",
+     "Approved in part",
+     "Not approved"
+    ]
+   },
+   {
+    "id": "Approver_note",
+    "type": "text",
+    "label": "Note",
+    "role": "signer_2",
+    "required": false,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.35795,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Approver_signature",
+    "type": "signature",
+    "label": "Approver signature",
+    "role": "signer_2",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.44223,
+    "w": 0.27819,
+    "h": 0.05303
+   },
+   {
+    "id": "Approver_date_signed",
+    "type": "date_signed",
+    "label": "Approver date signed",
+    "role": "signer_2",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.5161,
+    "w": 0.15686,
+    "h": 0.02273
+   }
+  ]
+ },
+ "purchase-request": {
+  "sha": "b5fb12d37a2803ba",
+  "pdfSha": "e8631558b2f3a383",
+  "pages": 2,
+  "bytes": 37477,
+  "roles": [
+   {
+    "key": "signer_1",
+    "label": "Requester"
+   },
+   {
+    "key": "signer_2",
+    "label": "Approver"
+   }
+  ],
+  "fields": [
+   {
+    "id": "Full_name",
+    "type": "text",
+    "label": "Full name",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.19975,
+    "y": 0.22633,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Email",
+    "type": "text",
+    "label": "Email",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.16667,
+    "y": 0.25663,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Budget",
+    "type": "text",
+    "label": "Team or budget",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.24142,
+    "y": 0.28788,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Item",
+    "type": "text",
+    "label": "Item or service",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.23775,
+    "y": 0.35511,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Supplier",
+    "type": "text",
+    "label": "Supplier",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.1875,
+    "y": 0.38542,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Quantity",
+    "type": "text",
+    "label": "Quantity",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.18995,
+    "y": 0.41572,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Cost",
+    "type": "text",
+    "label": "Estimated total",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.27451,
+    "y": 0.44602,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Needed_by",
+    "type": "text",
+    "label": "Needed by",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.20343,
+    "y": 0.47727,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Reason",
+    "type": "text",
+    "label": "Reason",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.52557,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Alternatives",
+    "type": "text",
+    "label": "Alternatives",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.61932,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Quote",
+    "type": "file",
+    "label": "Quote",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.16789,
+    "y": 0.69508,
+    "w": 0.2451,
+    "h": 0.02557
+   },
+   {
+    "id": "Wait",
+    "type": "checkbox",
+    "label": "I will not order until this request is approved.",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.72822,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "Requester_signature",
+    "type": "signature",
+    "label": "Requester signature",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.14867,
+    "w": 0.27819,
+    "h": 0.05303
+   },
+   {
+    "id": "Requester_date_signed",
+    "type": "date_signed",
+    "label": "Requester date signed",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.22254,
+    "w": 0.15686,
+    "h": 0.02273
+   },
+   {
+    "id": "Approver_decision",
+    "type": "dropdown",
+    "label": "Decision",
+    "role": "signer_2",
+    "required": true,
+    "page": 2,
+    "x": 0.18873,
+    "y": 0.30966,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Approved",
+     "Approved with changes",
+     "Not approved"
+    ]
+   },
+   {
+    "id": "Approver_note",
+    "type": "text",
+    "label": "Note",
+    "role": "signer_2",
+    "required": false,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.35795,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Approver_signature",
+    "type": "signature",
+    "label": "Approver signature",
+    "role": "signer_2",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.44223,
+    "w": 0.27819,
+    "h": 0.05303
+   },
+   {
+    "id": "Approver_date_signed",
+    "type": "date_signed",
+    "label": "Approver date signed",
+    "role": "signer_2",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.5161,
+    "w": 0.15686,
+    "h": 0.02273
+   }
+  ]
+ },
+ "vendor-information": {
+  "sha": "3817ed7cd4cca18f",
+  "pdfSha": "037ad4ed9b8fc2bc",
+  "pages": 2,
+  "bytes": 36421,
+  "roles": [
+   {
+    "key": "signer_1",
+    "label": "Vendor"
+   }
+  ],
+  "fields": [
+   {
+    "id": "Business_name",
+    "type": "text",
+    "label": "Business name",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.23652,
+    "y": 0.24432,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Trading_name",
+    "type": "text",
+    "label": "Trading name",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.32108,
+    "y": 0.27462,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Website",
+    "type": "text",
+    "label": "Website",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.1826,
+    "y": 0.30492,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Address",
+    "type": "text",
+    "label": "Business address",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.25368,
+    "y": 0.33617,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Business_type",
+    "type": "dropdown",
+    "label": "Type of business",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.25123,
+    "y": 0.36648,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Sole trader",
+     "Partnership",
+     "Company",
+     "Non-profit",
+     "Other"
+    ]
+   },
+   {
+    "id": "Full_name",
+    "type": "text",
+    "label": "Main contact",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.26961,
+    "y": 0.43371,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Email",
+    "type": "text",
+    "label": "Email",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.27083,
+    "y": 0.46402,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Phone",
+    "type": "text",
+    "label": "Phone",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.27574,
+    "y": 0.49432,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Billing_email",
+    "type": "text",
+    "label": "Billing email",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.3174,
+    "y": 0.52557,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Supplies",
+    "type": "text",
+    "label": "Goods or services",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.6108,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Lead_time",
+    "type": "text",
+    "label": "Lead time",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.24142,
+    "y": 0.68655,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Insurance",
+    "type": "multiselect",
+    "label": "Insurance",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.23775,
+    "y": 0.71686,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "General liability",
+     "Professional liability",
+     "Employer's liability",
+     "Product liability",
+     "None"
+    ]
+   },
+   {
+    "id": "Certificates",
+    "type": "file",
+    "label": "Certificates",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.43873,
+    "y": 0.74716,
+    "w": 0.2451,
+    "h": 0.02557
+   },
+   {
+    "id": "Accurate",
+    "type": "checkbox",
+    "label": "The information I have given is true and complete to the best of my knowledge.",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.7803,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "Authority",
+    "type": "checkbox",
+    "label": "I am authorized to give this information on behalf of the business.",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.80587,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "Vendor_signature",
+    "type": "signature",
+    "label": "Vendor signature",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.14867,
+    "w": 0.27819,
+    "h": 0.05303
+   },
+   {
+    "id": "Vendor_date_signed",
+    "type": "date_signed",
+    "label": "Vendor date signed",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.22254,
+    "w": 0.15686,
+    "h": 0.02273
+   }
+  ]
+ },
+ "membership-application": {
+  "sha": "9cf14da5a8cebddd",
+  "pdfSha": "8cd18b441b434d95",
+  "pages": 2,
+  "bytes": 41106,
+  "roles": [
+   {
+    "key": "signer_1",
+    "label": "Applicant"
+   },
+   {
+    "key": "signer_2",
+    "label": "Membership secretary"
+   }
+  ],
+  "fields": [
+   {
+    "id": "Full_name",
+    "type": "text",
+    "label": "Full name",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.19975,
+    "y": 0.24432,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Email",
+    "type": "text",
+    "label": "Email",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.16667,
+    "y": 0.27462,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Phone",
+    "type": "text",
+    "label": "Phone",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.17034,
+    "y": 0.30492,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Street_address",
+    "type": "text",
+    "label": "Street address",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.23039,
+    "y": 0.33617,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "City",
+    "type": "text",
+    "label": "City",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.15319,
+    "y": 0.36648,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "State_or_region",
+    "type": "text",
+    "label": "State or region",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.23407,
+    "y": 0.39678,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Postal_code",
+    "type": "text",
+    "label": "ZIP or postal code",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.2598,
+    "y": 0.42708,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Membership_type",
+    "type": "dropdown",
+    "label": "Membership type",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.25858,
+    "y": 0.49432,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Individual",
+     "Family or household",
+     "Student",
+     "Concession",
+     "Organization"
+    ]
+   },
+   {
+    "id": "Date_of_birth",
+    "type": "text",
+    "label": "Date of birth",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.38113,
+    "y": 0.52557,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Interests",
+    "type": "multiselect",
+    "label": "Interests",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.18995,
+    "y": 0.55587,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Events",
+     "Volunteering",
+     "Newsletters",
+     "Committees",
+     "Social activities"
+    ]
+   },
+   {
+    "id": "Heard",
+    "type": "dropdown",
+    "label": "How you heard",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.33578,
+    "y": 0.58617,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "A friend or member",
+     "Online",
+     "An event",
+     "Local press",
+     "Other"
+    ]
+   },
+   {
+    "id": "Rules",
+    "type": "checkbox",
+    "label": "I have read the club's rules and code of conduct and agree to follow them.",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.61648,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "News",
+    "type": "checkbox",
+    "label": "Please send me news and event invitations by email.",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.64205,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "Privacy",
+    "type": "checkbox",
+    "label": "I understand that what I enter here is stored by the organization that published this form and used only for the purpose",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.66761,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "Applicant_signature",
+    "type": "signature",
+    "label": "Applicant signature",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.78125,
+    "w": 0.27819,
+    "h": 0.05303
+   },
+   {
+    "id": "Applicant_date_signed",
+    "type": "date_signed",
+    "label": "Applicant date signed",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.85511,
+    "w": 0.15686,
+    "h": 0.02273
+   },
+   {
+    "id": "Membership_secretary_decision",
+    "type": "dropdown",
+    "label": "Decision",
+    "role": "signer_2",
+    "required": true,
+    "page": 2,
+    "x": 0.18873,
+    "y": 0.11553,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Accepted",
+     "Accepted once the fee is paid",
+     "Not accepted"
+    ]
+   },
+   {
+    "id": "Membership_secretary_note",
+    "type": "text",
+    "label": "Note",
+    "role": "signer_2",
+    "required": false,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.16383,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Membership_secretary_signature",
+    "type": "signature",
+    "label": "Membership secretary signature",
+    "role": "signer_2",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.24811,
+    "w": 0.27819,
+    "h": 0.05303
+   },
+   {
+    "id": "Membership_secretary_date_signed",
+    "type": "date_signed",
+    "label": "Membership secretary date signed",
+    "role": "signer_2",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.32197,
+    "w": 0.15686,
+    "h": 0.02273
+   }
+  ]
+ },
+ "donation-pledge": {
+  "sha": "4b0f828a3482783a",
+  "pdfSha": "563fd60337518c20",
+  "pages": 2,
+  "bytes": 36054,
+  "roles": [
+   {
+    "key": "signer_1",
+    "label": "Donor"
+   }
+  ],
+  "fields": [
+   {
+    "id": "Full_name",
+    "type": "text",
+    "label": "Full name",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.19975,
+    "y": 0.24432,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Email",
+    "type": "text",
+    "label": "Email",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.16667,
+    "y": 0.27462,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Phone",
+    "type": "text",
+    "label": "Phone",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.17034,
+    "y": 0.30492,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Street_address",
+    "type": "text",
+    "label": "Street address",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.23039,
+    "y": 0.33617,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "City",
+    "type": "text",
+    "label": "City",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.15319,
+    "y": 0.36648,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "State_or_region",
+    "type": "text",
+    "label": "State or region",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.23407,
+    "y": 0.39678,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Postal_code",
+    "type": "text",
+    "label": "ZIP or postal code",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.2598,
+    "y": 0.42708,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Amount",
+    "type": "text",
+    "label": "Amount",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.18505,
+    "y": 0.49432,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Frequency",
+    "type": "dropdown",
+    "label": "How often",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.20098,
+    "y": 0.52557,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Once",
+     "Every month",
+     "Every quarter",
+     "Every year"
+    ]
+   },
+   {
+    "id": "Start",
+    "type": "text",
+    "label": "Starting",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.18382,
+    "y": 0.55587,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Duration",
+    "type": "dropdown",
+    "label": "For how long",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.22304,
+    "y": 0.58617,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Just once",
+     "One year",
+     "Two years",
+     "Three years",
+     "Until I tell you to stop"
+    ]
+   },
+   {
+    "id": "Purpose",
+    "type": "text",
+    "label": "Purpose",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.19363,
+    "y": 0.61648,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Thanks",
+    "type": "dropdown",
+    "label": "How to thank you",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.32966,
+    "y": 0.68371,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "By email",
+     "By post",
+     "Please do not send thanks"
+    ]
+   },
+   {
+    "id": "Display_name",
+    "type": "text",
+    "label": "Name to show",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.40441,
+    "y": 0.71496,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Anonymous",
+    "type": "checkbox",
+    "label": "Please keep my gift anonymous.",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.74527,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "Change",
+    "type": "checkbox",
+    "label": "I understand that this pledge is not a binding contract and that I can change or cancel it at any time.",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.77083,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "Donor_signature",
+    "type": "signature",
+    "label": "Donor signature",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.14867,
+    "w": 0.27819,
+    "h": 0.05303
+   },
+   {
+    "id": "Donor_date_signed",
+    "type": "date_signed",
+    "label": "Donor date signed",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.22254,
+    "w": 0.15686,
+    "h": 0.02273
+   }
+  ]
+ },
+ "service-request-work-order": {
+  "sha": "7ab634885e79c1da",
+  "pdfSha": "91f6c916308b5dd8",
+  "pages": 2,
+  "bytes": 39457,
+  "roles": [
+   {
+    "key": "signer_1",
+    "label": "Customer"
+   },
+   {
+    "key": "signer_2",
+    "label": "Technician"
+   }
+  ],
+  "fields": [
+   {
+    "id": "Full_name",
+    "type": "text",
+    "label": "Full name",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.19975,
+    "y": 0.22633,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Email",
+    "type": "text",
+    "label": "Email",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.16667,
+    "y": 0.25663,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Phone",
+    "type": "text",
+    "label": "Phone",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.17034,
+    "y": 0.28788,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Street_address",
+    "type": "text",
+    "label": "Street address",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.23039,
+    "y": 0.31818,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "City",
+    "type": "text",
+    "label": "City",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.15319,
+    "y": 0.34848,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "State_or_region",
+    "type": "text",
+    "label": "State or region",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.23407,
+    "y": 0.37879,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Postal_code",
+    "type": "text",
+    "label": "ZIP or postal code",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.2598,
+    "y": 0.41004,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Work",
+    "type": "text",
+    "label": "Description of the work",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.49432,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Where",
+    "type": "text",
+    "label": "Location",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.23284,
+    "y": 0.57102,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Urgency",
+    "type": "dropdown",
+    "label": "Urgency",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.21324,
+    "y": 0.60133,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Emergency",
+     "Within 24 hours",
+     "This week",
+     "When convenient"
+    ]
+   },
+   {
+    "id": "Preferred_times",
+    "type": "text",
+    "label": "Preferred times",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.3076,
+    "y": 0.63163,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Access",
+    "type": "text",
+    "label": "Access",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.28676,
+    "y": 0.66193,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Photos",
+    "type": "file",
+    "label": "Photos",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.17402,
+    "y": 0.69318,
+    "w": 0.2451,
+    "h": 0.02462
+   },
+   {
+    "id": "Authorize",
+    "type": "checkbox",
+    "label": "I am authorized to request this work, and I understand any cost will be agreed with me before work starts.",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.72633,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "Customer_signature",
+    "type": "signature",
+    "label": "Customer signature",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.14867,
+    "w": 0.27819,
+    "h": 0.05303
+   },
+   {
+    "id": "Customer_date_signed",
+    "type": "date_signed",
+    "label": "Customer date signed",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.22254,
+    "w": 0.15686,
+    "h": 0.02273
+   },
+   {
+    "id": "Technician_decision",
+    "type": "dropdown",
+    "label": "Decision",
+    "role": "signer_2",
+    "required": true,
+    "page": 2,
+    "x": 0.18873,
+    "y": 0.30966,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Work completed",
+     "Part completed",
+     "return visit needed",
+     "Not completed"
+    ]
+   },
+   {
+    "id": "Technician_note",
+    "type": "text",
+    "label": "Note",
+    "role": "signer_2",
+    "required": false,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.35795,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Technician_signature",
+    "type": "signature",
+    "label": "Technician signature",
+    "role": "signer_2",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.44223,
+    "w": 0.27819,
+    "h": 0.05303
+   },
+   {
+    "id": "Technician_date_signed",
+    "type": "date_signed",
+    "label": "Technician date signed",
+    "role": "signer_2",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.5161,
+    "w": 0.15686,
+    "h": 0.02273
+   }
+  ]
+ },
+ "return-and-refund-request": {
+  "sha": "042c8e7079aeb8e4",
+  "pdfSha": "accb21600b17ea69",
+  "pages": 2,
+  "bytes": 37629,
+  "roles": [
+   {
+    "key": "signer_1",
+    "label": "Customer"
+   },
+   {
+    "key": "signer_2",
+    "label": "Seller"
+   }
+  ],
+  "fields": [
+   {
+    "id": "Full_name",
+    "type": "text",
+    "label": "Full name",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.19975,
+    "y": 0.24432,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Email",
+    "type": "text",
+    "label": "Email",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.16667,
+    "y": 0.27462,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Phone",
+    "type": "text",
+    "label": "Phone",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.17034,
+    "y": 0.30492,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Order_number",
+    "type": "text",
+    "label": "Order number",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.3125,
+    "y": 0.37216,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Purchase_date",
+    "type": "text",
+    "label": "Purchase date",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.25123,
+    "y": 0.40341,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Item",
+    "type": "text",
+    "label": "Item",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.15809,
+    "y": 0.43371,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Quantity",
+    "type": "text",
+    "label": "Quantity",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.18995,
+    "y": 0.46402,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Reason",
+    "type": "dropdown",
+    "label": "Reason",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.1777,
+    "y": 0.53125,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Faulty or damaged",
+     "Wrong item",
+     "Not as described",
+     "Changed my mind",
+     "Other"
+    ]
+   },
+   {
+    "id": "Details",
+    "type": "text",
+    "label": "Details",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.57955,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Outcome",
+    "type": "dropdown",
+    "label": "Outcome wanted",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.28799,
+    "y": 0.65625,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "A refund",
+     "An exchange",
+     "A repair",
+     "Store credit"
+    ]
+   },
+   {
+    "id": "Photos",
+    "type": "file",
+    "label": "Photos",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.26225,
+    "y": 0.68655,
+    "w": 0.2451,
+    "h": 0.02557
+   },
+   {
+    "id": "Condition",
+    "type": "checkbox",
+    "label": "The item is in the condition described, and I will return it as instructed.",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.7197,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "Customer_signature",
+    "type": "signature",
+    "label": "Customer signature",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.14867,
+    "w": 0.27819,
+    "h": 0.05303
+   },
+   {
+    "id": "Customer_date_signed",
+    "type": "date_signed",
+    "label": "Customer date signed",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.22254,
+    "w": 0.15686,
+    "h": 0.02273
+   },
+   {
+    "id": "Seller_decision",
+    "type": "dropdown",
+    "label": "Decision",
+    "role": "signer_2",
+    "required": true,
+    "page": 2,
+    "x": 0.18873,
+    "y": 0.30966,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Approved",
+     "Approved in part",
+     "Not approved"
+    ]
+   },
+   {
+    "id": "Seller_note",
+    "type": "text",
+    "label": "Note",
+    "role": "signer_2",
+    "required": false,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.35795,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Seller_signature",
+    "type": "signature",
+    "label": "Seller signature",
+    "role": "signer_2",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.44223,
+    "w": 0.27819,
+    "h": 0.05303
+   },
+   {
+    "id": "Seller_date_signed",
+    "type": "date_signed",
+    "label": "Seller date signed",
+    "role": "signer_2",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.5161,
+    "w": 0.15686,
+    "h": 0.02273
+   }
+  ]
+ },
+ "maintenance-request": {
+  "sha": "f9111bf5749e1dbe",
+  "pdfSha": "3affa99893ce8c15",
+  "pages": 2,
+  "bytes": 38759,
+  "roles": [
+   {
+    "key": "signer_1",
+    "label": "Occupant"
+   },
+   {
+    "key": "signer_2",
+    "label": "Maintenance"
+   }
+  ],
+  "fields": [
+   {
+    "id": "Full_name",
+    "type": "text",
+    "label": "Full name",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.19975,
+    "y": 0.24432,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Email",
+    "type": "text",
+    "label": "Email",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.16667,
+    "y": 0.27462,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Phone",
+    "type": "text",
+    "label": "Phone",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.17034,
+    "y": 0.30492,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Street_address",
+    "type": "text",
+    "label": "Street address",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.23039,
+    "y": 0.33617,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "City",
+    "type": "text",
+    "label": "City",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.15319,
+    "y": 0.36648,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "State_or_region",
+    "type": "text",
+    "label": "State or region",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.23407,
+    "y": 0.39678,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Postal_code",
+    "type": "text",
+    "label": "ZIP or postal code",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.2598,
+    "y": 0.42708,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Unit",
+    "type": "text",
+    "label": "Unit or room",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.26348,
+    "y": 0.49432,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Problem",
+    "type": "text",
+    "label": "Description",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.54356,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Category",
+    "type": "dropdown",
+    "label": "Category",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.19118,
+    "y": 0.61932,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Plumbing",
+     "Electrical",
+     "Heating or cooling",
+     "Appliance",
+     "Doors",
+     "windows or locks",
+     "Pests",
+     "Other"
+    ]
+   },
+   {
+    "id": "Urgency",
+    "type": "dropdown",
+    "label": "Urgency",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.21324,
+    "y": 0.64962,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Urgent: it is unsafe or unusable",
+     "Soon",
+     "Not urgent"
+    ]
+   },
+   {
+    "id": "Started",
+    "type": "text",
+    "label": "Started",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.25123,
+    "y": 0.67992,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Photos",
+    "type": "file",
+    "label": "Photos",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.17402,
+    "y": 0.71117,
+    "w": 0.2451,
+    "h": 0.02462
+   },
+   {
+    "id": "Entry",
+    "type": "checkbox",
+    "label": "Maintenance staff may enter to fix this if I am not at home.",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.7803,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "Access_note",
+    "type": "text",
+    "label": "Access note",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.38971,
+    "y": 0.80587,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Occupant_signature",
+    "type": "signature",
+    "label": "Occupant signature",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.14867,
+    "w": 0.27819,
+    "h": 0.05303
+   },
+   {
+    "id": "Occupant_date_signed",
+    "type": "date_signed",
+    "label": "Occupant date signed",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.22254,
+    "w": 0.15686,
+    "h": 0.02273
+   },
+   {
+    "id": "Maintenance_decision",
+    "type": "dropdown",
+    "label": "Decision",
+    "role": "signer_2",
+    "required": true,
+    "page": 2,
+    "x": 0.18873,
+    "y": 0.30966,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Fixed",
+     "Part fixed",
+     "follow-up booked",
+     "Could not fix"
+    ]
+   },
+   {
+    "id": "Maintenance_note",
+    "type": "text",
+    "label": "Note",
+    "role": "signer_2",
+    "required": false,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.35795,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Maintenance_signature",
+    "type": "signature",
+    "label": "Maintenance signature",
+    "role": "signer_2",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.44223,
+    "w": 0.27819,
+    "h": 0.05303
+   },
+   {
+    "id": "Maintenance_date_signed",
+    "type": "date_signed",
+    "label": "Maintenance date signed",
+    "role": "signer_2",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.5161,
+    "w": 0.15686,
+    "h": 0.02273
+   }
+  ]
+ },
+ "move-in-move-out-checklist": {
+  "sha": "4c98f02dea10c390",
+  "pdfSha": "191293e8b42514e1",
+  "pages": 2,
+  "bytes": 40164,
+  "roles": [
+   {
+    "key": "signer_1",
+    "label": "Occupant"
+   },
+   {
+    "key": "signer_2",
+    "label": "Property manager"
+   }
+  ],
+  "fields": [
+   {
+    "id": "Full_name",
+    "type": "text",
+    "label": "Full name",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.19975,
+    "y": 0.24432,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Email",
+    "type": "text",
+    "label": "Email",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.16667,
+    "y": 0.27462,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Phone",
+    "type": "text",
+    "label": "Phone",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.17034,
+    "y": 0.30492,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Property",
+    "type": "text",
+    "label": "Property address",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.2549,
+    "y": 0.37216,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Checklist_type",
+    "type": "dropdown",
+    "label": "Checklist for",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.22059,
+    "y": 0.40341,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Moving in",
+     "Moving out"
+    ]
+   },
+   {
+    "id": "Inspection_date",
+    "type": "text",
+    "label": "Inspection date",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.26225,
+    "y": 0.43371,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Entrance_and_hallways_condition",
+    "type": "dropdown",
+    "label": "Entrance and hallways: condition",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.29779,
+    "y": 0.50095,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Good",
+     "Fair",
+     "Poor",
+     "Not applicable"
+    ]
+   },
+   {
+    "id": "Entrance_and_hallways_notes",
+    "type": "text",
+    "label": "Entrance and hallways: notes",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.54657,
+    "y": 0.50095,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Living_areas_condition",
+    "type": "dropdown",
+    "label": "Living areas: condition",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.21569,
+    "y": 0.53125,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Good",
+     "Fair",
+     "Poor",
+     "Not applicable"
+    ]
+   },
+   {
+    "id": "Living_areas_notes",
+    "type": "text",
+    "label": "Living areas: notes",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.46446,
+    "y": 0.53125,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Kitchen_condition",
+    "type": "dropdown",
+    "label": "Kitchen: condition",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.1826,
+    "y": 0.56155,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Good",
+     "Fair",
+     "Poor",
+     "Not applicable"
+    ]
+   },
+   {
+    "id": "Kitchen_notes",
+    "type": "text",
+    "label": "Kitchen: notes",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.43137,
+    "y": 0.56155,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Bathrooms_condition",
+    "type": "dropdown",
+    "label": "Bathrooms: condition",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.20711,
+    "y": 0.5928,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Good",
+     "Fair",
+     "Poor",
+     "Not applicable"
+    ]
+   },
+   {
+    "id": "Bathrooms_notes",
+    "type": "text",
+    "label": "Bathrooms: notes",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.45588,
+    "y": 0.5928,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Bedrooms_condition",
+    "type": "dropdown",
+    "label": "Bedrooms: condition",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.19975,
+    "y": 0.62311,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Good",
+     "Fair",
+     "Poor",
+     "Not applicable"
+    ]
+   },
+   {
+    "id": "Bedrooms_notes",
+    "type": "text",
+    "label": "Bedrooms: notes",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.44975,
+    "y": 0.62311,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Outside_areas_condition",
+    "type": "dropdown",
+    "label": "Outside areas: condition",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.22672,
+    "y": 0.65341,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Good",
+     "Fair",
+     "Poor",
+     "Not applicable"
+    ]
+   },
+   {
+    "id": "Outside_areas_notes",
+    "type": "text",
+    "label": "Outside areas: notes",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.47549,
+    "y": 0.65341,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Photos",
+    "type": "file",
+    "label": "Photos",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.17402,
+    "y": 0.68371,
+    "w": 0.2451,
+    "h": 0.02557
+   },
+   {
+    "id": "More_photos",
+    "type": "file",
+    "label": "More photos",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.21814,
+    "y": 0.71686,
+    "w": 0.2451,
+    "h": 0.02557
+   },
+   {
+    "id": "Electricity",
+    "type": "text",
+    "label": "Electricity reading",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.31618,
+    "y": 0.78693,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Gas_or_water",
+    "type": "text",
+    "label": "Gas or water reading",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.33211,
+    "y": 0.81723,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Keys",
+    "type": "text",
+    "label": "Keys handed over",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.41054,
+    "y": 0.84754,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Agree",
+    "type": "checkbox",
+    "label": "This checklist is a fair record of the property's condition on the date above.",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.87879,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "Occupant_signature",
+    "type": "signature",
+    "label": "Occupant signature",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.14867,
+    "w": 0.27819,
+    "h": 0.05303
+   },
+   {
+    "id": "Occupant_date_signed",
+    "type": "date_signed",
+    "label": "Occupant date signed",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.22254,
+    "w": 0.15686,
+    "h": 0.02273
+   },
+   {
+    "id": "Property_manager_decision",
+    "type": "dropdown",
+    "label": "Decision",
+    "role": "signer_2",
+    "required": true,
+    "page": 2,
+    "x": 0.18873,
+    "y": 0.30966,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Agreed",
+     "Agreed with notes",
+     "Disputed"
+    ]
+   },
+   {
+    "id": "Property_manager_note",
+    "type": "text",
+    "label": "Note",
+    "role": "signer_2",
+    "required": false,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.35795,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Property_manager_signature",
+    "type": "signature",
+    "label": "Property manager signature",
+    "role": "signer_2",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.44223,
+    "w": 0.27819,
+    "h": 0.05303
+   },
+   {
+    "id": "Property_manager_date_signed",
+    "type": "date_signed",
+    "label": "Property manager date signed",
+    "role": "signer_2",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.5161,
+    "w": 0.15686,
+    "h": 0.02273
+   }
+  ]
+ },
+ "class-or-course-registration": {
+  "sha": "48e3ee4cc9786918",
+  "pdfSha": "8c42f52a1b0bb8cb",
+  "pages": 2,
+  "bytes": 36850,
+  "roles": [
+   {
+    "key": "signer_1",
+    "label": "Student"
+   }
+  ],
+  "fields": [
+   {
+    "id": "Full_name",
+    "type": "text",
+    "label": "Full name",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.19975,
+    "y": 0.24432,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Email",
+    "type": "text",
+    "label": "Email",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.16667,
+    "y": 0.27462,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Phone",
+    "type": "text",
+    "label": "Phone",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.17034,
+    "y": 0.30492,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Course",
+    "type": "text",
+    "label": "Course",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.23775,
+    "y": 0.37216,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Start",
+    "type": "text",
+    "label": "Start date",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.27696,
+    "y": 0.40341,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Schedule",
+    "type": "text",
+    "label": "Day and time",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.22426,
+    "y": 0.43371,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Level",
+    "type": "dropdown",
+    "label": "Experience",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.25,
+    "y": 0.46402,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Beginner",
+     "Some experience",
+     "Experienced"
+    ]
+   },
+   {
+    "id": "Goals",
+    "type": "text",
+    "label": "Goals",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.51231,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Participant",
+    "type": "text",
+    "label": "Participant's name",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.34926,
+    "y": 0.625,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Age_group",
+    "type": "dropdown",
+    "label": "Age group",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.29902,
+    "y": 0.65625,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Under 12",
+     "12 to 17",
+     "18 or over"
+    ]
+   },
+   {
+    "id": "Needs",
+    "type": "text",
+    "label": "Needs",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.70455,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Emergency",
+    "type": "text",
+    "label": "Emergency contact",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.40441,
+    "y": 0.7803,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Terms",
+    "type": "checkbox",
+    "label": "I have read the course terms, including attendance, cancellations and refunds.",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.81061,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "Guardian",
+    "type": "checkbox",
+    "label": "If the participant is under 18, I am their parent or guardian and I agree for them to take part.",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.83617,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "Privacy",
+    "type": "checkbox",
+    "label": "I understand that what I enter here is stored by the organization that published this form and used only for the purpose",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.86174,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "Student_signature",
+    "type": "signature",
+    "label": "Student signature",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.14867,
+    "w": 0.27819,
+    "h": 0.05303
+   },
+   {
+    "id": "Student_date_signed",
+    "type": "date_signed",
+    "label": "Student date signed",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.22254,
+    "w": 0.15686,
+    "h": 0.02273
+   }
+  ]
+ },
+ "reference-check": {
+  "sha": "8d160e93a6bae9d0",
+  "pdfSha": "a7599fe6c0af107f",
+  "pages": 2,
+  "bytes": 35761,
+  "roles": [
+   {
+    "key": "signer_1",
+    "label": "Referee"
+   }
+  ],
+  "fields": [
+   {
+    "id": "Full_name",
+    "type": "text",
+    "label": "Your name",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.23652,
+    "y": 0.24432,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Email",
+    "type": "text",
+    "label": "Email",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.20588,
+    "y": 0.27462,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Your_role",
+    "type": "text",
+    "label": "Job title and organization",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.35662,
+    "y": 0.30492,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Candidate",
+    "type": "text",
+    "label": "Candidate's name",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.25858,
+    "y": 0.37216,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Relationship",
+    "type": "dropdown",
+    "label": "Relationship",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.28186,
+    "y": 0.40341,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "I managed them",
+     "We worked together",
+     "I taught or supervised them",
+     "Personal reference",
+     "Other"
+    ]
+   },
+   {
+    "id": "From",
+    "type": "text",
+    "label": "From",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.16422,
+    "y": 0.43371,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "To",
+    "type": "text",
+    "label": "To",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.14093,
+    "y": 0.46402,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Their_role",
+    "type": "text",
+    "label": "Their role",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.28554,
+    "y": 0.49432,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Strengths",
+    "type": "text",
+    "label": "Strengths",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.57955,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Develop",
+    "type": "text",
+    "label": "Areas to develop",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.67424,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Reliability",
+    "type": "dropdown",
+    "label": "Reliability",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.32966,
+    "y": 0.75,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Excellent",
+     "Good",
+     "Satisfactory",
+     "Poor",
+     "Cannot say"
+    ]
+   },
+   {
+    "id": "Teamwork",
+    "type": "dropdown",
+    "label": "Working with others",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.28064,
+    "y": 0.7803,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Excellent",
+     "Good",
+     "Satisfactory",
+     "Poor",
+     "Cannot say"
+    ]
+   },
+   {
+    "id": "Again",
+    "type": "dropdown",
+    "label": "Again",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.46814,
+    "y": 0.81061,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Yes",
+     "Yes",
+     "with reservations",
+     "No",
+     "Cannot say"
+    ]
+   },
+   {
+    "id": "Other",
+    "type": "text",
+    "label": "Anything else",
+    "role": "signer_1",
+    "required": false,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.1089,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Accurate",
+    "type": "checkbox",
+    "label": "This reference is accurate and given in good faith.",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.18466,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "Referee_signature",
+    "type": "signature",
+    "label": "Referee signature",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.2803,
+    "w": 0.27819,
+    "h": 0.05303
+   },
+   {
+    "id": "Referee_date_signed",
+    "type": "date_signed",
+    "label": "Referee date signed",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.35417,
+    "w": 0.15686,
+    "h": 0.02273
+   }
+  ]
+ },
+ "exit-interview": {
+  "sha": "d7cafb0266fb2f03",
+  "pdfSha": "bf6e6b9586e4f589",
+  "pages": 2,
+  "bytes": 35476,
+  "roles": [
+   {
+    "key": "signer_1",
+    "label": "Leaver"
+   }
+  ],
+  "fields": [
+   {
+    "id": "Full_name",
+    "type": "text",
+    "label": "Full name",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.19975,
+    "y": 0.24432,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Email",
+    "type": "text",
+    "label": "Email",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.16667,
+    "y": 0.27462,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Role",
+    "type": "text",
+    "label": "Role and team",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.23162,
+    "y": 0.30492,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Last_day",
+    "type": "text",
+    "label": "Last day",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.18627,
+    "y": 0.33617,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Reason",
+    "type": "dropdown",
+    "label": "Main reason",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.30515,
+    "y": 0.40341,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "A new opportunity",
+     "Pay or benefits",
+     "Work-life balance",
+     "Management",
+     "Career growth",
+     "Relocation",
+     "Personal reasons",
+     "Other"
+    ]
+   },
+   {
+    "id": "Reason_detail",
+    "type": "text",
+    "label": "More about the reason",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.4517,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Valued",
+    "type": "text",
+    "label": "What you valued",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.58239,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Better",
+    "type": "text",
+    "label": "What could be better",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.67614,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Support",
+    "type": "dropdown",
+    "label": "Support",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.47917,
+    "y": 0.75189,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Very supported",
+     "Supported",
+     "Neutral",
+     "Unsupported",
+     "Very unsupported"
+    ]
+   },
+   {
+    "id": "Recommend",
+    "type": "dropdown",
+    "label": "Recommend",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.41789,
+    "y": 0.7822,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Yes",
+     "Maybe",
+     "No"
+    ]
+   },
+   {
+    "id": "Return",
+    "type": "dropdown",
+    "label": "Come back",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.38603,
+    "y": 0.81345,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Yes",
+     "Maybe",
+     "No"
+    ]
+   },
+   {
+    "id": "Share",
+    "type": "checkbox",
+    "label": "My comments may be shared, without my name, to help improve the organization.",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.84375,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "Leaver_signature",
+    "type": "signature",
+    "label": "Leaver signature",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.14867,
+    "w": 0.27819,
+    "h": 0.05303
+   },
+   {
+    "id": "Leaver_date_signed",
+    "type": "date_signed",
+    "label": "Leaver date signed",
+    "role": "signer_1",
+    "required": true,
+    "page": 2,
+    "x": 0.11765,
+    "y": 0.22254,
+    "w": 0.15686,
+    "h": 0.02273
+   }
+  ]
+ },
+ "visitor-sign-in": {
+  "sha": "29bc0cc696c15f2f",
+  "pdfSha": "a4657c6ca2178d39",
+  "pages": 1,
+  "bytes": 33341,
+  "roles": [
+   {
+    "key": "signer_1",
+    "label": "Visitor"
+   }
+  ],
+  "fields": [
+   {
+    "id": "Full_name",
+    "type": "text",
+    "label": "Full name",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.19975,
+    "y": 0.22633,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Email",
+    "type": "text",
+    "label": "Email",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.16667,
+    "y": 0.25663,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Organization",
+    "type": "text",
+    "label": "Organization",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.22181,
+    "y": 0.28788,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Phone",
+    "type": "text",
+    "label": "Phone",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.17034,
+    "y": 0.31818,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Host",
+    "type": "text",
+    "label": "Person you are visiting",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.28922,
+    "y": 0.38542,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Reason",
+    "type": "dropdown",
+    "label": "Reason",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.27083,
+    "y": 0.41572,
+    "w": 0.2451,
+    "h": 0.02273,
+    "options": [
+     "Meeting",
+     "Delivery",
+     "Contractor or maintenance",
+     "Interview",
+     "Event",
+     "Other"
+    ]
+   },
+   {
+    "id": "Visit_date",
+    "type": "text",
+    "label": "Date",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.15686,
+    "y": 0.44602,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Arrival",
+    "type": "text",
+    "label": "Arrival time",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.21569,
+    "y": 0.47727,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Vehicle",
+    "type": "text",
+    "label": "Vehicle",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.27328,
+    "y": 0.50758,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Badge",
+    "type": "text",
+    "label": "Badge number",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.23529,
+    "y": 0.53788,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Rules",
+    "type": "checkbox",
+    "label": "I will follow the site's safety and security rules, stay with my host where asked, and sign out when I leave.",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.60511,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "Emergency",
+    "type": "checkbox",
+    "label": "In an emergency I will follow staff instructions and go to the assembly point.",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.64867,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "Visitor_signature",
+    "type": "signature",
+    "label": "Visitor signature",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.74337,
+    "w": 0.27819,
+    "h": 0.05303
+   },
+   {
+    "id": "Visitor_date_signed",
+    "type": "date_signed",
+    "label": "Visitor date signed",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.81723,
+    "w": 0.15686,
+    "h": 0.02273
+   }
+  ]
+ },
+ "policy-acknowledgement": {
+  "sha": "43f46be1450551dc",
+  "pdfSha": "5b09ef7cc045ad3f",
+  "pages": 1,
+  "bytes": 35531,
+  "roles": [
+   {
+    "key": "signer_1",
+    "label": "Reader"
+   }
+  ],
+  "fields": [
+   {
+    "id": "Full_name",
+    "type": "text",
+    "label": "Full name",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.19975,
+    "y": 0.22633,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Email",
+    "type": "text",
+    "label": "Email",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.16667,
+    "y": 0.25663,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Team",
+    "type": "text",
+    "label": "Team or role",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.21936,
+    "y": 0.28788,
+    "w": 0.2451,
+    "h": 0.02273
+   },
+   {
+    "id": "Policy",
+    "type": "text",
+    "label": "Policy name",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.21691,
+    "y": 0.35511,
+    "w": 0.2451,
+    "h": 0.02273,
+    "sender": true
+   },
+   {
+    "id": "Version",
+    "type": "text",
+    "label": "Version",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.33946,
+    "y": 0.38542,
+    "w": 0.2451,
+    "h": 0.02273,
+    "sender": true
+   },
+   {
+    "id": "Questions",
+    "type": "text",
+    "label": "Questions",
+    "role": "signer_1",
+    "required": false,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.43371,
+    "w": 0.68627,
+    "h": 0.06818
+   },
+   {
+    "id": "Read",
+    "type": "checkbox",
+    "label": "I have read the policy named above.",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.5464,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "Understood",
+    "type": "checkbox",
+    "label": "I understand it and have had the chance to ask questions about it.",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.57197,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "Follow",
+    "type": "checkbox",
+    "label": "I will follow it, and I understand that it may be updated and that I will be asked to read any new version.",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.59754,
+    "w": 0.02328,
+    "h": 0.01799
+   },
+   {
+    "id": "Reader_signature",
+    "type": "signature",
+    "label": "Reader signature",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.71023,
+    "w": 0.27819,
+    "h": 0.05303
+   },
+   {
+    "id": "Reader_date_signed",
+    "type": "date_signed",
+    "label": "Reader date signed",
+    "role": "signer_1",
+    "required": true,
+    "page": 1,
+    "x": 0.11765,
+    "y": 0.78409,
     "w": 0.15686,
     "h": 0.02273
    }

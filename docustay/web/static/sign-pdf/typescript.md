@@ -5,6 +5,8 @@ description: Send a document for signature from TypeScript, with a program that 
 
 # Send a document for signature from TypeScript
 
+Sign PDF API in TypeScript: a short program that sends a template for signature, run against Docustay with a test key before it was published. Set DOCUSTAY_API_KEY and DOCUSTAY_TEMPLATE_ID.
+
 `npm install @docustay2026/sdk`
 
 The types ship inside the package: SendRequest describes what you send and the answer is typed too, so a wrong field name fails in your editor and not at 2 a.m. The program runs as it stands on Node 22 and newer with --experimental-strip-types; elsewhere compile it with tsc as usual.

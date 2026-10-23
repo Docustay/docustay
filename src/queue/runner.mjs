@@ -62,7 +62,7 @@
 //   ★ Until then the runner takes its connection string as an argument. The gate passes the privileged
 //     one, which is honest: it proves the QUEUE works, and does not claim the role model is wired.
 
-import { run, runOnce, makeWorkerUtils } from "graphile-worker";
+import { run, runOnce, makeWorkerUtils, Logger } from "graphile-worker";
 import { TASK_LIST, requestDispatchStop, resumeDispatch } from "./tasks.mjs";
 import { addJobWithPolicy } from "./jobPolicy.mjs";
 import { wrapWithRunLedger } from "./runLedger.mjs";
@@ -295,6 +295,11 @@ export async function startWorker({ connectionString, concurrency = 5, sweepEver
     //   seconds long) was still running, so the job died with "Cannot use a pool after calling end on the pool" and the process exited 1 instead of 0 (Run 10 SU-001, s3_worker_process_starts).
     //   worker.mjs is the one place that handles the signal: it calls stop(), which waits for in-flight jobs, and only then closes the pools.
     noHandleSignals: true,
+    // Quiet by default (G1, 15 Oct 2026): graphile logs "Started task" and "Completed task" at info for EVERY run, and dispatch_outbox runs for every workspace every few seconds, so an idle local worker wrote 3.4 GB of log. Warnings and errors still reach the log; set KEYSTONE_WORKER_LOG=verbose to see everything again.
+    logger: new Logger((scope) => (level, message, meta) => {
+      if (process.env.KEYSTONE_WORKER_LOG !== "verbose" && level === "info" && /^(Started|Completed) task /.test(String(message))) return;
+      const line = `[${scope.label ?? "worker"}] ${level.toUpperCase()}: ${message}`; (level === "error" ? console.error : level === "warning" ? console.warn : console.log)(line, ...(meta && Object.keys(meta).length && level !== "info" ? [JSON.stringify(meta)] : []));
+    }),
   });
 
   // ★★ THE SWEEP LOOP. Deliberately a timer in OUR process rather than graphile's crontab, for the

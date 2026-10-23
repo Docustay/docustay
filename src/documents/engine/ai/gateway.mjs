@@ -27,7 +27,15 @@ export async function loadPolicy(db, { tenantId, now = new Date() }) {
   const window = p.window?.start && p.window?.end ? { start: new Date(p.window.start), end: new Date(p.window.end) } : monthWindow(now);
   return { ...p, window };
 }
-const ownKeyPresent = async (db, tenantId) => (await db.query(`SELECT 1 FROM keystone.document_ai_secret WHERE tenant_id = $1 LIMIT 1`, [tenantId])).rowCount > 0;
+/** A workspace's own provider key, and whether it may be USED (21 Oct 2026, the maintainer): an own key is part of Pay as you go, Pro and Lifetime. A Free workspace that already held one keeps it until `grandfathered_until` (the end of October), then it stops.
+ *  `policy` is the host's AI policy for the workspace (null: a self-host or an organisation on no Docustay plan, where an own key is always the person's own business); undefined: look it up. → { present, usable, until, freePlan } */
+export async function ownKeyState(db, { tenantId, policy = undefined, now = new Date() }) {
+  const { rows: [r] } = await db.query(`SELECT grandfathered_until FROM keystone.document_ai_secret WHERE tenant_id = $1 LIMIT 1`, [tenantId]);
+  const pol = policy === undefined ? await loadPolicy(db, { tenantId, now }) : policy;
+  if (!r) return { present: false, usable: false, until: null, freePlan: pol?.plan === "free" };   // the plan is known without a key: a Free workspace with none must see the plan prompt and be refused (R13-D183)
+  const freePlan = pol?.plan === "free", until = r.grandfathered_until ? new Date(r.grandfathered_until) : null;
+  return { present: true, usable: !freePlan || (until != null && until.getTime() > now.getTime()), until: freePlan ? until : null, freePlan };
+}
 
 /** Month-to-date and today's spend on the platform's own key against the ceiling (the Docustay owner's bill). */
 export async function platformStatus(db, { policy, now = new Date(), env = process.env }) {
@@ -51,22 +59,27 @@ const refusal = (r) => conflict(r.message, { code: r.code, ...(r.retryAfterSecon
 
 /**
  * Ask to make a model call. Returns the context finish() needs, or throws a plain-words refusal (and records it in the ledger).
- * @param {object} a  { tenantId, userId, feature, cfg (readAiConfig), thinkHarder, weight (override), record (default true: write the refusal), requestId, now, env }
+ * @param {object} a  { tenantId, userId, feature, cfg (readAiConfig), weight (override), record (default true: write the refusal), requestId, now, env }
  */
-export async function admit(db, { tenantId, userId = null, feature, cfg, thinkHarder = false, weight = null, recordRefusal = true, requestId = null, now = new Date(), env = process.env, selfHost = env.KEYSTONE_SELF_HOST === "1" }) {
-  const own = await ownKeyPresent(db, tenantId);
+export async function admit(db, { tenantId, userId = null, feature, cfg, weight = null, recordRefusal = true, requestId = null, now = new Date(), env = process.env, selfHost = env.KEYSTONE_SELF_HOST === "1" }) {
   if (cfg?.provider === "fake" && !fakeAllowed(env)) throw conflict("The test provider is not available here. Pick another provider in Settings → AI writer.", { code: "ai_fake_refused" });
   const policy = selfHost ? null : await loadPolicy(db, { tenantId, now });
-  const effFeature = thinkHarder ? "think_harder" : feature;
-  const choice = modelFor({ feature, cfgModel: cfg?.model, own, selfHost, thinkHarder, env });
+  const own = (await ownKeyState(db, { tenantId, policy, now })).usable;
+  const effFeature = feature;
+  const choice = modelFor({ feature, cfgModel: cfg?.model, own, selfHost, env });
   const w = weight ?? (policy?.weights?.[effFeature] ?? 0);
-  let verdict = { ok: true };
+  let verdict = { ok: true }, usageNow = null;
   if (!selfHost || own || policy) {
-    const usage = await usageFor(db, { tenantId, userId, window: policy?.window, now });
+    const usage = await usageFor(db, { tenantId, userId, window: policy?.window, now }); usageNow = usage;
     const plat = policy && !own ? await platformStatus(db, { policy, now, env }) : { paused: false, ceilingReached: false };
-    verdict = decide({ policy, usage, weight: w, own, thinkHarder, platform: plat, now: now.getTime(), resetsOnText: policy?.window ? fmtDay(policy.window.end) : null, teamSize: Math.max(usage.users, 1) });
+    verdict = decide({ policy, usage, weight: w, own, platform: plat, now: now.getTime(), resetsOnText: policy?.window ? fmtDay(policy.window.end) : null });
   }
-  const ctx = { tenantId, userId, feature: effFeature, provider: cfg?.provider ?? "anthropic", model: choice.model, effort: choice.effort, fallback: choice.fallback, own, policy, weight: w, planKey: policy?.planKey ?? null, requestId: requestId ?? randomUUID(), startedAt: Date.now() };
+  const ctx = { tenantId, userId, feature: effFeature, provider: cfg?.provider ?? "anthropic", model: choice.model, effort: choice.effort, fallback: choice.fallback, own, policy, weight: w, overage: verdict.overage === true, overageMinor: verdict.overageMinor ?? null, planKey: policy?.planKey ?? null, requestId: requestId ?? randomUUID(), startedAt: Date.now() };
+  const pastAllowance = Boolean(verdict.ok && policy && !own && policy.draftOverMinor != null && policy.creditsPerMonth != null && usageNow && usageNow.creditsUsed >= policy.creditsPerMonth - 1e-9);
+  if (verdict.ok && (verdict.overage || pastAllowance)) {   // a paid plan past its allowance: the host's budget must have room, and says so in a plain sentence if not
+    try { await (await ports()).entitlements?.assertAiBudget?.(db, { tenantId }); }
+    catch (e) { verdict = { ok: false, code: e?.code ?? "budget_reached", message: e?.message ?? "Your monthly budget is reached.", event: "refused_limit" }; }
+  }
   if (!verdict.ok) {
     if (recordRefusal) await recordDurably(db, tenantId, userId, { ...ctx, status: verdict.event ?? "refused_limit", code: verdict.code, usage: {}, durationMs: 0 });
     throw refusal(verdict);
@@ -80,6 +93,13 @@ export async function admit(db, { tenantId, userId = null, feature, cfg, thinkHa
  */
 export async function finish(db, ctx, { status = "ok", usage = {}, code = null, credits = null, model = null, feature = null }) {
   const out = await recordEvent(db, { ...ctx, feature: feature ?? ctx.feature, model: model || ctx.model, status, usage, code, credits: credits ?? ctx.weight, durationMs: Date.now() - ctx.startedAt });
+  // usage billing: a SUCCESSFUL draft or edit that took the workspace past its monthly allowance is one billable unit on a plan with a per-draft price. Failed or empty answers are never charged.
+  if (status === "ok" && ctx.policy && !ctx.own && ctx.policy.draftOverMinor != null && ctx.policy.creditsPerMonth != null && (usage?.output ?? 0) > 0 && ["draft", "edit"].includes(feature ?? ctx.feature) && (credits ?? ctx.weight) > 0) {
+    try {
+      const after = await usageFor(db, { tenantId: ctx.tenantId, userId: null, window: ctx.policy.window });
+      if (after.creditsUsed > ctx.policy.creditsPerMonth + 1e-9) { let P = null; try { P = await ports(); } catch { /* no host */ } await P?.entitlements?.noteAiBilled?.(db, { tenantId: ctx.tenantId, identifier: ctx.requestId }); }
+    } catch (e) { console.error(`ai billing note: ${e?.message ?? e}`); }
+  }
   if (status === "ok" && ctx.policy && !ctx.own) await announceLow(db, ctx).catch((e) => console.error(`ai allowance_low: ${e?.message ?? e}`));
   return out;
 }
@@ -101,16 +121,16 @@ async function announceLow(db, ctx) {
 export async function allowanceAllows(db, ctx, feature, { now = new Date() } = {}) {
   if (!ctx?.policy || ctx.own) return true;
   const usage = await usageFor(db, { tenantId: ctx.tenantId, userId: ctx.userId, window: ctx.policy.window, now });
-  const v = decide({ policy: { ...ctx.policy, perMinute: 0, perHour: 0, perDay: 0 }, usage, weight: ctx.policy.weights?.[feature] ?? 0, teamSize: Math.max(usage.users, 1), now: now.getTime() });
+  const v = decide({ policy: { ...ctx.policy, perMinute: 0, perHour: 0, perDay: 0 }, usage, weight: ctx.policy.weights?.[feature] ?? 0, now: now.getTime() });
   return v.ok;
 }
 
 /** What GET /api/documents/ai/usage returns (and the settings card, the Scribe footer and the API show): the allowance, what is used, when it resets, by kind of work. */
 export async function usageView(db, { tenantId, userId = null, cfg = null, now = new Date(), env = process.env, selfHost = env.KEYSTONE_SELF_HOST === "1" }) {
-  const own = await ownKeyPresent(db, tenantId);
   const policy = selfHost ? null : await loadPolicy(db, { tenantId, now });
-  if (own) return { mode: "own_key", plan: policy?.plan ?? null, allowance: null, used: null, remaining: null, percent: null, state: "none", resetsAt: null, byFeature: await breakdownFor(db, { tenantId, window: policy?.window, now }), thinkHarder: { available: policy ? policy.thinkHarder === true : true, credits: policy?.weights?.think_harder ?? null }, paused: false };   // Run 8: Think harder is Pro WHATEVER the key (limits.mjs refuses it on Free) — the screen reads this, so it must say the same
-  if (!policy) return { mode: "unmetered", plan: null, allowance: null, used: null, remaining: null, percent: null, state: "none", resetsAt: null, byFeature: await breakdownFor(db, { tenantId, now }), thinkHarder: { available: true, credits: null }, paused: false };
+  const own = (await ownKeyState(db, { tenantId, policy, now })).usable;
+  if (own) return { mode: "own_key", plan: policy?.plan ?? null, allowance: null, used: null, remaining: null, percent: null, state: "none", resetsAt: null, byFeature: await breakdownFor(db, { tenantId, window: policy?.window, now }), paused: false };   // Run 8: Think harder is Pro WHATEVER the key (limits.mjs refuses it on Free) — the screen reads this, so it must say the same
+  if (!policy) return { mode: "unmetered", plan: null, allowance: null, used: null, remaining: null, percent: null, state: "none", resetsAt: null, byFeature: await breakdownFor(db, { tenantId, now }), paused: false };
   const usage = await usageFor(db, { tenantId, userId, window: policy.window, now });
   const used = Math.round(usage.creditsUsed * 1000) / 1000;
   const fraction = fractionUsed(policy, usage.creditsUsed, usage.usdMicroUsed);
@@ -119,7 +139,6 @@ export async function usageView(db, { tenantId, userId = null, cfg = null, now =
     mode: "hosted", plan: policy.plan, allowance: policy.creditsPerMonth, used, remaining: Math.max(0, Math.round((policy.creditsPerMonth - usage.creditsUsed) * 1000) / 1000),
     percent: fraction == null ? null : Math.min(100, Math.round(fraction * 100)), state: plat.paused || plat.ceilingReached ? "paused" : stateOf(fraction), resetsAt: policy.window.end.toISOString(),
     byFeature: await breakdownFor(db, { tenantId, window: policy.window, now }),
-    thinkHarder: { available: policy.thinkHarder === true, credits: policy.weights?.think_harder ?? null, perMonth: policy.thinkPerMonth ?? 0, usedThisMonth: usage.thinkMonth, perDay: policy.thinkPerDay ?? 0, usedToday: usage.thinkDay },
     paused: plat.paused || plat.ceilingReached, models: { default: modelFor({ feature: "draft", cfgModel: cfg?.model, own, selfHost, env }).model },
   };
 }

@@ -2,7 +2,7 @@
 // Builds the developer documentation's Markdown versions from docustay/docs/*.md and the OpenAPI file:
 //   static/docs/<slug>.md      every page, plain Markdown (served at /docs/<slug>.md)
 //   static/docs/api-reference.md   generated from static/api/openapi.json (never written by hand)
-//   static/llms.txt, static/llms-full.txt   an index and the whole documentation, for tools that read docs
+//   (llms.txt and llms-full.txt are written by build-site-files.mjs from the page registry and these docs)
 // `node scripts/build-docs.mjs` writes; `--check` fails if what is on disk differs from what would be written (the test runs this).
 import fs from "node:fs";
 import path from "node:path";
@@ -13,6 +13,7 @@ const ROOT = path.join(HERE, "..");
 const DOCS = path.join(ROOT, "..", "docs");
 const BASE = process.env.DOCUSTAY_DOCS_BASE ?? "https://docs.docustay.app";
 
+import { expandInstall } from "../src/lib/site/packages.js";
 export function readPages(dir = DOCS) {
   return fs.readdirSync(dir).filter((f) => f.endsWith(".md")).sort().map((f) => {
     const raw = fs.readFileSync(path.join(dir, f), "utf8");
@@ -20,7 +21,7 @@ export function readPages(dir = DOCS) {
     if (!m) throw new Error(`${f}: missing front matter`);
     const meta = Object.fromEntries(m[1].split("\n").map((l) => { const i = l.indexOf(":"); return [l.slice(0, i).trim(), l.slice(i + 1).trim()]; }));
     if (!meta.title || !meta.description) throw new Error(`${f}: front matter needs title and description`);
-    return { slug: f.replace(/\.md$/, ""), title: meta.title, description: meta.description, order: Number(meta.order ?? 99), body: m[2].trim() + "\n" };
+    return { slug: f.replace(/\.md$/, ""), title: meta.title, description: meta.description, order: Number(meta.order ?? 99), body: expandInstall(m[2].trim()) + "\n" };
   }).sort((a, b) => a.order - b.order || a.slug.localeCompare(b.slug));
 }
 
@@ -37,19 +38,24 @@ function fieldsTable(spec, schema) {
 const HINT = { email: "jo@example.com", replyTo: "jo@example.com", url: "https://example.com/hook", returnUrl: "https://example.com/done", origin: "https://example.com", name: "Example", title: "Example", subject: "Example", message: "Example", slug: "mutual-nda", role: "Signer", seat: "signer_1", language: "en", reason: "Example" };
 const RECORD_KEYS = new Set(["source", "facts", "answers", "variableValues", "brief", "values", "fields", "data"]);
 const example = (spec, schema, key = "") => {
-  const s = deref(spec, schema) ?? {};
+  let s = deref(spec, schema) ?? {};
   if (s.example !== undefined) return s.example;
+  // R13-D373: a nullable field (type ["integer","null"]) was shown as "string", a union as its first branch was never taken, and every number was 0
+  // even where the API refuses 0 (people[].order has minimum 1), so a copied example answered 400. Same rules as the site's src/lib/docs/openapi.js.
+  if (Array.isArray(s.type)) s = { ...s, type: s.type.find((t) => t !== "null") ?? "null" };
+  const alt = s.anyOf ?? s.oneOf; if (alt?.length && !s.type) return example(spec, alt.find((a) => deref(spec, a)?.type !== "null") ?? alt[0], key);
   if (s.type === "array") return [example(spec, s.items, key)];
   if (s.properties) return Object.fromEntries(Object.entries(s.properties).map(([k, v]) => [k, example(spec, v, k)]));
-  if (s.type === "integer" || s.type === "number") return 0;
+  if (s.type === "integer" || s.type === "number") return s.minimum ?? (s.exclusiveMinimum !== undefined ? s.exclusiveMinimum + 1 : 0);
   if (s.type === "boolean") return false;
   if (s.enum?.[0] !== undefined) return s.enum[0];
   if (s.format === "uuid") return "6f1c1f0e-7a0c-4d1d-9b5e-2f0a7b1c3d4e";
   if (s.format === "email") return "jo@example.com";
   if (s.format === "uri" || s.format === "url") return "https://example.com/hook";
   if (s.format === "date-time") return "2026-12-01T09:00:00Z";
-  if (!s.type && RECORD_KEYS.has(key)) return {};
-  return HINT[key] ?? "string";
+  if ((!s.type || s.type === "object") && (RECORD_KEYS.has(key) || s.type === "object")) return {};   // a map (z.record) is an object, never "string"
+  const pick = [HINT[key], "string", "example-playbook"].filter(Boolean);
+  return s.pattern ? (pick.find((c) => new RegExp(s.pattern).test(c)) ?? pick[0]) : pick[0];
 };
 
 export function apiReference(spec) {
@@ -68,7 +74,7 @@ export function apiReference(spec) {
     // A required query parameter belongs in the example, or the example is refused with a 400 (Run 12: GET /search without q).
     const qs = params.filter((x) => x.in === "query" && x.required).map((x) => `${x.name}=${x.schema?.type === "integer" ? (x.schema.minimum ?? 1) : "example"}`).join("&");
     const url = `https://app.docustay.app${urlPath}${qs ? `?${qs}` : ""}`;
-    const lines = [`curl${method === "get" ? "" : ` -X ${method.toUpperCase()}`} ${url} \\`, `  -H "Authorization: Bearer $DOCUSTAY_KEY"${bodySchema || method === "post" ? " \\" : ""}`];
+    const lines = [`curl${method === "get" ? "" : ` -X ${method.toUpperCase()}`} ${url} \\`, `  -H "Authorization: Bearer $DOCUSTAY_API_KEY"${bodySchema || method === "post" ? " \\" : ""}`];
     if (method === "post") lines[lines.length - 1] += "\n" + `  -H "Idempotency-Key: $(uuidgen)"` + (bodySchema ? " \\" : "");
     if (bodySchema) lines.push(`  -H "Content-Type: application/json" \\`, `  -d '${JSON.stringify(example(spec, bodySchema))}'`);
     out.push("```bash", lines.join("\n"), "```", "");
@@ -84,8 +90,6 @@ export function build() {
   const all = [...pages, refPage].sort((a, b) => a.order - b.order);
   const files = new Map();
   for (const p of all) files.set(`docs/${p.slug}.md`, p.body);
-  files.set("llms.txt", [`# Docustay`, ``, `> Docustay sends documents for signature. REST API, SDKs for JavaScript/TypeScript and Python, embedded signing, webhooks, an MCP server and agent skills.`, ``, `## Documentation`, ``, ...all.map((p) => `- [${p.title}](${BASE}/docs/${p.slug}.md): ${p.description}`), ``, `## Machine-readable`, ``, `- [OpenAPI 3.1](${BASE}/api/openapi.json)`, `- [Postman collection](${BASE}/api/docustay.postman_collection.json)`, `- [All documentation in one file](${BASE}/llms-full.txt)`, ``].join("\n"));
-  files.set("llms-full.txt", all.map((p) => p.body).join("\n\n---\n\n"));
   return { files, pages: all, spec };
 }
 

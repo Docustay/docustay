@@ -3,10 +3,10 @@ import { test } from "node:test"; import assert from "node:assert/strict"; impor
 const run = (env, code) => spawnSync(process.execPath, ["--input-type=module", "-e", code], { env: { ...process.env, ...env }, encoding: "utf8", cwd: new URL("..", import.meta.url).pathname });
 const probe = `const a = await import(${JSON.stringify(new URL("../src/documents/addon.mjs", import.meta.url).href)}); const d = await import(${JSON.stringify(new URL("../src/documents/proDoors.mjs", import.meta.url).href)}); await a.addonReady;
  let refused = null; try { await d.bulkSend({}, {}); } catch (e) { refused = e.detail?.code ?? e.message; }
- console.log(JSON.stringify({ installed: a.addonInstalled(), flows: a.addonInstalled() ? "real" : await d.listFlows({}), refused }));`;
-test("Community build: add-on absent, readers empty, writers refuse with pro_addon_missing", () => {
+ console.log(JSON.stringify({ installed: a.addonInstalled(), refused }));`;
+test("Community build: add-on absent, writers refuse with pro_addon_missing", () => {
   const r = run({ DOCUSTAY_PRO_ADDON: "off" }, probe); assert.equal(r.status, 0, r.stderr);
-  const o = JSON.parse(r.stdout.split("\n").filter((l) => l.startsWith("{")).pop()); assert.equal(o.installed, false); assert.deepEqual(o.flows, []); assert.equal(o.refused, "pro_addon_missing");
+  const o = JSON.parse(r.stdout.split("\n").filter((l) => l.startsWith("{")).pop()); assert.equal(o.installed, false); assert.equal(o.refused, "pro_addon_missing");
 });
 import { existsSync } from "node:fs";
 test("Pro build (positive control): add-on installed, the same writer is the real one and does NOT refuse with the upgrade message", { skip: !existsSync(new URL("../pro/index.mjs", import.meta.url)) && "the public export carries no add-on" }, () => {

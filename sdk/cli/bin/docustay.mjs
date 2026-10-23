@@ -5,33 +5,30 @@ import readline from "node:readline";
 import { Docustay, verifyWebhook } from "../../js/src/index.js";
 import { parseArgs, list, parseParty } from "../src/args.mjs";
 import { readConfig, writeConfig, isTestKey, mask, configPath, DEFAULT_URL } from "../src/config.mjs";
-import { listen } from "../src/listen.mjs";
+import { listen, sameTopics, triggerTopic } from "../src/listen.mjs";
 
 // a plan limit, in plain words: what is used, when it opens again, and where Pro is (the API's 403 with detail.code)
 const planLimit = (e) => {
-  if (e?.code !== "plan_template_limit" && e?.code !== "plan_document_limit") return null;
+  if (!["plan_template_limit", "plan_document_limit", "plan_signer_limit"].includes(e?.code)) return null;
   const d = e.detail ?? {}, when = d.resetsAt ? new Date(d.resetsAt).toLocaleDateString("en-US", { month: "long", day: "numeric", timeZone: "UTC" }) : "the first of next month";
-  const what = e.code === "plan_template_limit" ? "new templates" : "documents";
+  const what = e.code === "plan_template_limit" ? "new templates" : e.code === "plan_signer_limit" ? "different signers" : "documents";
   return `your plan's ${what} for this month are used (${d.used ?? "?"} of ${d.limit ?? "?"}). Everything you have still works. More open on ${when}, or see Pro: https://docustay.app/pricing#pro`;
 };
-const VERSION = "0.1.2";
+const VERSION = "0.2.0";
 const HELP = `docustay ${VERSION} — the Docustay command line
 
   docustay login [--key dsk_…] [--url https://…]     save your API key (kept in ${configPath()}, readable only by you)
   docustay whoami                                    check the saved key
   docustay detect <file.pdf> [--json]                find the fields on a PDF (nothing is stored)
-  docustay ai usage                                  AI credits used, left, and when they reset
-  docustay forms [list | templates | show <id> | responses <id>] [--json]
-                                                     your forms (one link many people fill in), the form templates, and their responses
-  docustay search <words> [--per 6] [--json]          documents, templates, forms and people, best first
-  docustay contracts [list [--q …] | date <id> --kind start|end|notice|renewal --date YYYY-MM-DD | --clear] [--json]
-                                                     signed contracts and their key dates; correct one by hand (the signed PDF never changes)
+  docustay ai usage                                  AI drafts used, left, and when they reset
+  docustay preflight <action> [--documents 20] [--people 2] [--bytes 30000000] [--recipients a@x.com,b@y.com] [--item custom_plays] [--json]
+                                                     ask what an action would cost and what your options are, before doing it (nothing is changed)
+  docustay search <words> [--per 6] [--json]          documents, templates and people, best first
   docustay payments [list | refund <id> --reason "…" [--amount-minor 500] --yes] [--json]
                                                      payments taken while signing; a refund goes through Stripe (leave out the amount for the rest)
-  docustay templates [library [--kind document|form] | customize <slug> [--name "…"]] [--json]
+  docustay templates [library | customize <slug> [--name "…"]] [--json]
                                                      the built-in templates; customize one into your own copy (a new template)
   docustay playbooks [list | on <name> | off <name>] [--json]   packs of templates and skills; switch one on or off
-  docustay automations [list | on <id> | off <id>] [--json]     what runs on its own when a document is signed (switching one on needs Pro)
   docustay documents [list [--state sent|completed|voided|declined] [--limit 20] | show <id> | remind <id> [--seat signer_1] | void <id> --reason "…" --yes] [--json]
                                                      your documents: the list, one document's people and events, a reminder, or cancel one that is out for signature
   docustay webhooks [list | create --url https://… [--events a,b] [--name "…"] | test <id> [--topic …] | rotate <id> | delete <id> --yes | deliveries <id>] [--json]
@@ -84,17 +81,19 @@ const COMMANDS = {
     if (positional[0] !== "usage") fail("did you mean:  docustay ai usage");
     const { docustay } = client();
     const u = await docustay.aiUsage();
-    show(flags, u, () => out(u.mode === "hosted" ? `AI credits: ${u.used} of ${u.allowance} used (${u.percent}%), ${u.remaining} left${u.resetsAt ? `, resets ${u.resetsAt.slice(0, 10)}` : ""}${u.paused ? " — AI is paused" : ""}` : u.mode === "own_key" ? "AI runs on your own provider key: nothing is metered here." : "AI is not metered on this install."));
+    show(flags, u, () => out(u.mode === "hosted" ? `AI drafts: ${u.used} of ${u.allowance} included drafts used (${u.percent}%), ${u.remaining} left${u.resetsAt ? `, resets ${u.resetsAt.slice(0, 10)}` : ""}${u.paused ? " — AI is paused" : ""}` : u.mode === "own_key" ? "AI runs on your own provider key: nothing is metered here." : "AI is not metered on this install."));
   },
-  async forms({ flags, positional }) {
-    const [what = "list", id] = positional; const { docustay } = client();
-    if (what === "list") { const r = await docustay.listForms(); return show(flags, r, () => { if (!r.forms.length) out("No forms yet. Make one under Templates → Form templates."); for (const f of r.forms) out(`${f.id}  ${(f.closed ? "closed" : f.open ? "open" : f.slug ? "off" : "not published").padEnd(13)} ${String(f.responses).padStart(5)} responses  ${f.name}${f.slug ? `  /f/…/${f.slug}` : ""}`); }); }
-    if (what === "templates") { const r = await docustay.listFormTemplates(); return show(flags, r, () => { for (const t of r.templates) out(`${t.slug.padEnd(34)} ${t.title}${t.counterSign ? "  (counter-signed)" : ""}`); }); }
-    if (!["show", "responses"].includes(what)) fail(`"forms ${what}" is not a forms command. Try:  docustay forms list | templates | show <id> | responses <id>`);
-    if (!id || !/^[0-9a-f-]{36}$/i.test(id)) fail(`give the form id:  docustay forms ${what} <id>`);
-    if (what === "show") { const f = await docustay.getForm(id); return show(flags, f, () => out(`${f.name}\n${f.link ? `link: ${f.link}` : f.slug ? `link name: ${f.slug}` : "not published"}\n${f.open ? "open" : "closed"} · ${f.responses} responses${f.closed ? ` · closed (${f.closed})` : ""}`)); }
-    if (what === "responses") { const r = await docustay.listFormResponses(id, { limit: flags.limit ? Number(flags.limit) : undefined }); return show(flags, r, () => { if (!r.responses.length) out("No responses yet."); for (const x of r.responses) out(`${x.id}  ${String(x.state).padEnd(16)} ${x.name ?? ""} <${x.email ?? ""}>`); }); }
-    fail("did you mean:  docustay forms list | templates | show <id> | responses <id>");
+  async preflight({ flags, positional }) {
+    const action = positional[0]; if (!action) fail("give an action:  docustay preflight send_document | bulk_send | invite_person | ai_draft | create_template | upload | use_feature | connect_payments");
+    const { docustay } = client();
+    const num = (v) => (v == null || v === true ? undefined : Number(v));
+    const r = await docustay.preflight({ action, documents: num(flags.documents), people: num(flags.people), bytes: num(flags.bytes), recipients: typeof flags.recipients === "string" ? flags.recipients.split(",").map((s) => s.trim()).filter(Boolean) : undefined, item: typeof flags.item === "string" ? flags.item : undefined });
+    show(flags, r, () => {
+      out(`${r.allowed ? "allowed" : "blocked"}  (${r.severity}${r.reason ? `, ${r.reason}` : ""})`);
+      if (r.message) out(r.message);
+      if (r.cost?.minor) out(`cost: $${(r.cost.minor / 100).toFixed(2)}${r.cost.per === "month" ? " a month" : ""}${r.cost.prorated ? ", prorated" : ""}`);
+      for (const o of r.options ?? []) out(`  ${o.label}${o.priceMinor ? `  $${(o.priceMinor / 100).toFixed(o.priceMinor % 100 ? 2 : 0)}${o.per ? ` ${o.per}` : ""}` : ""}`);
+    });
   },
   async search({ flags, positional }) {
     const q = positional.join(" ").trim(); if (!q) fail("give some words to look for:  docustay search <words>");
@@ -107,25 +106,6 @@ const COMMANDS = {
       for (const t of g.templates ?? []) out(`${t.kind.padEnd(8)}  ${t.id}  ${t.title}`);
       for (const p of g.people ?? []) out(`person    ${p.id}  ${p.name}${p.email && p.email !== p.name ? ` <${p.email}>` : ""}`);
     });
-  },
-  async contracts({ flags, positional }) {
-    const [what = "list", id] = positional; const { docustay } = client();
-    if (what === "list") {
-      const r = await docustay.listContracts({ q: flags.q && flags.q !== true ? flags.q : undefined, limit: flags.limit ? Number(flags.limit) : undefined });
-      return show(flags, r, () => {
-        if (!r.contracts.length) return out("No signed contracts yet.");
-        for (const c of r.contracts) { const d = c.dates ?? {}; const when = ["end", "renewal", "notice"].map((k) => (d[k]?.date ? `${k} ${d[k].date}` : null)).filter(Boolean).join(" · ");
-          out(`${c.id}  ${(c.executedAt ?? "").slice(0, 10)}  ${c.title}${when ? `  (${when})` : ""}`); }
-        out(`${r.summary.signed} signed · ${r.summary.renewingIn30Days} renewing or ending in the next 30 days`);
-      });
-    }
-    if (what !== "date") fail(`"contracts ${what}" is not a contracts command. Try:  docustay contracts list | date <id> --kind end --date YYYY-MM-DD`);
-    if (!id || !/^[0-9a-f-]{36}$/i.test(id)) fail("give the contract id:  docustay contracts date <id> --kind end --date YYYY-MM-DD");
-    if (!["start", "end", "notice", "renewal"].includes(flags.kind)) fail("say which date with --kind start | end | notice | renewal");
-    const clear = flags.clear === true; const date = flags.date && flags.date !== true ? flags.date : null;
-    if (!clear && !/^\d{4}-\d{2}-\d{2}$/.test(date ?? "")) fail("give the date as --date YYYY-MM-DD (or --clear to remove it)");
-    const r = await docustay.setContractDate(id, { kind: flags.kind, date: clear ? null : date });
-    show(flags, r, () => out(clear ? `✔ the ${flags.kind} date is cleared` : `✔ the ${flags.kind} date is now ${date} (kept as your correction)`));
   },
   async payments({ flags, positional }) {
     const [what = "list", id] = positional; const { docustay, config } = client();
@@ -150,22 +130,13 @@ const COMMANDS = {
     const r = await docustay.refundPayment(id, { amountMinor, reason });
     show(flags, r, () => out(`✔ refunded through Stripe — ${r.refundedLabel} refunded on this payment in all (${r.status.replace("_", " ")})`));
   },
-  // Run 9 Part 4R: what runs on its own is an AUTOMATION; a playbook is a pack of templates and skills; the built-in templates are the library
-  async automations({ flags, positional }) {
-    const [what = "list", id] = positional; const { docustay } = client();
-    if (what === "list") { const r = await docustay.listAutomations(); const list = Array.isArray(r) ? r : (r?.automations ?? []); return show(flags, r, () => { if (!list.length) out("No automations yet. Build one under Automations."); for (const p of list) out(`${p.id}  ${(p.enabled ? "on" : "off").padEnd(4)} ran ${p.runCount ?? 0}×  ${p.name ?? p.title}`); }); }
-    if (!["on", "off"].includes(what)) fail(`"automations ${what}" is not an automations command. Try:  docustay automations list | on <id> | off <id>`);
-    if (!id || !/^[0-9a-f-]{36}$/i.test(id)) fail(`give the automation id:  docustay automations ${what} <id>`);
-    const r = await docustay.setAutomationOn(id, what === "on");
-    show(flags, r, () => out(`✔ ${r.automation?.name ?? "the automation"} is ${r.automation?.enabled ? "on" : "off"}`));
-  },
   async documents({ flags, positional }) {
     const [what = "list", id] = positional; const { docustay } = client();
     if (what === "list") { const r = await docustay.listDocuments({ ...(flags.state && flags.state !== true ? { state: flags.state } : {}), limit: Number(flags.limit) || 20 }); return show(flags, r, () => { if (!r.documents.length) out("No documents."); for (const d of r.documents) out(`${d.id}  ${String(d.state).padEnd(10)} ${d.test ? "[test] " : ""}${d.title}  (${Array.isArray(d.parties) ? d.parties.map((x) => x.name || x.email).join(", ") : `${d.parties ?? 0} ${d.parties === 1 ? "person" : "people"}`})`); }); }
     if (!id) fail(`give the document's id:  docustay documents ${what} <id>`);
     if (what === "show") { const d = await docustay.getDocument(id); return show(flags, d, () => { out(`${d.title}  —  ${d.state}${d.test ? " (test)" : ""}`); for (const x of d.parties ?? []) out(`  ${x.seat}  ${x.name || ""} <${x.email}>  ${x.status}${x.declineReason ? `  declined: ${x.declineReason}` : ""}`); for (const e of d.events ?? []) out(`  ${e.at}  ${e.text ?? e.kind}`); }); }
     if (what === "remind") { const r = await docustay.remind(id, { seat: flags.seat && flags.seat !== true ? flags.seat : undefined }); return show(flags, r, () => out(`✔ reminder sent for ${id}`)); }
-    if (what === "void") { if (!flags.reason || flags.reason === true) fail('say why:  docustay documents void <id> --reason "…" --yes'); if (!flags.yes) fail("cancelling a document cannot be undone: add --yes to confirm"); const r = await docustay.voidDocument(id, flags.reason); return show(flags, r, () => out(`✔ ${id} is cancelled; the people on it were told`)); }
+    if (what === "void") { if (!flags.reason || flags.reason === true) fail('say why:  docustay documents void <id> --reason "…" --yes'); if (!flags.yes) fail("cancelling a document cannot be undone: add --yes to confirm"); const r = await docustay.voidDocument(id, flags.reason); return show(flags, r, () => out(`✔ ${id} is cancelled; ${typeof r?.notified !== "number" ? "the people on it are being told" : r.notified === 0 ? "nobody was emailed (no one on it had been sent it yet)" : r.notified === 1 ? "1 person was emailed" : `${r.notified} people were emailed`}`)); }   // R13-D222: say what happened, not what should have
     fail(`"documents ${what}" is not a documents command. Try:  docustay documents list | show <id> | remind <id> | void <id> --reason "…" --yes`);
   },
   async webhooks({ flags, positional }) {
@@ -189,9 +160,9 @@ const COMMANDS = {
   },
   async templates({ flags, positional }) {
     const [what = "library", slug] = positional; const { docustay } = client();
-    if (what === "library") { const kind = ["document", "form"].includes(flags.kind) ? flags.kind : undefined; const r = await docustay.listLibraryTemplates({ kind }); return show(flags, r, () => { if (!r.shown) out("This workspace has hidden the built-in templates (Settings → Templates)."); for (const t of r.templates) out(`${t.kind.padEnd(8)} ${t.slug.padEnd(34)} ${t.title}`); }); }
+    if (what === "library") { const r = await docustay.listLibraryTemplates({}); return show(flags, r, () => { if (!r.shown) out("This workspace has hidden the built-in templates (Settings → Templates)."); for (const t of r.templates) out(`${t.kind.padEnd(8)} ${t.slug.padEnd(34)} ${t.title}`); }); }
     if (what === "customize") { if (!slug) fail("give the built-in's slug:  docustay templates customize <slug>"); const r = await docustay.customizeLibraryTemplate(slug, { name: flags.name }); return show(flags, r, () => out(`✔ your own copy of ${slug}: template ${r.templateId}`)); }
-    fail(`"templates ${what}" is not a templates command. Try:  docustay templates library [--kind document|form] | customize <slug> [--name "…"]`);
+    fail(`"templates ${what}" is not a templates command. Try:  docustay templates library | customize <slug> [--name "…"]`);
   },
   // whoami also says where the plan's monthly numbers stand (documents and, on Free, new templates)
   async whoami({ flags }) {
@@ -214,11 +185,18 @@ const COMMANDS = {
     if (target && !/^http:\/\/(localhost|127\.0\.0\.1|\[::1\])(:\d+)?(\/|$)|^https?:\/\//.test(target)) fail("--forward-to must be a web address such as http://localhost:3000/webhooks");
     const events = flags.events && flags.events !== true ? String(flags.events).split(",").map((s) => s.trim()).filter(Boolean) : ["documents.document.executed", "documents.document.sent", "documents.document.declined"];
     let id = config.relayWebhookId, secret = null;
-    if (id) { const have = (await docustay.listWebhooks()).webhooks.find((w) => w.id === id && w.status === "active" && w.relay); if (!have) id = null; }
+    if (id) {
+      const have = (await docustay.listWebhooks()).webhooks.find((w) => w.id === id && w.status === "active" && w.relay);
+      if (!have) id = null;
+      // R13-D342: --events asks for other events than the reused webhook receives: replace it, so a trigger of those events is accepted
+      else if (flags.events && flags.events !== true && !sameTopics(have.eventTypes, events)) { await docustay.deleteWebhook(id).catch(() => {}); id = null; out("  The listen webhook from before received other events, so it was replaced: the signing secret below is new."); }
+    }
     if (!id) {
       const made = await docustay.createWebhook({ relay: true, name: "docustay listen", eventTypes: events });
       id = made.id; secret = made.secret; writeConfig({ relayWebhookId: id });
     }
+    // R13-D250: the docs say `listen --rotate` makes a new signing secret for the relay webhook it reuses
+    if (flags.rotate && !secret) { const r = await docustay.rotateWebhookSecret(id); secret = r.secret; }
     out(`✔ listening (webhook ${id})${target ? `, forwarding to ${target}` : ""}`);
     if (secret) out(`  Signing secret (shown once — your local code verifies with it):  ${secret}`);
     else out("  Reusing the webhook from before; its secret was shown the first time. Rotate it with  docustay trigger --rotate  if you lost it.");
@@ -232,7 +210,11 @@ const COMMANDS = {
     const { docustay, config } = client();
     if (!config.relayWebhookId) fail("run  docustay listen  first, so there is a webhook to send to");
     if (flags.rotate) { const r = await docustay.rotateWebhookSecret(config.relayWebhookId); return out(`✔ new signing secret (shown once): ${r.secret}`); }
-    const r = await docustay.testWebhook(config.relayWebhookId, flags.topic && flags.topic !== true ? flags.topic : undefined);
+    const hook = (await docustay.listWebhooks()).webhooks.find((w) => w.id === config.relayWebhookId && w.status === "active");
+    if (!hook) fail("the listen webhook is gone: run  docustay listen  again");
+    const pick = triggerTopic(hook.eventTypes, flags.topic && flags.topic !== true ? String(flags.topic) : null);
+    if (pick.error) fail(pick.error);
+    const r = await docustay.testWebhook(config.relayWebhookId, pick.topic);
     out(r.outcome === "delivered" ? `✔ test event ${r.topic} queued for docustay listen` : `✘ ${r.outcome}: ${r.error ?? ""}`);
   },
   async verify({ flags }) {

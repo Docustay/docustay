@@ -5,7 +5,8 @@
 //   3. every required box has someone to fill it (a box whose seat has nobody signing in it, with no answer from the sender, can never be filled);
 //   4. the email matches the document: a labelled number ("unit 4", "invoice 1182"), an amount, or the name the email greets, that the document contradicts.
 // Every row carries `text` (English, for the API) and `key` + `vars` (an ICU sentence the web catalogue translates), like checkPdfDraft's rows (R8-47).
-import { parsePdfBodyData } from "./pdfBody.mjs";
+import { parsePdfBodyData, validateFieldValue } from "./pdfBody.mjs";
+import { emptySenderBoxes } from "./senderBoxes.mjs";
 import { checkRuleOrderDetailed } from "./rules.mjs";
 import { getPdfDocument } from "./pdfDocs.mjs";
 import { documentsOfSend } from "./parties.mjs";
@@ -55,8 +56,8 @@ export function checkBeforeSending({ fields = [], pageRules = [], parties = [], 
   // 2 · order
   const orderRows = [];
   if (order === "sequential") {
-    const steps = [...new Set(parties.filter((p) => ["signer", "approver", "assistant"].includes(p.action_role ?? "signer")).map((p) => p.position ?? 1))].sort((a, b) => a - b);
-    for (let i = 0; i < steps.length; i += 1) if (steps[i] !== i + 1) { orderRows.push(row("order", false, "Nobody acts at step {n}, so the signing would stop there. Number the steps 1, 2, 3 without a gap.", { n: i + 1 }, { fix: { step: "people" } })); break; }
+    // R13-D231: a gap in the step numbers is not a stop. The engine always moves to the lowest unfinished step (pdfSend.activeParties), so a viewer numbered 4 between
+    // signers 3 and 5 changes nothing; the old "Nobody acts at step {n}, so the signing would stop there" was false and blocked a send that works.
   }
   const stepOf = (role) => { const ps = signers.filter((p) => p.role === role); return ps.length ? Math.min(...ps.map((p) => (order === "sequential" ? (p.position ?? 1) : 1))) : Number.MAX_SAFE_INTEGER; };
   if (fields.some((f) => f.show_when || f.calc) || pageRules.length) for (const m of checkRuleOrderDetailed({ fields, pages: pageRules, stepOf }).slice(0, 4)) orderRows.push({ kind: "order", ok: false, ...m, fix: { step: "prepare" } });
@@ -65,6 +66,11 @@ export function checkBeforeSending({ fields = [], pageRules = [], parties = [], 
   // 3 · required boxes with nobody to fill them (signature boxes are row 1; a box that works itself out, a locked answer or one the sender already filled needs nobody)
   const fillable = new Set(signers.map((p) => p.role));
   const orphans = fields.filter((f) => f.required && !["signature", "date_signed"].includes(f.type) && !f.calc && !(f.locked && f.default !== undefined) && !(typeof f.default === "string" && f.default.trim()) && !fillable.has(f.role));
+  // the boxes that are the SENDER's to fill (Filled in by: Sender) and still empty: Send refuses them, so Check says so too, with the box to go to
+  const mine = emptySenderBoxes(fields);
+  for (const f of mine.slice(0, 6)) rows.push(row("required", false, "“{box}” is yours to fill in before sending.", { box: labelOf(f) }, { fix: { step: "check", field: f.id }, show: { page: f.page, x: f.x, y: f.y, w: f.w, h: f.h, field: f.id } }));
+  const wrong = fields.filter((f) => f.sender === true && typeof f.default === "string" && f.default.trim() && !/\{\{/.test(f.default) && validateFieldValue({ ...f, required: false }, f.default));
+  for (const f of wrong.slice(0, 6)) rows.push(row("required", false, "“{box}” {problem}.", { box: labelOf(f), problem: validateFieldValue({ ...f, required: false }, f.default) }, { fix: { step: "check", field: f.id }, show: { page: f.page, x: f.x, y: f.y, w: f.w, h: f.h, field: f.id } }));
   if (!orphans.length) rows.push(row("required", true, "Every required box has someone to fill it"));
   else for (const f of orphans.slice(0, 6)) rows.push(row("required", false, "“{box}” is empty and nobody is set to fill it.", { box: labelOf(f) }, { fix: { step: "prepare", field: f.id }, show: { page: f.page, x: f.x, y: f.y, w: f.w, h: f.h, field: f.id } }));
 

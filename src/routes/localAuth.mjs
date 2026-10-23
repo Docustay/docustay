@@ -10,8 +10,17 @@ import { forbidden, invalid, notFound } from "../http/errors.mjs";
 import { formSubmitLimiter } from "../http/rateLimit.mjs";
 import { localAuthEnabled, signUpLocal, signInLocal } from "../auth/localIdentity.mjs";
 import { activateWorkspace } from "../product/docustay.mjs";
+import { previewInvite } from "../auth/invite.mjs";
 
 export const selfHosted = (env = process.env) => env.KEYSTONE_SELF_HOST === "1";
+/** R13-D280: a self-hosted install takes no PUBLIC sign-ups, but a teammate its owner invited must be able to choose a password. The permission is the invitation itself: live (the preview
+ *  refuses a used, expired or cancelled one) and for this exact address. `preview` is previewInvite. → true when this sign-up may go ahead. */
+export async function maySignUpLocally({ selfHost, email, inviteToken, preview }) {
+  if (!selfHost) return true;
+  if (typeof inviteToken !== "string" || !inviteToken) return false;
+  const inv = await preview({ presented: inviteToken }).catch(() => null);
+  return Boolean(inv?.email) && String(inv.email).trim().toLowerCase() === String(email ?? "").trim().toLowerCase();
+}
 const sameToken = (a, b) => typeof a === "string" && typeof b === "string" && a.length > 0 && a.length === b.length && timingSafeEqual(Buffer.from(a), Buffer.from(b));
 const slugOf = (name) => (name.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 40) || "workspace");
 
@@ -19,10 +28,10 @@ export function registerLocalAuthRoutes(app) {
   const guard = (c) => { if (!localAuthEnabled()) throw notFound("no such route"); return c.get("clientIp") ?? null; };
   app.post("/api/auth/local/signup", async (c) => {
     const ip = guard(c);
-    // a self-hosted install does not take public sign-ups: its owner is created once, through the setup token
-    if (selfHosted()) throw forbidden("This install does not take public sign-ups.");
     formSubmitLimiter("local-signup", ip, { limit: 20, windowMs: 3_600_000 });
     const body = await c.req.json().catch(() => null);
+    // a self-hosted install does not take public sign-ups: its owner is created once, through the setup token, and everyone else arrives with an invitation
+    if (!(await maySignUpLocally({ selfHost: selfHosted(), email: body?.email, inviteToken: body?.inviteToken, preview: previewInvite }))) throw forbidden("This install does not take public sign-ups.");
     return c.json(await signUpLocal({ email: body?.email, password: body?.password }), 201);
   });
   app.post("/api/auth/local/signin", async (c) => {

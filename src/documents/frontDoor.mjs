@@ -25,9 +25,8 @@
 //   cycle with this file's own closure and read DOCUMENTS_DOMAIN at module top level — domain.mjs imports
 //   nothing, so listing it first guarantees it is evaluated before anything that could loop back.
 export { DOCUMENTS_DOMAIN } from "./domain.mjs";
+export { notInDocustay, notOnHostedDocustay } from "./notInDocustay.mjs";   // Docustay v1: routes the hosted product no longer offers
 export { noteAccess, listAccess, accessCsv } from "./accessLog.mjs";   // Run 7 part 6: the access log (always on)
-export { listMessages as listEmailMessages, saveMessage as saveEmailMessage, resetMessage as resetEmailMessage } from "./emailMessages.mjs";
-export { previewMessage as previewEmailMessage } from "./emailPreview.mjs";
 export { listEmails, ratesFor as emailRates, guardState as emailGuardState } from "./emailLog.mjs";
 export { referenceFilter, documentEventReference, saveTemplateReference, cleanReference } from "./reference.mjs";
 export { shareNote } from "./noteShare.mjs";
@@ -37,7 +36,7 @@ export { shareNote } from "./noteShare.mjs";
 //   `tx.query` on `keystone.document_instance`, no import at all. `instanceCreatedBy` (api.mjs) is
 //   the door now; re-exported here since recipientResolvers.mjs is a general caller, not booking's
 //   own four-function door (api.mjs's original, narrower scope — see this file's header).
-export { documentAgingRelation, instanceCreatedBy, instanceNotificationFacts, documentNoticeFacts, inboxFacts, declineFacts, personHasRecentDocument, peopleWithRecentDocuments } from "./api.mjs";
+export { documentAgingRelation, instanceCreatedBy, instanceNotificationFacts, instanceAnalyticsFacts, documentNoticeFacts, inboxFacts, declineFacts, personHasRecentDocument, peopleWithRecentDocuments } from "./api.mjs";
 export { instrumentSnapshot } from "./preview.mjs";
 // ★ Shared document engine (design §6): the worker runs a queued AI draft through this one function.
 export { runAiJob, runAiJobDetached, rescueStaleAiJobs, createAiJob, getAiJob, cancelAiJob, readAiConfig } from "./engine/ai/jobs.mjs";
@@ -65,10 +64,7 @@ export { VARIABLES } from "./variableCatalogue.mjs";
 //   exports; time/due.mjs imports them through here rather than reaching into documents/ directly.
 export { DOCUMENT_LAPSED_FACT, DOCUMENT_REMINDER_DUE_FACT } from "./dueFacts.mjs";
 export { sendCheckFor } from "./sendCheck.mjs";   // Run 9: the check before sending
-// Run 9 Part 3.6 — a playbook that runs (Pro): the canvas's store, and the host job's start and resume (as the playbook's owner)
-export { flowTemplates, playbookNoticeFacts, playbookTitles, listFlows, getFlow, saveFlow, setFlowEnabled, archiveFlow, testFlow, playbooksToStart, playbookRunActor, startPlaybookRun, resumePlaybookRun, PLAYBOOK_WAIT_DUE_FACT } from "./proDoors.mjs";
 // Run 9 Part 3.4 — the contract repository's key dates: read into the repository by the sweep, and the Pro renewal reminder
-export { KEY_DATES_BACKFILL_FACT, KEY_DATE_DUE_FACT, listContracts, keyDatesForEmail, correctKeyDate } from "./keyDates.mjs";
 
 // QUEUE §23.3.6 — the retention guard and what a person's delete does to their documents (the shared Delete asks the island; it never names the tables).
 export { documentDeleteBlockers } from "./retention.mjs";
@@ -76,8 +72,8 @@ export { prepareForPersonDelete as prepareDocumentsForPersonDelete, personDelete
 
 // QUEUE §23.3.4 — the organisation's sending identity: one function sends any email with it (the signed-copy email, notices); the rest serve the settings screen and the provider's delivery events.
 export { alreadyEmailed as documentEmailAlreadySent } from "./emailLog.mjs";
-export { sendFormResponseNotice } from "./emailNotices.mjs";
 export { sentenceCase } from "./settings.mjs";
+export { removeDomain as removeEmailDomain } from "./emailIdentity.mjs";   // R13-D015: Settings → Domains and email, "Remove" on the sending domain
 export { sendMail as sendDocumentMail, noteEmailDelivery, identityStatus as emailIdentityStatus, startDomain as startEmailDomain, verifyDomain as verifyEmailDomain, saveSmtpPassword, sendTestEmail, startMailbox as startEmailMailbox, removeMailbox as removeEmailMailbox } from "./emailIdentity.mjs";
 
 // QUEUE §23.4 — uploaded documents: upload and read the pages, the draft (autosave, people, checks), send / track / remind / void, the recipient's side, and the pure shapes the browser shares.
@@ -86,7 +82,7 @@ export { getPdfDocument, savePdfDocument, deletePdfDraft, searchRecipients, save
 export { sendPdfDocument, sendTestToSender, remindPdfParties, signNowLink, reassignParty, voidPdfDocument, trackPdfDocument, mintPartyLink, advanceSequence } from "./pdfSend.mjs";
 export { openForParty, openAsTest, savePartyProgress, signAsParty, declineAsParty, delegateAsParty, PDF_CONSENT, PAYMENT_HOLD_LAPSED_FACT } from "./pdfSigning.mjs";
 export { signingPolicy, signatureIdOf } from "./signingPolicy.mjs";
-export { shareDownloadLink, mintDownloadLink, openDownload, sendDownloadCode, verifyDownloadCode, readDownload, DOWNLOAD_PURPOSE } from "./downloads.mjs";
+export { shareDownloadLink, mintDownloadLink, withSignedCopyLink, openDownload, sendDownloadCode, verifyDownloadCode, readDownload, DOWNLOAD_PURPOSE } from "./downloads.mjs";
 export { richTemplateForm, createDraftFromRichTemplate } from "./richDrafts.mjs";
 export { startUpload, uploadStatus, putPart, completeUpload, PART_BYTES } from "./uploads.mjs";
 
@@ -99,7 +95,6 @@ export { TAG_TYPES } from "./textTags.mjs";
 export { STARTERS, starter, starterFields } from "./starters/index.mjs";
 export { createTemplateFromStarter, starterCatalogue } from "./starters/clone.mjs";
 export { embedOriginsForParty, assertEmbedOrigin } from "./pdfSend.mjs";
-export { documentReport, documentReportCsv } from "./reports.mjs";
 export { listTeams, createTeam, renameTeam, deleteTeam, setTeamMembers, assignTeam, teamOf } from "./teams.mjs";
 export { kioskTemplates, kioskStart } from "./pdfKiosk.mjs";
 export { extendParty, remindDueParties, nextReminderAt } from "./pdfSend.mjs";
@@ -107,7 +102,7 @@ export { bulkSend, BULK_MAX_ROWS } from "./proDoors.mjs";
 export { readSelfServe, selfServeOwner, startSelfServe } from "./pdfSelfServe.mjs";
 export { startPayment, confirmPayment, refundPayment, recordCheckoutCompleted, recordSubscriptionEvent, recordDisputeEvent, refreshStripeFees, listWorkspacePayments, paidOnProThisMonth, sendReceiptsForSend, PAYMENT_RECEIPT_DUE_FACT, PAYMENT_FEE_DUE_FACT } from "./pdfPayments.mjs";
 export { exportOrganization, personReport, erasePerson, documentsCreatedBy } from "./pdfData.mjs";
-export { apiTestSign, apiListDocuments, apiGetDocument, apiTemplates, apiSendFromTemplate, apiVoid, apiSignedCopy, apiTemplate, apiRemind, apiEmbedSession, assertTestKeyMay } from "./pdfApi.mjs";
+export { apiTestSign, apiListDocuments, apiGetDocument, apiTemplates, apiSendFromTemplate, setSendValues, DOCUMENT_STATES, apiVoid, apiSignedCopy, apiTemplate, apiRemind, apiEmbedSession, assertTestKeyMay } from "./pdfApi.mjs";
 export { listPdfTemplates, getPdfTemplate, readTemplateFile, updatePdfTemplateMeta, newPdfTemplateVersion, diffPdfTemplates, clonePdfTemplate, approvePdfTemplate, rejectPdfTemplate, retirePdfTemplate } from "./pdfTemplates.mjs";
 
 /** Uploaded documents whose scheduled send time has come (the worker's sweep has no viewer; policy `system_scheduled_read` lets it list exactly these). → [{id, created_by}] */
@@ -127,8 +122,7 @@ export { signingWords } from "./signingWords.mjs";
 // Part 30 item 9 — the fourteen languages: the list, their names and directions, and the signing-email frame for the ten added ones (the host's email module reads them here, never from the island's files).
 export { LANGUAGES, LANG_META, EMAIL as EMAIL_LANGUAGE_WORDS, languageLabel, isRtl } from "./languages.mjs";
 
-// Final push Stage 2 — Forms (public link forms: settings, responses, the public read and start) and People (saved signers)
-export { publishForm, setFormOpen, removeForm, listForms, getForm, listResponses, responsesCsv, readForm, startForm, formOwner } from "./forms.mjs";
+// People (saved signers)
 export { listContacts, getContact, addContact, updateContact, deleteContact, contactsCsv, personTimeline } from "./contacts.mjs";
 export { searchWorkspace } from "./search.mjs";   // Run 9: ⌘K search
 

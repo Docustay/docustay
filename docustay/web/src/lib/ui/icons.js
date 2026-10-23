@@ -100,7 +100,13 @@ import IXcpu from "@lucide/svelte/icons/cpu";
 import IXpalette from "@lucide/svelte/icons/palette";
 import IXexternal from "@lucide/svelte/icons/external-link";
 import IXsignature from "@lucide/svelte/icons/signature";
+import IXfingerprint from "@lucide/svelte/icons/fingerprint";
+import IXsmartphone from "@lucide/svelte/icons/smartphone";
+import IXprinter from "@lucide/svelte/icons/printer";
 export const ICONS = {
+  "fingerprint": IXfingerprint,
+  "smartphone": IXsmartphone,
+  "printer": IXprinter,
   "type": IXtype,
   "calendar": IXcalendar,
   "user": IXuser,

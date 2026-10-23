@@ -29,3 +29,10 @@ export function variablesOf(doc) {
   const visit = (n) => { if (!n || typeof n !== "object") return; if (n.type === "variableChip" && /^custom\./.test(n.attrs?.name ?? "") && !/^custom\.p_/.test(n.attrs.name)) { const key = n.attrs.name.slice(7); if (!out.has(key)) out.set(key, { key, label: n.attrs.label || key, kind: n.attrs.kind || "text", default: n.attrs.default ?? "", help: n.attrs.help ?? "" }); } if (Array.isArray(n.content)) n.content.forEach(visit); };
   visit(doc); return [...out.values()];
 }
+
+/** R13-D361: a signing group is several people in ONE seat: one entry per seat (by its role word), labelled by the role word when the seat holds several people, by the person otherwise. */
+export const seatsOnce = (people = []) => {
+  const key = (p) => slugWord(p.roleWord ?? p.name);
+  return people.filter((p, i) => people.findIndex((q) => key(q) === key(p)) === i)
+    .map((p) => ({ ...p, label: people.filter((q) => key(q) === key(p)).length > 1 ? (p.roleWord || p.name) : (p.name || p.roleWord) }));
+};

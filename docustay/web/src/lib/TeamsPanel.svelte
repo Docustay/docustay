@@ -7,11 +7,12 @@
   import { t } from "$lib/i18n/index.svelte.js";
   // Teams: named groups. Work can belong to one team; a switch limits ordinary members to their teams' work (owners and admins always see everything).
   let { people = [] } = $props();
-  let teams = $state(null), problem = $state(null), note = $state(null), name = $state(""), busy = $state(false), limit = $state(false), openId = $state(null), edit = $state({});
+  let teams = $state(null), problem = $state(null), note = $state(null), name = $state(""), busy = $state(false), limit = $state(false), limitOffered = $state(false), openId = $state(null), edit = $state({});
   async function load() {
     const [tm, s] = await Promise.all([api("/api/documents/teams"), api("/api/documents/settings")]);
     if (tm.ok) teams = tm.json.teams ?? []; else problem = tm.error ?? t("Teams could not be loaded.");
-    limit = s.ok && (s.json.groups ?? []).flatMap((g) => g.fields).some((f) => f.key === "teams.restrict_visibility" && f.value === true);
+    const lf = s.ok ? (s.json.groups ?? []).flatMap((g) => g.fields).find((f) => f.key === "teams.restrict_visibility") : null;
+    limitOffered = Boolean(lf); limit = lf?.value === true;   // R13-D270: the switch shows only where the server offers the setting (Docustay leaves it out; ticking it answered "not a setting in Docustay")
   }
   onMount(() => { load(); return live(["team"], load); });
   const proNote = (r) => (r.status === 403 ? t("Teams are part of Docustay Pro.") : (r.error ?? t("That did not work.")));
@@ -24,11 +25,11 @@
   }
   async function setLimit(on) { const r = await api("/api/documents/settings", { method: "POST", body: { key: "teams.restrict_visibility", value: on } }); note = r.ok ? null : proNote(r); await load(); }
 </script>
-<section class="max-w-3xl space-y-4" data-testid="teams-panel">
+<section class="space-y-4" data-testid="teams-panel">
   <h2 class="text-lg font-semibold">{t("Teams")}</h2>
   <p class="text-sm text-mute">{t("Group your people, then put documents and templates in a team. Reports can be filtered by team.")}</p>
   {#if problem}<p class="text-bad" role="alert">{problem}</p>{:else if teams}
-    <label class="flex items-center gap-2 text-sm"><input type="checkbox" checked={limit} onchange={(e) => setLimit(e.currentTarget.checked)} data-testid="restrict-visibility" />{t("Limit documents to their teams (owners and admins still see everything)")}</label>
+    {#if limitOffered}<label class="flex items-center gap-2 text-sm"><input type="checkbox" checked={limit} onchange={(e) => setLimit(e.currentTarget.checked)} data-testid="restrict-visibility" />{t("Limit documents to their teams (owners and admins still see everything)")}</label>{/if}
     <ul class="divide-y divide-line rounded-xl border border-line" data-testid="team-list">
       {#each teams as tm (tm.id)}
         <li class="px-4 py-3"><div class="flex flex-wrap items-center gap-2"><strong>{tm.name}</strong><span class="text-xs text-mute">{t("{people, plural, one {# person} other {# people}} · {docs, plural, one {# document} other {# documents}} · {tpls, plural, one {# template} other {# templates}}", { people: tm.members.length, docs: tm.documents, tpls: tm.templates })}</span>
@@ -39,7 +40,7 @@
           {/if}</li>
       {:else}<li class="px-4 py-3 text-sm text-mute">{t("No teams yet.")}</li>{/each}
     </ul>
-    <form class="flex flex-wrap items-center gap-2" onsubmit={create}><input class="field !w-60 !py-1.5" placeholder={t("New team name")} bind:value={name} aria-label={t("New team name")} required maxlength="80" /><ProLock item="team_roles" tip={t("Teams let you group people and what they see. Part of Pro.")}>{#snippet children(locked)}<button class="btn primary" disabled={busy || locked} data-testid="teams-add">{t("Add team")}</button>{/snippet}</ProLock></form>
+    <form class="flex flex-wrap items-center gap-2" onsubmit={create}><input class="field min-w-0 flex-1 basis-40 !w-auto !py-1.5" placeholder={t("New team name")} bind:value={name} aria-label={t("New team name")} required maxlength="80" /><ProLock item="team_roles" tip={t("Teams let you group people and what they see. Part of Pro.")}>{#snippet children(locked)}<button class="btn primary" disabled={busy || locked} data-testid="teams-add">{t("Add team")}</button>{/snippet}</ProLock></form>
   {:else}<p class="text-mute">{t("Loading…")}</p>{/if}
   {#if note}<p class="text-sm text-bad" role="alert" data-testid="teams-note">{note}</p>{/if}
 </section>

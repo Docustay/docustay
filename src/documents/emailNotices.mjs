@@ -26,14 +26,16 @@ export async function sendVoidedNotices(tx, { tenantId, leadId, reason = null, a
     const brand = await P.brand.get(tx, { tenantId });
     const org = brand.practiceName || brand.tenantName || "";
     const [sender] = actorUserId ? await P.people.byIds(tx, [actorUserId]) : [];
-    const { rows: [doc] } = await tx.query(`SELECT title, send_options, is_test FROM keystone.document_instance WHERE id = $1`, [leadId]);
-    if (doc?.is_test) return 0;   // a practice run never emails the people on it
+    const { rows: [doc] } = await tx.query(`SELECT title, send_options, is_test, created_by FROM keystone.document_instance WHERE id = $1`, [leadId]);
+    // a practice run never emails the people on it; like its invitations (pdfSend), the one notice goes to the person who sent it, marked [TEST] (R13-D222)
+    const testTo = doc?.is_test ? (doc.created_by ? (await P.people.byIds(tx, [doc.created_by]))[0]?.email ?? null : null) : null;
+    if (doc?.is_test && !testTo) return 0;
     const { rows: people } = await tx.query(`SELECT id, name, email, signer_language FROM keystone.document_party WHERE instance_id = $1 AND invited_at IS NOT NULL AND email IS NOT NULL AND action_role IN ('signer','approver','viewer','assistant')`, [leadId]);
     let sent = 0;
-    for (const p of people) {
+    for (const p of (testTo ? people.slice(0, 1) : people)) {
       const language = (await languageFor(tx, { sendOptions: doc?.send_options, party: p })).language ?? "en";
-      const out = await mailOne(tx, { tenantId, kind: "voided", to: p.email, language, log: { instanceId: leadId, partyId: p.id },
-        vars: { "signer.name": p.name ?? "", "signer.email": p.email, "document.title": doc?.title ?? "", "sender.name": sender?.display_name || org, "org.name": org, reason: reason || "none given" } });
+      const out = await mailOne(tx, { tenantId, kind: "voided", to: testTo ?? p.email, language, log: { instanceId: leadId, partyId: p.id },
+        vars: { "signer.name": p.name ?? "", "signer.email": p.email, "document.title": testTo ? `[TEST] ${doc?.title ?? ""}` : (doc?.title ?? ""), "sender.name": sender?.display_name || org, "org.name": org, reason: reason || "none given" } });
       if (out.status === "sent") sent += 1;
     }
     return sent;
@@ -71,24 +73,4 @@ export async function sendHoldLapsedNotice(tx, { tenantId, partyId }) {
       vars: { "signer.name": p.name ?? "", "signer.email": p.email, "document.title": p.title ?? "", "sender.name": org, "org.name": org } });
     return out.status === "sent";
   } catch (e) { console.error(`hold-lapsed notice for ${partyId} failed: ${e?.message ?? e}`); return false; }
-}
-
-/** Run 7: tell the workspace owner a form response was signed. Only when the form's "Email me each new response" is on (the archive step decides). Never carries the answers. */
-export async function sendFormResponseNotice(tx, { tenantId, leadId }) {
-  try {
-    const { rows: [d] } = await tx.query(
-      `SELECT i.title, i.created_by, (SELECT t.name FROM keystone.document_template t WHERE t.family_id = COALESCE(i.form_id, (SELECT x.family_id FROM keystone.document_template x WHERE x.id = i.template_id)) ORDER BY t.version DESC LIMIT 1) AS form_name,
-              p.name, p.email FROM keystone.document_instance i LEFT JOIN LATERAL (SELECT name, email FROM keystone.document_party WHERE instance_id = i.id AND action_role = 'signer' ORDER BY position LIMIT 1) p ON true
-        WHERE i.id = $1 AND i.source_channel = 'form'`, [leadId]);
-    if (!d?.created_by) return false;
-    const P = await ports();
-    const [owner] = await P.people.byIds(tx, [d.created_by]);
-    if (!owner?.email) return false;
-    if (await alreadyEmailed(tx, { instanceId: leadId, kind: "form_response", to: owner.email })) return false;   // once per response: the email log is the memory
-    const brand = await P.brand.get(tx, { tenantId });
-    const org = brand.practiceName || brand.tenantName || "";
-    const out = await mailOne(tx, { tenantId, kind: "form_response", to: owner.email, language: "en", log: { instanceId: leadId },
-      vars: { "signer.name": d.name ?? "Someone", "signer.email": d.email ?? "", "form.name": d.form_name ?? d.title ?? "", "document.title": d.title ?? "", "org.name": org, link: `${brand.publicBase ?? ""}/documents/${leadId}` } });
-    return out.status === "sent";
-  } catch (e) { console.error(`form response notice for ${leadId} failed: ${e?.message ?? e}`); return false; }
 }

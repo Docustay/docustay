@@ -30,7 +30,7 @@ import { grantRole } from "../permissions/writes.mjs";
 import { STAFF_ROLE_TO_ROLE_KEY } from "../permissions/defaults.mjs";
 import { writeAudit } from "../permissions/audit.mjs";
 import { revokeSessionsForUser } from "../auth/session.mjs";
-import { invalid, conflict, notFound, unprocessable } from "../http/errors.mjs";
+import { invalid, conflict, notFound, unprocessable, forbidden } from "../http/errors.mjs";
 // ★ TASK 12.5 — `removeSamples` (bottom of this file) reuses the ONE archive writer every other
 //   archivable object uses, rather than a bespoke bulk-delete path. `src/records/archive.mjs` is
 //   P2.9's file; imported here, not redefined.
@@ -481,6 +481,8 @@ export async function createPerson(tx, {
     });
   }
 
+  // 21 Oct 2026 (the maintainer, decision 4): a team member joining changes what a Pay as you go workspace owes; Stripe hears of it now, prorated (an open invitation is not a team member yet and is not billed)
+  if (role === "staff" && !invite) { const { syncSeatsNow } = await import("../product/docustaySeatSync.mjs"); await syncSeatsNow(tx, { tenantId, why: "person_created" }); }
   return {
     id, role, staff_role: staffRole,
     email: email.trim().toLowerCase(), display_name: displayName.trim(),
@@ -732,6 +734,8 @@ export async function setLifecycleStatus(
     kind: "stage_change", reason: keptReason, createdBy: actorUserId,
   });
 
+  // 21 Oct 2026 (the maintainer, decision 4): a team member leaving or coming back changes what a Pay as you go workspace owes; Stripe hears of it now, prorated, not at the next daily count
+  { const { syncSeatsNow } = await import("../product/docustaySeatSync.mjs"); await syncSeatsNow(tx, { tenantId, why: `person_${status}` }); }
   return { id: personId, from, to: status };
 }
 
@@ -793,6 +797,13 @@ export async function inviteTeamMember(tx, { tenantId, email, displayName, mobil
 export async function setStaffRole(tx, { tenantId, personId, staffRole, actorUserId = null, requestId = null }) {
   if (!STAFF_ROLES.includes(staffRole)) {
     throw invalid(`staff_role must be one of ${STAFF_ROLES.join(", ")} — got ${JSON.stringify(staffRole)}`);
+  }
+  // R13-D309: the Owner rank is the Owner's to give and to take. Admins hold staff_role.change (0190) for Members and Admins; without this an Admin could make
+  // themself Owner, or demote the Owner, in one call. Asked in this transaction with a row lock on both people, so two changes cannot race past it.
+  if (actorUserId) {
+    const { rows: ranks } = await tx.query(`SELECT id, staff_role FROM keystone.app_user WHERE id = ANY($1::uuid[]) FOR UPDATE`, [[personId, actorUserId]]);
+    const rankOf = (id) => ranks.find((x) => x.id === id)?.staff_role ?? null;
+    if ((staffRole === "owner" || rankOf(personId) === "owner") && rankOf(actorUserId) !== "owner") throw forbidden("Only an Owner can make someone Owner or change an Owner's role.");
   }
 
   // ★★ `AND role = 'staff'` IS IN THE PREDICATE, NOT AN `if` ABOVE. Checking first would be a read

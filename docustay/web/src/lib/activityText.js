@@ -19,5 +19,7 @@ export function activityText(e, { short = false } = {}) {
     const list = [...(e.detail?.labels ?? e.detail?.sections ?? []), ...(e.detail?.pages ?? []).map((n) => t("page {n}", { n }))];
     return list.length && !short ? t("Left out by a rule: {list}", { list: list.join(", ") }) : t("Left out by a rule");
   }
+  // R13-D307: the owner's email says the signer's words are on the timeline; the line now carries them
+  if (kind === "changes_requested" && !short && typeof e.detail?.message === "string" && e.detail.message.trim()) return t("Asked for changes: “{message}”", { message: e.detail.message.trim() });
   return WORDS()[kind] ?? e.text ?? kind;
 }

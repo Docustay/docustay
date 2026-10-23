@@ -17,6 +17,7 @@
 //   is_local — it is the parameterised form of SET LOCAL, not of SET.
 
 import { currentJob } from "./jobContext.mjs";
+import { AsyncLocalStorage } from "node:async_hooks";
 import { dbSsl } from "./ssl.mjs";
 import pg from "pg";
 
@@ -36,19 +37,44 @@ const IDLE_TX_MS = Number(process.env.KEYSTONE_PG_IDLE_TX_MS ?? 120_000);
 const LOCK_WAIT_MS = Number(process.env.KEYSTONE_PG_LOCK_WAIT_MS ?? 15_000);   // no request waits on a row or advisory lock longer than this: a waiter holds a pooled connection, and enough of them starve the pool (R3-8)
 const POOL_OPTIONS = [IDLE_TX_MS > 0 ? `-c idle_in_transaction_session_timeout=${IDLE_TX_MS}` : "", LOCK_WAIT_MS > 0 ? `-c lock_timeout=${LOCK_WAIT_MS}` : ""].filter(Boolean).join(" ") || undefined;
 
+// ★ POOL STARVATION GUARD (19 Oct 2026, found on production: one signed-in browser loading ten document pictures froze the whole app until a restart).
+//   A request holds one pooled connection for its transaction and, inside it, can need a SECOND one (opening a stored file reads the workspace's data key through its own `withTenant`).
+//   With as many such requests as the pool has connections, every one holds a connection and waits for another that no one will free: a deadlock the database's idle-in-transaction timeout
+//   only turns into dead connections still checked out. So at most `max - reserve` OUTER transactions run at once, and a connection asked for from INSIDE a transaction (`holding`) is never
+//   made to queue behind that limit, so the inner one can always be served and the outer one then finishes.
+const holdingTx = new AsyncLocalStorage();
+const holding = (fn) => holdingTx.run(true, fn);
+function capOuterConnections(p, max) {
+  const reserve = Math.min(Math.max(Number(process.env.KEYSTONE_PG_NESTED_RESERVE ?? 3), 1), Math.max(max - 1, 1));
+  const limit = Math.max(max - reserve, 1); let open = 0; const waiting = [];
+  const free = () => { open -= 1; waiting.shift()?.(); };
+  const plain = p.connect.bind(p);
+  p.connect = async (cb) => {
+    if (cb || holdingTx.getStore()) return plain(cb);   // pool.query() and a connection asked for from inside a transaction: never queued behind the limit
+    if (open >= limit) await new Promise((go) => waiting.push(go));
+    open += 1;
+    let client; try { client = await plain(); } catch (e) { free(); throw e; }
+    const release = client.release; let done = false;
+    client.release = (err) => { if (!done) { done = true; free(); } return release(err); };
+    return client;
+  };
+  return p;
+}
+
 function getPool() {
   if (pool) return pool;
   const connectionString = process.env.KEYSTONE_DATABASE_URL;
   if (!connectionString) {
     throw new Error("KEYSTONE_DATABASE_URL is not set — refusing to guess a database");
   }
-  pool = guardPool(new pg.Pool({
+  const max = Number(process.env.KEYSTONE_PG_POOL_MAX ?? 10);
+  pool = capOuterConnections(guardPool(new pg.Pool({
     connectionString,
     ssl: dbSsl(),
-    max: Number(process.env.KEYSTONE_PG_POOL_MAX ?? 10),
+    max,
     application_name: "keystone",
     options: POOL_OPTIONS,
-  }), "main");
+  }), "main"), max);
   return pool;
 }
 
@@ -152,10 +178,10 @@ export async function withTenant(tenantId, fn, { userId = null, operatorGrantId 
     //     ★ `__withoutTenantContextForGatesOnly` deliberately does NOT brand its handle. Emitting
     //       an event with no tenant context is never correct, so it should fail at `emit`, by
     //       name, rather than deep in a policy.
-    const result = await fn({
+    const result = await holding(() => fn({
       query: (text, params) => client.query(text, params),
       [TENANT_TX]: true,
-    });
+    }));
     await client.query("COMMIT");
     return result;
   } catch (err) {
@@ -208,7 +234,7 @@ export async function withCredentialLookup(fn) {
     // ★★ READ ONLY: a credential lookup must never write. `create_session` is a separate,
     //    deliberate call made through this same door at LOGIN — see the note in src/auth — so
     //    this flag is set per call rather than hardcoded.
-    const result = await fn({ query: (text, params) => client.query(text, params) });
+    const result = await holding(() => fn({ query: (text, params) => client.query(text, params) }));
     await client.query("COMMIT");
     return result;
   } catch (err) {
@@ -250,10 +276,10 @@ export async function withOperator(operatorGrantId, fn) {
     // ★ Exactly one set_config — the grant, transaction-local. Deliberately NO keystone.tenant_id
     //   and NO keystone.user_id: this caller is not inside a practice and has no viewer.
     await client.query("SELECT set_config('keystone.operator_grant_id', $1, true)", [operatorGrantId]);
-    const result = await fn({
+    const result = await holding(() => fn({
       query: (text, params) => client.query(text, params),
       [TENANT_TX]: true,
-    });
+    }));
     await client.query("COMMIT");
     return result;
   } catch (err) {
@@ -269,7 +295,7 @@ export async function __withoutTenantContextForGatesOnly(fn) {
   try {
     await client.query("BEGIN");
     // Deliberately NO set_config here. That is the entire point.
-    const result = await fn({ query: (text, params) => client.query(text, params) });
+    const result = await holding(() => fn({ query: (text, params) => client.query(text, params) }));
     await client.query("COMMIT");
     return result;
   } catch (err) {

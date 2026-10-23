@@ -1,6 +1,6 @@
 ---
 title: Permission slip template
-description: A free permission slip template for trips and activities. Send one link to every family; each parent signs on a phone and you see who is missing.
+description: A free permission slip template for trips and activities. Send it to every family from a list; each parent signs on a phone and you see who is missing.
 ---
 
 # Permission slip template
@@ -18,6 +18,7 @@ Use it for a trip, an event or an activity that needs a parent's yes. It names t
 - Give the date, place and times.
 - Add an emergency contact field.
 - Say what the school or group will and will not cover.
+- Keep health notes brief. Docustay is not for protected health information yet.
 
 ## The facts
 

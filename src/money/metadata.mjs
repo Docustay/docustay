@@ -49,7 +49,7 @@ const KEY_SETS = {
     // ◆ 20.2 one-writer: app.mjs sends instanceId for checkout session payment_intent_data
     "instanceId",
     // ◆ Part 30 item 11: documentsPayments.mjs sends the signing party and field ids for a hosted Checkout Session — ids only, no names or amounts
-    "docustay_party", "docustay_field",
+    "docustay_party", "docustay_field", "docustay_source",
     // ◆ T1.19 (F785/F787): every other kind gains workbench_tenant_id
     "workbench_tenant_id"],
   invoice: ["person_id", "practice_id", "invoice_id", "account_id",
@@ -66,7 +66,10 @@ const KEY_SETS = {
     // ◆ the maintainer, 6 Oct 2026: a Docustay founders subscription is stamped when checkout starts ("true"/"false") — the price promise travels with the subscription
     "founders_price",
     // ◆ T1.19 (F785/F787): every other kind gains workbench_tenant_id
-    "workbench_tenant_id"],
+    "workbench_tenant_id",
+    // ◆ Run 13 D-RT21-025 (23 Oct 2026): the Lifetime checkout's marker and its switch credit. They were silently dropped by this allow-list, so a paid Lifetime checkout was
+    //   neither confirmed on return nor applied by the webhook (both look for docustay_kind = "lifetime"): the customer was charged and stayed on their old plan.
+    "docustay_kind", "credit_minor"],
   // ◆ QUEUE §4 (the maintainer, 2 Oct 2026) — the hard-coded `coaching_group` (life/recovery) is GONE. A catalogue item's Program travels as its id and its name
   // (`program_id`, `program`), for every catalogue kind, so a Stripe report can group by the practice's own programs.
   product: ["service_id", "practice_id", "category", "workbench_tenant_id", "kind", "program_id", "program"],

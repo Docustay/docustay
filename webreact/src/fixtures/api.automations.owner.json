@@ -1180,14 +1180,6 @@
     "enabled": true
    },
    {
-    "id": "settings.usage_reconciled",
-    "name": "Monthly usage, and a warning at 80%",
-    "defaultOn": true,
-    "week_count": 0,
-    "month_count": 0,
-    "enabled": true
-   },
-   {
     "id": "growth.campaign_scheduled",
     "name": "Confirm: who, when, how many",
     "defaultOn": true,

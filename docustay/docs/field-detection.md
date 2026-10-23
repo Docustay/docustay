@@ -16,7 +16,7 @@ Detection by the program is free. The optional **Find fields with AI** button (s
 
 ## How it decides
 
-Each blank is judged by the words printed beside it and the shape it makes on the page. A line next to "Signature", "Initials", "Date", "Email" or "Phone" (in any of the 13 languages the product speaks) becomes that kind of field. A line with no useful label becomes a plain text field. Words like "Landlord", "Witness" or "Parent or guardian" next to a blank decide which person it belongs to, and "Borrower signature" makes a new role called Borrower.
+Each blank is judged by the words printed beside it and the shape it makes on the page. A line next to "Signature", "Initials", "Date", "Email" or "Phone" becomes that kind of field. A line with no useful label becomes a plain text field. Words like "Landlord", "Witness" or "Parent or guardian" next to a blank decide which person it belongs to, and "Borrower signature" makes a new role called Borrower.
 
 The program marks a box "not sure" when the label and the shape disagree, when two readings fit, or when a blank sits in dense running text. The AI look sees all of them, weak ones included; without it nothing leaves the server. Sensitive blanks (a social security or account number, a date of birth) are marked sensitive: the signing page masks what the signer types and turns off browser autofill for them.
 
@@ -26,7 +26,7 @@ The program marks a box "not sure" when the label and the shape disagree, when t
 
 ```bash
 curl https://app.docustay.app/api/v1/documents/detect-fields \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY" -H "Content-Type: application/json" \
   -d "{\"fileName\":\"intake.pdf\",\"file\":\"$(base64 -i intake.pdf)\"}"
 ```
 
@@ -36,7 +36,7 @@ To make a template and place the sure fields in one call, upload with `fields: "
 
 ```bash
 curl https://app.docustay.app/api/v1/templates/file -H "Idempotency-Key: $(uuidgen)" \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY" -H "Content-Type: application/json" \
   -d "{\"name\":\"Intake\",\"fileName\":\"intake.pdf\",\"file\":\"$(base64 -i intake.pdf)\",\"fields\":\"auto\"}"
 ```
 
@@ -46,6 +46,6 @@ From the command line: `docustay detect intake.pdf`. From an assistant: the MCP 
 
 ## What it will not do
 
-Through the API the whole request, with the file sent as base64, must stay under 1 MB (a file of about 700 KB); a bigger scan is refused with `413`, so upload large scans in the app instead.
+Through the API the file goes in the body as base64 and may be as large as your plan's upload limit (25 MB on Free and Pay as you go, 100 MB on Pro and Lifetime). A bigger file is refused with `400` and the code `too_big`, which says the limit.
 
 It does not read ID, card or bank numbers out of a picture, and it never sends a page to the AI unless you pressed Find fields with AI. Files are checked first: scripts, launch actions and embedded files are removed from the copy that is kept, and at most the first 100 pages are read, within a time limit. A file that cannot be read simply has no suggestions.

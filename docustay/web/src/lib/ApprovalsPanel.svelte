@@ -24,7 +24,7 @@
   const logColumns = [{ key: "when", label: t("When") }, { key: "key", label: t("Key") }, { key: "what", label: t("What it did") }, { key: "by", label: t("Decided by") }];
   const columns = [{ key: "when", label: t("Asked") }, { key: "doc", label: t("Document") }, { key: "key", label: t("Key") }, { key: "status", label: t("Status") }, { key: "act", label: "" }];
 </script>
-<div class="max-w-5xl space-y-4" data-testid="approvals">
+<div class=" space-y-4" data-testid="approvals">
   <div><h2 class="text-lg font-semibold">{t("Approvals")}</h2>
     <p class="text-sm text-mute">{t("A draft-only key can make documents but cannot send them. When it asks, the request waits here until you approve it or decline it.")}</p></div>
   {#if rows === null}<p class="text-sm text-mute">{t("Loading…")}</p>

@@ -9,6 +9,7 @@ import { invalid, conflict, forbidden } from "../http/errors.mjs";
 import { emit, userActor } from "../events/outbox.mjs";
 import { gateFor, maskEmail, requireVerified, sendVerificationCode, verifyParty } from "./pdfVerify.mjs";
 import { ports } from "./ports.mjs";
+import { logoForPage } from "./logo.mjs";
 import { parsePdfBodyData, validateFieldValue, AUTO_FIELD_TYPES } from "./pdfBody.mjs";
 import { parseTemplateSnapshot } from "./body.mjs";
 import { disclosureSnapshotFromAcceptance } from "./disclosure.mjs";
@@ -41,7 +42,12 @@ async function context(tx, { leadId, partyId, requireLive = true, lock = false }
     `SELECT id, title, state, message, description, expires_at, sent_at, send_options, created_by, is_test FROM keystone.document_instance WHERE id = $1 AND builder = 'pdf' AND archived_at IS NULL${forUpdate}`, [leadId]);
   const { rows: [party] } = await tx.query(`SELECT * FROM keystone.document_party WHERE id = $1 AND instance_id = $2${forUpdate}`, [partyId, leadId]);
   if (!party || !lead || lead.state === "draft") throw forbidden(LINK_REFUSED);
-  if (requireLive && !["sent", "partially_signed"].includes(lead.state)) throw forbidden(LINK_REFUSED);
+  if (requireLive && !["sent", "partially_signed"].includes(lead.state)) {
+    // R13-D048: a person whose link still belongs to this document is told what happened to it, not that the link is "not valid"
+    if (lead.state === "executed") throw forbidden(isFinished(party) ? "You have already done your part, and the document is now complete." : "This document is already complete, so there is nothing left for you to do.");
+    if (lead.state === "void") throw forbidden("The sender cancelled this document, so there is nothing left for you to do.");
+    throw forbidden(LINK_REFUSED);
+  }
   // ★ §23.5.17 — each person can have their own deadline; past it their link is dead (the sender can extend it, which mails a new one)
   // Run 9 Part 3.7 — a signature HELD for its payment was given before any deadline that passed since: the deadline is measured at the moment they signed, so the payment can still complete it
   const at = party.status === "awaiting_payment" && party.held_at ? new Date(party.held_at) : new Date();
@@ -74,7 +80,8 @@ export async function openForParty(tx, { tenantId, leadId, partyId, ip = null, u
   const { party, lead, members } = await context(tx, { leadId, partyId });
   await rememberSignerLanguage(tx, { sendOptions: lead.send_options, partyId, language });
   const P = await ports();
-  const { practiceName, logoUrl } = await P.brand.get(tx, { tenantId });
+  const { practiceName, logoUrl: storedLogo } = await P.brand.get(tx, { tenantId });
+  const logoUrl = await logoForPage(storedLogo);
   // ★ §23.5.2 — a send that asks for a code shows NOTHING but the question until it is answered; the first look is recorded after.
   const gate = gateFor(party, lead);
   if (gate) {
@@ -86,7 +93,7 @@ export async function openForParty(tx, { tenantId, leadId, partyId, ip = null, u
   const firstLook = !party.viewed_at;
   if (firstLook) {
     await tx.query(`UPDATE keystone.document_party SET viewed_at = now(), viewed_ip = $2, viewed_user_agent = $3, status = CASE WHEN status = 'pending' THEN 'viewed' ELSE status END, updated_at = now() WHERE id = $1`, [partyId, ip, userAgent]);
-    for (const d of docs) await recordAuditEvent(tx, { tenantId, instanceId: d.id, kind: "opened", actorRole: party.role });
+    for (const d of docs) await recordAuditEvent(tx, { tenantId, instanceId: d.id, kind: "opened", actorRole: party.role, partyId: party.id });
     await emit(tx, { tenantId, topic: "documents.document.opened", emittedBy: "documents", subjectType: "document", subjectId: leadId, actor: userActor(partyId), payload: { role: party.role, builder: "pdf" } });
   }
   const { rows: parties } = await tx.query(`SELECT id, role, name, action_role, position, status, completed_at, assists_role, progress FROM keystone.document_party WHERE instance_id = $1 ORDER BY position, created_at`, [leadId]);
@@ -131,7 +138,7 @@ export async function isFormFiller(tx, { leadId, partyId }) {
   const { rows: [r] } = await tx.query(`SELECT i.source_channel, (SELECT p.id FROM keystone.document_party p WHERE p.instance_id = i.id AND p.action_role = 'signer' ORDER BY p.position, p.created_at LIMIT 1) AS filler FROM keystone.document_instance i WHERE i.id = $1`, [leadId]);
   return !r || r.source_channel !== "form" || r.filler === partyId;
 }
-async function formEndOf(tx, { tenantId, leadId }) { const { formEndFor } = await import("./forms.mjs"); const f = await formEndFor(tx, { tenantId, leadId }); return f ? { thankYou: f.thankYou, againUrl: f.againUrl } : null; }
+async function formEndOf() { return null; }   // Docustay v1: forms are gone, so no signing page has a form ending
 async function resubmitUrlFor(tx, { tenantId, leadId }) {
   if (!(await signingPolicy(tx)).allowResubmit) return null;
   const { rows: [r] } = await tx.query(`SELECT t.self_serve_slug AS slug FROM keystone.document_instance i JOIN keystone.document_template t ON t.id = i.template_id WHERE i.id = $1 AND t.self_serve_enabled AND t.self_serve_slug IS NOT NULL`, [leadId]);
@@ -155,7 +162,8 @@ export async function openAsTest(tx, { tenantId, leadId }) {
   const docs = await memberBodies(tx, members);
   const { rows: parties } = await tx.query(`SELECT id, role, name, email, action_role, position, status FROM keystone.document_party WHERE instance_id = $1 ORDER BY position, created_at`, [leadId]);
   const first = parties.find((p) => p.action_role === "signer") ?? { id: "test", role: "signer_1", name: "Test signer", email: null, action_role: "signer", status: "pending" };
-  const { practiceName, logoUrl } = await (await ports()).brand.get(tx, { tenantId });
+  const { practiceName, logoUrl: storedLogo } = await (await ports()).brand.get(tx, { tenantId });
+  const logoUrl = await logoForPage(storedLogo);
   return {
     test: true,
     document: { id: lead.id, title: lead.title, state: lead.state, message: lead.description || null, sentAt: lead.sent_at, expiresAt: lead.expires_at },
@@ -179,7 +187,7 @@ export async function savePartyProgress(tx, { tenantId, leadId, partyId, values 
   const bytes = JSON.stringify(clean).length;
   if (bytes > 6_000_000) throw invalid("that is too much to save for later — sign now or remove a picture", { field: "values" });
   await tx.query(`UPDATE keystone.document_party SET progress = $2::jsonb, updated_at = now() WHERE id = $1`, [partyId, JSON.stringify(clean)]);
-  await recordAuditEvent(tx, { tenantId, instanceId: leadId, kind: "saved", actorRole: party.role });
+  await recordAuditEvent(tx, { tenantId, instanceId: leadId, kind: "saved", actorRole: party.role, partyId: party.id });
   return { saved: true, fields: Object.keys(clean).length };
 }
 
@@ -291,7 +299,7 @@ export async function signAsParty(tx, { tenantId, leadId, partyId, language = nu
     const held = { typedName: name, consent: true, marks, values, signerTimezone: zone, reason: why || null, signatureMethod, witness, language, ip, userAgent: userAgent ? String(userAgent).slice(0, 1000) : null };
     const until = new Date(signedAt.getTime() + HOLD_DAYS * 864e5);
     await tx.query(`UPDATE keystone.document_party SET status = 'awaiting_payment', held_signature = $2::jsonb, held_at = $3, hold_expires_at = $4, progress = NULL, updated_at = now() WHERE id = $1`, [partyId, JSON.stringify(held), signedAt, until]);
-    if (party.status !== "awaiting_payment") for (const d of docs) await recordAuditEvent(tx, { tenantId, instanceId: d.id, kind: "held_for_payment", actorRole: party.role, occurredAt: signedAt, detail: { payments: unpaid.filter((u) => u.documentId === d.id).length } });
+    if (party.status !== "awaiting_payment") for (const d of docs) await recordAuditEvent(tx, { tenantId, instanceId: d.id, kind: "held_for_payment", actorRole: party.role, partyId: party.id, occurredAt: signedAt, detail: { payments: unpaid.filter((u) => u.documentId === d.id).length } });
     return { held: true, heldAt: signedAt.toISOString(), holdExpiresAt: until.toISOString(), payments: unpaid };
   }
 
@@ -314,15 +322,15 @@ export async function signAsParty(tx, { tenantId, leadId, partyId, language = nu
        VALUES ($1,$2,$3,$4,NULL,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)`,
       [tenantId, d.id, party.role, order, name, signedAt, localDate, zone, userAgent, ip, digest, prev, rowHash, mark]);
     await tx.query(`UPDATE keystone.document_instance SET state = 'partially_signed', updated_at = now() WHERE id = $1 AND state = 'sent'`, [d.id]);
-    await recordAuditEvent(tx, { tenantId, instanceId: d.id, kind: "consented", actorRole: party.role, occurredAt: signedAt });
-    await recordAuditEvent(tx, { tenantId, instanceId: d.id, kind: "signed", actorRole: party.role, occurredAt: signedAt, detail: signatureMethod ? { signature_method: signatureMethod } : null });
+    await recordAuditEvent(tx, { tenantId, instanceId: d.id, kind: "consented", actorRole: party.role, partyId: party.id, occurredAt: signedAt });
+    await recordAuditEvent(tx, { tenantId, instanceId: d.id, kind: "signed", actorRole: party.role, partyId: party.id, occurredAt: signedAt, detail: signatureMethod ? { signature_method: signatureMethod } : null });
     // Run 9: what a rule left out when this person signed is part of the trail — their boxes (id and the sender's label) and every page left out by then. No answers, no personal data.
     const hid = hiddenOf.get(d.id);
-    if (hid?.fields.length || hid?.pages.length) await recordAuditEvent(tx, { tenantId, instanceId: d.id, kind: "hidden_by_rule", actorRole: party.role, occurredAt: signedAt, detail: { fields: hid.fields.slice(0, 200), labels: hid.labels.slice(0, 200), pages: hid.pages.slice(0, 200) } });
+    if (hid?.fields.length || hid?.pages.length) await recordAuditEvent(tx, { tenantId, instanceId: d.id, kind: "hidden_by_rule", actorRole: party.role, partyId: party.id, occurredAt: signedAt, detail: { fields: hid.fields.slice(0, 200), labels: hid.labels.slice(0, 200), pages: hid.pages.slice(0, 200) } });
     if (witnessRow) {
       await tx.query(`INSERT INTO keystone.document_witness (tenant_id, instance_id, party_id, name, email, mark_image, mark_sha256, signed_at, ip, user_agent) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
         [tenantId, d.id, partyId, witnessRow.name, witnessRow.email, witnessRow.mark, witnessRow.digest, signedAt, ip, userAgent ? String(userAgent).slice(0, 1000) : null]);
-      await recordAuditEvent(tx, { tenantId, instanceId: d.id, kind: "witnessed", actorRole: party.role, occurredAt: signedAt, detail: { mark_sha256: witnessRow.digest } });
+      await recordAuditEvent(tx, { tenantId, instanceId: d.id, kind: "witnessed", actorRole: party.role, partyId: party.id, occurredAt: signedAt, detail: { mark_sha256: witnessRow.digest } });
     }
     await emit(tx, { tenantId, topic: "documents.document.signed", emittedBy: "documents", subjectType: "document", subjectId: d.id, actor: userActor(partyId), payload: { role: party.role, signature_record_stored: true, builder: "pdf" } });
   }
@@ -337,7 +345,7 @@ export async function signAsParty(tx, { tenantId, leadId, partyId, language = nu
     if (others.length) {
       const { rows: live } = await tx.query(`SELECT id FROM keystone.link_token WHERE tenant_id = $1 AND subject_id = $2 AND issued_to = ANY($3::uuid[]) AND redeemed_at IS NULL AND revoked_at IS NULL`, [tenantId, leadId, others.map((o) => o.id)]);
       for (const l of live) await revokeLinkTokenById(tx, l.id, "another member of the signing group signed");
-      for (const d of docs) await recordAuditEvent(tx, { tenantId, instanceId: d.id, kind: "group_closed", actorRole: party.role, occurredAt: signedAt, detail: { closed: others.length } });
+      for (const d of docs) await recordAuditEvent(tx, { tenantId, instanceId: d.id, kind: "group_closed", actorRole: party.role, partyId: party.id, occurredAt: signedAt, detail: { closed: others.length } });
     }
   }
 
@@ -429,7 +437,7 @@ export async function declineAsParty(tx, { tenantId, leadId, partyId, reason = n
   if (lead.send_options?.require_decline_reason === true && !text) throw invalid("Please tell the sender why you are declining.", { field: "reason", code: "reason_required" });
   for (const m of members) {
     await tx.query(`UPDATE keystone.document_instance SET state = 'declined', declined_at = now(), next_reminder_at = NULL, updated_at = now() WHERE id = $1 AND state IN ('sent','partially_signed')`, [m.id]);
-    await recordAuditEvent(tx, { tenantId, instanceId: m.id, kind: "declined", actorRole: party.role });
+    await recordAuditEvent(tx, { tenantId, instanceId: m.id, kind: "declined", actorRole: party.role, partyId: party.id });
     await emit(tx, { tenantId, topic: "documents.document.declined", emittedBy: "documents", subjectType: "document", subjectId: m.id, actor: userActor(partyId), payload: { role: party.role, builder: "pdf" } });
   }
   await tx.query(`UPDATE keystone.document_party SET status = 'declined', decline_reason = $2, completed_at = now(), updated_at = now() WHERE id = $1`, [partyId, text || null]);
@@ -461,7 +469,7 @@ export async function delegateAsParty(tx, { tenantId, leadId, partyId, name, ema
             verified_at = NULL, verify_code_hash = NULL, verify_code_expires_at = NULL, verify_code_sent_at = NULL, verify_attempts = 0, verify_locked_until = NULL, invited_at = NULL, progress = NULL, updated_at = now() WHERE id = $1`,
     [partyId, newName, newEmail]);
   const { rows: [fresh] } = await tx.query(`SELECT * FROM keystone.document_party WHERE id = $1`, [partyId]);
-  await recordAuditEvent(tx, { tenantId, instanceId: leadId, kind: "delegated", actorRole: party.role });
+  await recordAuditEvent(tx, { tenantId, instanceId: leadId, kind: "delegated", actorRole: party.role, partyId: party.id });
   const mail = await emailParty(tx, { tenantId, leadId, party: fresh });   // mints the new link (which revokes the old one) and mails it
   await announceDelegation(tx, { tenantId, leadId, partyId, role: party.role });
   return { delegated: true, to: { name: newName, email: newEmail }, emailed: Boolean(mail) };
@@ -488,7 +496,7 @@ export async function requestChangesAsParty(tx, { tenantId, leadId, partyId, mes
   const text = String(message ?? "").trim();
   if (!text) throw invalid("Tell the sender what needs to change.", { field: "message" });
   if (text.length > 1000) throw invalid("Keep it under 1000 characters.", { field: "message" });
-  await recordAuditEvent(tx, { tenantId, instanceId: leadId, kind: "changes_requested", actorRole: party.role, detail: { message: text } });
+  await recordAuditEvent(tx, { tenantId, instanceId: leadId, kind: "changes_requested", actorRole: party.role, partyId: party.id, detail: { message: text } });
   await emit(tx, { tenantId, topic: "documents.document.changes_requested", emittedBy: "documents", subjectType: "document", subjectId: leadId, actor: userActor(partyId), payload: { role: party.role, builder: "pdf" } });
   return { sent: true };
 }
@@ -512,7 +520,7 @@ export async function decideAsApprover(tx, { tenantId, leadId, partyId, decision
     if (lead.send_options?.require_decline_reason === true && !text) throw invalid("Please tell the sender why you are rejecting it.", { field: "comment", code: "reason_required" });
     for (const m of members) {
       await tx.query(`UPDATE keystone.document_instance SET state = 'declined', declined_at = now(), next_reminder_at = NULL, updated_at = now() WHERE id = $1 AND state IN ('sent','partially_signed')`, [m.id]);
-      await recordAuditEvent(tx, { tenantId, instanceId: m.id, kind: "rejected", actorRole: party.role, detail: text ? { comment: text } : null });
+      await recordAuditEvent(tx, { tenantId, instanceId: m.id, kind: "rejected", actorRole: party.role, partyId: party.id, detail: text ? { comment: text } : null });
       await emit(tx, { tenantId, topic: "documents.document.declined", emittedBy: "documents", subjectType: "document", subjectId: m.id, actor: userActor(partyId), payload: { role: party.role, builder: "pdf", approver: true } });
     }
     await tx.query(`UPDATE keystone.document_party SET status = 'rejected', decline_reason = $2, completed_at = now(), updated_at = now() WHERE id = $1`, [partyId, text || null]);
@@ -520,7 +528,7 @@ export async function decideAsApprover(tx, { tenantId, leadId, partyId, decision
   }
   for (const m of members) {
     await tx.query(`UPDATE keystone.document_instance SET state = 'partially_signed', updated_at = now() WHERE id = $1 AND state = 'sent'`, [m.id]);
-    await recordAuditEvent(tx, { tenantId, instanceId: m.id, kind: "approved", actorRole: party.role, detail: { ...(text ? { comment: text } : {}), ...(ip ? { ip } : {}) } });
+    await recordAuditEvent(tx, { tenantId, instanceId: m.id, kind: "approved", actorRole: party.role, partyId: party.id, detail: { ...(text ? { comment: text } : {}), ...(ip ? { ip } : {}) } });
   }
   await tx.query(`UPDATE keystone.document_party SET status = 'approved', completed_at = now(), updated_at = now() WHERE id = $1`, [partyId]);
   return { ...(await finishStep(tx, { tenantId, leadId, lead, docs, signed: false })), decision: "approve" };
@@ -533,7 +541,7 @@ export async function acknowledgeAsViewer(tx, { tenantId, leadId, partyId, ip = 
   if (party.action_role !== "viewer") throw conflict("you are not asked to confirm this document");
   if (isFinished(party)) return { acknowledged: true, already: true };
   await tx.query(`UPDATE keystone.document_party SET completed_at = now(), status = CASE WHEN status = 'pending' THEN 'viewed' ELSE status END, updated_at = now() WHERE id = $1`, [partyId]);
-  for (const m of members) await recordAuditEvent(tx, { tenantId, instanceId: m.id, kind: "acknowledged", actorRole: party.role, detail: ip ? { ip } : null });
+  for (const m of members) await recordAuditEvent(tx, { tenantId, instanceId: m.id, kind: "acknowledged", actorRole: party.role, partyId: party.id, detail: ip ? { ip } : null });
   return { acknowledged: true };
 }
 
@@ -564,7 +572,7 @@ export async function assistAsParty(tx, { tenantId, leadId, partyId, values = {}
   await tx.query(`UPDATE keystone.document_party SET progress = $2::jsonb, updated_at = now() WHERE id = $1`, [target.id, JSON.stringify(merged)]);
   if (finish) {
     await tx.query(`UPDATE keystone.document_party SET completed_at = now(), updated_at = now() WHERE id = $1`, [partyId]);
-    for (const m of members) await recordAuditEvent(tx, { tenantId, instanceId: m.id, kind: "assisted", actorRole: party.role, detail: { for: target.role, fields: Object.keys(accepted).length } });
+    for (const m of members) await recordAuditEvent(tx, { tenantId, instanceId: m.id, kind: "assisted", actorRole: party.role, partyId: party.id, detail: { for: target.role, fields: Object.keys(accepted).length } });
   }
   return { saved: true, fields: Object.keys(accepted).length, finished: Boolean(finish) };
 }

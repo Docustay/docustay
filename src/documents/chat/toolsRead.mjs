@@ -93,32 +93,27 @@ export const READ_TOOLS = [
       return done({ id, events: rows.slice(-60).map((e) => ({ at: iso(e.occurred_at ?? e.at), what: e.kind, by: e.actor_role ?? e.who ?? null })), certificate: "When everyone has signed, Docustay seals the document and adds a certificate page: who signed, their email, the time and zone, the document's fingerprint (SHA-256) and the audit trail. The seal is a digital signature, so any change after signing breaks it and PDF readers show that." });
     } },
   { name: "docustay.docs.find", kind: "read", permission: VIEW_ALL, step: "Looking through your documents",
-    description: "Find the person's documents to answer a question (\"which NDAs from September aren't signed\", \"which contracts end before March\"): title or template words, state (waiting = out for signature), a person, dates made/sent/signed, an end or notice date before a day. Up to 25, with key dates; the person sees the list as a card.",
-    input_schema: OBJ({ words: STR("title words"), state: { type: "string", enum: Object.keys(FIND_STATES) }, person: STR("name or email"), from: STR("YYYY-MM-DD"), to: STR("YYYY-MM-DD"), dateOf: { type: "string", enum: Object.keys(DATE_COL) }, endsBefore: STR("YYYY-MM-DD"), noticeBefore: STR("YYYY-MM-DD"), question: STR("the question, briefly") }),
+    description: "Find the person's documents to answer a question (\"which NDAs from September aren't signed\"): title or template words, state (waiting = out for signature), a person, dates made/sent/signed. Up to 25; the person sees the list as a card.",
+    input_schema: OBJ({ words: STR("title words"), state: { type: "string", enum: Object.keys(FIND_STATES) }, person: STR("name or email"), from: STR("YYYY-MM-DD"), to: STR("YYYY-MM-DD"), dateOf: { type: "string", enum: Object.keys(DATE_COL) }, question: STR("the question, briefly") }),
     run: async (ctx, input) => {
       const words = likeWords(input?.words), states = FIND_STATES[input?.state] ?? null, who = String(input?.person ?? "").trim().slice(0, 80).replace(/[\\%_]/g, "\\$&") || null;
-      const col = DATE_COL[input?.dateOf] ?? "i.created_at", from = isoDay(input?.from), to = isoDay(input?.to), ends = isoDay(input?.endsBefore), notice = isoDay(input?.noticeBefore);
-      if (input?.from && !from || input?.to && !to || input?.endsBefore && !ends || input?.noticeBefore && !notice) return refuse("Give dates as YYYY-MM-DD.");
+      const col = DATE_COL[input?.dateOf] ?? "i.created_at", from = isoDay(input?.from), to = isoDay(input?.to);
+      if (input?.from && !from || input?.to && !to) return refuse("Give dates as YYYY-MM-DD.");
       const { rows } = await ctx.db.query(
         `SELECT i.id, i.title, i.state, i.created_at, i.sent_at, i.executed_at, count(*) OVER () AS total,
-                (SELECT string_agg(p.name, ', ' ORDER BY p.position, p.created_at) FROM keystone.document_party p WHERE p.instance_id = i.id AND p.status IN ('pending','viewed') AND p.action_role IN ('signer','approver') AND i.state IN ('sent','partially_signed')) AS waiting_on,
-                (SELECT k.date_value FROM keystone.document_key_date k WHERE k.instance_id = i.id AND k.kind = 'end') AS ends_on,
-                (SELECT k.date_value FROM keystone.document_key_date k WHERE k.instance_id = i.id AND k.kind = 'notice') AS notice_on
+                (SELECT string_agg(p.name, ', ' ORDER BY p.position, p.created_at) FROM keystone.document_party p WHERE p.instance_id = i.id AND p.status IN ('pending','viewed') AND p.action_role IN ('signer','approver') AND i.state IN ('sent','partially_signed')) AS waiting_on
            FROM keystone.document_instance i LEFT JOIN keystone.document_template t ON t.id = i.template_id
           WHERE i.builder = 'pdf' AND i.archived_at IS NULL AND (i.package_lead_id IS NULL OR i.package_lead_id = i.id)
             AND (cardinality($1::text[]) = 0 OR (SELECT bool_and(i.title ILIKE '%' || w || '%' OR coalesce(t.name, '') ILIKE '%' || w || '%') FROM unnest($1::text[]) w))
             AND ($2::text[] IS NULL OR i.state = ANY($2::text[]))
             AND ($3::text IS NULL OR EXISTS (SELECT 1 FROM keystone.document_party p WHERE p.instance_id = i.id AND (p.name ILIKE '%' || $3 || '%' OR p.email ILIKE '%' || $3 || '%')))
             AND ($4::date IS NULL OR ${col} >= $4::date) AND ($5::date IS NULL OR ${col} < $5::date + 1)
-            AND ($6::date IS NULL OR EXISTS (SELECT 1 FROM keystone.document_key_date k WHERE k.instance_id = i.id AND k.kind = 'end' AND k.date_value < $6::date))
-            AND ($7::date IS NULL OR EXISTS (SELECT 1 FROM keystone.document_key_date k WHERE k.instance_id = i.id AND k.kind = 'notice' AND k.date_value < $7::date))
-          ORDER BY ${col} DESC NULLS LAST, i.id LIMIT 25`, [words, states, who, from, to, ends, notice]);
-      const day = (d) => (d ? new Date(d).toISOString().slice(0, 10) : null);
-      const docs = rows.map((r) => ({ id: r.id, title: r.title, state: r.state, madeAt: iso(r.created_at), sentAt: iso(r.sent_at), signedAt: iso(r.executed_at), waitingOn: r.waiting_on ?? null, ends: day(r.ends_on), notice: day(r.notice_on), link: `/documents/${r.id}` }));
+          ORDER BY ${col} DESC NULLS LAST, i.id LIMIT 25`, [words, states, who, from, to]);
+      const docs = rows.map((r) => ({ id: r.id, title: r.title, state: r.state, madeAt: iso(r.created_at), sentAt: iso(r.sent_at), signedAt: iso(r.executed_at), waitingOn: r.waiting_on ?? null, link: `/documents/${r.id}` }));
       const total = Number(rows[0]?.total ?? 0);
       const question = String(input?.question ?? "").trim().slice(0, 140) || null;
       return done({ count: total, shown: docs.length, documents: docs, note: "The person sees this list as a card. Say how many, and name a few; do not invent any that are not here." },
-        { proposal: { kind: "results", state: "confirmed", summary: question ?? "Documents found", card: { kind: "results", question, total, rows: docs.map(({ id, title, state, sentAt, signedAt, waitingOn, ends, notice }) => ({ id, title, state, sentAt, signedAt, waitingOn, ends, notice })) } } });
+        { proposal: { kind: "results", state: "confirmed", summary: question ?? "Documents found", card: { kind: "results", question, total, rows: docs.map(({ id, title, state, sentAt, signedAt, waitingOn }) => ({ id, title, state, sentAt, signedAt, waitingOn })) } } });
     } },
   { name: "docustay.docs.explain_clause", kind: "read", permission: VIEW, step: "Reading the clause",
     description: "Explain one clause in plain words: its heading or a few of its words, and 2–3 sentences in the person's language on what it means (never advice). Refused when the clause is not in the document; the card adds the not-legal-advice line.",

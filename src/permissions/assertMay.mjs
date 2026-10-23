@@ -51,6 +51,15 @@ export const NAMED_ACTIONS = Object.freeze([
 const VERB_ACTIONS = Object.freeze(["view", "edit", "delete"]);
 
 /**
+ * ★ RANK ACTIONS (21 Oct 2026, the maintainer): a capability that follows the person's RANK in the workspace, not a row in `keystone.role_action`. Docustay has exactly three roles (Owner, Admin, Member), and "who may create, publish,
+ *   archive, import and switch on plays and playbooks" is the question "Admin or Owner?", so it is answered from the rank (`app_user.staff_role`) with no new database vocabulary and no per-workspace backfill.
+ *   Members keep every USE of a switched-on play while drafting (that is the AI draft route, not these). Listed here, mirrored nowhere else: docs/ROLE-TABLE (specs/v1/ROLE-TABLE.md) reads this object.
+ */
+export const RANK_ACTIONS = Object.freeze({ "play.manage": Object.freeze(["owner", "admin"]) });
+/** Is this action a capability question (a named action or a rank action) rather than a question about one row? */
+export const isCapabilityAction = (action) => NAMED_ACTIONS.includes(action) || Object.hasOwn(RANK_ACTIONS, action);
+
+/**
  * The owning user id for a specific ROW of `object`, resolved through `ownerExpr` — the same map
  * `src/permissions/ownership.mjs` uses for every scoped list predicate. `null` when the object is
  * ownerless (the question is answered by `scope = 'everything'` alone), when there is no existing
@@ -144,6 +153,13 @@ export async function assertMay(db, principal, check, body = null) {
 
   if (typeof action !== "string" || action === "") {
     throw new Error("assertMay: check.action is required");
+  }
+
+  // ── a RANK ACTION: the person's rank in this workspace ───────────────────────────────────────
+  if (Object.hasOwn(RANK_ACTIONS, action)) {
+    const { rows } = await db.query(`SELECT staff_role FROM keystone.app_user WHERE id = $1 AND role = 'staff' AND archived_at IS NULL`, [userId]);
+    if (!RANK_ACTIONS[action].includes(rows[0]?.staff_role)) throw forbidden(`refused: requires ${RANK_ACTIONS[action].join(" or ")}`);
+    return;
   }
 
   // ── a NAMED ACTION: keystone.role_action, no owner, no scope ────────────────────────────────

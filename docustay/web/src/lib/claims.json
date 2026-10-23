@@ -5,12 +5,12 @@
    "id": "free-docs-per-month",
    "says": "Free plan: 15 documents a month",
    "site": {
-    "file": "src/lib/site/plans.js",
-    "re": "free: \\{ docsPerMonth: (\\d+),"
+    "file": "src/lib/site/prices.json",
+    "re": "\"free\": \\{[^}]*?\"docsIncluded\": (\\d+)"
    },
    "code": {
-    "file": "../../src/product/docustayPlans.mjs",
-    "re": "docsPerMonth: num\\(env\\.KEYSTONE_DOCUSTAY_FREE_DOCS_PER_MONTH\\) \\?\\? (\\d+)"
+    "file": "../../src/product/docustayPrices.mjs",
+    "re": "free: Object\\.freeze\\(\\{[^}]*?docsIncluded: (\\d+)"
    }
   },
   {
@@ -140,19 +140,6 @@
    }
   },
   {
-   "id": "report-default-window-days",
-   "says": "the default window is the last 30 days",
-   "site": {
-    "file": "static/llms-full.txt",
-    "re": "default window is the last (\\d+) days"
-   },
-   "code": {
-    "file": "../../src/documents/reports.mjs",
-    "re": "- (\\d+) \\* DAY\\)\\);",
-    "plus": 1
-   }
-  },
-  {
    "id": "upload-ui-max-mb",
    "says": "The home drop box takes files up to the Free limit",
    "site": {
@@ -166,26 +153,26 @@
   },
   {
    "id": "cloud-pro-monthly",
-   "says": "Cloud Pro lists at $39 a month, flat per workspace (3900 minor units)",
+   "says": "Pro lists at $39 a month, flat per workspace (3900 minor units)",
    "site": {
-    "file": "src/lib/site/plans.js",
-    "re": "monthlyMinor: (\\d+)"
+    "file": "src/lib/site/prices.json",
+    "re": "\"listMonthlyMinor\": (\\d+)"
    },
    "code": {
-    "file": "../../scripts/stripe/docustay-catalogue.mjs",
-    "re": "docustay_pro_monthly_v3\", amount: (\\d+)"
+    "file": "../../src/product/docustayPrices.mjs",
+    "re": "listMonthlyMinor: (\\d+)"
    }
   },
   {
    "id": "cloud-pro-founders-monthly",
    "says": "Founders pay $25 a month for as long as the subscription stays active (2500 minor units)",
    "site": {
-    "file": "src/lib/site/plans.js",
-    "re": "foundersMonthlyMinor: (\\d+)"
+    "file": "src/lib/site/prices.json",
+    "re": "\"foundersMonthlyMinor\": (\\d+)"
    },
    "code": {
-    "file": "../../scripts/stripe/docustay-catalogue.mjs",
-    "re": "docustay_pro_monthly_v2\", amount: (\\d+)"
+    "file": "../../src/product/docustayPrices.mjs",
+    "re": "foundersMonthlyMinor: (\\d+)"
    }
   },
   {
@@ -216,12 +203,12 @@
    "id": "founders-cutoff",
    "says": "The founders cut-off is one instant: the page and the server must agree exactly (provisionally the end of 27 Jan 2027, Pacific)",
    "site": {
-    "file": "src/lib/site/plans.js",
-    "re": "foundersUntil: \"([^\"]+)\""
+    "file": "src/lib/site/prices.json",
+    "re": "\"foundersUntil\": \"([^\"]+)\""
    },
    "code": {
-    "file": "../../src/product/docustayPlans.mjs",
-    "re": "KEYSTONE_DOCUSTAY_FOUNDERS_UNTIL \\|\\| \"([^\"]+)\""
+    "file": "../../src/product/docustayPrices.mjs",
+    "re": "foundersUntil: \"([^\"]+)\""
    },
    "date": true
   },
@@ -262,18 +249,6 @@
    }
   },
   {
-   "id": "free-docs-cap-pricing-page",
-   "says": "The What counts block repeats the Free limit of 15 documents a month",
-   "site": {
-    "file": "src/routes/(site)/pricing/+page.svelte",
-    "re": "Free sends up to (\\d+) documents a month"
-   },
-   "code": {
-    "file": "../../src/product/docustayPlans.mjs",
-    "re": "docsPerMonth: num\\(env\\.KEYSTONE_DOCUSTAY_FREE_DOCS_PER_MONTH\\) \\?\\? (\\d+)"
-   }
-  },
-  {
    "id": "price-change-notice-months",
    "says": "At least 12 months' notice before a price change applies (policy value written in the Terms; no billing code)",
    "site": {
@@ -287,50 +262,62 @@
   },
   {
    "id": "ai-credits-free",
-   "says": "Free includes 10 Scribe AI credits a month",
+   "says": "Free includes 10 AI drafts a month",
    "site": {
-    "file": "src/lib/site/plans.js",
-    "re": "AI_CREDITS = \\{ free: (\\d+), pro: \\d+ \\}"
+    "file": "src/lib/site/prices.json",
+    "re": "\"free\": \\{[^}]*?\"draftsIncluded\": (\\d+)"
    },
    "code": {
-    "file": "../../src/product/docustayPlans.mjs",
-    "re": "creditsPerMonth: dec\\(env\\[`KEYSTONE_AI_\\$\\{P\\}_CREDITS`\\]\\) \\?\\? \\(free \\? (\\d+) : \\d+\\)"
+    "file": "../../src/product/docustayPrices.mjs",
+    "re": "free: Object\\.freeze\\(\\{[^}]*?draftsIncluded: (\\d+)"
    }
   },
   {
    "id": "ai-credits-pro",
-   "says": "Pro includes 150 Scribe AI credits a month",
+   "says": "Pro includes 100 AI drafts a month",
    "site": {
-    "file": "src/lib/site/plans.js",
-    "re": "AI_CREDITS = \\{ free: \\d+, pro: (\\d+) \\}"
+    "file": "src/lib/site/prices.json",
+    "re": "\"pro\": \\{[^}]*?\"draftsIncluded\": (\\d+)"
    },
    "code": {
-    "file": "../../src/product/docustayPlans.mjs",
-    "re": "creditsPerMonth: dec\\(env\\[`KEYSTONE_AI_\\$\\{P\\}_CREDITS`\\]\\) \\?\\? \\(free \\? \\d+ : (\\d+)\\)"
+    "file": "../../src/product/docustayPrices.mjs",
+    "re": "pro: Object\\.freeze\\(\\{[^}]*?draftsIncluded: (\\d+)"
+   }
+  },
+  {
+   "id": "free-signers-per-month",
+   "says": "Free plan: 15 different signers a month",
+   "site": {
+    "file": "src/lib/site/prices.json",
+    "re": "\"free\": \\{[^}]*?\"signersPerMonth\": (\\d+)"
+   },
+   "code": {
+    "file": "../../src/product/docustayPrices.mjs",
+    "re": "free: Object\\.freeze\\(\\{[^}]*?signersPerMonth: (\\d+)"
+   }
+  },
+  {
+   "id": "payg-templates-per-month",
+   "says": "Pay as you go: 25 new templates a month",
+   "site": {
+    "file": "src/lib/site/prices.json",
+    "re": "\"payg\": \\{[^}]*?\"templatesPerMonth\": (\\d+)"
+   },
+   "code": {
+    "file": "../../src/product/docustayPrices.mjs",
+    "re": "payg: Object\\.freeze\\(\\{[^}]*?templatesPerMonth: (\\d+)"
    }
   },
   {
    "id": "free-templates-per-month",
    "says": "Free plan: 5 new templates a month (documents and forms together)",
    "site": {
-    "file": "src/lib/site/plans.js",
-    "re": "templatesPerMonth: (\\d+) \\}"
+    "file": "src/lib/site/prices.json",
+    "re": "\"free\": \\{[^}]*?\"templatesPerMonth\": (\\d+)"
    },
    "code": {
-    "file": "../../src/product/docustayPlans.mjs",
-    "re": "templatesPerMonth: num\\(env\\.KEYSTONE_DOCUSTAY_FREE_TEMPLATES_PER_MONTH\\) \\?\\? (\\d+)"
-   }
-  },
-  {
-   "id": "free-templates-cap-pricing-page",
-   "says": "The What counts block repeats the Free limit of 5 new templates a month",
-   "site": {
-    "file": "src/routes/(site)/pricing/+page.svelte",
-    "re": "Free makes up to (\\d+) new templates a month, documents and forms together, however"
-   },
-   "code": {
-    "file": "../../src/product/docustayPlans.mjs",
-    "re": "templatesPerMonth: num\\(env\\.KEYSTONE_DOCUSTAY_FREE_TEMPLATES_PER_MONTH\\) \\?\\? (\\d+)"
+    "file": "../../src/product/docustayPrices.mjs",
+    "re": "free: Object\\.freeze\\(\\{[^}]*?templatesPerMonth: (\\d+)"
    }
   },
   {
@@ -349,7 +336,7 @@
    "id": "pay-hold-days-docs",
    "says": "The API docs repeat the 7-day hold",
    "site": {
-    "file": "../docs/contracts-payments-playbooks.md",
+    "file": "../docs/payments-and-playbooks.md",
     "re": "for up to (\\d+) days\\)"
    },
    "code": {
@@ -358,51 +345,171 @@
    }
   },
   {
-   "id": "notice-reminder-first",
-   "says": "On Pro, the first notice-date reminder comes 30 days before",
+   "id": "facts-free-upload-mb",
+   "says": "The facts page states 25 MB uploads on Free",
    "site": {
-    "file": "src/lib/site/pages/pass3-usecases.js",
-    "re": "a reminder comes (\\d+) and \\d+ days before a notice date"
+    "file": "src/lib/site/plans.js",
+    "re": "freeUploadMb: (\\d+),"
    },
    "code": {
-    "file": "../../src/documents/keyDates.mjs",
-    "re": "kind = 'notice' AND date_value BETWEEN current_date AND current_date \\+ (\\d+)"
+    "file": "../../src/product/docustayPlans.mjs",
+    "re": "KEYSTONE_DOCUSTAY_FREE_UPLOAD_MB\\) \\?\\? (\\d+)"
    }
   },
   {
-   "id": "notice-reminder-second",
-   "says": "On Pro, the second notice-date reminder comes 7 days before",
+   "id": "facts-pro-upload-mb",
+   "says": "The facts page states 100 MB uploads on Pro",
    "site": {
-    "file": "src/lib/site/pages/pass3-usecases.js",
-    "re": "a reminder comes \\d+ and (\\d+) days before a notice date"
+    "file": "src/lib/site/plans.js",
+    "re": "proUploadMb: (\\d+),"
    },
    "code": {
-    "file": "../../src/documents/keyDates.mjs",
-    "re": "date_value <= current_date \\+ (\\d+) AND reminded_7_at IS NULL"
+    "file": "../../src/product/docustayPlans.mjs",
+    "re": "KEYSTONE_DOCUSTAY_PRO_UPLOAD_MB\\) \\?\\? (\\d+)"
    }
   },
   {
-   "id": "contracts-due-window",
-   "says": "The Contracts page shows what is due in the next 30 days",
+   "id": "facts-free-emails-per-day",
+   "says": "The facts page states 25 emails a day on Free",
    "site": {
-    "file": "src/lib/site/pages/pass3-usecases.js",
-    "re": "with what is due in the next (\\d+) days"
+    "file": "src/lib/site/plans.js",
+    "re": "freeEmailsPerDay: (\\d+),"
    },
    "code": {
-    "file": "../../src/documents/keyDates.mjs",
-    "re": "in30 = new Date\\(Date.now\\(\\) \\+ (\\d+) \\* 864e5\\)"
+    "file": "../../src/product/docustayPlans.mjs",
+    "re": "emailsPerDay: num\\(env\\.KEYSTONE_DOCUSTAY_FREE_EMAILS_PER_DAY\\) \\?\\? (\\d+)"
+   }
+  },
+  {
+   "id": "facts-pro-emails-per-day",
+   "says": "The facts page states 500 emails a day on Pro",
+   "site": {
+    "file": "src/lib/site/plans.js",
+    "re": "proEmailsPerDay: (\\d+),"
+   },
+   "code": {
+    "file": "../../src/product/docustayPlans.mjs",
+    "re": "emailsPerDay: num\\(env\\.KEYSTONE_DOCUSTAY_PRO_EMAILS_PER_DAY\\) \\?\\? (\\d+)"
+   }
+  },
+  {
+   "id": "facts-api-rate",
+   "says": "The facts page states 600 API requests a minute per key",
+   "site": {
+    "file": "src/lib/site/plans.js",
+    "re": "apiRequestsPerMinute: (\\d+) "
+   },
+   "code": {
+    "file": "../../src/http/rateLimit.mjs",
+    "re": "checkKeyLimit\\(db, tenantId, tokenId, \\{ limit = (\\d+)"
    }
   },
   {
    "id": "api-scope-count",
-   "says": "There are 35 API key scopes",
+   "says": "A Docustay workspace is offered 12 API key scopes",
    "site": {
     "file": "static/docs/api-reference.md",
     "re": "there are (\\d+) in all"
    },
    "code": {
     "file": "../../src/developer/scopes.mjs",
-    "re": "must hold exactly (\\d+) distinct scopes"
+    "re": "offered exactly (\\d+) scopes"
+   }
+  },
+  {
+   "id": "payg-person-monthly",
+   "says": "Pay as you go is $5 per team member a month",
+   "site": {
+    "file": "src/lib/site/prices.json",
+    "re": "\"payg\": \\{[^}]*?\"personMonthlyMinor\": (\\d+)"
+   },
+   "code": {
+    "file": "../../src/product/docustayPrices.mjs",
+    "re": "payg: Object\\.freeze\\(\\{[^}]*?personMonthlyMinor: (\\d+)"
+   }
+  },
+  {
+   "id": "payg-document-over",
+   "says": "Pay as you go: $0.50 for each document past 15",
+   "site": {
+    "file": "src/lib/site/prices.json",
+    "re": "\"payg\": \\{[^}]*?\"docOverMinor\": (\\d+)"
+   },
+   "code": {
+    "file": "../../src/product/docustayPrices.mjs",
+    "re": "payg: Object\\.freeze\\(\\{[^}]*?docOverMinor: (\\d+)"
+   }
+  },
+  {
+   "id": "payg-draft-over",
+   "says": "Drafts past the allowance are $0.30 each",
+   "site": {
+    "file": "src/lib/site/prices.json",
+    "re": "\"payg\": \\{[^}]*?\"draftOverMinor\": (\\d+)"
+   },
+   "code": {
+    "file": "../../src/product/docustayPrices.mjs",
+    "re": "payg: Object\\.freeze\\(\\{[^}]*?draftOverMinor: (\\d+)"
+   }
+  },
+  {
+   "id": "lifetime-price",
+   "says": "Lifetime is $299 once",
+   "site": {
+    "file": "src/lib/site/prices.json",
+    "re": "\"oneTimeMinor\": (\\d+)"
+   },
+   "code": {
+    "file": "../../src/product/docustayPrices.mjs",
+    "re": "oneTimeMinor: (\\d+)"
+   }
+  },
+  {
+   "id": "lifetime-first-workspaces",
+   "says": "Lifetime is for the first 200 workspaces",
+   "site": {
+    "file": "src/lib/site/prices.json",
+    "re": "\"firstWorkspaces\": (\\d+)"
+   },
+   "code": {
+    "file": "../../src/product/docustayPrices.mjs",
+    "re": "firstWorkspaces: (\\d+)"
+   }
+  },
+  {
+   "id": "lifetime-drafts",
+   "says": "Lifetime includes 50 AI drafts a month",
+   "site": {
+    "file": "src/lib/site/prices.json",
+    "re": "\"lifetime\": \\{[^}]*?\"draftsIncluded\": (\\d+)"
+   },
+   "code": {
+    "file": "../../src/product/docustayPrices.mjs",
+    "re": "lifetime: Object\\.freeze\\(\\{[^}]*?draftsIncluded: (\\d+)"
+   }
+  },
+  {
+   "id": "budget-default",
+   "says": "The default monthly budget is $50",
+   "site": {
+    "file": "src/lib/site/prices.json",
+    "re": "\"defaultMinor\": (\\d+)"
+   },
+   "code": {
+    "file": "../../src/product/docustayPrices.mjs",
+    "re": "defaultMinor: (\\d+)"
+   }
+  },
+  {
+   "id": "payg-fee",
+   "says": "Pay as you go fee is 2%",
+   "site": {
+    "file": "src/lib/site/prices.json",
+    "re": "\"payg\": \\{[^}]*?\"feeBps\": (\\d+)"
+   },
+   "code": {
+    "file": "../../src/product/docustayPrices.mjs",
+    "re": "payg: Object\\.freeze\\(\\{[^}]*?feeBps: (\\d+)"
    }
   }
  ]

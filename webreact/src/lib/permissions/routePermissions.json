@@ -10,10 +10,6 @@
   "kind": "section",
   "section": null
  },
- "DELETE /api/v1/email-templates/:kind": {
-  "kind": "handler",
-  "check": "src/routes/developerDocuments.mjs — developer API key with documents scope (ROUTE_SCOPES), checked by tokenRoute before anything runs"
- },
  "DELETE /api/v1/plays/:name": {
   "kind": "handler",
   "check": "src/routes/developerPlays.mjs — developer API key with plays:write (ROUTE_SCOPES), checked by tokenRoute before anything runs"
@@ -167,17 +163,58 @@
  "POST /api/auth/passkeys/rename": {
   "kind": "public"
  },
+ "POST /api/auth/password-reset/code": {
+  "kind": "public",
+  "note": "src/auth/install.mjs — the typed code; per-code and per-account guess limits in redeemEmailCode; answers a single-use grant"
+ },
+ "POST /api/auth/password-reset/link": {
+  "kind": "public",
+  "note": "src/auth/install.mjs — the fallback link from the same email, finished on the server"
+ },
  "POST /api/auth/password-reset/request": {
   "kind": "public",
-  "note": "src/auth/install.mjs:519 — always answers the same, rate-limited inside requestPasswordReset"
+  "note": "src/auth/install.mjs — emails a six-digit code (and the fallback link); always answers the same, rate-limited inside requestEmailCode"
+ },
+ "POST /api/auth/password-reset/set": {
+  "kind": "public",
+  "note": "src/auth/install.mjs — the grant plus the new password; signs nobody in, ends every session, two-step still asked"
+ },
+ "POST /api/auth/password/change": {
+  "kind": "public",
+  "note": "src/auth/twoStepRoutes.mjs — change or set the signed-in person's own password; current password or emailed code, plus the second step when it is on"
+ },
+ "POST /api/auth/password/request-code": {
+  "kind": "public",
+  "note": "src/auth/twoStepRoutes.mjs — a signed-in person asks for a code to their own address (loadSelf)"
  },
  "POST /api/auth/sessions/revoke": {
+  "kind": "public"
+ },
+ "POST /api/auth/two-step/authenticator/remove": {
   "kind": "public"
  },
  "POST /api/auth/two-step/confirm": {
   "kind": "public"
  },
+ "POST /api/auth/two-step/devices/forget": {
+  "kind": "public"
+ },
+ "POST /api/auth/two-step/devices/remember": {
+  "kind": "public"
+ },
  "POST /api/auth/two-step/disable": {
+  "kind": "public"
+ },
+ "POST /api/auth/two-step/passkey/begin": {
+  "kind": "public"
+ },
+ "POST /api/auth/two-step/passkey/finish": {
+  "kind": "public"
+ },
+ "POST /api/auth/two-step/proof/passkey/begin": {
+  "kind": "public"
+ },
+ "POST /api/auth/two-step/recovery-codes": {
   "kind": "public"
  },
  "POST /api/auth/two-step/start": {
@@ -267,34 +304,6 @@
   "kind": "grant",
   "object": "document",
   "action": "edit",
-  "subject": null,
-  "section": "/documents"
- },
- "POST /api/documents/automations/archive": {
-  "kind": "grant",
-  "object": "document",
-  "action": "template.author",
-  "subject": null,
-  "section": "/documents"
- },
- "POST /api/documents/automations/enable": {
-  "kind": "grant",
-  "object": "document",
-  "action": "template.author",
-  "subject": null,
-  "section": "/documents"
- },
- "POST /api/documents/automations/save": {
-  "kind": "grant",
-  "object": "document",
-  "action": "template.author",
-  "subject": null,
-  "section": "/documents"
- },
- "POST /api/documents/automations/test": {
-  "kind": "grant",
-  "object": "document",
-  "action": "template.author",
   "subject": null,
   "section": "/documents"
  },
@@ -393,6 +402,13 @@
   "subject": null,
   "section": "/documents/settings"
  },
+ "POST /api/documents/email/domain/remove": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": "/documents/settings"
+ },
  "POST /api/documents/email/domain/verify": {
   "kind": "grant",
   "object": "setting",
@@ -413,34 +429,6 @@
   "action": "edit",
   "subject": null,
   "section": "/documents/settings"
- },
- "POST /api/documents/email/messages/preview": {
-  "kind": "grant",
-  "object": "document",
-  "action": "template.author",
-  "subject": null,
-  "section": "/documents"
- },
- "POST /api/documents/email/messages/reset": {
-  "kind": "grant",
-  "object": "setting",
-  "action": "edit",
-  "subject": null,
-  "section": "/documents"
- },
- "POST /api/documents/email/messages/save": {
-  "kind": "grant",
-  "object": "setting",
-  "action": "edit",
-  "subject": null,
-  "section": "/documents"
- },
- "POST /api/documents/email/messages/test": {
-  "kind": "grant",
-  "object": "document",
-  "action": "template.author",
-  "subject": null,
-  "section": "/documents"
  },
  "POST /api/documents/email/resume": {
   "kind": "grant",
@@ -575,27 +563,6 @@
   "subject": null,
   "section": "/documents/executed"
  },
- "POST /api/documents/forms/open": {
-  "kind": "grant",
-  "object": "document",
-  "action": "edit",
-  "subject": null,
-  "section": "/documents"
- },
- "POST /api/documents/forms/publish": {
-  "kind": "grant",
-  "object": "document",
-  "action": "edit",
-  "subject": null,
-  "section": "/documents"
- },
- "POST /api/documents/forms/remove": {
-  "kind": "grant",
-  "object": "document",
-  "action": "edit",
-  "subject": null,
-  "section": "/documents"
- },
  "POST /api/documents/forms/templates": {
   "kind": "grant",
   "object": "document",
@@ -608,13 +575,6 @@
   "object": "document",
   "action": "edit",
   "subject": null,
-  "section": "/documents"
- },
- "POST /api/documents/key-dates/correct": {
-  "kind": "grant",
-  "object": "document",
-  "action": "edit",
-  "subject": "instanceId",
   "section": "/documents"
  },
  "POST /api/documents/library/customize": {
@@ -921,70 +881,70 @@
  "POST /api/documents/playbooks/archive": {
   "kind": "grant",
   "object": "document",
-  "action": "template.author",
+  "action": "play.manage",
   "subject": null,
   "section": "/documents"
  },
  "POST /api/documents/playbooks/enable": {
   "kind": "grant",
   "object": "document",
-  "action": "template.author",
+  "action": "play.manage",
   "subject": null,
   "section": "/documents"
  },
  "POST /api/documents/playbooks/save": {
   "kind": "grant",
   "object": "document",
-  "action": "template.author",
+  "action": "play.manage",
   "subject": null,
   "section": "/documents"
  },
  "POST /api/documents/plays/archive": {
   "kind": "grant",
   "object": "document",
-  "action": "template.author",
+  "action": "play.manage",
   "subject": null,
   "section": "/documents"
  },
  "POST /api/documents/plays/duplicate": {
   "kind": "grant",
   "object": "document",
-  "action": "template.author",
+  "action": "play.manage",
   "subject": null,
   "section": "/documents"
  },
  "POST /api/documents/plays/import": {
   "kind": "grant",
   "object": "document",
-  "action": "template.author",
+  "action": "play.manage",
   "subject": null,
   "section": "/documents"
  },
  "POST /api/documents/plays/on": {
   "kind": "grant",
   "object": "document",
-  "action": "template.author",
+  "action": "play.manage",
   "subject": null,
   "section": "/documents"
  },
  "POST /api/documents/plays/publish": {
   "kind": "grant",
   "object": "document",
-  "action": "template.author",
+  "action": "play.manage",
   "subject": null,
   "section": "/documents"
  },
  "POST /api/documents/plays/save": {
   "kind": "grant",
   "object": "document",
-  "action": "template.author",
+  "action": "play.manage",
   "subject": null,
   "section": "/documents"
  },
  "POST /api/documents/plays/test": {
   "kind": "grant",
   "object": "document",
-  "action": "template.author",
+  "action": "play.manage",
   "subject": null,
   "section": "/documents"
  },
@@ -2594,6 +2554,12 @@
  "POST /api/platform/automations/kill-switch": {
   "kind": "platform"
  },
+ "POST /api/platform/docustay/review": {
+  "kind": "platform"
+ },
+ "POST /api/platform/docustay/review/resolve": {
+  "kind": "platform"
+ },
  "POST /api/platform/flags": {
   "kind": "platform"
  },
@@ -2646,6 +2612,13 @@
   "subject": null,
   "section": "/settings/plans"
  },
+ "POST /api/product/docustay/budget": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": "/settings/plans"
+ },
  "POST /api/product/docustay/cancel": {
   "kind": "grant",
   "object": "setting",
@@ -2682,6 +2655,13 @@
   "kind": "section",
   "section": "/settings/plans"
  },
+ "POST /api/product/docustay/estimate": {
+  "kind": "grant",
+  "object": "document",
+  "action": "view",
+  "subject": null,
+  "section": "/documents"
+ },
  "POST /api/product/docustay/inbox/read-all": {
   "kind": "grant",
   "object": "document",
@@ -2708,12 +2688,42 @@
   "kind": "section",
   "section": "/settings/plans"
  },
+ "POST /api/product/docustay/payments/settings": {
+  "kind": "section",
+  "section": "/settings/plans"
+ },
+ "POST /api/product/docustay/payments/update-link": {
+  "kind": "section",
+  "section": "/settings/plans"
+ },
+ "POST /api/product/docustay/payments/wizard": {
+  "kind": "section",
+  "section": "/settings/plans"
+ },
+ "POST /api/product/docustay/payments/wizard/continue": {
+  "kind": "section",
+  "section": "/settings/plans"
+ },
  "POST /api/product/docustay/portal": {
   "kind": "grant",
   "object": "setting",
   "action": "edit",
   "subject": null,
   "section": "/settings/plans"
+ },
+ "POST /api/product/docustay/preflight": {
+  "kind": "grant",
+  "object": "document",
+  "action": "view",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/product/docustay/prompt-event": {
+  "kind": "grant",
+  "object": "document",
+  "action": "view",
+  "subject": null,
+  "section": "/documents"
  },
  "POST /api/product/docustay/resume": {
   "kind": "grant",
@@ -2722,13 +2732,26 @@
   "subject": null,
   "section": "/settings/plans"
  },
- "POST /api/product/docustay/translation-suggestions/:id/review": {
-  "kind": "handler",
-  "check": "src/routes/docustay.mjs viewerGuard — keystone.docustay_may_view() (the named Docustay viewers), plus a RESTRICTIVE row policy on the table"
+ "POST /api/product/docustay/switch-plan": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": "/settings/plans"
  },
- "POST /api/product/docustay/translation-suggestions/applied": {
-  "kind": "handler",
-  "check": "src/routes/docustay.mjs viewerGuard — keystone.docustay_may_view(), plus a RESTRICTIVE row policy on the table"
+ "POST /api/product/docustay/switch-plan/cancel": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": "/settings/plans"
+ },
+ "POST /api/product/docustay/switch-plan/preview": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": "/settings/plans"
  },
  "POST /api/product/docustay/welcome-emails": {
   "kind": "grant",
@@ -2779,17 +2802,9 @@
   "kind": "public",
   "note": "src/routes/publicDocustay.mjs:38 — starts a Stripe Checkout; per-IP limit"
  },
- "POST /api/public/docustay/translation-suggestions": {
-  "kind": "public",
-  "note": "src/routes/publicDocustay.mjs — a suggested sentence; hidden field, minimum time, per-IP limit and a daily cap per hashed address; the address is never stored"
- },
  "POST /api/public/docustay/usage-report": {
   "kind": "public",
   "note": "src/routes/publicDocustay.mjs:45 — same whitelist as the ping; per-IP limit"
- },
- "POST /api/public/forms/:org/:slug/start": {
-  "kind": "public",
-  "note": "a visitor starts a response to a live form; rate-limited, bot-checked, the same 404 for anything not live; src/routes/publicForms.mjs"
  },
  "POST /api/public/leads": {
   "kind": "public"
@@ -3119,6 +3134,14 @@
   "kind": "rank",
   "rank": "admin"
  },
+ "POST /api/settings/security/remind": {
+  "kind": "rank",
+  "rank": "admin"
+ },
+ "POST /api/settings/security/reset": {
+  "kind": "rank",
+  "rank": "admin"
+ },
  "POST /api/settings/sign-in/revoke": {
   "kind": "section",
   "section": "/settings/sign-in"
@@ -3238,14 +3261,6 @@
   "subject": null,
   "section": "/items/services"
  },
- "POST /api/v1/automations/:id/enable": {
-  "kind": "handler",
-  "check": "src/routes/developerRun9.mjs — developer API key with plays:write (ROUTE_SCOPES), checked by tokenRoute before anything runs; switching on needs Pro. Run 9 (renamed from playbook flows in Part 4R)."
- },
- "POST /api/v1/contracts/:id/dates": {
-  "kind": "handler",
-  "check": "src/routes/developerRun9.mjs — developer API key with documents:write (ROUTE_SCOPES), checked by tokenRoute before anything runs; acts as the workspace owner. Run 9."
- },
  "POST /api/v1/documents": {
   "kind": "handler",
   "check": "src/routes/developerDocuments.mjs — developer API key with documents:write (ROUTE_SCOPES), checked by token before the handler runs"
@@ -3306,10 +3321,6 @@
   "kind": "handler",
   "check": "src/routes/developerPlays.mjs — developer API key with drafts:write (ROUTE_SCOPES), checked by tokenRoute before anything runs"
  },
- "POST /api/v1/email-templates/:kind/preview": {
-  "kind": "handler",
-  "check": "src/routes/developerDocuments.mjs — developer API key with documents scope (ROUTE_SCOPES), checked by tokenRoute before anything runs"
- },
  "POST /api/v1/embedded/builder-session": {
   "kind": "handler",
   "check": "src/routes/developerBuilder.mjs — developer API key with embedded:write (ROUTE_SCOPES) + Idempotency-Key; the website must be on the organisation's own embedding list; the key it makes can only read and write templates, is member rank and ends in an hour"
@@ -3317,18 +3328,6 @@
  "POST /api/v1/embedded/scribe-session": {
   "kind": "handler",
   "check": "src/routes/developerBuilder.mjs — developer API key with embedded:write (ROUTE_SCOPES) + Idempotency-Key; the site must be on the embed allow-list; the key it mints is draft-only and lasts an hour"
- },
- "POST /api/v1/forms/:id/open": {
-  "kind": "handler",
-  "check": "src/routes/developerForms.mjs — developer API key with documents:write (ROUTE_SCOPES), checked by tokenRoute before the handler; acts as the workspace owner. Run 7: forms over the API."
- },
- "POST /api/v1/forms/:id/unpublish": {
-  "kind": "handler",
-  "check": "src/routes/developerForms.mjs — developer API key with documents:write (ROUTE_SCOPES), checked by tokenRoute before the handler; acts as the workspace owner. Run 7: forms over the API."
- },
- "POST /api/v1/forms/publish": {
-  "kind": "handler",
-  "check": "src/routes/developerForms.mjs — developer API key with documents:write (ROUTE_SCOPES), checked by tokenRoute before the handler; acts as the workspace owner. Run 7: forms over the API."
  },
  "POST /api/v1/payments/:id/refund": {
   "kind": "handler",
@@ -3357,6 +3356,10 @@
  "POST /api/v1/plays/test": {
   "kind": "handler",
   "check": "src/routes/developerPlays.mjs — developer API key with plays:write (ROUTE_SCOPES), checked by tokenRoute before anything runs"
+ },
+ "POST /api/v1/preflight": {
+  "kind": "handler",
+  "check": "src/routes/developerDocuments.mjs — developer API key (ROUTE_SCOPES), checked by tokenRoute before anything runs; it reads the plan and changes nothing"
  },
  "POST /api/v1/templates/:id/defaults": {
   "kind": "handler",
@@ -3436,9 +3439,5 @@
  "PUT /api/settings/notifications": {
   "kind": "section",
   "section": "/settings/notifications"
- },
- "PUT /api/v1/email-templates/:kind": {
-  "kind": "handler",
-  "check": "src/routes/developerDocuments.mjs — developer API key with documents scope (ROUTE_SCOPES), checked by tokenRoute before anything runs"
  }
 }

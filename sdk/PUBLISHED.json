@@ -1,0 +1,43 @@
+{
+ "_note": "written by scripts/publish-public.mjs after each publish: package folder -> the version on the registry and the commit it was built from. A folder that changed since its commit must carry a new version before the next publish.",
+ "js": {
+  "name": "@docustay2026/sdk",
+  "version": "0.1.0",
+  "commit": "001ab94fe9e04e465c5cf5b4081b94fde2e334b2"
+ },
+ "embed": {
+  "name": "@docustay2026/embed",
+  "version": "0.1.2",
+  "commit": "001ab94fe9e04e465c5cf5b4081b94fde2e334b2"
+ },
+ "react": {
+  "name": "@docustay2026/react",
+  "version": "0.1.0",
+  "commit": "001ab94fe9e04e465c5cf5b4081b94fde2e334b2"
+ },
+ "vue": {
+  "name": "@docustay2026/vue",
+  "version": "0.1.0",
+  "commit": "001ab94fe9e04e465c5cf5b4081b94fde2e334b2"
+ },
+ "angular": {
+  "name": "@docustay2026/angular",
+  "version": "0.1.1",
+  "commit": "001ab94fe9e04e465c5cf5b4081b94fde2e334b2"
+ },
+ "mcp": {
+  "name": "@docustay2026/mcp",
+  "version": "0.1.0",
+  "commit": "001ab94fe9e04e465c5cf5b4081b94fde2e334b2"
+ },
+ "cli": {
+  "name": "docustay",
+  "version": "0.1.2",
+  "commit": "001ab94fe9e04e465c5cf5b4081b94fde2e334b2"
+ },
+ "python": {
+  "name": "docustay (PyPI)",
+  "version": "0.1.0",
+  "commit": "001ab94fe9e04e465c5cf5b4081b94fde2e334b2"
+ }
+}

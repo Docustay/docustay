@@ -38,44 +38,48 @@ const unb64 = (s) => new Uint8Array(Buffer.from(String(s), "base64url"));
 
 const q = (fn, ...a) => withCredentialLookup((db) => fn(db, ...a));
 
-/** Begin registering a passkey for the signed-in person. */
-export async function beginRegistration({ firebaseUid, email, origin }) {
+/** Begin registering a passkey (or, with kind "security_key", a roaming security key: a USB or NFC key, no resident credential, second step only) for the signed-in person. */
+export async function beginRegistration({ firebaseUid, email, origin, kind = "passkey" }) {
   gate();
   const { rpID } = relyingParty(origin);
   const existing = await q((db) => db.query(`SELECT credential_id, transports FROM keystone.list_passkeys($1)`, [firebaseUid]));
+  const key = kind === "security_key";
   const options = await generateRegistrationOptions({
     rpName: RP_NAME, rpID, userName: email || firebaseUid, userID: new TextEncoder().encode(firebaseUid), attestationType: "none",
     excludeCredentials: existing.rows.map((r) => ({ id: r.credential_id, transports: r.transports?.length ? r.transports : undefined })),
-    authenticatorSelection: { residentKey: "required", userVerification: "required" },   // a passkey must be unlocked with Touch ID, Face ID, Windows Hello or the device PIN
+    authenticatorSelection: key
+      ? { authenticatorAttachment: "cross-platform", residentKey: "discouraged", userVerification: "preferred" }   // a security key proves possession; a PIN is used when the key has one
+      : { residentKey: "required", userVerification: "required" },   // a passkey must be unlocked with Touch ID, Face ID, Windows Hello or the device PIN
   });
   const { rows: [c] } = await q((db) => db.query(`SELECT keystone.put_passkey_challenge('register', $1, $2) AS id`, [options.challenge, firebaseUid]));
   return { ticket: c.id, options };
 }
 
-export async function finishRegistration({ firebaseUid, email = null, origin, ticket, response, name }) {
+export async function finishRegistration({ firebaseUid, email = null, origin, ticket, response, name, kind = "passkey" }) {
   gate();
   const { origin: expectedOrigin, rpID } = relyingParty(origin);
   const taken = await q((db) => db.query(`SELECT * FROM keystone.take_passkey_challenge($1, 'register')`, [ticket]));
   const ch = taken.rows[0];
   if (!ch || ch.firebase_uid !== firebaseUid) throw invalid("That passkey request expired. Start again.");
+  const key = kind === "security_key";
   let v;
-  try { v = await verifyRegistrationResponse({ response, expectedChallenge: ch.challenge, expectedOrigin, expectedRPID: rpID, requireUserVerification: true }); }
-  catch { throw invalid("That passkey could not be verified."); }
-  if (!v.verified || !v.registrationInfo) throw invalid("That passkey could not be verified.");
+  try { v = await verifyRegistrationResponse({ response, expectedChallenge: ch.challenge, expectedOrigin, expectedRPID: rpID, requireUserVerification: !key }); }
+  catch { throw invalid(key ? "That security key could not be verified." : "That passkey could not be verified."); }
+  if (!v.verified || !v.registrationInfo) throw invalid(key ? "That security key could not be verified." : "That passkey could not be verified.");
   const cred = v.registrationInfo.credential;
   try {
-    const { rows: [r] } = await q((db) => db.query(`SELECT keystone.add_passkey($1,$2,$3,$4,$5,$6,$7) AS id`, [firebaseUid, cred.id, b64(cred.publicKey), cred.counter ?? 0, response.response?.transports ?? cred.transports ?? [], typeof name === "string" ? name : "Passkey", email]));
+    const { rows: [r] } = await q((db) => db.query(`SELECT keystone.add_passkey_kind($1,$2,$3,$4,$5,$6,$7,$8) AS id`, [firebaseUid, cred.id, b64(cred.publicKey), cred.counter ?? 0, response.response?.transports ?? cred.transports ?? [], typeof name === "string" ? name : "", email, key ? "security_key" : "passkey"]));
     return { id: r.id };
   } catch (e) {
-    if (e?.code === "23505") throw conflict(/at most/.test(e.message) ? "You can keep up to 10 passkeys." : "That passkey is already registered.");
+    if (e?.code === "23505") throw conflict(/at most/.test(e.message) ? "You can keep up to 10 passkeys and security keys." : "That passkey is already registered.");
     throw e;
   }
 }
 
 export async function listPasskeys({ firebaseUid }) {
   gate();
-  const { rows } = await q((db) => db.query(`SELECT id, name, transports, created_at, last_used_at FROM keystone.list_passkeys($1)`, [firebaseUid]));
-  return { passkeys: rows.map((r) => ({ id: r.id, name: r.name, transports: r.transports, createdAt: r.created_at?.toISOString?.() ?? r.created_at, lastUsedAt: r.last_used_at?.toISOString?.() ?? r.last_used_at ?? null })) };
+  const { rows } = await q((db) => db.query(`SELECT id, name, transports, created_at, last_used_at, kind FROM keystone.list_passkeys_kind($1)`, [firebaseUid]));
+  return { passkeys: rows.map((r) => ({ id: r.id, name: r.name, kind: r.kind, transports: r.transports, createdAt: r.created_at?.toISOString?.() ?? r.created_at, lastUsedAt: r.last_used_at?.toISOString?.() ?? r.last_used_at ?? null })) };
 }
 export async function removePasskey({ firebaseUid, id }) {
   gate();
@@ -106,7 +110,7 @@ export async function finishLogin({ origin, ticket, response }) {
   const taken = await q((db) => db.query(`SELECT * FROM keystone.take_passkey_challenge($1, 'login')`, [ticket]));
   const ch = taken.rows[0];
   const fail = () => unauthenticated("That passkey could not be used to sign in.");
-  if (!ch || typeof response?.id !== "string") throw fail();
+  if (!ch || ch.firebase_uid || typeof response?.id !== "string") throw fail();   // a challenge made for a second step (it names a person) can never sign anyone in
   const { rows: [pk] } = await q((db) => db.query(`SELECT * FROM keystone.get_passkey($1)`, [response.id]));
   if (!pk) throw fail();
   let v;
@@ -117,7 +121,36 @@ export async function finishLogin({ origin, ticket, response }) {
   if (!v.verified) throw fail();
   await q((db) => db.query(`SELECT keystone.touch_passkey($1, $2)`, [response.id, v.authenticationInfo.newCounter ?? 0]));
   // the built-in identity (self-host, sandbox) mints its own id token; Firebase installs mint a custom token the browser exchanges at Google
-  if (localAuthEnabled()) return { idToken: issueToken({ uid: pk.firebase_uid, email: String(pk.email ?? "").toLowerCase() }) };
-  try { return { customToken: await getFirebaseAuth().createCustomToken(pk.firebase_uid) }; }
+  if (localAuthEnabled()) return { idToken: issueToken({ uid: pk.firebase_uid, email: String(pk.email ?? "").toLowerCase(), claims: { passkey: true } }) };
+  try { return { customToken: await getFirebaseAuth().createCustomToken(pk.firebase_uid, { docustay_passkey: true }) }; }   // the sign-in that follows knows a passkey was used, so it does not ask for a second step
   catch (err) { throw dependency("Sign-in by passkey is not available right now.", err); }
+}
+
+/** The second step with a passkey or a security key: the device signs a one-time challenge made for THIS person. Also used as the proof before a security change. */
+export async function beginSecondStep({ firebaseUid, origin }) {
+  gate();
+  const { rpID } = relyingParty(origin);
+  const { rows } = await q((db) => db.query(`SELECT credential_id, transports FROM keystone.list_passkeys($1)`, [firebaseUid]));
+  if (!rows.length) throw invalid("No passkey or security key is set up for this account.");
+  const options = await generateAuthenticationOptions({ rpID, userVerification: "preferred", allowCredentials: rows.map((r) => ({ id: r.credential_id, transports: r.transports?.length ? r.transports : undefined })) });
+  const { rows: [c] } = await q((db) => db.query(`SELECT keystone.put_passkey_challenge('login', $1, $2) AS id`, [options.challenge, firebaseUid]));
+  return { ticket: c.id, options };
+}
+export async function finishSecondStep({ firebaseUid, origin, ticket, response }) {
+  gate();
+  const { origin: expectedOrigin, rpID } = relyingParty(origin);
+  const taken = await q((db) => db.query(`SELECT * FROM keystone.take_passkey_challenge($1, 'login')`, [ticket]));
+  const ch = taken.rows[0];
+  const fail = () => unauthenticated("That passkey could not be used. Try again, or use another way.");
+  if (!ch || ch.firebase_uid !== firebaseUid || typeof response?.id !== "string") throw fail();
+  const { rows: [pk] } = await q((db) => db.query(`SELECT * FROM keystone.get_passkey($1)`, [response.id]));
+  if (!pk || pk.firebase_uid !== firebaseUid) throw fail();
+  let v;
+  try {
+    v = await verifyAuthenticationResponse({ response, expectedChallenge: ch.challenge, expectedOrigin, expectedRPID: rpID,
+      credential: { id: response.id, publicKey: unb64(pk.public_key), counter: Number(pk.counter), transports: pk.transports?.length ? pk.transports : undefined }, requireUserVerification: false });
+  } catch { throw fail(); }
+  if (!v.verified) throw fail();
+  await q((db) => db.query(`SELECT keystone.touch_passkey($1, $2)`, [response.id, v.authenticationInfo.newCounter ?? 0]));
+  return { ok: true };
 }

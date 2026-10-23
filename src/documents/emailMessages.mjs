@@ -1,9 +1,7 @@
 // src/documents/emailMessages.mjs — A WORKSPACE'S OWN WORDING FOR ITS DOCUMENT EMAILS (FP-K1/K2, 7 Oct 2026).
-// Eight message types, each editable per language: subject, preview line, body, button label and footer. The body is plain text with {{variables}} that THIS FILE substitutes — no template language is run on
+// Nine message types, each with standard wording (Docustay v1 removed the editor that let a workspace change it): subject, preview line, body, button label and footer. The body is plain text with {{variables}} that THIS FILE substitutes — no template language is run on
 // anything a customer types. An unknown variable is refused when it is saved, so a typo never reaches a signer. The sign button and its link are always in the email: the wording changes, the link cannot be removed.
 // ★ Email goes ONLY to people named on a document the workspace made (FP-K5): this file never takes a recipient; callers pass the document's own person.
-import { z } from "zod";
-import { invalid } from "../http/errors.mjs";
 import { LANGUAGES } from "./languages.mjs";
 import { ports } from "./ports.mjs";
 
@@ -36,10 +34,6 @@ export const MESSAGE_KINDS = Object.freeze([
   { kind: "receipt", label: "Payment receipt", to: "the person who paid while signing", button: false, vars: [...COMMON, "amount", "description"],
     subject: "Receipt: {{amount}} to {{org.name}}", preview: "Thank you. Your payment of {{amount}} went through.",
     body: "Thank you, {{signer.name}}. Your payment of {{amount}} ({{description}}) for {{document.title}} went through.\n\nStripe also sends its own receipt to the email you paid with.", buttonLabel: "" },
-  // Run 7: one email to the workspace owner per signed form response (the form's "Email me each new response" switch). It names who responded and links to the response; it never carries the answers.
-  { kind: "form_response", label: "New form response", to: "the workspace owner, for each signed response to a form", button: false, vars: ["signer.name", "signer.email", "form.name", "document.title", "org.name", "link"],
-    subject: "New response to {{form.name}} from {{signer.name}}", preview: "{{signer.name}} filled in and signed {{form.name}}.",
-    body: "{{signer.name}} ({{signer.email}}) filled in and signed {{form.name}}.\n\nOpen the response: {{link}}\n\nThis email does not include the answers. They are in the signed document.", buttonLabel: "" },
   // Run 9 Part 3.7: a signature kept for its payment for 7 days was not paid — nothing of it was kept, and the same link signs again
   { kind: "hold_lapsed", label: "Payment not received", to: "a person who signed but did not finish paying within 7 days", button: false, vars: [...COMMON],
     subject: "{{org.name}}: {{document.title}} is not signed yet", preview: "Your payment did not arrive, so your signature was not kept.",
@@ -57,86 +51,16 @@ export const variablesIn = (text) => [...new Set([...String(text ?? "").matchAll
 /** Replace {{name}} with the value (unknown or missing → empty text). Never runs anything. */
 export const fill = (text, vars = {}) => String(text ?? "").replace(VAR, (_, name) => (vars[name] == null ? "" : String(vars[name])));
 
-const Draft = z.object({
-  subject: z.string().max(200).optional().nullable(), preview: z.string().max(200).optional().nullable(), body: z.string().max(5000).optional().nullable(),
-  buttonLabel: z.string().max(60).optional().nullable(), footer: z.string().max(500).optional().nullable()
-});
-
-/** Check a draft against its message type: every variable known to that type, nothing too long. Throws a sentence naming the field and the variable. */
-export function checkDraft(kind, draft) {
-  const k = KIND_BY.get(kind);
-  if (!k) throw invalid(`kind must be one of ${MESSAGE_KINDS.map((m) => m.kind).join(", ")}`, { field: "kind" });
-  const r = Draft.safeParse(draft ?? {});
-  if (!r.success) throw invalid(`${r.error.issues[0].path.join(".") || "message"}: ${r.error.issues[0].message}`, { field: String(r.error.issues[0].path[0] ?? "message") });
-  const clean = {};
-  for (const f of ["subject", "preview", "body", "buttonLabel", "footer"]) {
-    const v = r.data[f];
-    if (v === undefined) continue;
-    const text = v === null ? "" : String(v).replace(/\r\n/g, "\n");
-    const unknown = variablesIn(text).filter((n) => !k.vars.includes(n));
-    if (unknown.length) throw invalid(`${f} uses {{${unknown[0]}}}, which a “${k.label}” message cannot use. You can use: ${k.vars.map((n) => `{{${n}}}`).join(", ")}`, { field: f });
-    if (/\{\{|\}\}|\{%|%\}/.test(text.replace(VAR, ""))) throw invalid(`${f} has a stray { or } pair. Variables look like {{document.title}}; nothing else in braces is allowed.`, { field: f });
-    if ((f === "subject" || f === "preview" || f === "buttonLabel") && /\n/.test(text)) throw invalid(`${f} must be one line`, { field: f });
-    clean[f] = text.trim() === "" ? null : text;
-  }
-  return clean;
-}
-
 const localeOf = (l) => (LANGUAGES.includes(String(l ?? "en").slice(0, 2)) ? String(l ?? "en").slice(0, 2) : "en");
-
-/** All eight types for one language: the workspace's saved wording (or null) beside the standard wording. */
-export async function listMessages(tx, { locale = "en" } = {}) {
-  const loc = localeOf(locale);
-  const { rows } = await tx.query(`SELECT kind, locale, subject, preview, body, button_label, footer, updated_at FROM keystone.document_email_message WHERE locale = $1`, [loc]);
-  const by = new Map(rows.map((r) => [r.kind, r]));
-  const { rows: langs } = await tx.query(`SELECT kind, array_agg(locale ORDER BY locale) AS locales FROM keystone.document_email_message GROUP BY kind`);
-  const has = new Map(langs.map((r) => [r.kind, r.locales]));
-  return MESSAGE_KINDS.map((k) => {
-    const r = by.get(k.kind);
-    return { kind: k.kind, label: k.label, to: k.to, button: k.button, vars: k.vars, locale: loc, languages: has.get(k.kind) ?? [],
-      standard: { subject: k.subject, preview: k.preview, body: k.body, buttonLabel: k.buttonLabel },
-      saved: r ? { subject: r.subject, preview: r.preview, body: r.body, buttonLabel: r.button_label, footer: r.footer, updatedAt: r.updated_at instanceof Date ? r.updated_at.toISOString() : r.updated_at } : null };
-  });
-}
-
-export async function saveMessage(tx, { tenantId, kind, locale = "en", draft, userId = null }) {
-  const clean = checkDraft(kind, draft);
-  const loc = localeOf(locale);
-  await tx.query(
-    `INSERT INTO keystone.document_email_message (tenant_id, kind, locale, subject, preview, body, button_label, footer, updated_by)
-     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
-     ON CONFLICT (tenant_id, kind, locale) DO UPDATE SET subject = EXCLUDED.subject, preview = EXCLUDED.preview, body = EXCLUDED.body, button_label = EXCLUDED.button_label, footer = EXCLUDED.footer,
-       updated_by = EXCLUDED.updated_by, updated_at = now()`,
-    [tenantId, kind, loc, clean.subject ?? null, clean.preview ?? null, clean.body ?? null, clean.buttonLabel ?? null, clean.footer ?? null, userId]);
-  await syncHost(tx, { tenantId, kind, locale: loc, clean, userId });
-  return (await listMessages(tx, { locale: loc })).find((m) => m.kind === kind);
-}
-
-// The three emails the HOST sends (completed copy, declined, expired) read their wording from the host's own template store, so a saved English wording is also written there. Other languages keep the fixed
-// translated emails. Standard text stands in for any field left blank, so the stored template is always complete.
-async function syncHost(tx, { tenantId, kind, locale, clean, userId }) {
-  const k = KIND_BY.get(kind);
-  if (!k?.host || locale !== "en") return;
-  const P = await ports();
-  if (!P.templates) return;
-  if (!clean.subject && !clean.body) { await P.templates.clear(tx, { tenantId, key: k.host }); return; }
-  await P.templates.override(tx, { tenantId, key: k.host, subject: clean.subject ?? k.subject, text: clean.body ?? k.body, userId });
-}
-
-/** Back to the standard wording for this type and language. */
-export async function resetMessage(tx, { tenantId, kind, locale = "en" }) {
-  if (!KIND_BY.has(kind)) throw invalid("unknown message type", { field: "kind" });
-  await tx.query(`DELETE FROM keystone.document_email_message WHERE kind = $1 AND locale = $2`, [kind, localeOf(locale)]);
-  await syncHost(tx, { tenantId, kind, locale: localeOf(locale), clean: {}, userId: null });
-  return (await listMessages(tx, { locale })).find((m) => m.kind === kind);
-}
 
 /**
  * The wording that applies right now: this language's saved row, else English's, else the standard — field by field, so a workspace that only changed the subject keeps the standard body.
+ * Docustay v1: the wording is no longer editable, so a Docustay workspace always gets the standard text and any row an older version saved is ignored (kept, not deleted).
  * Returns the TEXT still containing {{variables}}; `render` below fills them.
  */
 export async function wordingFor(tx, { kind, locale = "en" }) {
   if (!KIND_BY.has(kind)) return null;
+  if (await (await ports()).brand?.isDocustay?.(tx).catch?.(() => false)) return { kind, custom: false, subject: null, preview: null, body: null, buttonLabel: null, footer: null };
   const loc = localeOf(locale);
   const { rows: [r] } = await tx.query(`SELECT subject, preview, body, button_label, footer FROM keystone.document_email_message WHERE kind = $1 AND locale = $2`, [kind, loc]);
   return { kind, custom: Boolean(r), subject: r?.subject ?? null, preview: r?.preview ?? null, body: r?.body ?? null, buttonLabel: r?.button_label ?? null, footer: r?.footer ?? null };

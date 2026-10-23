@@ -8,3 +8,14 @@ export function periodOf(d) {
   const cancelAt = d?.cancel_at ? d.cancel_at : (d?.cancel_at_period_end && end ? end : null);
   return { start, end, cancelAt };
 }
+
+/** The subscription's plan line (R13-D211): the licensed item (Pro's price, or Pay as you go's per-person price), never a metered one. A Pay as you go
+ *  subscription also carries metered document and AI-draft prices, and Stripe does not promise their order, so items[0] could be the $0.30 draft price. */
+export function planItem(d) {
+  const items = d?.items?.data ?? [];
+  return items.find((i) => i?.price?.recurring?.usage_type !== "metered") ?? items[0];
+}
+/** What the next renewal charges for the plan itself, in minor units: every licensed item's unit amount × quantity (metered usage is added by Stripe on top). */
+export function licensedTotalMinor(d) {
+  return (d?.items?.data ?? []).filter((i) => i?.price?.recurring?.usage_type !== "metered").reduce((n, i) => n + (i?.price?.unit_amount ?? 0) * (i?.quantity ?? 1), 0);
+}

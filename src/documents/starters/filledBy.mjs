@@ -45,9 +45,9 @@ export const FILLED_BY_SENDER = Object.freeze({
   "payment-plan-agreement": { "Business name": "org.name",
     ...terms("Date of this agreement", "The balance, with currency", "what it is for", "Any agreed reduction, such as a discount for paying on time", "Number of installments", "How often", "First payment due",
       "Installment 1 due", "Installment 1 amount", "Installment 2 due", "Installment 2 amount", "Installment 3 due", "Installment 3 amount", "Installment 4 due", "Installment 4 amount",
-      "First installment (USD)", "Days of grace", "Days to put it right", "Late fee, if any, and how it is calculated"), ...law },
+      "Days of grace", "Days to put it right", "Late fee, if any, and how it is calculated"), ...law },
   "deposit-agreement": { "Business name": "org.name",
-    ...terms("Date of this agreement", "What the deposit holds", "Deposit (USD)", "How the deposit is held", "Refund within", "the condition for a refund", "Date after which the deposit is kept", "Remaining balance and when it is due"), ...law },
+    ...terms("Date of this agreement", "What the deposit holds", "How the deposit is held", "Refund within", "the condition for a refund", "Date after which the deposit is kept", "Remaining balance and when it is due"), ...law },
   // ── HR: the employer ──
   "volunteer-agreement": { "Organization name": "org.name", "Organization’s legal name": "org.name", ...terms("Role", "Start date", "Hours or schedule", "Supervisor’s name", "Expenses covered, if any") },
   "offer-letter": { "Company name": "org.name", "Company’s legal name": "org.name",

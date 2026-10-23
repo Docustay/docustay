@@ -175,8 +175,8 @@ test("sensitive blanks: an SSN or date of birth is flagged, carried into the pla
   const where = new Map();   // file name → folder: src/documents, and pro/documents where the closed add-on exists (the public export has none)
   for (const dir of ["src/documents", "pro/documents"]) if (fs.existsSync(dir)) for (const f of fs.readdirSync(dir, { recursive: true })) if (String(f).endsWith(".mjs") && /document_field_value/.test(fs.readFileSync(`${dir}/${f}`, "utf8"))) where.set(String(f), dir);
   const readers = [...where.keys()];
-  // Run 9: the key dates (a sensitive box is never a key date) and the playbooks (a sensitive answer is never read into a run) each decided — proved in r9_key_dates and r9_playbooks
-  assert.deepEqual(readers.sort(), ["keyDates.mjs", "pdfArchive.mjs", "pdfSigning.mjs", ...(fs.existsSync("pro/documents") ? ["playbooks.mjs"] : [])], "a new reader of signed values must decide how to mask sensitive ones");
+  // (Docustay v1: key dates and automations were removed, so only the archive and the signing step read a sensitive box)
+  assert.deepEqual(readers.sort(), ["pdfArchive.mjs", "pdfSigning.mjs"], "a new reader of signed values must decide how to mask sensitive ones");
   // signing stores the values and the sealed copy prints them, by design; every OTHER reader must say what it does with a sensitive one
   for (const f of readers.filter((x) => !["pdfArchive.mjs", "pdfSigning.mjs"].includes(x))) assert.match(fs.readFileSync(`${where.get(f)}/${f}`, "utf8"), /\.sensitive\b/, `${f} reads signed values and does nothing about sensitive ones`);
 });

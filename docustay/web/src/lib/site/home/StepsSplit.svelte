@@ -37,7 +37,7 @@
 <style>
   .split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: clamp(1.5rem, 5vw, 5rem); align-items: start; }
   .left { list-style: none; margin: 0; padding: 0; }
-  .step { min-height: 78svh; display: grid; grid-template-columns: auto 1fr; gap: 1.5rem; align-content: center; opacity: .9; transition: opacity var(--dur-slow) var(--ease-out); }
+  .step { min-height: 78svh; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 1.5rem; align-content: center; opacity: .9; transition: opacity var(--dur-slow) var(--ease-out); }
   .step.on { opacity: 1; }
   .num { color: var(--brand); line-height: 1; min-width: 1.4ch; }
   .inline { display: none; }

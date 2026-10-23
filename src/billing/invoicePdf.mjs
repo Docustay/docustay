@@ -34,7 +34,11 @@ export function renderInvoicePdf({ invoice, card = null, seller = "" }) {
     y += 6; doc.moveTo(L + W * 0.55, y).lineTo(R, y).strokeColor(line).stroke(); y += 10;
     const tax = (invoice.total_taxes ?? []).reduce((a, t) => a + (t.amount ?? 0), 0);
     const row = (label, v, bold) => { doc.font(bold ? "Helvetica-Bold" : "Helvetica").fontSize(bold ? 12 : 10.5).fillColor(bold ? ink : mute).text(label, L + W * 0.55, y, { width: W * 0.25 }); doc.fillColor(ink).text(v, L + W * 0.55, y, { width: W * 0.45, align: "right" }); y += bold ? 22 : 18; };
-    row("Subtotal", money(invoice.subtotal ?? invoice.total, invoice.currency)); row("Tax", money(tax, invoice.currency)); row("Total", money(invoice.total, invoice.currency), true); row("Amount paid", money(invoice.amount_paid ?? 0, invoice.currency), true);
+    row("Subtotal", money(invoice.subtotal ?? invoice.total, invoice.currency));
+    // Run 13 R13-D179 (23 Oct 2026): a discount (the "Credit for unused time" coupon a plan switch puts on Checkout) and a customer-balance credit are shown as their own lines, so the total is explained
+    for (const d of invoice.total_discount_amounts ?? []) if (d.amount > 0) { const c = typeof d.discount === "object" ? d.discount?.coupon : (invoice.discounts ?? []).find((x) => typeof x === "object" && x.id === d.discount)?.coupon; row(c?.name || "Discount", `-${money(d.amount, invoice.currency)}`); }
+    const balanceUsed = Math.max(0, (invoice.total ?? 0) - (invoice.amount_due ?? invoice.total ?? 0)); if (balanceUsed > 0) row("Credit applied", `-${money(balanceUsed, invoice.currency)}`);
+    row("Tax", money(tax, invoice.currency)); row("Total", money(invoice.total, invoice.currency), true); row("Amount paid", money(invoice.amount_paid ?? 0, invoice.currency), true);
     y += 24; doc.font("Helvetica").fontSize(10).fillColor(mute).text("Thank you for using Docustay. Your plan and invoices are always in Billing at app.docustay.app.", L, y, { width: W });
     if (seller) doc.fontSize(9).fillColor(mute).text(seller, L, doc.page.height - 100, { width: W });
     doc.fontSize(9).fillColor(violet).text("docustay.app", L, doc.page.height - 78, { width: W });

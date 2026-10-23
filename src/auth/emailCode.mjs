@@ -124,7 +124,7 @@ export async function takeCodeRequestBudget(scope, key) {
  *   module still calls `sendAuthEmail` by name; nothing here reimplements or wraps it.
  * @returns {Promise<{ sent: true, expiresAt: Date }>}
  */
-export async function requestEmailCode({ email, purpose = "sign_in", ip, product = null, lang = null } = {}, { fetchImpl, env } = {}) {
+export async function requestEmailCode({ email, purpose = "sign_in", ip, product = null, lang = null, decorate = null } = {}, { fetchImpl, env } = {}) {
   assertPurpose(purpose);
   const normalizedEmail = normalizedEmailOf(email);
 
@@ -163,10 +163,12 @@ export async function requestEmailCode({ email, purpose = "sign_in", ip, product
     return rows[0].expires_at;
   });
 
+  // 21 Oct 2026: a caller may dress the mail (the password reset code adds a link for another device and its own template); the code and its limits are this function's, unchanged
+  const extra = decorate ? await decorate({ email: normalizedEmail, uid }) : null;
   await sendAuthEmail({
     to: normalizedEmail,
-    templateKey: "auth.email_code",
-    vars: { code, minutes: CODE_TTL_MINUTES },
+    templateKey: extra?.templateKey ?? "auth.email_code",
+    vars: { code, minutes: CODE_TTL_MINUTES, ...(extra?.vars ?? {}) },
     product, lang, variant: purpose === "verify_email" ? "verify" : null,
   }, { fetchImpl, env });
 
@@ -187,7 +189,8 @@ const EXPIRED_CODE_MESSAGE = "That code has expired — ask for a new one.";
  * @param {{ email: string, code: string, purpose?: string }} args
  * @returns {Promise<{ customToken: string }>}
  */
-export async function verifyEmailCode({ email, code, purpose = "sign_in" } = {}) {
+/** Redeem a code (single use, with the same per-code and per-account guess limits) and say whose it was. No token, no session: the caller decides what the proof is for (21 Oct 2026: the password reset). */
+export async function redeemEmailCode({ email, code, purpose = "sign_in" } = {}) {
   assertPurpose(purpose);
   const normalizedEmail = normalizedEmailOf(email);
   if (typeof code !== "string" || code.trim() === "") {
@@ -234,6 +237,13 @@ export async function verifyEmailCode({ email, code, purpose = "sign_in" } = {})
   }
 
   await clearAttempts("email_code", uid);
+  return { uid, email: normalizedEmail };
+}
+
+/** ★★★ REDEEM A CODE, MINT A CUSTOM TOKEN (see above). */
+export async function verifyEmailCode({ email, code, purpose = "sign_in" } = {}) {
+  const { uid, email: normalizedEmail } = await redeemEmailCode({ email, code, purpose });
+
 
   // ★★★ 12-signup-first-run-people.md §6 — GATED ON `purpose === "verify_email"`. The code has
   //     just been redeemed, so this uid's address is now proven; the sign-in path

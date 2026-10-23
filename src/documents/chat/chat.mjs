@@ -124,9 +124,8 @@ export async function runChatTurn({ db, tx = null, tenantId, actorUserId, can, c
   // the ledger: one row for the turn (what it did decides the work and so the credits: a draft made, a change suggested, a check or play run, or a plain answer that costs none), one more for any file the person attached
   if (adm) {
     const w = adm.policy?.weights ?? {};
-    const think = adm.feature === "think_harder";
-    const kind = think ? "think_harder" : created ? "draft" : proposals ? "edit" : checkRuns ? "check" : "chat";
-    const credits = think ? (w.think_harder ?? 0) : (w[kind] ?? 0);
+    const kind = created ? "draft" : proposals ? "edit" : checkRuns ? "check" : "chat";
+    const credits = w[kind] ?? 0;
     await ledgerFinish(db, adm, { status: failed ? "error" : "ok", usage: { input: usageTotal.input, output: usageTotal.output, cacheRead: usageTotal.cacheRead, cacheWrite: usageTotal.cacheCreation }, code: failed ? (failed.kind ?? "error") : null, credits: failed ? 0 : credits, feature: kind });
     if (!failed && context.fileCount) await ledgerFinish(db, { ...adm, requestId: `${adm.requestId}:files` }, { status: "ok", usage: {}, credits: (w.file_read ?? 0) * context.fileCount, feature: "file_read" });
   }

@@ -1,6 +1,6 @@
 // node docustay/web/scripts/host-guard.test.mjs — a customer's own hostname serves the signing page and nothing else; our own hosts serve everything.
 import assert from "node:assert/strict";
-import { hostMayServe, isPlatformHost, redirectFor, pathAllowed } from "../src/lib/hostGuard.js";
+import { hostMayServe, isPlatformHost, redirectFor, pathAllowed, isAppHost, isSiteHost } from "../src/lib/hostGuard.js";
 assert.ok(hostMayServe("sign.acme.com", "/sign/pdf"), "own host: signing page");
 assert.ok(hostMayServe("sign.acme.com", "/api/public/pdf/view"), "own host: public API");
 assert.ok(hostMayServe("sign.acme.com", "/_app/immutable/x.js"), "own host: the app's assets");
@@ -18,7 +18,8 @@ assert.equal(redirectFor("docs.example.org", "/pricing", { siteHosts: ["example.
 assert.equal(redirectFor("www.example.org", "/pricing", { siteHosts: ["www.example.org", "example.org"] }), null, "R8-71: when www IS the main site address it is not sent to itself (no loop)");
 assert.equal(redirectFor("www.example.org", "/pricing", { siteHosts: ["example.org", "www.example.org"] }), "https://example.org/pricing", "R8-71: control — the same names the other way round do fold");
 assert.equal(redirectFor("docustay.app", "/templates/nda-template"), null, "a public template page stays on the site address");
-assert.equal(redirectFor("docustay.app", "/templates"), "https://app.docustay.app/templates", "the workspace template list still belongs to the app address");
+assert.equal(redirectFor("docustay.app", "/templates"), null, "on the site address /templates is an old address of the template hub (301 to /free-templates), not the workspace list");
+assert.equal(isAppHost("app.docustay.app"), true); assert.equal(isAppHost("docustay.app"), false); assert.equal(isSiteHost("docustay.app"), true); assert.equal(isSiteHost("app.docustay.app"), false); assert.equal(isSiteHost("host.example.com"), false);
 assert.equal(redirectFor("docustay.app", "/templates/rich"), "https://app.docustay.app/templates/rich", "the editor route still belongs to the app address");
 assert.equal(redirectFor("app.docustay.app", "/"), "/documents");
 assert.equal(redirectFor("app.docustay.app", "/documents"), null);
@@ -27,9 +28,9 @@ assert.equal(redirectFor("sign.docustay.app", "/login"), "https://docustay.app/l
 assert.equal(redirectFor("localhost:5180", "/login"), null, "local and sandbox hosts are not redirected");
 
 // Run 8 /verify (Stryker: the PUBLIC list survived 23 of 24 mutants, because no assertion pinned its anchors). A customer's own signing hostname serves EXACTLY these paths:
-for (const p of ["/sign", "/sign/pdf", "/verify", "/verify/abc", "/s/abc123", "/f/acme", "/f/acme/volunteers", "/api/public/pdf/view", "/_app/immutable/x.js", "/media/a.png", "/favicon.ico", "/favicon.svg", "/robots.txt", "/healthz"])
+for (const p of ["/sign", "/sign/pdf", "/download", "/download?t=kl_x".split("?")[0], "/verify", "/verify/abc", "/s/abc123", "/f/acme", "/f/acme/volunteers", "/api/public/pdf/view", "/_app/immutable/x.js", "/media/a.png", "/favicon.ico", "/favicon.svg", "/robots.txt", "/healthz"])
   assert.ok(pathAllowed(p), `a customer host serves ${p}`);
-for (const p of ["/signup", "/signing", "/documents/sign", "/x/verify", "/verify-me", "/s/abc/def", "/s/", "/f/", "/f/acme/volunteers/edit", "/api/publicx", "/api/v1/documents", "/x/_app/y", "/_apps/x", "/x/media/a", "/mediax", "/x/favicon.ico", "/robots.txt.bak", "/x/robots.txt", "/healthz/x", "/x/healthz", "/x/s/abc", "/x/f/acme", "/x/api/public/pdf/view", "/settings", "/"])
+for (const p of ["/downloads", "/x/download", "/signup", "/signing", "/documents/sign", "/x/verify", "/verify-me", "/s/abc/def", "/s/", "/f/", "/f/acme/volunteers/edit", "/api/publicx", "/api/v1/documents", "/x/_app/y", "/_apps/x", "/x/media/a", "/mediax", "/x/favicon.ico", "/robots.txt.bak", "/x/robots.txt", "/healthz/x", "/x/healthz", "/x/s/abc", "/x/f/acme", "/x/api/public/pdf/view", "/settings", "/"])
   assert.ok(!pathAllowed(p), `a customer host refuses ${p}`);
 assert.ok(!hostMayServe("sign.theircompany.com", "/settings") && hostMayServe("sign.theircompany.com", "/sign/pdf"), "the guard itself: refuses the workspace, serves signing");
 console.log("ok — host guard and hostname routing");

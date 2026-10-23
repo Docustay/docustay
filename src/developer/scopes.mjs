@@ -38,7 +38,7 @@ export const GRANTABLE_SCOPES = Object.freeze([
   "plays:read", "plays:write", "drafts:write",
   // FINAL PUSH Stage 6 (FP-F1, 7 Oct 2026): narrower scopes. The database allows only <name>:read|write, so the report's `webhooks:manage` and `embedded:sign` are spelled webhooks:write and embedded:write.
   // `documents:*` keeps working on every route it did before; a narrow scope is an ALTERNATIVE way in (NARROW_ROUTE_SCOPES), so a key can be made that reads templates and does nothing else.
-  "templates:read", "templates:write", "webhooks:read", "webhooks:write", "reports:read", "account:read", "embedded:write",
+  "templates:read", "templates:write", "webhooks:read", "webhooks:write", "account:read", "embedded:write",
 ]);
 
 /**
@@ -56,13 +56,8 @@ export const NARROW_ROUTE_SCOPES = Object.freeze({
   "POST /api/v1/templates/file": "templates:write",
   "POST /api/v1/templates/source": "templates:write",
   "POST /api/v1/templates/:id/defaults": "templates:write",
-  "GET /api/v1/reports": "reports:read",
-  "GET /api/v1/forms/templates": "templates:read",
-  "GET /api/v1/email-templates": "templates:read",
-  "PUT /api/v1/email-templates/:kind": "templates:write",
-  "DELETE /api/v1/email-templates/:kind": "templates:write",
-  "POST /api/v1/email-templates/:kind/preview": "templates:write",
   "GET /api/v1/usage": "account:read",
+  "POST /api/v1/preflight": "account:read",
   "GET /api/v1/ai/usage": "account:read",
   "POST /api/v1/documents/detect-fields": "templates:read",
   "GET /api/v1/payments/status": "account:read",
@@ -137,6 +132,7 @@ export const ROUTE_SCOPES = Object.freeze({
   "POST /api/v1/documents/ai/draft": "documents:write",
   "GET /api/v1/documents/ai/jobs/:id": "documents:read",
   "GET /api/v1/usage": "documents:read",
+  "POST /api/v1/preflight": "documents:read",
   "GET /api/v1/ai/usage": "documents:read",
   "POST /api/v1/documents/detect-fields": "documents:read",
   "POST /api/v1/documents": "documents:write",
@@ -163,14 +159,6 @@ export const ROUTE_SCOPES = Object.freeze({
   "POST /api/v1/webhooks/:id/rotate": "webhooks:write",
   "GET /api/v1/webhooks/:id/deliveries": "webhooks:read",
   "GET /api/v1/webhooks/:id/relay": "webhooks:read",
-  // Run 7: forms (a form is a document template with one link; its responses are documents)
-  "GET /api/v1/forms": "documents:read",
-  "GET /api/v1/forms/templates": "documents:read",
-  "GET /api/v1/forms/:id": "documents:read",
-  "GET /api/v1/forms/:id/responses": "documents:read",
-  "POST /api/v1/forms/publish": "documents:write",
-  "POST /api/v1/forms/:id/open": "documents:write",
-  "POST /api/v1/forms/:id/unpublish": "documents:write",
   "GET /api/v1/plays": "plays:read",
   "GET /api/v1/plays/:name": "plays:read",
   "POST /api/v1/plays/test": "plays:read",
@@ -184,19 +172,12 @@ export const ROUTE_SCOPES = Object.freeze({
   "POST /api/v1/drafts": "drafts:write",
   // Run 9: search, the contract repository and key dates, payments taken while signing, automations
   "GET /api/v1/search": "documents:read",
-  "GET /api/v1/contracts": "documents:read",
-  "POST /api/v1/contracts/:id/dates": "documents:write",
   "GET /api/v1/payments": "documents:read",
   "POST /api/v1/payments/:id/refund": "documents:write",
-  "GET /api/v1/automations": "plays:read",
-  "POST /api/v1/automations/:id/enable": "plays:write",
   "POST /api/v1/drafts/:draftRef/answers": "drafts:write",
   "POST /api/v1/documents/:id/void": "documents:write",
+  "DELETE /api/v1/documents/:id": "documents:write",   // R13-D385: discard a draft that was never sent
   "POST /api/v1/documents/:id/test-sign": "documents:write",
-  "GET /api/v1/email-templates": "documents:read",
-  "PUT /api/v1/email-templates/:kind": "documents:write",
-  "DELETE /api/v1/email-templates/:kind": "documents:write",
-  "POST /api/v1/email-templates/:kind/preview": "documents:write",
   "GET /api/v1/emails": "documents:read",
   // growth:write (23)
   "POST /api/growth/campaigns": "growth:write",
@@ -290,7 +271,6 @@ export const ROUTE_SCOPES = Object.freeze({
   "GET /api/v1/documents/templates": "documents:read",
   "GET /api/v1/templates/:id": "documents:read",
   "GET /api/v1/documents/:id/audit-log.csv": "documents:read",
-  "GET /api/v1/reports": "documents:read",
   "GET /api/v1/teams": "documents:read",
   "GET /api/v1/documents/:id": "documents:read",
   "GET /api/v1/documents/:id/signed.pdf": "documents:read",
@@ -513,8 +493,9 @@ export function assertVocabularyCounts({
 } = {}) {
   // ★ [FINAL PUSH Stage 4, 7 Oct 2026] 25 → 28: plays:read, plays:write, drafts:write.
   // ★ [FINAL PUSH Stage 6, 7 Oct 2026] 28 → 35: templates:read/write, webhooks:read/write, reports:read, account:read, embedded:write.
-  if (grantable.length !== 35 || new Set(grantable).size !== 35) {
-    throw new TypeError(`GRANTABLE_SCOPES must hold exactly 35 distinct scopes, holds ${grantable.length} (${new Set(grantable).size} distinct)`);
+  // ★ [Docustay v1 redo, 17 Oct 2026] 35 → 34: reports:read removed with the reports feature (item 3).
+  if (grantable.length !== 34 || new Set(grantable).size !== 34) {
+    throw new TypeError(`GRANTABLE_SCOPES must hold exactly 34 distinct scopes, holds ${grantable.length} (${new Set(grantable).size} distinct)`);
   }
   const routeCount = Object.keys(routeScopes).length;
   // ★ [TY, 2 Oct 2026] 129 → 128: "GET /api/reports/accountant" removed along with the whole
@@ -532,8 +513,11 @@ export function assertVocabularyCounts({
   // [Run 9, 12 Oct 2026] 193 → 200: search, contracts (list, correct a date), payments (list, refund), playbook flows (list, switch on/off).
   // [Run 9 Part 4R, 12 Oct 2026] 200 → 205: the template library (list, one, draft from, customize) and switching a pack on or off; the flows are /api/v1/automations now (renamed, not added).
   // [Run 9 Part 4.3, 12 Oct 2026] 205 → 204: POST /api/money/subscriptions/cancel named a route that no longer exists (F1031's gate found it).
-  if (routeCount !== 204) {
-    throw new TypeError(`ROUTE_SCOPES must hold exactly 204 entries, holds ${routeCount}`);
+  // [Docustay v1 redo, 17 Oct 2026] 204 → 203: GET /api/v1/reports removed (item 3); 203 → 201: the two /api/v1/automations routes removed (item 1); 201 → 199: GET /api/v1/contracts and POST /api/v1/contracts/:id/dates removed (item 4); 199 → 192: the seven /api/v1/forms routes removed (item 7). 192 → 188: the four /api/v1/email-templates routes removed (item 8).
+  // [Part 2, 19 Oct 2026] 188 → 189: POST /api/v1/preflight (ask what an action would do to the plan before doing it; reads only).
+  // [R13-D385, 23 Oct 2026] 189 → 190: DELETE /api/v1/documents/{id} (discard a draft that was never sent; documents:write).
+  if (routeCount !== 190) {
+    throw new TypeError(`ROUTE_SCOPES must hold exactly 190 entries, holds ${routeCount}`);
   }
   // ★★★ 7.25 — 40 → 41. 7.21 shipped 40; this module's OWN load-time check must accept the 41st
   //     member 7.25 adds above, or the module (and everything that imports it, including
@@ -564,3 +548,10 @@ assertRouteScopes(ROUTE_SCOPES);
 assertNeverDelegableDisjoint(ROUTE_SCOPES, NEVER_DELEGABLE);
 assertScopedButClosedSubset(ROUTE_SCOPES, SCOPED_BUT_CLOSED);
 assertVocabularyCounts();
+
+// A Docustay workspace is a document product: its keys carry the Documents-side scopes only (and reading people, which the signer list needs). The CRM, money, booking and internal scopes belong to
+// the platform and must never be published for Docustay. src/routes/developer.mjs applies the same rule when it lists and accepts scopes (Run 10, R10-38); this is the copy the published API description uses.
+const DOCUSTAY_SCOPE = /^(documents|templates|webhooks|account|embedded|plays|drafts):/;
+export const docustayScopes = (all = GRANTABLE_SCOPES) => [...all].filter((x) => DOCUSTAY_SCOPE.test(x) || x === "people:read");
+// A Docustay workspace is offered exactly 12 scopes. Changing the vocabulary changes this number, the published API description and the website's claim together (docustay/web/src/lib/claims.json).
+if (docustayScopes().length !== 12) throw new Error(`a Docustay workspace is offered ${docustayScopes().length} scopes, expected 12`);

@@ -10,7 +10,7 @@ Show the signing form inside your own page, so the signer never leaves your app.
 
 ## How it fits together
 
-1. **List your website.** In **Settings → Developers → Embedding** add each website that will show the form, one per line, for example `https://app.example.com`. While developing, `http://localhost:3000` is allowed. Nothing else (no path, no plain `http`) is.
+1. **List your website.** In **Settings → Developers → Embedding** add each website that will show the form, one per line, for example `https://app.example.com`. While developing, add `http://localhost:3000` (or your own port) to the same list: localhost is the one plain `http` address it takes. Nothing else (no path, no other plain `http`) is. An address that is not on the list gets `409` with the address in the message.
 2. **Send with embedded seats.** On your server add `embedded: ["signer_1"]` to the send request. Nobody is emailed for those seats.
 3. **Ask for a session.** On your server call `POST /api/v1/documents/{id}/embed-session` with `{ "seat": "signer_1", "origin": "https://app.example.com" }`. The answer is `{ url, expiresAt }`. The link works for one hour; ask again each time the page loads. Asking again does not end a session that is already open: the five newest links for a seat keep working until their hour is up, so a page that loads twice or a second tab is fine.
 4. **Show it.** Give the `url` to the element.
@@ -43,6 +43,14 @@ The `docustay` event carries all of them as `{ type, … }`. Events do not bubbl
 
 ## React, Vue, Angular
 
+Install the wrapper for your framework together with the web component it wraps:
+
+```bash
+npm install @docustay2026/react @docustay2026/embed     # React 17 or later
+npm install @docustay2026/vue @docustay2026/embed       # Vue 3.3 or later
+npm install @docustay2026/angular @docustay2026/embed   # Angular 17 or later
+```
+
 ```jsx
 import { DocustaySign } from "@docustay2026/react";
 <DocustaySign url={session.url} onCompleted={({ documentId }) => confirmOnServer(documentId)} />
@@ -59,7 +67,6 @@ import { DocustaySign } from "@docustay2026/react";
 ## What keeps it safe
 
 - The form can be framed only by the websites you listed. Docustay sends a `frame-ancestors` header naming exactly those, and only for a link made for an embedded seat. An ordinary emailed link is never frameable, even with `embed=1` added.
-- A published **form** link (`/f/<workspace>/<link name>?embed=1`) is the other case: it can be framed by the websites listed on that form (its Publish step, "Websites that may show it"), and the signing page that follows keeps the same list. With no websites listed it cannot be framed anywhere.
 - The form sends its events to one parent origin, the one in the link, and only if it is on your list. The element accepts a message only from its own frame and the form's own origin.
 - Treat `completed` as a prompt, not proof: confirm with `GET /api/v1/documents/{id}` on your server (`state: executed`).
 
@@ -69,9 +76,10 @@ The builder is the same editor Docustay uses, in a frame on your website. Your s
 
 1. **On your server** (never in a browser), with a key that has the `embedded:write` scope:
 
-   ```
-   POST /api/v1/embedded/builder-session
-   { "origin": "https://app.example.com", "name": "Services agreement" }
+   ```bash
+   curl -X POST "${DOCUSTAY_URL:-https://docustay.app}/api/v1/embedded/builder-session" \
+     -H "Authorization: Bearer $DOCUSTAY_API_KEY" -H "Content-Type: application/json" \
+     -d '{ "origin": "https://app.example.com", "name": "Services agreement" }'
    ```
 
    The answer is a `url` that works for one hour. The website must already be on your allowed list (Settings → Developers → Embedding); anything else gets a 409.

@@ -8,7 +8,7 @@ import { routePaths, startPreview } from "./crawl-gate.mjs";
 const OUT = path.join(path.dirname(new URL(import.meta.url).pathname), "..", ".design-shots"); fs.mkdirSync(OUT, { recursive: true });
 const only = process.argv.includes("--only") ? process.argv[process.argv.indexOf("--only") + 1] : null;
 const { port, stop } = await startPreview(); process.on("exit", stop);
-const REPS = new Set(["/", "/product", "/use-cases/contracts", "/templates/nda-template", "/trust/security", "/pricing", "/docs/webhooks", "/verify", "/tools/signature-generator", "/contact", "/legal/terms", "/developers", "/es"]);
+const REPS = new Set(["/", "/product", "/use-cases/contracts", "/templates/nda-template", "/trust/security", "/pricing", "/docs/webhooks", "/verify", "/tools/signature-generator", "/contact", "/legal/terms", "/developers"]);
 const paths = routePaths().filter((p) => !/\.(txt|xml|json|svg)$/.test(p) && (!only || p.includes(only)));
 const b = await chromium.launch({ channel: "chrome" });
 const rows = [];

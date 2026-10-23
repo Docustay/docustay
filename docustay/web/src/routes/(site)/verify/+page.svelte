@@ -9,9 +9,9 @@
     busy = false;
   }
 </script>
-<svelte:head><title>Verify a signed PDF | Docustay</title><meta name="description" content="Check the seal on a signed PDF in your browser. The file is not uploaded." /></svelte:head>
-<Hero eyebrow="Trust" title="Verify a signed PDF" lede="Drop a signed PDF here. The check runs in this page; the file is not uploaded anywhere." />
-<div class="mx-auto max-w-3xl">
+<svelte:head><title>Verify a signed PDF | Docustay</title><meta name="description" content="Verify a signed PDF in your browser. The check reads the digital signature and the file's fingerprint and says whether the file is intact. The file is not uploaded." /></svelte:head>
+<Hero eyebrow="Trust" title="Verify a signed *PDF.*" scene="seal" lede="Drop a signed PDF here. The check runs in this page; the file is not uploaded anywhere." />
+<div class="d-wrap"><div class="max-w-3xl">
   <div class="rounded-[var(--r-5)] border-2 border-dashed p-10 text-center {over ? 'border-brand bg-brand-soft' : 'border-line-strong bg-card'}" role="group" aria-label="Drop a signed PDF" ondragover={(e) => { e.preventDefault(); over = true; }} ondragleave={() => (over = false)} ondrop={(e) => { e.preventDefault(); over = false; check(e.dataTransfer.files?.[0]); }}>
     <div class="mx-auto mb-3 w-40"><Seal /></div><p class="serif text-2xl font-semibold">Drop a PDF</p>
     <button class="btn primary mt-4" onclick={() => input.click()} disabled={busy}>{busy ? "Checking…" : "Choose a file"}</button>
@@ -31,4 +31,5 @@
     <p>It checks that the digital signature inside the file is a correct signature, made with the certificate it carries, over exactly the bytes of the file: change one byte after sealing, or damage the signature, and the check fails. It tells you whether that certificate is the Docustay hosted service's own (by its fingerprint). It does not tell you who the signer is in the real world, and it does not check any certificate authority: the seal is made with Docustay's own certificate. The Certificate of Completion page inside the document carries the signing record.</p></section>
 </div>
 <Blocks blocks={TOOLS_ADD["/verify"]} />
-<Cta title="Send your own." text="" href="/signup" label="Get started free" keep={[["How the proof works", "/product/proof"], ["Signature standards", "/trust#proof"], ["Legal validity", "/trust/legal-validity"]]} />
+</div>
+<Cta title="Send your own." text="" href="/signup" label="Get started free" keep={[["How the proof works", "/features/proof"], ["Signature standards", "/trust#proof"], ["Legal validity", "/trust/legal-validity"]]} />

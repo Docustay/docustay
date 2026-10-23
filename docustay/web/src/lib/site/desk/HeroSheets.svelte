@@ -25,6 +25,6 @@
   :global(.p1), :global(.p2), :global(.p3) { padding: 22px; } :global(.p1) { min-height: 270px; } :global(.p2) { min-height: 240px; }
   .row { display: flex; gap: 10px; margin-top: 26px; } .row .fld { flex: 1; }
   .hash { margin-top: 24px; font: 500 10px/1 var(--font-mono); color: #6f6b63; letter-spacing: .06em; } .st { position: absolute; right: 18px; bottom: 22px; }
-  .btn { margin-top: 14px; display: inline-block; background: #1b1b1b; color: #faf8f3; font: 600 12px/1 var(--font-sans); padding: 10px 14px; border-radius: 6px; }
+  .btn { margin-top: 14px; display: inline-block; background: #1b1b1b; color: #f4f2ec; font: 600 12px/1 var(--font-sans); padding: 10px 14px; border-radius: 6px; }
   @media (max-width: 900px) { .stage { height: 440px; margin: 28px auto 0; } .s1 { left: 0; } }
 </style>

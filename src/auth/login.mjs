@@ -18,6 +18,7 @@
 //   5. the session               — and only now.
 
 import { withTenant, withCredentialLookup } from "../db/index.mjs";
+import { enforceFreeDeviceLimit, DEVICE_NOTICE } from "./deviceLimit.mjs";
 import { verifyIdToken, orgSlugFromClaims } from "./firebase.mjs";
 import { createSession, revokeSessionsForUid } from "./session.mjs";
 import { unauthenticated, forbidden, AppError, ErrorKind } from "../http/errors.mjs";
@@ -26,7 +27,7 @@ import { APP_DOMAIN_VAR } from "./tenantFromHost.mjs";
 //     imports session.mjs, db/index.mjs, secrets/envelope.mjs, firebase.mjs, http/errors.mjs —
 //     never login.mjs (checked: `grep -rln "auth/login.mjs" src/` names only emailCode.mjs,
 //     tenantFromHost.mjs, install.mjs, routes/writes.mjs, none of which totp.mjs imports).
-import { hasConfirmedFactor } from "./totp.mjs";
+import { summary as twoStepSummary, isTrustedDevice } from "./twoStep.mjs";
 
 // ★ CT-028 / Q6-1 — the domain a wrong-address redirect's `correctHost` hangs off, read the same
 //   way `src/routes/settings.mjs:94` already reads it: the deployment's own config, never
@@ -59,6 +60,8 @@ export async function login(idToken, {
   //   step 5 differs, minting a one-time `handoff` session instead of a real one. See
   //   0532_handoff_session_kind.sql for why this session KIND, not a new credential type.
   handoff = false,
+  // 0766: the remembered-device cookie of this browser (skips only the SECOND step, for this person, for 30 days)
+  trustedDeviceToken = null,
 } = {}) {
   // ── 1 · IDENTITY ───────────────────────────────────────────────────────────
   let decoded;
@@ -290,7 +293,13 @@ export async function login(idToken, {
   //     kind='partial' outright: every OTHER authenticated route 401s on it, by construction of
   //     the resolver every route already goes through (src/http/app.mjs:689-698), not by a check
   //     this file or any route file has to remember to add.
-  const requiresTwoStep = await hasConfirmedFactor(uid);
+  // 0766: a second step is asked for when the person has ANY (an authenticator app, a passkey, a security key), except when this very sign-in was made with a passkey (the device was unlocked with Face ID,
+  // Touch ID or the PIN, so it was already two factors) or this browser was remembered for this person.
+  let requiresTwoStep = false;
+  if (!(decoded?.docustay_passkey === true)) {
+    requiresTwoStep = (await twoStepSummary(uid)).on;
+    if (requiresTwoStep && trustedDeviceToken && !handoff && await isTrustedDevice(uid, trustedDeviceToken)) requiresTwoStep = false;
+  }
   // ★ the maintainer, 28 Sep 2026 — a handoff mint ALWAYS uses kind='handoff', regardless of requiresTwoStep:
   //   the two-step decision is re-made on the practice's own host, after redemption, the same way
   //   an ordinary sign-in already makes it — see redeem_handoff_session's own header. Minting it
@@ -314,10 +323,13 @@ export async function login(idToken, {
     ...(kind !== "app" ? { ttlHours: 1 } : {}),
   });
 
+  // 21 Oct 2026 (the maintainer, decision 5): a Free workspace may be signed in on three devices at once; a fourth sign-in signs out the oldest, and the new device is told so
+  const devices = kind === "app" ? await enforceFreeDeviceLimit({ tenantId, appUserId: person.id, currentTokenId: session.tokenId }) : { signedOut: 0 };
   return {
     token: session.token,
     tenantId,
     tenantSlug: person.tenantSlug,
+    ...(devices.signedOut > 0 ? { deviceNotice: DEVICE_NOTICE } : {}),
     appUserId: person.id,
     // ★★ P13.6 — role and rank come FROM THE DATABASE ROW. The token's own `role` claim
     //    (measured as 'pir' on live records) is NEVER consulted: 'pir' is not in app_user's CHECK

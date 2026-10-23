@@ -68,8 +68,7 @@ import { MAIL_SETTINGS_WRITES, registerMailSettingsReads } from "./mailSettings.
 import { DOCUSTAY_WRITES, registerDocustayReads } from "./docustay.mjs";
 import { DOCUMENT_PDF_WRITES, registerDocumentPdfRoutes } from "./documentsPdf.mjs";
 import { registerSelfServeRoutes } from "./publicSelfServe.mjs";
-import { FORMS_WRITES, registerFormReads } from "./documentsForms.mjs";
-import { registerPublicFormRoutes } from "./publicForms.mjs";
+import { PEOPLE_WRITES, registerPeopleReads } from "./documentsForms.mjs";
 import { PLAYS_WRITES, registerPlayReads } from "./documentsPlays.mjs";
 import { EMAIL_WRITES, registerEmailReads } from "./documentsEmail.mjs";
 import { APPROVAL_WRITES, registerApprovalReads } from "./documentsApprovals.mjs";
@@ -114,7 +113,7 @@ export const STAGE14_WRITES = Object.freeze([
   ...MAIL_SETTINGS_WRITES,
   ...DOCUSTAY_WRITES,
   ...DOCUMENT_PDF_WRITES,
-  ...FORMS_WRITES,
+  ...PEOPLE_WRITES,
   ...PLAYS_WRITES,
   ...EMAIL_WRITES,
   ...APPROVAL_WRITES,
@@ -157,7 +156,7 @@ export function registerItemsAndDocumentsRoutes(app, { runTenantScoped, runSigne
   registerPublicDocumentRoutes(app, { runSignerScoped });
   registerDocumentPdfRoutes(app, { runTenantScoped, runSignerScoped, tenantIsPlatform });
   registerSelfServeRoutes(app);
-  registerFormReads(app, { runTenantScoped, tenantIsPlatform });
+  registerPeopleReads(app, { runTenantScoped, tenantIsPlatform });
   registerPlayReads(app, { runTenantScoped, tenantIsPlatform });
   registerEmailReads(app, { runTenantScoped, tenantIsPlatform });
   registerApprovalReads(app, { runTenantScoped, tenantIsPlatform });
@@ -166,6 +165,5 @@ export function registerItemsAndDocumentsRoutes(app, { runTenantScoped, runSigne
   registerConnectorPublic(app);
   registerConnectorSession(app, { runTenantScoped, tenantIsPlatform });
   registerBuilderPublic(app);
-  registerPublicFormRoutes(app);
   registerPublicDocustayRoutes(app);
 }

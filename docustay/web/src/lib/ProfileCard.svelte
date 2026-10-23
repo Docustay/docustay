@@ -18,7 +18,7 @@
   <h2 class="text-lg font-semibold">{t("Your name")}</h2>
   <p class="mt-1 text-sm text-mute">{t("This is how your teammates, the people you send to and the activity log refer to you.")}</p>
   <form class="mt-3 flex flex-wrap items-end gap-3" onsubmit={(e) => { e.preventDefault(); save(); }}>
-    <label class="grid gap-1 text-sm"><span class="font-medium">{t("Name")}</span><input class="field w-72" bind:value={name} maxlength="80" autocomplete="name" data-testid="profile-name" /></label>
+    <label class="grid min-w-0 flex-1 gap-1 text-sm"><span class="font-medium">{t("Name")}</span><input class="field w-full" bind:value={name} maxlength="80" autocomplete="name" data-testid="profile-name" /></label>
     <button class="btn primary" type="submit" disabled={busy || !name.trim() || name.trim() === (me.displayName ?? "")} data-testid="profile-save">{t("Save")}</button>
   </form>
   <p class="mt-3 text-sm text-mute [overflow-wrap:anywhere]">{t("You sign in with")} <span class="font-mono">{me.email}</span></p>

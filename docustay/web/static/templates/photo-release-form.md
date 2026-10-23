@@ -1,6 +1,6 @@
 ---
 title: Photo release form
-description: A free photo release form. Ask permission to use pictures of a person, collect it from a link on any phone, and keep a sealed copy of each yes.
+description: A free photo release form. Ask permission to use pictures of a person, collect it on any phone, and keep a sealed copy of each yes.
 ---
 
 # Photo release form

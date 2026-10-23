@@ -5,5 +5,6 @@ import { GENERIC_NOTIFICATIONS, docustayWantsNotice } from "../src/queue/generic
 
 test("document-side and team topics reach a Docustay owner; the CRM ones do not (every topic exists in the table, so the control is real)", () => {
   for (const t of ["documents.document.signed", "documents.document.executed", "documents.document.bounced", "documents.usage.threshold", "settings.subscription.updated", "settings.data.export_ready", "people.role.granted", "people.team.member_removed"]) { assert.ok(GENERIC_NOTIFICATIONS[t], `${t} is in the table`); assert.equal(docustayWantsNotice(t), true, t); }
-  for (const t of ["settings.usage.reconciled", "accounts.account.created", "booking.policy.changed", "money.payout.recorded", "growth.campaign.scheduled", "run.item.blocked", "messages.message.sent", "tasks.task.assigned"]) { assert.ok(GENERIC_NOTIFICATIONS[t], `${t} is in the table`); assert.equal(docustayWantsNotice(t), false, t); }
+  for (const t of ["accounts.account.created", "booking.policy.changed", "money.payout.recorded", "growth.campaign.scheduled", "run.item.blocked", "messages.message.sent", "tasks.task.assigned"]) { assert.ok(GENERIC_NOTIFICATIONS[t], `${t} is in the table`); assert.equal(docustayWantsNotice(t), false, t); }
+  assert.equal(GENERIC_NOTIFICATIONS["settings.usage.reconciled"], undefined, "the usage-reconciled notice is gone for good (G1)");
 });

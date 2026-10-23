@@ -68,19 +68,18 @@ export const DRAFT_TOOLS = [
         { proposal: { kind: "created", summary: `Made the draft “${title}”`, documentId: made.id, state: "accepted", card: { title, test, people: people.length, link: `/documents/${made.id}/edit?step=prepare`, ...(usedTemplate ? { using: usedTemplate.title } : {}), ...(notes.length ? { notes } : {}) } } });
     } },
   { name: "docustay.template.create", kind: "create", permission: AUTHOR, step: "Making the template",
-    description: "Make a reusable TEMPLATE from words you write (blocks) or from the document that is open (fromOpen:true). Merge text such as {{Client.name}} fills in per person when the template is used. Does not send anything. kind \"document\" (the default) is sent to people the sender names; kind \"form\" is ONE public link many people fill in and sign: give it exactly one role that fills it in (plus, only if asked, one staff role with a decision, a note and a signature), ask for name and email first, and never ask for card or bank numbers, ID numbers, tax forms or medical records. A form is published afterwards on the Forms page.",
-    input_schema: OBJ({ name: STR("the template's name", { maxLength: 120 }), kind: { type: "string", enum: ["document", "form"], description: "document (default) or form" }, blocks: { type: "array", items: BLOCK, maxItems: 200 }, fromOpen: { type: "boolean", description: "use the open document's words instead of blocks" } }, ["name"]),
+    description: "Make a reusable TEMPLATE from words you write (blocks) or from the document that is open (fromOpen:true). Merge text such as {{Client.name}} fills in per person when the template is used. Does not send anything.",
+    input_schema: OBJ({ name: STR("the template's name", { maxLength: 120 }), blocks: { type: "array", items: BLOCK, maxItems: 200 }, fromOpen: { type: "boolean", description: "use the open document's words instead of blocks" } }, ["name"]),
     run: async (ctx, input) => {
       let source;
       if (input?.fromOpen === true) { const d = await loadOpen(ctx); if (!d?.source) return refuse("No written document is open to make a template from."); source = d.source; }
       else { const b = blocksToSource(input?.blocks); if (!b.ok) return refuse(b.errors[0]); source = b.source; }
       const name = String(input?.name ?? "").trim().slice(0, 120); if (!name) return refuse("Give the template a name.");
-      const isForm = input?.kind === "form";   // Run 7: Scribe is told the type; a form template opens on the Forms page to publish
-      let t; try { t = await ctx.tx((tx) => saveSourceTemplate(tx, { tenantId: ctx.tenantId, actorUserId: ctx.actorUserId, name, source, profile: "typeset", origin: "written", requireSignature: false, kind: isForm ? "form" : "document" })); }
+      let t; try { t = await ctx.tx((tx) => saveSourceTemplate(tx, { tenantId: ctx.tenantId, actorUserId: ctx.actorUserId, name, source, profile: "typeset", origin: "written", requireSignature: false, kind: "document" })); }
       catch (e) { return refuse(String(e?.message ?? "The template could not be saved.").slice(0, 300), e); }
       const id = t.templateId ?? t.id;
-      const link = isForm ? `/forms?new=${id}` : "/templates";
-      return done({ created: true, templateId: id, name, kind: isForm ? "form" : "document", link }, { proposal: { kind: "template", summary: isForm ? `Made the form template “${name}”` : `Made the template “${name}”`, state: "accepted", card: { title: name, link, kind: isForm ? "form" : "document" } } });
+      const link = "/templates";
+      return done({ created: true, templateId: id, name, kind: "document", link }, { proposal: { kind: "template", summary: `Made the template “${name}”`, state: "accepted", card: { title: name, link, kind: "document" } } });
     } },
   { name: "docustay.doc.propose_people", kind: "proposal", permission: EDIT, step: "Preparing the people", needs: "edit",
     description: "Propose who signs (or approves, views, gets a copy) on a saved DRAFT, their roles and their order. The person sees the new list and accepts or rejects it. Replaces the draft's people with this list.",

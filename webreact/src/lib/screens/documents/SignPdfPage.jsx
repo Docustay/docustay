@@ -55,6 +55,8 @@ export default function SignPdfPage() {
   const [saved, setSaved] = useState(null);
   const [decline, setDecline] = useState(false);
   const [reason, setReason] = useState("");
+  const [why, setWhy] = useState(""), [method, setMethod] = useState(null);
+  const [delegating, setDelegating] = useState(false), [dName, setDName] = useState(""), [dEmail, setDEmail] = useState(""), [passedTo, setPassedTo] = useState(null);
   const [width, setWidth] = useState(720);
   const t = useMemo(() => makeT(view?.language), [view?.language]);     // §23.5.6 — the language the sender chose (en | es | fr | de)
   const token = useRef(null), column = useRef(null), kiosk = useRef(false);
@@ -81,6 +83,7 @@ export default function SignPdfPage() {
   useEffect(() => { if (!kiosk.current || (phase !== "signed" && phase !== "declined")) return undefined; const id = setTimeout(() => window.location.assign("/documents/kiosk"), 6000); return () => clearTimeout(id); }, [phase]);
   useEffect(() => { const f = () => setWidth(Math.max(280, Math.min(820, (column.current?.clientWidth ?? window.innerWidth) - 8))); f(); window.addEventListener("resize", f); return () => window.removeEventListener("resize", f); }, [phase]);
 
+  const policy = view?.policy ?? {};     // the organisation's signing rules (src/documents/signingPolicy.mjs), read live by the server and drawn here exactly as the other signing page draws them
   const accent = /^#[0-9a-fA-F]{6}$/.test(view?.brand?.accent ?? "") ? view.brand.accent : null;     // §23.5.9 — the practice's own colour, only ever a plain hex
   const [payFor, setPayFor] = useState(null);                       // the payment field being paid (opens the card form)
   const paidOf = useMemo(() => Object.fromEntries((view?.payments ?? []).filter((p) => p.paid).map((p) => [p.fieldId, p])), [view]);
@@ -133,9 +136,10 @@ export default function SignPdfPage() {
     if (test) { setProblem(t("This is a test — nothing is recorded and you cannot sign.")); return; }
     if (!name.trim()) return setProblem(t("Type your full name to sign."));
     if (open.length) return setProblem(open.length === 1 ? t("{{n}} field still needs filling in.", { n: 1 }) : t("{{n}} fields still need filling in.", { n: open.length }));
+    if (policy.requireReason && !why.trim()) return setProblem(t("Say why you are signing (for example, your role or capacity)."));
     if (!consent) return setProblem(t("Agree to sign electronically first."));
     setProblem(null); setPhase("signing");
-    try { await api("sign", { typedName: name.trim(), consent: true, marks: { signature: marks.signature, initials: marks.initials }, values: payload(), signerTimezone: zone() }); setPhase("signed"); }
+    try { await api("sign", { typedName: name.trim(), consent: true, marks: { signature: marks.signature, initials: marks.initials }, values: payload(), signerTimezone: zone(), signatureMethod: method, ...(policy.requireReason ? { reason: why.trim() } : {}) }); setPhase("signed"); }
     catch (e) {
       if (e instanceof ApiError && e.status === 403) setPhase("refused");
       else if (e instanceof ApiError && e.status === 409) { setView((v) => ({ ...v, waitingFor: [e.body?.error?.detail?.waitingFor ?? "someone"].flat() })); setPhase(e.body?.error?.detail?.code === "not_your_turn" ? "waiting" : "signed"); }
@@ -168,6 +172,11 @@ export default function SignPdfPage() {
     if (!changesText.trim()) { setProblem(t("Tell them what needs to change.")); return; }
     await api("request-changes", { message: changesText.trim() }); setSaved(t("Sent. They will get your note — you can still sign or decline.")); setChanges(false); setChangesText("");
   });
+  async function delegateNow() {
+    if (!dName.trim() || !dEmail.trim()) return setProblem(t("Give their name and email."));
+    setProblem(null);
+    try { const r = await api("delegate", { name: dName.trim(), email: dEmail.trim() }); setPassedTo(r?.to ?? { name: dName.trim(), email: dEmail.trim() }); setPhase("delegated"); } catch (e) { setProblem(e.message || t("Something went wrong. Try again.")); }
+  }
   async function declineNow() {
     if (view.requireDeclineReason && !reason.trim()) return setProblem(t("Please tell them why you are declining."));
     if (test) { setProblem(t("This is a test — nothing is recorded.")); return; }
@@ -191,6 +200,7 @@ export default function SignPdfPage() {
     </Center>
   );
   else if (phase === "signed") inner = <Center id="signpdf-signed" title={doneKind === "approved" ? t("You've approved it") : doneKind === "viewed" ? t("Thank you") : doneKind === "assisted" ? t("Details saved") : t("You've signed")}><p className="m-0 text-body">{kiosk.current ? t("Thank you — this screen will reset for the next person. ") : ""}{doneKind === "assisted" ? t("{{name}} will check what you filled in and sign it themselves. ", { name: view?.party?.assistsName ?? t("The signer") }) : doneKind === "viewed" ? t("We have noted that you looked at it. ") : ""}{view?.party?.name ? t("Thank you, {{name}}. ", { name: view.party.name }) : t("Thank you. ")}{view?.otherParties?.some((p) => p.actionRole === "signer" && p.status !== "signed") ? t("We'll tell everyone once the last person has signed.") : t("Everyone has signed — you'll get a copy by email.")}</p></Center>;
+  else if (phase === "delegated") inner = <Center id="signpdf-delegated" title={t("Passed on")}><p className="m-0 text-body">{t("{{name}} has been sent this document to sign. You can close this page.", { name: passedTo?.name ?? t("They") })}</p></Center>;
   else if (phase === "declined") inner = <Center id="signpdf-declined" title={t("Declined")}><p className="m-0 text-body">{t("The sender has been told. You can close this page.")}</p></Center>;
   else if (phase === "waiting") inner = <Center id="signpdf-waiting" title={t("Not your turn yet")}><p className="m-0 text-body">{t("{{who}} signs first. We'll email you when it's your turn.", { who: (view?.waitingFor ?? []).join(", ") || t("Someone else") })}</p></Center>;
   else inner = (
@@ -220,8 +230,8 @@ export default function SignPdfPage() {
       {padFor && (
         <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 p-0 sm:items-center sm:p-4" role="dialog" aria-modal="true" aria-label={`Add your ${padFor.type}`}>
           <div className="w-full max-w-[520px] rounded-t-card bg-surface p-4 sm:rounded-card">
-            <SignaturePad canRemember={!kiosk.current} label={padFor.type === "initials" ? "initials" : padFor.type === "image" ? "picture" : "signature"} defaultName={padFor.type === "initials" ? name.split(/\s+/).map((w) => w[0]).join("").toUpperCase() : name}
-              onDone={(url) => { if (padFor.type === "signature" || padFor.type === "initials") setMarks((m) => ({ ...m, [padFor.type]: url })); else set(padFor.id, url); setPadFor(null); }} onCancel={() => setPadFor(null)} />
+            <SignaturePad allowTyped={policy.allowTyped !== false} canRemember={!kiosk.current && policy.rememberSignature === true} label={padFor.type === "initials" ? "initials" : padFor.type === "image" ? "picture" : "signature"} defaultName={padFor.type === "initials" ? name.split(/\s+/).map((w) => w[0]).join("").toUpperCase() : name}
+              onDone={(url, m) => { if (padFor.type === "signature" || padFor.type === "initials") { setMarks((mk) => ({ ...mk, [padFor.type]: url })); if (padFor.type === "signature") setMethod(m ?? null); } else set(padFor.id, url); setPadFor(null); }} onCancel={() => setPadFor(null)} />
           </div>
         </div>
       )}
@@ -248,12 +258,21 @@ export default function SignPdfPage() {
           <span className="text-meta text-ink-2" role="status" data-testid="signpdf-left">{open.length ? t("{{n}} to fill in", { n: open.length }) : t("All filled in")}</span>
           {open.length > 0 && <Button size="sm" variant="outline" onClick={goNext} data-testid="signpdf-next">{t("Next field")}</Button>}
           <Input className="w-[200px]" value={name} onChange={(e) => setName(e.currentTarget.value)} placeholder={t("Your full name")} aria-label={t("Your full name")} data-testid="signpdf-name" />
+          {policy.requireReason && <Input className="w-[220px]" value={why} onChange={(e) => setWhy(e.currentTarget.value)} maxLength={500} placeholder={t("Why you are signing")} aria-label={t("Why you are signing")} data-testid="signpdf-reason" />}
           <label className="flex items-center gap-2 text-caption text-ink-2"><input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} data-testid="signpdf-consent" /><span title={view.consent.text}>{t("I agree to sign electronically")}</span></label>
           <Button disabled={phase === "signing"} onClick={sign} style={accent ? { backgroundColor: accent, color: "#fff" } : undefined} data-testid="signpdf-finish">{t("Finish and sign")}</Button>
           <Button size="sm" variant="ghost" onClick={save} data-testid="signpdf-save">{t("Save and finish later")}</Button>
-          <Button size="sm" variant="ghost" onClick={() => setDecline((d) => !d)} data-testid="signpdf-decline">{t("Decline")}</Button>
+          {policy.allowDelegate === true && <Button size="sm" variant="ghost" onClick={() => setDelegating((d) => !d)} data-testid="signpdf-delegate">{t("Pass this to someone else")}</Button>}
+          {policy.allowDecline !== false && <Button size="sm" variant="ghost" onClick={() => setDecline((d) => !d)} data-testid="signpdf-decline">{t("Decline")}</Button>}
         </div>}
         {(role === "signer" || role === "approver") && <div className="mx-auto mt-1 max-w-[860px]"><Button size="sm" variant="ghost" onClick={() => setChanges((c) => !c)} data-testid="signpdf-changes">{t("Ask for changes")}</Button></div>}
+        {delegating && (
+          <form className="mx-auto mt-2 flex max-w-[860px] flex-wrap items-center gap-2" onSubmit={(e) => { e.preventDefault(); delegateNow(); }} data-testid="signpdf-delegate-box">
+            <Input className="w-[200px]" value={dName} onChange={(e) => setDName(e.currentTarget.value)} placeholder={t("Their full name")} aria-label={t("Their full name")} />
+            <Input className="w-[240px]" type="email" value={dEmail} onChange={(e) => setDEmail(e.currentTarget.value)} placeholder={t("Their email")} aria-label={t("Their email")} />
+            <Button type="submit" variant="outline" data-testid="signpdf-delegate-send">{t("Pass it on")}</Button>
+          </form>
+        )}
         {changes && (
           <div className="mx-auto mt-2 max-w-[860px] space-y-2" data-testid="signpdf-changes-box">
             <Textarea value={changesText} onChange={(e) => setChangesText(e.currentTarget.value)} placeholder={t("What needs to change? They will see your note.")} aria-label={t("What needs to change")} maxLength={1000} />

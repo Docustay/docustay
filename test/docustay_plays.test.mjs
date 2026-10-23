@@ -80,18 +80,19 @@ test("the Pro gate for the chat: Free is refused send-to-a-list with a card (mak
   assert.equal(proItemFor("docustay.doc.create", { from: "blocks" }), null, "Run 8 (the maintainer): making a document from words is allowed on Free");
   assert.equal(proItemFor("docustay.doc.create", { from: "library" }), null, "a built-in template from the library is allowed on Free");
   assert.equal(proItemFor("docustay.template.create", {}), null, "Run 8 (the maintainer): making a template or a form is allowed on Free");
-  assert.equal(proItemFor("docustay.confirm.bulk_send", {}), "ai_bulk");
-  // Run 9 (the maintainer, 12 Oct 2026, decision 2): Scribe ACTING for the person — sending, reminding, voiding, a template, reminders — is Pro; a copy or a draft from a template (nothing is sent) is not
-  for (const n of ["docustay.confirm.send", "docustay.confirm.remind", "docustay.confirm.void", "docustay.confirm.remind_many"]) assert.equal(proItemFor(n, {}), "scribe_actions", n);
+  // v1 item 16 (the maintainer, 17 Oct 2026): sending to a list and Scribe acting for the person are on every plan, so no chat tool needs Pro any more
+  for (const n of ["docustay.confirm.bulk_send", "docustay.confirm.send", "docustay.confirm.remind", "docustay.confirm.void", "docustay.confirm.remind_many"]) assert.equal(proItemFor(n, {}), null, n);
   for (const n of ["docustay.nav.find", "docustay.doc.run_check", "docustay.plays.list", "docustay.library.find", "docustay.library.load", "docustay.confirm.copy", "docustay.confirm.use_template", "docustay.docs.find", "docustay.ask.questions"]) assert.equal(proItemFor(n, {}), null, n);
   const dbFor = (row) => ({ query: async (sql) => { if (/workbench_subscription/.test(sql)) return { rows: row ? [row] : [] }; if (/FROM keystone\.tenant/.test(sql)) return { rows: [{ shape: "documents", product: "docustay" }] }; throw new Error(`unexpected query ${sql.slice(0, 60)}`); } });
   const free = dbFor({ plan_key: "docustay_free", status: "active" }), pro = dbFor({ plan_key: "docustay_pro", status: "active" }), none = dbFor(null);
   assert.equal(await proGate(free, { tenantId: "t", name: "docustay.doc.create", input: { from: "blocks" } }), null, "Free may make a document from words");
-  const g = await proGate(free, { tenantId: "t", name: "docustay.confirm.bulk_send", input: {} });
-  assert.equal(g.item, "ai_bulk"); assert.equal(g.card.link, "https://docustay.app/pricing#pro"); assert.equal(g.card.linkLabel, "Explore Pro"); assert.match(g.error, /Pro/);
-  assert.equal(await proGate(pro, { tenantId: "t", name: "docustay.confirm.bulk_send", input: {} }), null, "positive control: Pro may");
-  assert.equal(await proGate(none, { tenantId: "t", name: "docustay.confirm.bulk_send", input: {} }), null, "a workspace on no Docustay plan is never limited");
-  assert.equal(await planAiCap(free, { tenantId: "t" }), 10); assert.equal(await planAiCap(pro, { tenantId: "t" }), 150);   // 150 since 1d3959c2, matching claims.json "Pro includes 150 Scribe AI credits a month" and plans.js AI_CREDITS
+  for (const db of [free, pro, none]) assert.equal(await proGate(db, { tenantId: "t", name: "docustay.confirm.bulk_send", input: {} }), null, "bulk send is not gated on any plan");
+  const { proUpFront } = await import("../src/documents/chat/pro.mjs");
+  const up = await proUpFront(free, { tenantId: "t", text: "Make me my own playbook for leases" });
+  assert.equal(up.item, "custom_plays"); assert.equal(up.card.link, "https://docustay.app/pricing#pro"); assert.equal(up.card.linkLabel, "Explore Pro"); assert.match(up.text, /Pro/);
+  assert.equal(await proUpFront(pro, { tenantId: "t", text: "Make me my own playbook for leases" }), null, "positive control: Pro may");
+  assert.equal(await proUpFront(free, { tenantId: "t", text: "Send this to everyone on my list" }), null, "list sends are not Pro");
+  assert.equal(await planAiCap(free, { tenantId: "t" }), 10); assert.equal(await planAiCap(pro, { tenantId: "t" }), 100);   // 100 since v1 item 17 (the maintainer, 17 Oct 2026); more at $0.30 a draft
   assert.equal(await planAiCap(none, { tenantId: "t" }), null);   // ★ Run 8: this assertion sat after the comment above on the same line and never ran
 });
 test("the workspace store: Free may not make, change, publish or bundle; the built-ins are always listed and cannot be overwritten", async () => {
@@ -120,7 +121,7 @@ test("a draft from a template without a model: its guidance's questions first (n
   assert.ok(r2.status === "needs_input" ? r2.questions.every((q) => q.key !== first.key) : true);
   await assert.rejects(() => startDraftFromTemplate(db, { tenantId: "t", ownerId: "u", template: "services-agreement", people, answers: { nonsense: "x" } }), /not one of this template/);
   await assert.rejects(() => startDraftFromTemplate(db, { tenantId: "t", ownerId: "u", template: "no-such-template", people }), /no built-in template/);
-  await assert.rejects(() => startDraftFromTemplate(db, { tenantId: "t", ownerId: "u", template: "contact-and-inquiry", people }), /Form template/);   // a form is published, not drafted
+  assert.notEqual((await startDraftFromTemplate(db, { tenantId: "t", ownerId: "u", template: "contact-and-inquiry", people })).status, undefined);   // Docustay v1: the former form templates are ordinary templates, so they can be drafted
   const free = { query: async (sql) => { if (/workbench_subscription/.test(sql)) return { rows: [{ plan_key: "docustay_free", status: "active" }] }; throw new Error("unexpected"); } };
   await assert.rejects(() => startDraftFromTemplate(free, { tenantId: "t", ownerId: "u", template: "services-agreement", people }), /Pro/);
 });

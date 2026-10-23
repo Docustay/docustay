@@ -9,6 +9,7 @@
     "LICENSE-OFL-Geist.txt",
     "LICENSE-OFL-InstrumentSerif.txt",
     "LICENSE-OFL-JetBrainsMono.txt",
+    "LICENSE-OFL-Newsreader.txt",
     "LICENSE-OFL-ReenieBeanie.txt"
    ]
   },
@@ -21,6 +22,7 @@
     "LICENSE-OFL-Geist.txt",
     "LICENSE-OFL-InstrumentSerif.txt",
     "LICENSE-OFL-JetBrainsMono.txt",
+    "LICENSE-OFL-Newsreader.txt",
     "LICENSE-OFL-ReenieBeanie.txt"
    ]
   },
@@ -33,6 +35,7 @@
     "LICENSE-OFL-Geist.txt",
     "LICENSE-OFL-InstrumentSerif.txt",
     "LICENSE-OFL-JetBrainsMono.txt",
+    "LICENSE-OFL-Newsreader.txt",
     "LICENSE-OFL-ReenieBeanie.txt"
    ]
   },
@@ -45,6 +48,7 @@
     "LICENSE-OFL-Geist.txt",
     "LICENSE-OFL-InstrumentSerif.txt",
     "LICENSE-OFL-JetBrainsMono.txt",
+    "LICENSE-OFL-Newsreader.txt",
     "LICENSE-OFL-ReenieBeanie.txt"
    ]
   },
@@ -57,6 +61,7 @@
     "LICENSE-OFL-Geist.txt",
     "LICENSE-OFL-InstrumentSerif.txt",
     "LICENSE-OFL-JetBrainsMono.txt",
+    "LICENSE-OFL-Newsreader.txt",
     "LICENSE-OFL-ReenieBeanie.txt"
    ]
   },
@@ -69,6 +74,33 @@
     "LICENSE-OFL-Geist.txt",
     "LICENSE-OFL-InstrumentSerif.txt",
     "LICENSE-OFL-JetBrainsMono.txt",
+    "LICENSE-OFL-Newsreader.txt",
+    "LICENSE-OFL-ReenieBeanie.txt"
+   ]
+  },
+  {
+   "file": "newsreader-latin-wght-italic.woff2",
+   "licence": "OFL-1.1",
+   "text": [
+    "LICENSE-OFL-Caveat.txt",
+    "LICENSE-OFL-DancingScript.txt",
+    "LICENSE-OFL-Geist.txt",
+    "LICENSE-OFL-InstrumentSerif.txt",
+    "LICENSE-OFL-JetBrainsMono.txt",
+    "LICENSE-OFL-Newsreader.txt",
+    "LICENSE-OFL-ReenieBeanie.txt"
+   ]
+  },
+  {
+   "file": "newsreader-latin-wght-normal.woff2",
+   "licence": "OFL-1.1",
+   "text": [
+    "LICENSE-OFL-Caveat.txt",
+    "LICENSE-OFL-DancingScript.txt",
+    "LICENSE-OFL-Geist.txt",
+    "LICENSE-OFL-InstrumentSerif.txt",
+    "LICENSE-OFL-JetBrainsMono.txt",
+    "LICENSE-OFL-Newsreader.txt",
     "LICENSE-OFL-ReenieBeanie.txt"
    ]
   },
@@ -81,6 +113,7 @@
     "LICENSE-OFL-Geist.txt",
     "LICENSE-OFL-InstrumentSerif.txt",
     "LICENSE-OFL-JetBrainsMono.txt",
+    "LICENSE-OFL-Newsreader.txt",
     "LICENSE-OFL-ReenieBeanie.txt"
    ]
   }
@@ -325,6 +358,27 @@
    "licence": "MIT",
    "repository": "https://github.com/Hopding/upng",
    "publisher": "photopea"
+  },
+  {
+   "name": "@posthog/browser-common",
+   "version": "0.9.5",
+   "licence": "MIT",
+   "repository": "https://github.com/PostHog/posthog-js",
+   "publisher": null
+  },
+  {
+   "name": "@posthog/core",
+   "version": "1.59.1",
+   "licence": "MIT",
+   "repository": "https://github.com/PostHog/posthog-js",
+   "publisher": null
+  },
+  {
+   "name": "@posthog/types",
+   "version": "1.416.0",
+   "licence": "MIT",
+   "repository": "https://github.com/PostHog/posthog-js",
+   "publisher": null
   },
   {
    "name": "@stripe/stripe-js",
@@ -1426,6 +1480,13 @@
    "publisher": "TJ Holowaychuk"
   },
   {
+   "name": "core-js",
+   "version": "3.50.0",
+   "licence": "MIT",
+   "repository": "https://github.com/zloirock/core-js",
+   "publisher": "Denis Pushkarev"
+  },
+  {
    "name": "cose-base",
    "version": "1.0.3",
    "licence": "MIT",
@@ -1804,6 +1865,13 @@
    "publisher": "Wilson Page"
   },
   {
+   "name": "fflate",
+   "version": "0.4.9",
+   "licence": "MIT",
+   "repository": "https://github.com/101arrowz/fflate",
+   "publisher": "Arjun Barrett"
+  },
+  {
    "name": "find-up",
    "version": "4.1.0",
    "licence": "MIT",
@@ -2084,6 +2152,20 @@
    "publisher": "Preet Shihn"
   },
   {
+   "name": "posthog-js",
+   "version": "1.435.5",
+   "licence": "(Apache-2.0 AND MIT)",
+   "repository": "https://github.com/PostHog/posthog-js",
+   "publisher": "engineering@posthog.com"
+  },
+  {
+   "name": "preact",
+   "version": "10.29.8",
+   "licence": "MIT",
+   "repository": "https://github.com/preactjs/preact",
+   "publisher": null
+  },
+  {
    "name": "prosemirror-changeset",
    "version": "2.4.4",
    "licence": "MIT",
@@ -2194,6 +2276,13 @@
    "licence": "MIT",
    "repository": "https://github.com/soldair/node-qrcode",
    "publisher": "Ryan Day"
+  },
+  {
+   "name": "query-selector-shadow-dom",
+   "version": "1.0.1",
+   "licence": "MIT",
+   "repository": "https://github.com/webdriverio/query-selector-shadow-dom",
+   "publisher": "George Griffiths"
   },
   {
    "name": "require-directory",
@@ -2385,6 +2474,20 @@
    "publisher": "Marijn Haverbeke"
   },
   {
+   "name": "web-vitals",
+   "version": "6.2.1",
+   "licence": "Apache-2.0",
+   "repository": "https://github.com/GoogleChrome/web-vitals",
+   "publisher": "Philip Walton"
+  },
+  {
+   "name": "web-vitals",
+   "version": "6.2.3",
+   "licence": "Apache-2.0",
+   "repository": "https://github.com/GoogleChrome/web-vitals",
+   "publisher": "Philip Walton"
+  },
+  {
    "name": "which-module",
    "version": "2.0.1",
    "licence": "ISC",
@@ -2428,6 +2531,104 @@
   }
  ],
  "devOnly": [
+  {
+   "name": "@eslint-community/eslint-utils",
+   "version": "4.10.1",
+   "licence": "MIT",
+   "repository": "https://github.com/eslint-community/eslint-utils",
+   "publisher": "Toru Nagashima"
+  },
+  {
+   "name": "@eslint-community/regexpp",
+   "version": "4.12.2",
+   "licence": "MIT",
+   "repository": "https://github.com/eslint-community/regexpp",
+   "publisher": "Toru Nagashima"
+  },
+  {
+   "name": "@eslint/config-array",
+   "version": "0.21.2",
+   "licence": "Apache-2.0",
+   "repository": "https://github.com/eslint/rewrite",
+   "publisher": "Nicholas C. Zakas"
+  },
+  {
+   "name": "@eslint/config-helpers",
+   "version": "0.4.2",
+   "licence": "Apache-2.0",
+   "repository": "https://github.com/eslint/rewrite",
+   "publisher": null
+  },
+  {
+   "name": "@eslint/core",
+   "version": "0.17.0",
+   "licence": "Apache-2.0",
+   "repository": "https://github.com/eslint/rewrite",
+   "publisher": "Nicholas C. Zakas"
+  },
+  {
+   "name": "@eslint/eslintrc",
+   "version": "3.3.7",
+   "licence": "MIT",
+   "repository": "https://github.com/eslint/eslintrc",
+   "publisher": "Nicholas C. Zakas"
+  },
+  {
+   "name": "@eslint/js",
+   "version": "9.39.5",
+   "licence": "MIT",
+   "repository": "https://github.com/eslint/eslint",
+   "publisher": null
+  },
+  {
+   "name": "@eslint/object-schema",
+   "version": "2.1.7",
+   "licence": "Apache-2.0",
+   "repository": "https://github.com/eslint/rewrite",
+   "publisher": "Nicholas C. Zakas"
+  },
+  {
+   "name": "@eslint/plugin-kit",
+   "version": "0.4.1",
+   "licence": "Apache-2.0",
+   "repository": "https://github.com/eslint/rewrite",
+   "publisher": "Nicholas C. Zakas"
+  },
+  {
+   "name": "@humanfs/core",
+   "version": "0.19.2",
+   "licence": "Apache-2.0",
+   "repository": "https://github.com/humanwhocodes/humanfs",
+   "publisher": "Nicholas C. Zakas"
+  },
+  {
+   "name": "@humanfs/node",
+   "version": "0.16.8",
+   "licence": "Apache-2.0",
+   "repository": "https://github.com/humanwhocodes/humanfs",
+   "publisher": "Nicholas C. Zakas"
+  },
+  {
+   "name": "@humanfs/types",
+   "version": "0.15.0",
+   "licence": "Apache-2.0",
+   "repository": "https://github.com/humanwhocodes/humanfs",
+   "publisher": "Nicholas C. Zakas"
+  },
+  {
+   "name": "@humanwhocodes/module-importer",
+   "version": "1.0.1",
+   "licence": "Apache-2.0",
+   "repository": "https://github.com/humanwhocodes/module-importer",
+   "publisher": "Nicholas C. Zaks"
+  },
+  {
+   "name": "@humanwhocodes/retry",
+   "version": "0.4.3",
+   "licence": "Apache-2.0",
+   "repository": "https://github.com/humanwhocodes/retry",
+   "publisher": "Nicholas C. Zaks"
+  },
   {
    "name": "@oxc-project/types",
    "version": "0.152.0",
@@ -2632,6 +2833,13 @@
    "publisher": null
   },
   {
+   "name": "@types/json-schema",
+   "version": "7.0.15",
+   "licence": "MIT",
+   "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+   "publisher": null
+  },
+  {
    "name": "@types/mdast",
    "version": "4.0.4",
    "licence": "MIT",
@@ -2660,11 +2868,60 @@
    "publisher": "Andrea Giammarchi"
   },
   {
+   "name": "acorn-jsx",
+   "version": "5.3.2",
+   "licence": "MIT",
+   "repository": "https://github.com/acornjs/acorn-jsx",
+   "publisher": null
+  },
+  {
+   "name": "ajv",
+   "version": "6.15.0",
+   "licence": "MIT",
+   "repository": "https://github.com/ajv-validator/ajv",
+   "publisher": "Evgeny Poberezkin"
+  },
+  {
+   "name": "argparse",
+   "version": "2.0.1",
+   "licence": "Python-2.0",
+   "repository": "https://github.com/nodeca/argparse",
+   "publisher": null
+  },
+  {
+   "name": "balanced-match",
+   "version": "1.0.2",
+   "licence": "MIT",
+   "repository": "https://github.com/juliangruber/balanced-match",
+   "publisher": "Julian Gruber"
+  },
+  {
+   "name": "brace-expansion",
+   "version": "1.1.21",
+   "licence": "MIT",
+   "repository": "https://github.com/juliangruber/brace-expansion",
+   "publisher": "Julian Gruber"
+  },
+  {
+   "name": "callsites",
+   "version": "3.1.0",
+   "licence": "MIT",
+   "repository": "https://github.com/sindresorhus/callsites",
+   "publisher": "Sindre Sorhus"
+  },
+  {
    "name": "ccount",
    "version": "2.0.1",
    "licence": "MIT",
    "repository": "https://github.com/wooorm/ccount",
    "publisher": "Titus Wormer"
+  },
+  {
+   "name": "chalk",
+   "version": "4.1.2",
+   "licence": "MIT",
+   "repository": "https://github.com/chalk/chalk",
+   "publisher": null
   },
   {
    "name": "character-entities-html4",
@@ -2702,11 +2959,46 @@
    "publisher": "James Halliday"
   },
   {
+   "name": "concat-map",
+   "version": "0.0.1",
+   "licence": "MIT",
+   "repository": "https://github.com/substack/node-concat-map",
+   "publisher": "James Halliday"
+  },
+  {
    "name": "cookie",
    "version": "0.6.0",
    "licence": "MIT",
    "repository": "https://github.com/jshttp/cookie",
    "publisher": "Roman Shtylman"
+  },
+  {
+   "name": "cross-spawn",
+   "version": "7.0.6",
+   "licence": "MIT",
+   "repository": "https://github.com/moxystudio/node-cross-spawn",
+   "publisher": "André Cruz"
+  },
+  {
+   "name": "cssesc",
+   "version": "3.0.0",
+   "licence": "MIT",
+   "repository": "https://github.com/mathiasbynens/cssesc",
+   "publisher": "Mathias Bynens"
+  },
+  {
+   "name": "debug",
+   "version": "4.4.3",
+   "licence": "MIT",
+   "repository": "https://github.com/debug-js/debug",
+   "publisher": "Josh Junon"
+  },
+  {
+   "name": "deep-is",
+   "version": "0.1.4",
+   "licence": "MIT",
+   "repository": "https://github.com/thlorenz/deep-is",
+   "publisher": "Thorsten Lorenz"
   },
   {
    "name": "deepmerge",
@@ -2751,6 +3043,76 @@
    "publisher": "Jordan Harband"
   },
   {
+   "name": "escape-string-regexp",
+   "version": "4.0.0",
+   "licence": "MIT",
+   "repository": "https://github.com/sindresorhus/escape-string-regexp",
+   "publisher": "Sindre Sorhus"
+  },
+  {
+   "name": "eslint",
+   "version": "9.39.5",
+   "licence": "MIT",
+   "repository": "https://github.com/eslint/eslint",
+   "publisher": "Nicholas C. Zakas"
+  },
+  {
+   "name": "eslint-plugin-svelte",
+   "version": "3.23.1",
+   "licence": "MIT",
+   "repository": "https://github.com/sveltejs/eslint-plugin-svelte",
+   "publisher": "Yosuke Ota"
+  },
+  {
+   "name": "eslint-scope",
+   "version": "8.4.0",
+   "licence": "BSD-2-Clause",
+   "repository": "https://github.com/eslint/js",
+   "publisher": null
+  },
+  {
+   "name": "eslint-visitor-keys",
+   "version": "3.4.3",
+   "licence": "Apache-2.0",
+   "repository": "https://github.com/eslint/eslint-visitor-keys",
+   "publisher": "Toru Nagashima"
+  },
+  {
+   "name": "eslint-visitor-keys",
+   "version": "4.2.1",
+   "licence": "Apache-2.0",
+   "repository": "https://github.com/eslint/js",
+   "publisher": "Toru Nagashima"
+  },
+  {
+   "name": "espree",
+   "version": "10.4.0",
+   "licence": "BSD-2-Clause",
+   "repository": "https://github.com/eslint/js",
+   "publisher": "Nicholas C. Zakas"
+  },
+  {
+   "name": "esquery",
+   "version": "1.7.0",
+   "licence": "BSD-3-Clause",
+   "repository": "https://github.com/estools/esquery",
+   "publisher": "Joel Feenstra"
+  },
+  {
+   "name": "esrecurse",
+   "version": "4.3.0",
+   "licence": "BSD-2-Clause",
+   "repository": "https://github.com/estools/esrecurse",
+   "publisher": null
+  },
+  {
+   "name": "estraverse",
+   "version": "5.3.0",
+   "licence": "BSD-2-Clause",
+   "repository": "https://github.com/estools/estraverse",
+   "publisher": null
+  },
+  {
    "name": "estree-walker",
    "version": "2.0.2",
    "licence": "MIT",
@@ -2758,11 +3120,67 @@
    "publisher": "Rich Harris"
   },
   {
+   "name": "esutils",
+   "version": "2.0.3",
+   "licence": "BSD-2-Clause",
+   "repository": "https://github.com/estools/esutils",
+   "publisher": null
+  },
+  {
+   "name": "fast-deep-equal",
+   "version": "3.1.3",
+   "licence": "MIT",
+   "repository": "https://github.com/epoberezkin/fast-deep-equal",
+   "publisher": "Evgeny Poberezkin"
+  },
+  {
+   "name": "fast-json-stable-stringify",
+   "version": "2.1.0",
+   "licence": "MIT",
+   "repository": "https://github.com/epoberezkin/fast-json-stable-stringify",
+   "publisher": "James Halliday"
+  },
+  {
+   "name": "fast-levenshtein",
+   "version": "2.0.6",
+   "licence": "MIT",
+   "repository": "https://github.com/hiddentao/fast-levenshtein",
+   "publisher": "Ramesh Nair"
+  },
+  {
    "name": "fdir",
    "version": "6.5.0",
    "licence": "MIT",
    "repository": "https://github.com/thecodrr/fdir",
    "publisher": "thecodrr"
+  },
+  {
+   "name": "file-entry-cache",
+   "version": "8.0.0",
+   "licence": "MIT",
+   "repository": "https://github.com/jaredwray/file-entry-cache",
+   "publisher": "Jared Wray"
+  },
+  {
+   "name": "find-up",
+   "version": "5.0.0",
+   "licence": "MIT",
+   "repository": "https://github.com/sindresorhus/find-up",
+   "publisher": "Sindre Sorhus"
+  },
+  {
+   "name": "flat-cache",
+   "version": "4.0.1",
+   "licence": "MIT",
+   "repository": "https://github.com/jaredwray/flat-cache",
+   "publisher": "Jared Wray"
+  },
+  {
+   "name": "flatted",
+   "version": "3.4.4",
+   "licence": "ISC",
+   "repository": "https://github.com/WebReflection/flatted",
+   "publisher": "Andrea Giammarchi"
   },
   {
    "name": "fsevents",
@@ -2779,11 +3197,46 @@
    "publisher": "Raynos"
   },
   {
+   "name": "glob-parent",
+   "version": "6.0.2",
+   "licence": "ISC",
+   "repository": "https://github.com/gulpjs/glob-parent",
+   "publisher": "Gulp Team"
+  },
+  {
+   "name": "globals",
+   "version": "14.0.0",
+   "licence": "MIT",
+   "repository": "https://github.com/sindresorhus/globals",
+   "publisher": "Sindre Sorhus"
+  },
+  {
+   "name": "globals",
+   "version": "16.5.0",
+   "licence": "MIT",
+   "repository": "https://github.com/sindresorhus/globals",
+   "publisher": "Sindre Sorhus"
+  },
+  {
+   "name": "globals",
+   "version": "17.13.0",
+   "licence": "MIT",
+   "repository": "https://github.com/sindresorhus/globals",
+   "publisher": "Sindre Sorhus"
+  },
+  {
    "name": "graceful-fs",
    "version": "4.2.11",
    "licence": "ISC",
    "repository": "https://github.com/isaacs/node-graceful-fs",
    "publisher": null
+  },
+  {
+   "name": "has-flag",
+   "version": "4.0.0",
+   "licence": "MIT",
+   "repository": "https://github.com/sindresorhus/has-flag",
+   "publisher": "Sindre Sorhus"
   },
   {
    "name": "hasown",
@@ -2814,11 +3267,46 @@
    "publisher": "Titus Wormer"
   },
   {
+   "name": "ignore",
+   "version": "5.3.2",
+   "licence": "MIT",
+   "repository": "https://github.com/kaelzhang/node-ignore",
+   "publisher": "kael"
+  },
+  {
+   "name": "import-fresh",
+   "version": "3.3.1",
+   "licence": "MIT",
+   "repository": "https://github.com/sindresorhus/import-fresh",
+   "publisher": "Sindre Sorhus"
+  },
+  {
+   "name": "imurmurhash",
+   "version": "0.1.4",
+   "licence": "MIT",
+   "repository": "https://github.com/jensyt/imurmurhash-js",
+   "publisher": "Jens Taylor"
+  },
+  {
    "name": "is-core-module",
    "version": "2.17.0",
    "licence": "MIT",
    "repository": "https://github.com/inspect-js/is-core-module",
    "publisher": "Jordan Harband"
+  },
+  {
+   "name": "is-extglob",
+   "version": "2.1.1",
+   "licence": "MIT",
+   "repository": "https://github.com/jonschlinkert/is-extglob",
+   "publisher": "Jon Schlinkert"
+  },
+  {
+   "name": "is-glob",
+   "version": "4.0.3",
+   "licence": "MIT",
+   "repository": "https://github.com/micromatch/is-glob",
+   "publisher": "Jon Schlinkert"
   },
   {
    "name": "is-module",
@@ -2835,11 +3323,53 @@
    "publisher": "Rich Harris"
   },
   {
+   "name": "isexe",
+   "version": "2.0.0",
+   "licence": "ISC",
+   "repository": "https://github.com/isaacs/isexe",
+   "publisher": "Isaac Z. Schlueter"
+  },
+  {
    "name": "jiti",
    "version": "2.7.0",
    "licence": "MIT",
    "repository": "https://github.com/unjs/jiti",
    "publisher": null
+  },
+  {
+   "name": "js-yaml",
+   "version": "4.3.2",
+   "licence": "MIT",
+   "repository": "https://github.com/nodeca/js-yaml",
+   "publisher": "Vladimir Zapparov"
+  },
+  {
+   "name": "json-buffer",
+   "version": "3.0.1",
+   "licence": "MIT",
+   "repository": "https://github.com/dominictarr/json-buffer",
+   "publisher": "Dominic Tarr"
+  },
+  {
+   "name": "json-schema-traverse",
+   "version": "0.4.1",
+   "licence": "MIT",
+   "repository": "https://github.com/epoberezkin/json-schema-traverse",
+   "publisher": "Evgeny Poberezkin"
+  },
+  {
+   "name": "json-stable-stringify-without-jsonify",
+   "version": "1.0.1",
+   "licence": "MIT",
+   "repository": "https://github.com/samn/json-stable-stringify",
+   "publisher": "James Halliday"
+  },
+  {
+   "name": "keyv",
+   "version": "4.5.4",
+   "licence": "MIT",
+   "repository": "https://github.com/jaredwray/keyv",
+   "publisher": "Jared Wray"
   },
   {
    "name": "kleur",
@@ -2849,6 +3379,20 @@
    "publisher": "Luke Edwards"
   },
   {
+   "name": "known-css-properties",
+   "version": "0.37.0",
+   "licence": "MIT",
+   "repository": "https://github.com/known-css/known-css-properties",
+   "publisher": "Viorel Cojocaru"
+  },
+  {
+   "name": "levn",
+   "version": "0.4.1",
+   "licence": "MIT",
+   "repository": "https://github.com/gkz/levn",
+   "publisher": "George Zahariev"
+  },
+  {
    "name": "lightningcss",
    "version": "1.32.0",
    "licence": "MPL-2.0",
@@ -2875,6 +3419,27 @@
    "licence": "MPL-2.0",
    "repository": "https://github.com/parcel-bundler/lightningcss",
    "publisher": null
+  },
+  {
+   "name": "lilconfig",
+   "version": "2.1.0",
+   "licence": "MIT",
+   "repository": "https://github.com/antonk52/lilconfig",
+   "publisher": "antonk52"
+  },
+  {
+   "name": "locate-path",
+   "version": "6.0.0",
+   "licence": "MIT",
+   "repository": "https://github.com/sindresorhus/locate-path",
+   "publisher": "Sindre Sorhus"
+  },
+  {
+   "name": "lodash.merge",
+   "version": "4.6.2",
+   "licence": "MIT",
+   "repository": "https://github.com/lodash/lodash",
+   "publisher": "John-David Dalton"
   },
   {
    "name": "magic-string",
@@ -2926,6 +3491,13 @@
    "publisher": "Titus Wormer"
   },
   {
+   "name": "minimatch",
+   "version": "3.1.5",
+   "licence": "ISC",
+   "repository": "https://github.com/isaacs/minimatch",
+   "publisher": "Isaac Z. Schlueter"
+  },
+  {
    "name": "mri",
    "version": "1.2.0",
    "licence": "MIT",
@@ -2940,11 +3512,25 @@
    "publisher": "Luke Edwards"
   },
   {
+   "name": "ms",
+   "version": "2.1.3",
+   "licence": "MIT",
+   "repository": "https://github.com/vercel/ms",
+   "publisher": null
+  },
+  {
    "name": "nanoid",
    "version": "3.3.19",
    "licence": "MIT",
    "repository": "https://github.com/ai/nanoid",
    "publisher": "Andrey Sitnik"
+  },
+  {
+   "name": "natural-compare",
+   "version": "1.4.0",
+   "licence": "MIT",
+   "repository": "https://github.com/litejs/natural-compare-lite",
+   "publisher": "Lauri Rooden"
   },
   {
    "name": "obug",
@@ -2966,6 +3552,41 @@
    "licence": "MIT",
    "repository": "https://github.com/slevithan/oniguruma-to-es",
    "publisher": "Steven Levithan"
+  },
+  {
+   "name": "optionator",
+   "version": "0.9.4",
+   "licence": "MIT",
+   "repository": "https://github.com/gkz/optionator",
+   "publisher": "George Zahariev"
+  },
+  {
+   "name": "p-limit",
+   "version": "3.1.0",
+   "licence": "MIT",
+   "repository": "https://github.com/sindresorhus/p-limit",
+   "publisher": "Sindre Sorhus"
+  },
+  {
+   "name": "p-locate",
+   "version": "5.0.0",
+   "licence": "MIT",
+   "repository": "https://github.com/sindresorhus/p-locate",
+   "publisher": "Sindre Sorhus"
+  },
+  {
+   "name": "parent-module",
+   "version": "1.0.1",
+   "licence": "MIT",
+   "repository": "https://github.com/sindresorhus/parent-module",
+   "publisher": "Sindre Sorhus"
+  },
+  {
+   "name": "path-key",
+   "version": "3.1.1",
+   "licence": "MIT",
+   "repository": "https://github.com/sindresorhus/path-key",
+   "publisher": "Sindre Sorhus"
   },
   {
    "name": "path-parse",
@@ -2996,11 +3617,53 @@
    "publisher": "Andrey Sitnik"
   },
   {
+   "name": "postcss-load-config",
+   "version": "3.1.4",
+   "licence": "MIT",
+   "repository": "https://github.com/postcss/postcss-load-config",
+   "publisher": "Michael Ciniawky"
+  },
+  {
+   "name": "postcss-safe-parser",
+   "version": "7.1.0",
+   "licence": "MIT",
+   "repository": "https://github.com/postcss/postcss-safe-parser",
+   "publisher": "Andrey Sitnik"
+  },
+  {
+   "name": "postcss-scss",
+   "version": "4.0.9",
+   "licence": "MIT",
+   "repository": "https://github.com/postcss/postcss-scss",
+   "publisher": "Andrey Sitnik"
+  },
+  {
+   "name": "postcss-selector-parser",
+   "version": "7.1.6",
+   "licence": "MIT",
+   "repository": "https://github.com/postcss/postcss-selector-parser",
+   "publisher": null
+  },
+  {
+   "name": "prelude-ls",
+   "version": "1.2.1",
+   "licence": "MIT",
+   "repository": "https://github.com/gkz/prelude-ls",
+   "publisher": "George Zahariev"
+  },
+  {
    "name": "property-information",
    "version": "7.2.0",
    "licence": "MIT",
    "repository": "https://github.com/wooorm/property-information",
    "publisher": "Titus Wormer"
+  },
+  {
+   "name": "punycode",
+   "version": "2.3.1",
+   "licence": "MIT",
+   "repository": "https://github.com/mathiasbynens/punycode.js",
+   "publisher": "Mathias Bynens"
   },
   {
    "name": "readdirp",
@@ -3038,6 +3701,13 @@
    "publisher": "James Halliday"
   },
   {
+   "name": "resolve-from",
+   "version": "4.0.0",
+   "licence": "MIT",
+   "repository": "https://github.com/sindresorhus/resolve-from",
+   "publisher": "Sindre Sorhus"
+  },
+  {
    "name": "rolldown",
    "version": "1.2.12",
    "licence": "MIT",
@@ -3059,11 +3729,32 @@
    "publisher": "Luke Edwards"
   },
   {
+   "name": "semver",
+   "version": "7.8.5",
+   "licence": "ISC",
+   "repository": "https://github.com/npm/node-semver",
+   "publisher": "GitHub Inc."
+  },
+  {
    "name": "set-cookie-parser",
    "version": "3.1.2",
    "licence": "MIT",
    "repository": "https://github.com/nfriedly/set-cookie-parser",
    "publisher": "Nathan Friedly"
+  },
+  {
+   "name": "shebang-command",
+   "version": "2.0.0",
+   "licence": "MIT",
+   "repository": "https://github.com/kevva/shebang-command",
+   "publisher": "Kevin Mårtensson"
+  },
+  {
+   "name": "shebang-regex",
+   "version": "3.0.0",
+   "licence": "MIT",
+   "repository": "https://github.com/sindresorhus/shebang-regex",
+   "publisher": "Sindre Sorhus"
   },
   {
    "name": "shiki",
@@ -3101,6 +3792,20 @@
    "publisher": "Titus Wormer"
   },
   {
+   "name": "strip-json-comments",
+   "version": "3.1.1",
+   "licence": "MIT",
+   "repository": "https://github.com/sindresorhus/strip-json-comments",
+   "publisher": "Sindre Sorhus"
+  },
+  {
+   "name": "supports-color",
+   "version": "7.2.0",
+   "licence": "MIT",
+   "repository": "https://github.com/chalk/supports-color",
+   "publisher": "Sindre Sorhus"
+  },
+  {
    "name": "supports-preserve-symlinks-flag",
    "version": "1.0.0",
    "licence": "MIT",
@@ -3113,6 +3818,13 @@
    "licence": "MIT",
    "repository": "https://github.com/sveltejs/language-tools",
    "publisher": "The Svelte Community"
+  },
+  {
+   "name": "svelte-eslint-parser",
+   "version": "1.9.0",
+   "licence": "MIT",
+   "repository": "https://github.com/sveltejs/svelte-eslint-parser",
+   "publisher": "Yosuke Ota"
   },
   {
    "name": "tailwindcss",
@@ -3148,6 +3860,13 @@
    "licence": "MIT",
    "repository": "https://github.com/wooorm/trim-lines",
    "publisher": "Titus Wormer"
+  },
+  {
+   "name": "type-check",
+   "version": "0.4.0",
+   "licence": "MIT",
+   "repository": "https://github.com/gkz/type-check",
+   "publisher": "George Zahariev"
   },
   {
    "name": "typescript",
@@ -3192,6 +3911,20 @@
    "publisher": "Titus Wormer"
   },
   {
+   "name": "uri-js",
+   "version": "4.4.1",
+   "licence": "BSD-2-Clause",
+   "repository": "https://github.com/garycourt/uri-js",
+   "publisher": "Gary Court"
+  },
+  {
+   "name": "util-deprecate",
+   "version": "1.0.2",
+   "licence": "MIT",
+   "repository": "https://github.com/TooTallNate/util-deprecate",
+   "publisher": "Nathan Rajlich"
+  },
+  {
    "name": "vfile",
    "version": "6.0.3",
    "licence": "MIT",
@@ -3218,6 +3951,34 @@
    "licence": "MIT",
    "repository": "https://github.com/svitejs/vitefu",
    "publisher": null
+  },
+  {
+   "name": "which",
+   "version": "2.0.2",
+   "licence": "ISC",
+   "repository": "https://github.com/isaacs/node-which",
+   "publisher": "Isaac Z. Schlueter"
+  },
+  {
+   "name": "word-wrap",
+   "version": "1.2.5",
+   "licence": "MIT",
+   "repository": "https://github.com/jonschlinkert/word-wrap",
+   "publisher": "Jon Schlinkert"
+  },
+  {
+   "name": "yaml",
+   "version": "1.10.3",
+   "licence": "ISC",
+   "repository": "https://github.com/eemeli/yaml",
+   "publisher": "Eemeli Aro"
+  },
+  {
+   "name": "yocto-queue",
+   "version": "0.1.0",
+   "licence": "MIT",
+   "repository": "https://github.com/sindresorhus/yocto-queue",
+   "publisher": "Sindre Sorhus"
   },
   {
    "name": "zwitch",

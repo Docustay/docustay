@@ -16,5 +16,5 @@
   :global(.anim.armed) .s1 { animation: rise .5s ease-out .2s both; } :global(.anim.armed) .s2 { animation: rise .5s ease-out .5s both; } :global(.anim.armed) .s3 { animation: rise .5s ease-out .8s both; }
   :global(.anim.armed) .ring { animation: draw 1.2s ease-in-out 1.5s both; } :global(.anim.armed) .cert { animation: slideup .6s ease-out 3s both; }
   @keyframes rise { from { transform: translateY(22px); opacity: 0; } } @keyframes draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } } @keyframes slideup { from { transform: translateY(26px); opacity: 0; } }
-.real { filter: drop-shadow(0 1px 2px rgb(0 0 0 / .28)); } .ctitle { font: 600 7.5px Georgia, serif; fill: var(--ink); } .cline { font: 5.6px Inter, system-ui, sans-serif; fill: var(--mute); }
+.real { filter: drop-shadow(0 1px 2px rgb(60 40 140 / 0.126)); } .ctitle { font: 600 7.5px Georgia, serif; fill: var(--ink); } .cline { font: 5.6px Inter, system-ui, sans-serif; fill: var(--mute); }
 </style>

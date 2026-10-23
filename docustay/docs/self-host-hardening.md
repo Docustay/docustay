@@ -12,14 +12,14 @@ Docustay is not for protected health information yet, on our hosted service or o
 
 ## 1. Set the workspace's security settings
 
-In **Workspace → Security**, an owner or admin can set these for everyone in the workspace:
+In **Settings → Account → Security**, an owner or admin can set these for everyone in the workspace (other team members see only their own password, two-step and passkeys there):
 
 | What | Setting |
 |---|---|
 | Two-step sign-in | Offered to everyone. Tick **Require two-step sign-in for every team member** to make it required; set it up for yourself first |
 | Idle sign-out | Off by default. Choose 15, 30 or 60 minutes, or 4 or 8 hours |
 | Access log | Always on: every view, download and export by your team, with a CSV |
-| Signed copies | Attached to the email by default; Settings → Download links can send a link instead |
+| Signed copies | Attached to the completion email (Docustay sends the copy itself, not a download link) |
 
 ## 2. Keep the inside private
 
@@ -30,11 +30,13 @@ In **Workspace → Security**, an owner or admin can set these for everyone in t
 ## 3. Encrypt what is stored
 
 - **Disks.** Put the Docker volumes (`dbdata`, `filedata`, `appdata`) on an encrypted disk: LUKS on Linux, or your cloud provider's encrypted volumes.
-- **Secrets and files.** `init.sh` writes `KEYSTONE_MASTER_KEY`, which seals stored secrets (two-step secrets, SMTP passwords, webhook secrets) and each workspace's file key; every stored document file is encrypted under its workspace's own key (see [Back up and restore](/docs/self-host-backup)). The database and the disks are not encrypted by Docustay, so the disk advice above still applies. Keep `.env` readable only by the account that runs Docker (`chmod 600 .env`).
+- **Secrets and files.** The app makes the install's master key on its first start and keeps it in the `appdata` volume (`/data/master.key`, readable only by the app). It seals stored secrets (two-step secrets, SMTP passwords, webhook secrets) and each workspace's file key; every stored document file is encrypted under its workspace's own key (see [Back up and restore](/docs/self-host-backup)). The database and the disks are not encrypted by Docustay, so the disk advice above still applies. Keep `.env` readable only by the account that runs Docker (`chmod 600 .env`).
 - **Backups.** Encrypt each backup before it leaves the machine (for example `age` or `gpg`), and keep the key apart from the backup. See [Back up and restore](/docs/self-host-backup).
 
 ```bash
-# encrypt last night's backup folder for one recipient key, then copy only the .age file off the machine
+# once: install age (brew install age · apt install age) and make the key pair; keep the .key file OFF this machine
+[ -f ~/.docustay-backup.pub ] || { age-keygen -o ~/.docustay-backup.key && age-keygen -y ~/.docustay-backup.key > ~/.docustay-backup.pub; }
+# each night, in the folder your backups are written to: encrypt the newest backup for that key, then copy only the .age file off the machine
 d=$(ls -d backup-* | tail -1)
 tar czf - "$d" | age -r "$(cat ~/.docustay-backup.pub)" > "$d.tgz.age"
 ```
@@ -76,8 +78,12 @@ Before the first real document:
 2. From outside the host, confirm the database port (5432) and the file store port (8333) do not answer.
 
 ```bash
-# run from another machine: each line must say "closed" (nc exits non-zero when nothing answers)
-for p in 5432 8333 3000; do nc -z -w 3 your-address "$p" && echo "$p OPEN: close it" || echo "$p closed"; done
+# run from ANOTHER machine; every line must say "closed" (nc exits non-zero when nothing answers)
+HOST=sign.example.com   # your install's public address
+# Linux:
+for p in 5432 8333 3000; do nc -z -w 3 "$HOST" "$p" && echo "$p OPEN: close it" || echo "$p closed"; done
+# macOS (its nc needs -G for a connect time limit):
+for p in 5432 8333 3000; do nc -z -G 3 "$HOST" "$p" && echo "$p OPEN: close it" || echo "$p closed"; done
 ```
 
 3. With two-step required, sign in as a team member without it: Docustay shows one page with a Set up button.

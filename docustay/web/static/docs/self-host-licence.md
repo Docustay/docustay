@@ -10,7 +10,8 @@ Choose Self-host Pro on the [Self-host](/self-host) page and pay by card. When t
 
 Add it to the `.env` of your install and restart:
 
-```bash
+```ini
+# add this line to .env in your install folder (a file, not a command)
 DOCUSTAY_LICENSE_KEY=<the key from the email>
 ```
 
@@ -42,3 +43,31 @@ If you cancel or the grace days pass, the Pro features stop (the add-on stays in
 ## Lost key?
 
 Write to the address on your payment receipt.
+
+## What the install sends, exactly
+
+With `DOCUSTAY_LICENSE_KEY` set, the worker checks your Pro licence as well as sending its anonymous daily usage ping. The ping holds a random install id, the version and five counts, never a document, name or email. `DOCUSTAY_TELEMETRY=off` stops the ping without affecting the key's validity.
+
+## Which file does what
+
+| Item | Where | Purpose |
+|---|---|---|
+| `DOCUSTAY_LICENSE_KEY` | your `.env` | the key from your purchase email |
+| `license-public.pem` | shipped in the install | the public key your machine checks the signature against |
+| the usage report | Settings, download | five whole numbers and an install id, for installs that cannot reach the internet |
+
+## What stops and what stays
+
+When the licence ends, the Pro features stop, and nothing else changes. Your documents, signed PDFs and settings stay where they are, and the install keeps running as Community under the AGPL-3.0.
+
+## Before you contact us
+
+Write to the address on your payment receipt. Do not paste the key itself into a message.
+
+## One production instance per key
+
+A key is for one production instance. The install checks its key when it is set up and then about once a month. If it cannot reach docustay.app, the last answer keeps working for another 30 days, so a short outage never switches Pro off.
+
+If a second production instance uses the same key, **Settings, Usage** on each instance shows a warning and we email the licence owner. Nothing is switched off because of it. The check sends only the key, the install's anonymous id, the version and the instance role: never a document, a name or an address.
+
+A test or staging copy does not count if you set `DOCUSTAY_INSTANCE_ROLE=test` in its `.env`. If you need a second production instance, write to us and we will sort out the licence.

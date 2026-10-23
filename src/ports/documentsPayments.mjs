@@ -14,6 +14,12 @@ import { stripePublishableFor, hasDedicatedDocustayStripe, productOfTenant } fro
 
 const publishable = (product = "workbench") => stripePublishableFor(product);
 
+/** "Take payments" switched off for this workspace (connect_account.paused_at). */
+export async function isPaused(tx, tenantId) {
+  const { rows: [r] } = await tx.query(`SELECT paused_at FROM keystone.connect_account WHERE tenant_id = $1 ORDER BY (state = 'not_connected'), updated_at DESC LIMIT 1`, [tenantId]);
+  return Boolean(r?.paused_at);
+}
+
 export const payments = {
   /** Can this install take a payment at all? */
   configured: () => Boolean(publishable()) || Boolean(process.env.KEYSTONE_STRIPE_SECRET_KEY) || hasDedicatedDocustayStripe(),
@@ -21,6 +27,7 @@ export const payments = {
   /** Is THIS workspace's Stripe ready to take a payment right now? → { status: "connected" | "needs_attention" | "not_connected" } (live = details submitted, charges enabled, nothing due; kept current from account.updated). */
   async ready(tx, { tenantId }) {
     const s = await getConnectAccountState(tx, tenantId);
+    if (s.state === "live" && await isPaused(tx, tenantId)) return { status: "paused" };   // an Admin or Owner switched "Take payments" off (Billing > Payments)
     return { status: s.state === "live" ? "connected" : s.state === "not_connected" ? "not_connected" : "needs_attention" };
   },
 
@@ -64,7 +71,7 @@ export const payments = {
 
   /** Create the hosted Checkout Session — a DIRECT charge on the workspace's account — idempotent on `idempotencyKey`. → { sessionId, url, expiresAt } */
   async checkout(tx, { tenantId, amountMinor, currency, lineItems = null, name, instanceId, partyId, fieldId, successUrl, cancelUrl, idempotencyKey, feeMinor = 0, feeBps = 0, recurring = null, actorUserId = null, embedded = false, returnUrl = null }) {
-    const meta = metadataFor("payment_intent", { keystone_tenant_id: tenantId, instanceId, docustay_party: partyId, docustay_field: fieldId });
+    const meta = metadataFor("payment_intent", { keystone_tenant_id: tenantId, instanceId, docustay_party: partyId, docustay_field: fieldId, docustay_source: "docustay" });   // v1 item 26: every payment Docustay creates is tagged, so it can be told apart in the owner's own Stripe account
     const flatMeta = (prefix) => Object.fromEntries(Object.entries(meta).map(([k, v]) => [`${prefix}[${k}]`, v]));
     const items = lineItems
       ? Object.fromEntries(lineItems.flatMap((li, i) => [[`line_items[${i}][price]`, li.price], [`line_items[${i}][quantity]`, li.quantity]]))

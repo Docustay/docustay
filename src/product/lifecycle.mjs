@@ -41,7 +41,7 @@ export function readUnsubscribeToken(token, env = process.env) {
 /** Start the series for the person who created this workspace. Idempotent; called once from activateWorkspace. */
 export async function enrol(tx, { tenantId, userId, lang = "en" }) {
   if (!userId) return null;
-  const l = /^[a-z]{2}(-[A-Za-z]{2,4})?$/.test(String(lang)) ? String(lang) : "en";
+  const l = "en";   // Docustay v1 is English only (a language asked for is not kept)
   await tx.query(`INSERT INTO keystone.docustay_welcome (tenant_id, user_id, lang) VALUES ($1, $2, $3) ON CONFLICT (tenant_id, user_id) DO NOTHING`, [tenantId, userId, l]);
   return { enrolled: true };
 }
@@ -68,10 +68,11 @@ async function done(tx, tenantId) {
   const [sends, tpl, seats] = await Promise.all([sendCountForPeriod(tx, { tenantId, ...FOREVER }), templateCreationsInPeriod(tx, FOREVER), teamSeatUsage(tx)]);
   return { 1: sends > 0, 2: tpl > 0, 3: seats.used > 1 };
 }
-const linkFor = (step, env) => `${appBase(env)}${step === 0 || step === 1 ? "/create?mode=document&upload=1" : step === 2 ? "/templates" : "/people"}`;
+const linkFor = (step, env) => `${appBase(env)}${step === 0 || step === 1 ? "/create?mode=document&upload=1" : step === 2 ? "/templates" : "/contacts"}`;
 
 /** Build one email: { subject, text, html, headers } — plain words, one link, the postal address, the unsubscribe line, in the person's language. */
 export function buildEmail({ step, lang, tenantId, userId, env = process.env }) {
+  lang = "en";   // Docustay v1 is English only: a series started in another language is sent in English
   const w = welcomeWords(lang, step), addr = postalAddress(env);
   const tok = unsubscribeToken(tenantId, userId, env);
   const unsub = `${appBase(env)}/unsubscribe?t=${tok}`;                 // the link a person clicks: a page that confirms

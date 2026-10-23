@@ -20,5 +20,5 @@
   .col { padding: .5rem clamp(1rem, 3vw, 2.5rem) 1.5rem; border-left: 1px solid var(--black-line); } .col:first-child { border-left: 0; padding-left: 0; }
   .per { font-size: .22em; letter-spacing: 0; margin-left: .3em; color: var(--black-mute); font-family: var(--font-sans); font-weight: 500; }
   .cap { margin: .75rem 0 1.25rem; color: var(--black-mute); font-size: 1.05rem; max-width: 20rem; }
-  @media (max-width: 800px) { .cols { grid-template-columns: 1fr; } .col { border-left: 0; border-top: 1px solid var(--black-line); padding-left: 0; } .col:first-child { border-top: 0; } }
+  @media (max-width: 800px) { .cols { grid-template-columns: minmax(0, 1fr); } .col { border-left: 0; border-top: 1px solid var(--black-line); padding-left: 0; } .col:first-child { border-top: 0; } }
 </style>

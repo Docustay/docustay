@@ -50,7 +50,8 @@ docker compose logs --tail 100 app worker
 A migration that cannot apply stops the new app from starting, and the log says which one. Do not keep retrying: restore the backup you took (see [Back up and restore](/docs/self-host-backup)), go back to the version you had, and report the log.
 
 ```bash
-git checkout <the version you had>
+PREVIOUS_VERSION="v0.1.1"   # the version you had before the upgrade (git tag)
+git checkout "$PREVIOUS_VERSION"
 docker compose build && docker compose up -d
 ```
 
@@ -58,8 +59,12 @@ Migrations are written to only add things, but the supported way back is the bac
 
 ## The built-in templates
 
-The 54 built-in templates (24 Document, 30 Form) are seeded by the worker: on install it prints every one for each workspace, and on an upgrade that changes a template it makes a new version of that template's read-only master, so a form or an automation that uses it follows. Nothing you customized is touched, and nothing here counts toward any limit. The worker logs `seed_template_library` with how many masters it printed.
+The 54 built-in templates are seeded by the worker: on install it prints every one for each workspace, and on an upgrade that changes a template it makes a new version of that template's read-only master, so a document that uses it follows. Nothing you customized is touched, and nothing here counts toward any limit. The worker logs `seed_template_library` with how many masters it printed.
 
 ## Keep your secrets
 
 Never delete `.env` or the `appdata` volume during an upgrade. The first holds the secrets that protect sign-in tokens; the second holds the certificate that seals your signed PDFs and the key that protects stored passwords.
+
+## Uninstall
+
+Back up first if you may want the documents again. In the `docustay` folder, `docker compose down --volumes --rmi local` stops the containers and deletes the database, the signed files and the images built there; then delete the cloned folder (it holds `.env` and its secrets). Leave out `--volumes` to keep the data in Docker volumes for a later `docker compose up -d`.

@@ -23,6 +23,16 @@ const STYLES = ["color", "background-color", "font-size", "font-weight", "font-s
 const SAFE_VALUE = /^(?!.*(url\(|expression|javascript:|@import|\\)).*$/i;
 const allowedStyles = { "*": Object.fromEntries(STYLES.map((p) => [p, [SAFE_VALUE]])) };
 
+/** R13-D170 (SEC-012/013/016): the HTML is cleaned before it is printed, and the sender is told plainly what was taken out. */
+export function removalNotes(html) {
+  const notes = [];
+  if (/<\s*script\b/i.test(html)) notes.push("Scripts were removed: a document never runs code.");
+  if (/<\s*(iframe|object|embed|form|link|style)\b/i.test(html)) notes.push("Frames, forms and style sheets were removed.");
+  if (/\son[a-z]+\s*=/i.test(html)) notes.push("Event handlers were removed.");
+  if (/<\s*img\b[^>]*\bsrc\s*=\s*["']?(?!data:image\/)/i.test(html)) notes.push("Pictures that are not embedded in the HTML (an address) were not fetched; use a data: picture.");
+  return notes;
+}
+
 export function cleanHtml(html) {
   return sanitizeHtml(html, {
     allowedTags: TAGS,
@@ -134,5 +144,5 @@ export async function renderHtmlDocument({ html, paper = "letter", title = "Docu
     all.push({ raw, parsed }); placed.push(b);
   }
   const { roles, fields, warnings } = all.length ? fieldsFromTags(all, placed, { fromBlanks: true }) : { roles: [{ key: "signer_1", label: "Signer 1" }], fields: [], warnings: [] };
-  return { bytes, roles, fields, warnings, tagCount: tags.length, pages: placed.reduce((m, b) => Math.max(m, b.page), initials.reduce((m, b) => Math.max(m, b.page), 1)) };
+  return { bytes, roles, fields, warnings: [...removalNotes(html), ...warnings], tagCount: tags.length, pages: placed.reduce((m, b) => Math.max(m, b.page), initials.reduce((m, b) => Math.max(m, b.page), 1)) };
 }

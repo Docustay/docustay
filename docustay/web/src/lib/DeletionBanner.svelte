@@ -3,8 +3,9 @@
   import { t, whenText } from "$lib/i18n/index.svelte.js";
   import { api } from "$lib/api.js";
   import { onMount } from "svelte";
+  import { inDemo } from "$lib/pro/plan.svelte.js";
   let st = $state(null);
-  async function load() { const r = await api("/api/account/deletion"); st = r.ok ? r.json : null; }
+  async function load() { if (await inDemo()) { st = null; return; } const r = await api("/api/account/deletion"); st = r.ok ? r.json : null; }
   const onChange = (e) => { if (e?.detail && "state" in e.detail) st = e.detail.state; else load(); };   // Run 8 (R8-14): the panel hands over what it just read instead of the banner asking again
   onMount(() => { load(); addEventListener("ds-deletion", onChange); return () => removeEventListener("ds-deletion", onChange); });
 </script>

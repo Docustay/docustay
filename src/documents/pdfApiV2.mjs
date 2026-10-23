@@ -7,6 +7,7 @@ import { reviseSourceDocument } from "./engine/revise.mjs";
 import { savePdfDocument, getPdfDocument } from "./pdfDocs.mjs";
 import { sendPdfDocument } from "./pdfSend.mjs";
 import { cleanReference, saveDocumentReference, documentReference } from "./reference.mjs";
+import { cleanName } from "./textSafety.mjs";
 import { ACTION_ROLES, REMINDER_CHOICES, WIZARD_UNIVERSAL, WIZARD_TYPES, WIZARD_FINAL_QUESTION, WIZARD_PAYMENT, PAYMENT_CURRENCIES, AGENT_KINDS, LANGUAGE_CHOICES } from "./flowDefinition.mjs";
 import { rolesOfSource, slugWord } from "./engine/rolesOfSource.mjs";
 
@@ -44,7 +45,6 @@ function sendChoices(c = {}) {
   if (c.expiryDays !== undefined) { if (c.expiryDays !== null && !(Number.isInteger(c.expiryDays) && c.expiryDays >= 0 && c.expiryDays <= 365)) throw invalid("expiryDays is 0 to 365 (0 or null = never)", { field: "expiryDays" }); o.expiry_days = c.expiryDays; }
   if (c.reminderDays !== undefined) { const d = c.reminderDays; if (!Array.isArray(d) || d.length > 3 || d.some((x) => !(Number.isInteger(x) && x >= 1 && x <= 60))) throw invalid("reminderDays is up to three whole numbers of days, 1 to 60", { field: "reminderDays" }); o.reminders = { on: d.length > 0, days: d }; }
   if (c.signingOrder !== undefined) { if (!["any", "sequential"].includes(c.signingOrder)) throw invalid("signingOrder is any or sequential", { field: "signingOrder" }); o.order = c.signingOrder === "sequential" ? "sequential" : "parallel"; }
-  if (typeof c.language === "string") o.language = c.language;
   if (typeof c.replyTo === "string") o.reply_to = c.replyTo.slice(0, 254);
   if (typeof c.senderName === "string" && c.senderName.trim()) o.sender_name = c.senderName.trim().slice(0, 120);
   if (typeof c.internalNote === "string") o.internal_note = c.internalNote.slice(0, 2000);
@@ -77,8 +77,18 @@ async function finishDraft(tx, { tenantId, ownerId, instanceId, people, sendOpti
 }
 
 /** POST /api/v1/documents — a document from a source and people. `send: true` also sends it (the same checks as the screen's Send). */
+// R13-D312: the title and each person's name are cleaned like the template path's (no control, bidi or zero-width characters; bounded): a right-to-left override in a name reordered what others saw
+const cleanBounded = (raw, max, label, field) => { const c = cleanName(raw, { max: max + 1 }); if (Array.from(c).length > max) throw invalid(`${label} must be at most ${max} characters`, { field }); if (!c) throw invalid(`${label} is required`, { field }); return c; };
+export function cleanTitleAndPeople({ title, people }) {
+  return {
+    title: title != null && String(title).trim() !== "" ? cleanBounded(title, 300, "title", "title") : title,
+    people: Array.isArray(people) ? people.map((p, i) => (p && typeof p === "object" && String(p.name ?? "").trim() ? { ...p, name: cleanBounded(p.name, 200, `people[${i}].name`, `people.${i}.name`) } : p)) : people,
+  };
+}
+
 export async function apiCreateDocument(tx, { tenantId, ownerId, title, source, people, facts = {}, variableValues = null, paper = "letter", sendChoice = {}, baseOptions = {}, description, send = false, test = false, requireSignature = true, metadata, externalId }) {
   const ref = cleanReference({ metadata, externalId });
+  ({ title, people } = cleanTitleAndPeople({ title, people }));
   const vv = cleanValues(variableValues);
   const roleWords = rolesOfSource(source);
   const so = { ...baseOptions, ...sendChoices(sendChoice) }; const sequential = so.order === "sequential";

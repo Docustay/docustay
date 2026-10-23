@@ -1,5 +1,11 @@
 # Email setup
 
+## On the hosted service
+
+Nothing to set up. Docustay sends your signing requests, reminders and completed copies from its own verified sending domain, with **your name** as the sender and your address as the reply-to, so a reply goes to you. Hosted workspaces cannot send from their own domain, mailbox or SMTP server. The rest of this page is for a **self-hosted** install, which sends from your own domain.
+
+## On a self-hosted install
+
 Signing requests only help if they arrive. Mail sent from your own domain is far more likely to reach the inbox when the domain publishes three DNS records: SPF, DKIM and DMARC. Docustay shows the exact values to use; this page explains what they are. Every record below uses `example.com`: replace it with your domain.
 
 ## The three records
@@ -44,8 +50,7 @@ Send a test email to a mailbox you control. In the message's headers (often "Sho
 The self-host environment file (`docustay/.env.example`) takes one of two options:
 
 - `RESEND_API_KEY`: your own Resend API key.
-- Your own SMTP server: leave `RESEND_API_KEY` empty and enter the server in **Settings → Email** after you sign in.
-- Amazon SES: SES gives you SMTP credentials (in the SES console, “SMTP settings”). Enter that server, port 587 and those credentials in **Settings → Email** as your own SMTP server. Your sending then goes through your SES account and never through ours.
+- Your own SMTP server: leave `RESEND_API_KEY` empty and enter the server in **Settings → Email** after you sign in. Amazon SES works this way too: SES gives you SMTP credentials (in the SES console, “SMTP settings”); enter that server, port 587 and those credentials, and your sending goes through your SES account and never through ours.
 
 `KEYSTONE_MAIL_SENDER` is the default From address used until you verify your own domain, and `KEYSTONE_PUBLIC_URL` is the address used for links in emails. If neither option is set, Docustay says email isn't set up and will not invite signers.
 

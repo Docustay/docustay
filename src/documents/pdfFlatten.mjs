@@ -71,7 +71,7 @@ function visualToNative(rotation, W, H) {
  * @param {{signatureIds?: Map<string,string>|null, testWatermark?: boolean}} [opts] `signatureIds` (field id → ID) prints that ID in small type under the signature or initials mark; `testWatermark` draws TEST across every page (test mode)
  * @returns {Promise<Buffer>}
  */
-export async function flattenOntoOriginal(originalBytes, fields, values, { signatureIds = null, testWatermark = false, dropPages = null } = {}) {
+export async function flattenOntoOriginal(originalBytes, fields, values, { signatureIds = null, testWatermark = false, dropPages = null, markWaiting = false, pageChrome = null } = {}) {
   const get = (id) => (values instanceof Map ? values.get(id) : values[id]);
   const doc = await PDFDocument.load(originalBytes, { updateMetadata: false });
   try { doc.getForm().flatten(); } catch { /* a file with no form, or one pdf-lib cannot flatten, is drawn on as it is */ }
@@ -91,9 +91,18 @@ export async function flattenOntoOriginal(originalBytes, fields, values, { signa
     page.pushOperators(pushGraphicsState(), concatTransformationMatrix(...visualToNative(rot, W, H)));
     for (const f of list) {
       const v = get(f.id);
-      if (!v || (v.value == null && v.mark == null)) continue;
       const bx = f.x * VW, bw = f.w * VW, bh = f.h * VH;
       const by = VH - f.y * VH - bh;                         // bottom-left origin, displayed page
+      if (!v || (v.value == null && v.mark == null)) {
+        // the live view of a document still out for signing (never the sealed copy): a pale dashed box, and who it waits for, on every box nobody has filled in yet
+        if (markWaiting) {
+          const c = rgb(0.35, 0.23, 0.76);
+          page.drawRectangle({ x: bx, y: by, width: bw, height: bh, color: c, opacity: 0.07, borderColor: c, borderOpacity: 0.55, borderWidth: 0.8, borderDashArray: [3, 2] });
+          const who = String(f.role ?? "").replace(/[^\x20-\x7E]/g, "").slice(0, 28);
+          if (who && bh >= 11) page.drawText(who, { x: bx + 2, y: by + bh - 7, size: 5.5, font, color: c, opacity: 0.85 });
+        }
+        continue;
+      }
       if (v.mark) {
         let img;
         try { img = await doc.embedPng(dataUrlBytes(v.mark)); } catch { continue; }
@@ -117,6 +126,17 @@ export async function flattenOntoOriginal(originalBytes, fields, values, { signa
     }
     page.pushOperators(popGraphicsState());
     void mb;
+  }
+  // R13-D325/D326: the workspace's signed-copy settings reach the document's OWN pages, not only the certificate: `pageChrome.top` (the letterhead line) in the top margin and
+  //   `pageChrome.bottom` (document ID, footer text) in the bottom margin of every page, in small grey type, drawn in displayed-page coordinates so a rotated page reads the right way up.
+  if (pageChrome?.top || pageChrome?.bottom) for (const page of pages) {
+    const { width: W, height: H } = page.getSize();
+    const rot = ((page.getRotation().angle % 360) + 360) % 360;
+    const VW = rot === 90 || rot === 270 ? H : W, VH = rot === 90 || rot === 270 ? W : H, grey = rgb(0.42, 0.42, 0.45), margin = Math.min(36, VW * 0.06);
+    page.pushOperators(pushGraphicsState(), concatTransformationMatrix(...visualToNative(rot, W, H)));
+    if (pageChrome.top) { const { size, runs } = await fitRuns(getFallback, font, pageChrome.top, VW - 2 * margin, 7.5); drawRuns(page, runs, margin, VH - 14, size, grey); }
+    if (pageChrome.bottom) { const { size, runs } = await fitRuns(getFallback, font, pageChrome.bottom, VW - 2 * margin, 6.5); drawRuns(page, runs, margin, 7, size, grey); }
+    page.pushOperators(popGraphicsState());
   }
   if (testWatermark) for (const page of pages) {
     const { width: W, height: H } = page.getSize(), size = Math.min(W, H) * 0.22, label = "TEST";

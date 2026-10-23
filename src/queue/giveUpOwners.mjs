@@ -173,8 +173,6 @@ export const JOB_OWNERS = Object.freeze({
   archive_document_pdf: person("admin", "document", "pdf_not_saved", PRACTICE_ACTIONABLE,
     "07 §7 'Document PDF not archived → Document shows PDF pending; owner task after 1 h'. ★ Only when the document " +
     "itself is the problem (nothing to render, the record is gone); storage being down is ours."),
-  // ★ Run 9 Part 3.6 — `platform`: a run that cannot go on records why on its own row (the playbook page shows it); a give-up of the job itself is a queue or database fault.
-  run_document_playbooks: platform("starts or resumes an automation as its owner; a step that fails is written on the run itself, so a give-up here is the platform's"),
   seed_template_library: platform("prints the built-in template masters for the library's current version; a failure is a print or queue fault, re-run by the retry"),
   reencrypt_document_files: platform("seals each workspace's stored document files with its own key, or moves them to a newly active key; a failure is a storage or key fault, re-run by the retry"),
   close_orphan_tasks: platform("tidies tasks whose subject is gone — bookkeeping"),
@@ -387,7 +385,8 @@ export const LISTENER_OWNERS = Object.freeze({
   // ★ B-3b — CONFIRM_HELD_BOOKINGS. `platform`: confirming a held booking when its document is
   //   executed is idempotent system work (confirmHeldBookings' own exactly-once UPDATE), so a real
   //   give-up here is a queue or database fault, not something a practice can act on.
-  document_playbooks: platform("only queues run_document_playbooks for a signed document or a run whose wait is over; a failure is a queue fault"),
+  // ★ PH1 — business analytics to PostHog: nothing a workspace can act on; a give-up is PostHog or network trouble for us to see.
+  posthog: platform("copies a committed Docustay event to PostHog for Docustay's own analytics; a failure is a PostHog or network fault, not something a workspace can act on"),
   confirm_held_bookings: platform(
     "confirming a held booking when its document is executed is idempotent system work; a failure " +
     "is a queue or database fault, not something a practice can act on"),

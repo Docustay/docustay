@@ -104,7 +104,12 @@ export async function assertDocumentVisible(tx, instanceId) {
   const viewer = await viewerOf(tx);
   if (!viewer) return;
   const { rows: [r] } = await tx.query(`SELECT keystone.document_team_visible($1::uuid, i.team_id, i.created_by) AS ok FROM keystone.document_instance i WHERE i.id = $2`, [viewer, instanceId]);
-  if (r && r.ok === false) throw notFound("That document is not in this workspace.");
+  if (r && r.ok === false) {
+    // 21 Oct 2026: a teammate who is a recipient on the document may open it (read only: every change still asks for its own right)
+    const { isPartyOn } = await import("./teamRecipients.mjs");
+    if (await isPartyOn(tx, { instanceId, userId: viewer })) return;
+    throw notFound("That document is not in this workspace.");
+  }
 }
 export async function assertTemplateVisible(tx, templateId) {
   const viewer = await viewerOf(tx);

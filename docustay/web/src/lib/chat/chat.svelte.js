@@ -3,6 +3,7 @@ import { api } from "$lib/api.js";
 import { uploadFile } from "$lib/docs.js";
 import { postStream } from "./stream.js";
 import { chatBridge } from "./bridge.js";
+import { afterWork } from "./afterWork.js";
 
 const BASE = "/api/documents/chat";
 export const DOC_CHANGED = "ds:doc-changed";
@@ -17,7 +18,6 @@ class Chat {
   conversationId = $state(null);
   messages = $state([]);           // { id, role, text, steps: [{id,label,detail,state,summary,ms}], proposals: [proposal], error?, streaming, seq?, rating }
   busy = $state(false);
-  thinkHarder = $state(false);     // the per-run "Think harder" switch (Pro): it applies to the next message only
   unread = $state(false);
   error = $state("");
   conversations = $state(null);    // the history list, loaded on demand
@@ -60,8 +60,8 @@ class Chat {
       else if (ev.type === "step.start") upd((m) => { const s = m.steps.find((x) => x.id === ev.id); if (s) { s.state = "running"; s.detail = ev.detail ?? ""; s.build = ev.build ?? null; s.t0 = Date.now(); } else m.steps.push({ id: ev.id, label: ev.label, detail: ev.detail ?? "", state: "running", summary: "", ms: null, build: ev.build ?? null, t0: Date.now() }); });
       else if (ev.type === "step.end") upd((m) => { const s = m.steps.find((x) => x.id === ev.id); if (s) { s.state = ev.ok ? "done" : "failed"; s.summary = ev.summary ?? ""; s.ms = ev.ms ?? null; } });
       else if (ev.type === "proposal") upd((m) => { m.proposals.push({ ...ev.proposal, state: ev.proposal.state ?? "proposed" }); if (ev.proposal.documentId) tell({ documentId: ev.proposal.documentId, created: ev.proposal.kind === "created" }); });
-      else if (ev.type === "message.end") upd((m) => { m.streaming = false; m.seq = ev.assistantSeq ?? m.seq; if (ev.error && !m.text) m.error = ev.error; });
-      else if (ev.type === "error") upd((m) => { m.error = ev.message; });
+      else if (ev.type === "message.end") upd((m) => { m.streaming = false; m.seq = ev.assistantSeq ?? m.seq; if (ev.error && !m.text) m.error = afterWork(m, ev.error); else if (!ev.error && (m.text || m.proposals?.length)) m.error = undefined; });
+      else if (ev.type === "error") upd((m) => { m.error = afterWork(m, ev.message); });
     };
   }
   async send(text, screen, { regenerate = false, answer = false } = {}) {
@@ -77,9 +77,9 @@ class Chat {
     const upd = (fn) => { const m = this.messages[idx]; if (m) fn(m); };
     const ctx = { screen, ...chatBridge.context(), ...(this.attached ? { documentId: this.attached.documentId, ...(this.attached.read ? {} : { readFile: true }) } : {}) };
     if (this.attached) this.attached = { ...this.attached, read: true };   // its pages go to the model once, with the message that follows the attach
-    const res = await postStream(`${BASE}/conversations/${this.conversationId}/messages`, { text: regenerate ? undefined : text, regenerate: regenerate || undefined, context: ctx, ...(this.thinkHarder ? { thinkHarder: true } : {}) }, { signal: this.#abort.signal, onEvent: this.#onEvent(upd) });
+    const res = await postStream(`${BASE}/conversations/${this.conversationId}/messages`, { text: regenerate ? undefined : text, regenerate: regenerate || undefined, context: ctx }, { signal: this.#abort.signal, onEvent: this.#onEvent(upd) });
     upd((m) => { m.streaming = false; for (const s of m.steps) if (s.state === "pending" || s.state === "running") s.state = res.aborted ? "failed" : s.state === "running" ? "failed" : "failed"; if (res.error && !m.text && !m.error) m.error = res.status === 409 || res.status === 403 ? (res.error ?? "") : "I could not reach the assistant. Try again."; if (res.aborted && !m.text) m.error = "Stopped."; });
-    this.busy = false; this.#abort = null; this.thinkHarder = false;
+    this.busy = false; this.#abort = null;
     if (!this.open) this.unread = true;   // finished while the panel was closed
   }
   regenerate(screen) { return this.send("", screen, { regenerate: true }); }

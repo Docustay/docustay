@@ -13,7 +13,7 @@
 </div>
 <style>
   .tr { display: grid; gap: 22px; justify-items: center; } .q { border: 1.2px solid rgb(244 242 236 / .78); padding: 14px 22px; font: 500 12px/1 var(--font-mono); letter-spacing: .12em; }
-  .br { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; width: 100%; } .side { display: grid; gap: 14px; justify-items: stretch; align-content: start; } .nd { border: 1.2px solid rgb(244 242 236 / .78); background: rgb(244 242 236 / .03); padding: 16px; font: 600 18px/1.25 var(--font-sans); letter-spacing: -.02em; }
-  .ln { justify-self: center; height: 20px; border-left: 1.2px dashed rgb(244 242 236 / .6); } .leaf { border: 1.2px solid rgb(244 242 236 / .5); padding: 14px 16px; } .leaf.red { border-color: #8585fd; background: rgb(133 133 253 / .1); } .leaf b { display: block; font: 600 17px/1.2 var(--font-sans); } .leaf i { display: block; font: 400 11px/1.4 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: #a8a39a; margin-top: 5px; font-style: normal; }
-  @media (max-width: 700px) { .br { grid-template-columns: 1fr; } }
+  .br { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px; width: 100%; } .side { display: grid; gap: 14px; justify-items: stretch; align-content: start; } .nd { border: 1.2px solid rgb(244 242 236 / .78); background: rgb(22 22 29 / 0.03); padding: 16px; font: 600 18px/1.25 var(--font-sans); letter-spacing: -.02em; }
+  .ln { justify-self: center; height: 20px; border-left: 1.2px dashed rgb(244 242 236 / .6); } .leaf { border: 1.2px solid rgb(76 74 94 / .5); padding: 14px 16px; } .leaf.red { border-color: rgb(90 58 193 / 0.5); background: rgb(90 58 193 / 0.05); } .leaf b { display: block; font: 600 17px/1.2 var(--font-sans); } .leaf i { display: block; font: 400 11px/1.4 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--tx-3); margin-top: 5px; font-style: normal; }
+  @media (max-width: 700px) { .br { grid-template-columns: minmax(0, 1fr); } }
 </style>

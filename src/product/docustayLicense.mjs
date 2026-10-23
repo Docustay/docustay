@@ -4,7 +4,8 @@
 import { createHash, randomBytes, createPrivateKey, createPublicKey, sign as edSign, verify as edVerify } from "node:crypto";
 import { invalid, unauthenticated } from "../http/errors.mjs";
 
-const OFFLINE_DAYS = 30;
+const OFFLINE_DAYS = 60;   // the install checks its key about every 30 days; a note therefore lasts 30 days past the next check (the 30-day grace when we cannot be reached)
+export const CHECK_EVERY_DAYS = 30;
 const DAY = 86_400_000;
 const hashKey = (key) => createHash("sha256").update(String(key)).digest("hex");
 const b64u = (buf) => Buffer.from(buf).toString("base64url");
@@ -46,16 +47,18 @@ export function verifyEntitlement({ entitlement, signature }, publicPem, { insta
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 /** POST /license: a key + this install's own id → a signed note, or the same plain refusal for every bad key (so the route cannot be used to find out which keys exist). */
-export async function checkLicense(tx, { tenantId, key, installId, now = Date.now() }) {
+export async function checkLicense(tx, { tenantId, key, installId, role = "production", version = null, now = Date.now() }) {
   if (typeof key !== "string" || key.length < 16 || key.length > 80) throw unauthenticated("that licence key is not valid");
   if (typeof installId !== "string" || !UUID.test(installId)) throw invalid("installId must be the install's own id");
-  const { rows: [lic] } = await tx.query(`SELECT key_hash, install_id, expires_at, revoked_at FROM keystone.docustay_license WHERE tenant_id = $1 AND key_hash = $2 FOR UPDATE`, [tenantId, hashKey(key)]);
+  const { rows: [lic] } = await tx.query(`SELECT key_hash, install_id, expires_at, revoked_at, note FROM keystone.docustay_license WHERE tenant_id = $1 AND key_hash = $2 FOR UPDATE`, [tenantId, hashKey(key)]);
   if (!lic || lic.revoked_at || +new Date(lic.expires_at) <= now) throw unauthenticated("that licence key is not valid");
-  if (lic.install_id && lic.install_id !== installId) throw unauthenticated("that licence key is not valid");   // one key, one install (moving it is a support step)
-  await tx.query(`UPDATE keystone.docustay_license SET install_id = $3, last_seen_at = now() WHERE tenant_id = $1 AND key_hash = $2`, [tenantId, lic.key_hash, installId]);
+  // 21 Oct 2026 (the maintainer, answer 8): a second install on the same key is NOT refused any more. It is remembered and warned about (docustayLicenseShare.mjs); an instance is never switched off for it.
+  await tx.query(`UPDATE keystone.docustay_license SET install_id = COALESCE(install_id, $3), last_seen_at = now() WHERE tenant_id = $1 AND key_hash = $2`, [tenantId, lic.key_hash, installId]);
+  const { noteInstance, SHARE_NOTICE } = await import("./docustayLicenseShare.mjs");
+  const share = await noteInstance(tx, { tenantId, keyHash: lic.key_hash, installId, role, version, note: lic.note, now });
   const out = signEntitlement({ installId, licenseExpiresAt: lic.expires_at, now });
   if (!out) throw Object.assign(new Error("the licence signing key is not configured on this server"), { status: 503 });
-  return out;
+  return share.shared && role !== "test" ? { ...out, notice: SHARE_NOTICE } : out;
 }
 
 const COUNT_KEYS = ["documentsSentThisMonth", "documentsSigned", "workspaces", "users", "uptimeDays"];

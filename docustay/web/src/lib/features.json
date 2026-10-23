@@ -3,21 +3,21 @@
  "features": [
   {
    "id": "F-FREEPLAN",
-   "statement": "The Free plan: 15 documents and 5 new templates a month, 25 emails a day, 25 MB uploads, one user (the owner) and 10 AI credits a month. Forms and making a document or a form with Scribe are included.",
+   "statement": "The Free plan: 15 documents and 5 new templates a month, 10 AI drafts a month, 15 different signers a month, one team member (the owner), 25 MB uploads and a list send of up to 15. Everything you need to send, sign and seal is included; nothing is billed for going over, sending simply stops at the limit.",
    "plan": "Free",
    "status": "PROVEN",
-   "module": "src/product/docustayPlans.mjs",
-   "test": "claims C01 C02 C03, free-templates-per-month, free-templates-cap-pricing-page (scripts/claims-gate.mjs); test/r8_template_cap.test.mjs; test/r8_forms_and_pro.test.mjs",
+   "module": "src/product/docustayPlans.mjs, src/product/docustayPrices.mjs",
+   "test": "claims free-docs-per-month, free-templates-per-month, ai-drafts-free (scripts/claims-gate.mjs); test/v1_usage_billing.test.mjs; test/r8_template_cap.test.mjs",
    "pages": [],
    "note": ""
   },
   {
    "id": "F-PRO",
-   "statement": "Pro: $39 a month flat for the workspace; unlimited documents, templates and users; 100 MB uploads; 500 emails a day; 150 AI credits a month.",
+   "statement": "Pro: $39 a month flat for the workspace ($25 for founders); unlimited documents, templates, signers and team members; 100 AI drafts each billing month included, then $0.30 each; 0% fee on payments; 100 MB uploads; your own plays and playbooks.",
    "plan": "Pro",
    "status": "PROVEN",
-   "module": "src/product/docustayPlans.mjs",
-   "test": "claims C04 C05",
+   "module": "src/product/docustayPlans.mjs, src/product/docustayPrices.mjs",
+   "test": "claims cloud-pro-monthly, cloud-pro-founders-monthly, ai-drafts-pro (scripts/claims-gate.mjs); test/v1_usage_billing.test.mjs",
    "pages": [],
    "note": ""
   },
@@ -33,11 +33,11 @@
   },
   {
    "id": "F-FEE",
-   "statement": "Docustay's fee on payments taken in a document: 2% on Free, 0% on Pro, on top of Stripe's fees.",
+   "statement": "Docustay's fee on payments taken in a document: 2% on Free and Pay as you go, 0% on Pro and Lifetime, on top of Stripe's fees.",
    "plan": "both",
    "status": "PROVEN",
    "module": "src/product/docustayFee.mjs",
-   "test": "claim C06",
+   "test": "claims free-fee-percent, pro-fee-percent; test/docustay_money_units.test.mjs",
    "pages": [],
    "note": ""
   },
@@ -103,7 +103,7 @@
   },
   {
    "id": "F-REMIND",
-   "statement": "Automatic reminders until everyone has signed.",
+   "statement": "Automatic reminders until everyone has signed, on every plan.",
    "plan": "Pro",
    "status": "BUILT",
    "module": "src/documents/dueFacts.mjs",
@@ -113,7 +113,7 @@
   },
   {
    "id": "F-BULK",
-   "statement": "Send one template to a list from a CSV.",
+   "statement": "Send one template to a list from a CSV, on every plan; Free up to 15 people at a time.",
    "plan": "Pro",
    "status": "BUILT",
    "module": "src/documents/pdfBulk.mjs",
@@ -123,7 +123,7 @@
   },
   {
    "id": "F-TEMPLATES",
-   "statement": "54 built-in templates (24 Document, 30 Form), each with its roles and fields placed.",
+   "statement": "54 built-in templates, all ordinary templates, each with its roles and fields placed.",
    "plan": "both",
    "status": "PROVEN",
    "module": "src/documents/starterTemplates.mjs",
@@ -142,16 +142,6 @@
    "note": ""
   },
   {
-   "id": "F-FORMS",
-   "statement": "Link forms, data forms and form templates, on every plan. A form counts as one document the month it is first published, and each signed response counts as one.",
-   "plan": "both",
-   "status": "BUILT",
-   "module": "src/documents/forms.mjs",
-   "test": "journey forms; test/r8_forms_and_pro.test.mjs",
-   "pages": [],
-   "note": ""
-  },
-  {
    "id": "F-PEOPLE",
    "statement": "Saved signers (a People list).",
    "plan": "both",
@@ -163,30 +153,10 @@
   },
   {
    "id": "F-TEAMS",
-   "statement": "Teams and roles in a workspace.",
+   "statement": "People in a workspace, with owner, admin and member roles, on every paid plan.",
    "plan": "Pro",
    "status": "BUILT",
    "module": "src/documents/teams.mjs",
-   "test": "",
-   "pages": [],
-   "note": ""
-  },
-  {
-   "id": "F-OWNDOMAIN",
-   "statement": "Signing links on your own domain.",
-   "plan": "Pro",
-   "status": "BUILT",
-   "module": "src/documents/signLinks.mjs",
-   "test": "",
-   "pages": [],
-   "note": ""
-  },
-  {
-   "id": "F-NOFOOTER",
-   "statement": "No Docustay footer on signed copies.",
-   "plan": "Pro",
-   "status": "BUILT",
-   "module": "src/documents/pdfTheme.mjs",
    "test": "",
    "pages": [],
    "note": ""
@@ -202,16 +172,6 @@
    "note": ""
   },
   {
-   "id": "F-RECURRING",
-   "statement": "Series and subscriptions inside a document.",
-   "plan": "Pro",
-   "status": "BUILT",
-   "module": "src/documents/pdfPayments.mjs",
-   "test": "test/r10_recurring_payments.test.mjs",
-   "pages": [],
-   "note": ""
-  },
-  {
    "id": "F-SCRIBE",
    "statement": "Describe a document; Scribe writes it, places the fields and sets payment terms; you review it before it is sent. Payment terms need Stripe connected.",
    "plan": "both",
@@ -223,7 +183,7 @@
   },
   {
    "id": "F-PLAYS",
-   "statement": "Built-in skills (add-ons and house styles) are free; your own skills and playbooks are on Pro.",
+   "statement": "Built-in Plays are free; your own Plays and Playbooks are on Pro and Lifetime.",
    "plan": "both",
    "status": "PENDING PROOF",
    "module": "src/documents/plays",
@@ -233,7 +193,7 @@
   },
   {
    "id": "F-PLAYSAPI",
-   "statement": "The templates, skills and playbooks API.",
+   "statement": "The Plays and Playbooks API.",
    "plan": "Pro",
    "status": "PENDING PROOF",
    "module": "src/documents/plays",
@@ -243,21 +203,11 @@
   },
   {
    "id": "F-EMAILCTRL",
-   "statement": "Edit all eight email types per language, send a test, and send from your own domain, mailbox or SMTP server.",
+   "statement": "Hosted: email comes from Docustay with your sender name and reply-to address. Self-hosted installs can also send from their own domain, mailbox or SMTP server.",
    "plan": "both",
    "status": "PROVEN",
    "module": "src/documents/emailTemplates.mjs",
    "test": "claim C12",
-   "pages": [],
-   "note": ""
-  },
-  {
-   "id": "F-LANG14",
-   "statement": "The signing page, emails and certificate in 14 languages.",
-   "plan": "both",
-   "status": "PROVEN",
-   "module": "src/documents/languages.mjs",
-   "test": "claim C11",
    "pages": [],
    "note": ""
   },
@@ -307,7 +257,7 @@
    "plan": "both",
    "status": "BUILT",
    "module": "sdk/js, sdk/python, sdk/generated",
-   "test": "scripts/signpdf-proof.mjs for three languages",
+   "test": "scripts/signpdf-proof.mjs for six languages",
    "pages": [],
    "note": ""
   },
@@ -393,7 +343,7 @@
   },
   {
    "id": "F-AUDIT",
-   "statement": "An audit log of every step on a document and reports with a CSV export.",
+   "statement": "An audit log of every step on a document, with a CSV export of the log.",
    "plan": "both",
    "status": "PROVEN",
    "module": "src/documents/auditTrail.mjs",
@@ -413,8 +363,8 @@
   },
   {
    "id": "F-ONEUSER",
-   "statement": "Free is for one person (the owner); Pro adds your team with unlimited users and roles.",
-   "plan": "Free / Pro",
+   "statement": "Free is for one team member (the owner). Pay as you go charges $5 per team member a month; Pro and Lifetime have unlimited team members. Signers are free on every plan.",
+   "plan": "all",
    "status": "BUILT",
    "module": "src/product/docustay.mjs plan item team_roles",
    "test": "D-038 (fix pass 1)",
@@ -423,7 +373,7 @@
   },
   {
    "id": "F-SCOPES",
-   "statement": "API keys carry the scopes you tick: thirteen of them, from the broad documents:read and documents:write down to one-job scopes such as reports:read.",
+   "statement": "API keys carry the scopes you tick: twelve of them, from the broad documents:read and documents:write down to one-job scopes such as templates:read.",
    "plan": "both",
    "status": "BUILT",
    "module": "static/docs/authentication.md",
@@ -433,23 +383,13 @@
   },
   {
    "id": "F-AICREDITS",
-   "statement": "Free includes 10 AI credits a month, Pro includes 150; a credit is about one Scribe draft. TODO-CLAIM: the numbers move to plans.js and claims.json when fix pass 2 lands them.",
-   "plan": "Free / Pro",
-   "status": "PENDING PROOF",
-   "module": "fix pass 2 (AI-COST-AND-USAGE-SPEC.md)",
-   "test": "fix pass 2 sections 10.1 and 10.2",
+   "statement": "AI drafts included in each plan: 10 a calendar month on Free, 10 on Pay as you go, 100 on Pro and 50 on Lifetime each billing month. A paid plan can go past it at $0.30 a draft; Free stops. A failed or empty draft is never charged.",
+   "plan": "all",
+   "status": "PROVEN",
+   "module": "src/documents/engine/ai/limits.mjs, src/product/docustayUsage.mjs",
+   "test": "test/docustay_fix2_aillimits.test.mjs; test/v1_usage_billing.test.mjs; claims ai-drafts-free, ai-drafts-pro",
    "pages": [],
-   "note": "claim until proven"
-  },
-  {
-   "id": "F-THINKHARDER",
-   "statement": "Pro can switch Think harder on for one Scribe request.",
-   "plan": "Pro",
-   "status": "PENDING PROOF",
-   "module": "fix pass 2 (AI-COST-AND-USAGE-SPEC.md)",
-   "test": "fix pass 2 section 10.2",
-   "pages": [],
-   "note": "claim until proven Run 8 ruling R2: Pro only whatever the AI key; the screen follows the server (gateway.mjs usageView)."
+   "note": ""
   },
   {
    "id": "F-AIOWNKEY",
@@ -503,7 +443,7 @@
   },
   {
    "id": "F-TEMPLATECAP",
-   "statement": "Free makes up to 5 new templates a month, document and form templates together, however they are made; a new version never counts and every template already made keeps working. Pro and self-hosted installs have no template limit.",
+   "statement": "Free makes up to 5 new templates a month, however they are made; a new version of an existing template and sending straight from a built-in never count. Pay as you go, Pro and Lifetime have no limit.",
    "plan": "Free",
    "status": "BUILT",
    "module": "src/documents/templateCap.mjs, src/product/docustay.mjs (assertMayCreateTemplate)",
@@ -542,16 +482,6 @@
    "note": "Run 9 Part 3.7 (Pay4) and the integration pass."
   },
   {
-   "id": "F-CONTRACTS",
-   "statement": "When a contract is signed, its start, end, notice and renewal dates and its value are read from the boxes the signers filled in. The Contracts page lists them with search and what is due in the next 30 days; a wrong date is corrected by hand and the signed PDF never changes. On Pro, a reminder goes out 30 and 7 days before a notice date.",
-   "plan": "both",
-   "status": "BUILT",
-   "module": "src/documents/keyDates.mjs, docustay/web/src/routes/(app)/contracts",
-   "test": "test/r9_key_dates.test.mjs; specs/proofs/stage-t/run9/click/j9-probe-34.mjs; j9-probe-api.mjs (correct a date)",
-   "pages": [],
-   "note": "Run 9 Part 3.4 (R9-i: the reminders are Pro)."
-  },
-  {
    "id": "F-SEARCH",
    "statement": "One search box (⌘K) finds documents by title or signer, templates, forms and people, best match first; the same search is in the API.",
    "plan": "both",
@@ -562,14 +492,66 @@
    "note": "Run 9."
   },
   {
-   "id": "F-FLOWS",
-   "statement": "An automation is drawn on a canvas: it starts when a document from a chosen template or form is signed, then waits, checks an answer and sends the next document. Test run tries it without sending anything. Switching one on needs Pro.",
-   "plan": "Pro",
-   "status": "BUILT",
-   "module": "src/documents/playbooks.mjs, docustay/web/src/routes/(app)/automations",
-   "test": "test/r9_playbooks.test.mjs; specs/proofs/stage-t/run9/click/j9-probe-36.mjs; j9-probe-api.mjs (switch on and off)",
+   "id": "F-DEMO",
+   "statement": "A try-it-now demo at app.docustay.app/demo: a private, short-lived workspace on the real product with sample property-manager data, no sign-up, nothing sent or charged, a built-in signer view, a few real Scribe prompts then a scripted Demo AI, one 2 MB PDF upload, a guided tour, an hourly limit, deletion after 24 hours, and a Keep my work button that turns it into a real account.",
+   "plan": "Free",
+   "status": "PENDING PROOF",
+   "module": "main session (app demo), shipped in the one combined release",
+   "test": "re-verify every sentence on /demo against the shipped demo before release (RELEASE-STEPS.md)",
+   "pages": [
+    "/demo"
+   ],
+   "note": "Written from the maintainer's decisions of 12 Oct 2026; the site session cannot prove it. Claim-until-proven page."
+  },
+  {
+   "id": "F-PAYG",
+   "statement": "Pay as you go: $5 per team member a month, 25 new templates a month, 15 documents each billing month included then $0.50 each, 10 AI drafts each billing month included then $0.30 each, 2% fee on payments. Billed monthly in arrears, and early if about $50 builds up.",
+   "plan": "Pay as you go",
+   "status": "PROVEN",
+   "module": "src/product/docustayUsage.mjs, src/product/docustayPrices.mjs",
+   "test": "test/v1_usage_billing.test.mjs; claims payg-person-monthly, payg-document-over, payg-draft-over",
    "pages": [],
-   "note": "Run 9 Part 3.6."
+   "note": ""
+  },
+  {
+   "id": "F-LIFETIME",
+   "statement": "Lifetime: $299 once for the first 200 workspaces. Pro for as long as Docustay runs the hosted service; 50 AI drafts each month from your purchase date included, then $0.30 each.",
+   "plan": "Lifetime",
+   "status": "PROVEN",
+   "module": "src/product/docustay.mjs, src/billing/webhook.mjs",
+   "test": "claims lifetime-price, lifetime-first-workspaces; test/v1_usage_billing.test.mjs",
+   "pages": [],
+   "note": ""
+  },
+  {
+   "id": "F-BUDGET",
+   "statement": "A monthly spending budget (default $50) with alerts at 50%, 80% and 100%. At 100% sending and AI drafting pause with a clear message; raising the budget resumes them. Nothing is deleted.",
+   "plan": "Pay as you go / Pro / Lifetime",
+   "status": "PROVEN",
+   "module": "src/product/docustayUsage.mjs",
+   "test": "test/v1_usage_billing.test.mjs; claim budget-default",
+   "pages": [],
+   "note": ""
+  },
+  {
+   "id": "F-USAGEAPI",
+   "statement": "GET /api/v1/usage returns the running bill: documents, AI drafts, what is billable this month, the budget and whether sending is paused.",
+   "plan": "all",
+   "status": "PROVEN",
+   "module": "src/product/docustay.mjs apiUsage",
+   "test": "test/v1_usage_billing.test.mjs",
+   "pages": [],
+   "note": ""
+  },
+  {
+   "id": "F-BRANDING",
+   "statement": "Your logo, brand colour, welcome note, sender name and reply-to address, on every hosted plan. The Docustay footer stays on hosted signed copies; a self-hosted install can remove it.",
+   "plan": "all",
+   "status": "BUILT",
+   "module": "src/documents/branding",
+   "test": "claim brand",
+   "pages": [],
+   "note": ""
   }
  ]
 }

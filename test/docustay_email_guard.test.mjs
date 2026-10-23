@@ -29,10 +29,11 @@ try {
     await reset(); await seed(100); await bounce(1);
     must(!(await as((tx) => L.guardState(tx))).paused, "paused at 1%");
   });
-  await t("spam reports: 1 of 100 is 1% (far past 0.05%): pauses; control: 49 emails with 1 report is under the sample: no pause", async () => {
+  await t("spam reports: 1 of 100 is 1% (far past 0.05%): pauses; in a workspace's first 7 days the sample is 20 (21 Oct, decision 6): 20 emails with 1 report pauses, control: 19 with 1 report is under it: no pause", async () => {
     await reset(); await seed(100); await complain(1);
     const g = await as((tx) => L.guardState(tx)); must(g.paused && /spam/.test(g.reason), `not paused for spam: ${JSON.stringify(g)}`);
-    await reset(); await seed(49); await complain(1); must(!(await as((tx) => L.guardState(tx))).paused, "paused under the sample");
+    await reset(); await seed(20); await complain(1); must((await as((tx) => L.guardState(tx))).paused, "a new workspace not paused at 20 emails with 1 report");
+    await reset(); await seed(19); await complain(1); must(!(await as((tx) => L.guardState(tx))).paused, "paused under the new-workspace sample");
   });
   await t("test-mode emails never count (50 test emails, 10 bounced: no pause), and 'Resume' clears a pause (a list that is still bad pauses again at the next bounce)", async () => {
     await reset(); await seed(50, "delivered", true); for (let i = 1; i <= 10; i += 1) await bounce(i);

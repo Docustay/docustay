@@ -2,6 +2,7 @@
 // Host-side on purpose: the key check, the scope map (src/developer/scopes.mjs ROUTE_SCOPES) and idempotency are the host's; Documents is reached only through its front door.
 // ★ A key may start and follow a signature, never sign for anyone: no response carries a signing link, link token or access code. Reads need `documents:read`, the two writes need `documents:write`.
 // ★ POST /send needs an Idempotency-Key header (a retry must not email people twice).
+import { apiKeyFirst } from "../http/apiKeyFirst.mjs";
 import { OpenAPIHono, createRoute, z } from "@hono/zod-openapi";
 import { Scalar } from "@scalar/hono-api-reference";
 import { polish, BASE_CONFIG } from "../developer/openapiPolish.mjs";
@@ -9,13 +10,13 @@ import { registerWebhooksV1 } from "./developerWebhooks.mjs";
 import { registerBuilderV1 } from "./developerBuilder.mjs";
 import { invalid, notFound, forbidden, unauthenticated } from "../http/errors.mjs";
 import { registerPlaysV1, registerLibraryV1 } from "./developerPlays.mjs";
-import { registerFormsV1 } from "./developerForms.mjs";
 import { requireIdempotencyKey, withIdempotency, fingerprint } from "../http/idempotency.mjs";
 import { decodeCursor } from "./index.mjs";
 import { apiUsage, apiAiUsage, apiDetectFields } from "../product/docustay.mjs";
+import { preflight, PREFLIGHT_ACTIONS } from "../product/docustayPreflight.mjs";
 import { registerRun9V1 } from "./developerRun9.mjs";
 import { paymentsStatus } from "../product/docustayPayments.mjs";
-import { listEmailMessages, saveEmailMessage, resetEmailMessage, previewEmailMessage, listEmails, apiTestSign, referenceFilter, saveTemplateReference, cleanReference, apiListDocuments, apiGetDocument, apiTemplates, apiSendFromTemplate, apiCreateDocument, apiUseTemplate, apiReviseDocument, apiSendDraft, apiDraftSource, apiCheckSource, apiTemplateDefaults, apiWizard, cancelAiJob, apiVoid, apiSignedCopy, selfServeOwner, createTemplateFromSource, saveSourceTemplate, createAiJob, getAiJob, apiTemplate, apiRemind, apiEmbedSession, assertTestKeyMay, auditLogCsv, listTeams, documentReport, LANGUAGES, policyFor, currentKeyId, countAgainstLimit, requestSendApproval, contentDisposition } from "../documents/frontDoor.mjs";
+import { listEmails, deletePdfDraft, apiTestSign, referenceFilter, saveTemplateReference, cleanReference, apiListDocuments, apiGetDocument, apiTemplates, apiSendFromTemplate, setSendValues, DOCUMENT_STATES, apiCreateDocument, apiUseTemplate, apiReviseDocument, apiSendDraft, apiDraftSource, apiCheckSource, apiTemplateDefaults, apiWizard, cancelAiJob, apiVoid, apiSignedCopy, selfServeOwner, createTemplateFromSource, saveSourceTemplate, createAiJob, getAiJob, apiTemplate, apiRemind, apiEmbedSession, assertTestKeyMay, auditLogCsv, listTeams, policyFor, currentKeyId, countAgainstLimit, requestSendApproval, contentDisposition } from "../documents/frontDoor.mjs";
 
 /**
  * The document list pages by KEYSET, not offset (Round 3, R-14): with an offset, a document created while someone pages through shifts every row down one, so the next page repeats a row (measured: 65 rows, 64 unique, 7 pages).
@@ -39,10 +40,10 @@ const Err = z.object({ error: z.object({ kind: z.enum(["validation", "unauthenti
 const Meta = z.record(z.string(), z.string()).openapi({ description: "Your own key-value text (up to 20 keys; keys 1–40 letters, digits, dot, dash or underscore; values up to 500 characters). Returned in every response and every webhook for this document; never shown to a signer.", example: { crmDealId: "D-1042" } });
 const ExternalId = z.string().min(1).max(200).openapi({ description: "Your own id for this thing, so you can match it to your records. Filter lists with `externalId=`.", example: "contract-2026-0042" });
 const EmailChoice = z.object({ subject: z.string().max(200).optional(), message: z.string().max(4000).optional(), replyTo: z.string().email().optional().openapi({ description: "Where replies to this document's emails go." }),
-  senderName: z.string().min(1).max(120).optional().openapi({ description: "The name the emails say they are from, for this document." }), locale: z.string().optional().openapi({ description: "The language of the emails (en, es, fr, …), or auto to match each person." }) })
-  .openapi("EmailChoice", { description: "Your own wording for the emails about THIS document. The workspace's saved wording (Settings → Email templates) applies underneath; what you give here wins." });
+  senderName: z.string().min(1).max(120).optional().openapi({ description: "The name the emails say they are from, for this document." }) })
+  .openapi("EmailChoice", { description: "Your own wording for the emails about THIS document. What you give here is used for this document." });
 // the grouped `email` object is the friendly spelling of the send choices
-const emailChoice = (e) => (e ? { subject: e.subject, message: e.message, replyTo: e.replyTo, senderName: e.senderName, language: e.locale === "auto" ? undefined : e.locale } : {});
+const emailChoice = (e) => (e ? { subject: e.subject, message: e.message, replyTo: e.replyTo, senderName: e.senderName } : {});
 const Party = z.object({ seat: z.string(), externalId: ExternalId.nullable(), metadata: Meta, name: z.string(), email: z.string().nullable(), role: z.string(), status: z.string(), viewedAt: z.string().nullable(), completedAt: z.string().nullable(), declineReason: z.string().nullable() }).openapi("Party");
 const Summary = z.object({ externalId: ExternalId.nullable(), metadata: Meta, test: z.boolean().openapi({ description: "True for a document made in test mode (a test API key or the workspace's test switch)." }), id: Id, title: z.string(), state: z.string(), parties: z.number().int(), createdAt: z.string().nullable(), sentAt: z.string().nullable(), executedAt: z.string().nullable(), expiresAt: z.string().nullable() }).openapi("DocumentSummary");
 const Payment = z.object({ id: Id, fieldId: z.string().nullable(), person: z.string(), status: z.enum(["pending", "paid", "partially_refunded", "refunded", "expired"]).openapi({ description: "`paid` once Stripe says so. A refund moves it to `partially_refunded` or `refunded`." }),
@@ -52,12 +53,13 @@ const Payment = z.object({ id: Id, fieldId: z.string().nullable(), person: z.str
   test: z.boolean() }).openapi("Payment");
 const Detail = z.object({
   externalId: ExternalId.nullable(), metadata: Meta, test: z.boolean(), id: Id, title: z.string(), state: z.string(), sentAt: z.string().nullable(), expiresAt: z.string().nullable(), executedAt: z.string().nullable(), voidedAt: z.string().nullable(), voidReason: z.string().nullable(),
-  progress: z.object({ signed: z.number().int(), of: z.number().int() }), signedCopyAvailable: z.boolean(), parties: z.array(Party), payments: z.array(Payment).openapi({ description: "Payments made through payment fields on this document (empty when it has none). A payment field's amount is set by ONE of: a fixed amount, a formula over the signer's own fields, a Stripe price, or a Stripe payment link — see the text tag settings `amount`, `formula`, `price` and `link`." }), events: z.array(z.object({ at: z.string().nullable(), kind: z.string(), text: z.string() })),
+  progress: z.object({ signed: z.number().int(), of: z.number().int() }), signedCopyAvailable: z.boolean(), parties: z.array(Party), payments: z.array(Payment).openapi({ description: "Payments made through payment fields on this document (empty when it has none). A payment field's amount is one set amount (optionally paid as a deposit now), or an amount you give when you send the document — see the text tag setting `amount`." }), events: z.array(z.object({ at: z.string().nullable(), kind: z.string(), text: z.string() })),
 }).openapi("Document");
 const Template = z.object({ externalId: ExternalId.nullable().optional(), metadata: Meta.optional(), id: Id, name: z.string(), pages: z.number().int().nullable(), seats: z.array(z.object({ key: z.string(), label: z.string() })) }).openapi("Template");
 const SendBody = z.object({
   templateId: Id, email: EmailChoice.optional(), metadata: Meta.optional(), externalId: ExternalId.optional(), title: z.string().max(200).optional(), message: z.string().max(5000).nullable().optional(), subject: z.string().max(200).optional(),
-  language: z.enum(LANGUAGES).optional(), expiryDays: z.number().int().min(1).max(365).optional(),
+  expiryDays: z.number().int().min(1).max(365).optional(),
+  values: z.record(z.string().regex(/^[a-z][a-z0-9_]{0,40}$/, { message: "each key is a box's label in lower case with underscores, such as effective_date" }), z.string().max(300)).optional().openapi({ description: "The boxes the sender fills in (\"Filled in by: Sender\") and the template's send-time amounts, by key: a box's label in lower case with underscores (\"Effective date\" → `effective_date`). A send that leaves one empty answers 400 naming it.", example: { effective_date: "2026-11-01" } }),
   embedded: z.array(z.string()).optional().openapi({ description: "Seats signed inside your own app instead of by emailed link (for example [\"signer_1\"]). Nobody is emailed for these seats: you ask for a session with POST /api/v1/documents/{id}/embed-session and show it on a website you listed under Settings → Developers → Embedding." }),
   parties: z.array(z.object({ seat: z.string(), name: z.string().min(1), email: z.string().email().max(254).refine((e) => e.split("@")[0].length <= 64, "the part before the @ is at most 64 characters"), externalId: ExternalId.optional(), metadata: Meta.optional() })).min(1).openapi({ description: "One entry for each seat of the template (see GET /api/v1/documents/templates)." }),
 }).openapi("SendRequest");
@@ -89,7 +91,7 @@ export function registerDocumentsV1(app, { tokenRoute }) {
   const api = new OpenAPIHono({ defaultHook: (r) => { if (!r.success) throw invalid(r.error.issues.map((i) => `${i.path.join(".") || "request"}: ${i.message}`).join("; ")); if (hasNul(r.data)) throw invalid("text cannot contain a NUL character"); } });
   // Schemathesis (OI-010, 15 Oct 2026): a request with NO bearer key at all got a field-level 400 (the body check, or the Idempotency-Key check) before it ever got a 401. Credentials first: the answer to "who are you" never depends on the body.
   // (A key that is present but wrong still reaches the route and gets the same single 401 from the key check; the two documentation routes stay open.)
-  api.use("/api/v1/*", async (c, next) => { if (c.req.path !== "/api/v1/openapi.json" && c.req.path !== "/api/v1/docs" && !/^Bearer\s+\S/i.test(c.req.header("authorization") ?? "")) throw unauthenticated("the API token is not valid"); await next(); });
+  api.use("/api/v1/*", apiKeyFirst);   // R13-D191: the key before the body (src/http/apiKeyFirst.mjs)
   api.openAPIRegistry.registerComponent("securitySchemes", "bearerAuth", { type: "http", scheme: "bearer", description: "A developer API key from Settings → Developer. Test keys act on test documents only." });
   const run = (c, method, path, fn) => tokenRoute(c, method, path, fn);
 
@@ -99,7 +101,7 @@ export function registerDocumentsV1(app, { tokenRoute }) {
 
   api.openapi(createRoute({ method: "get", path: "/api/v1/documents", tags: ["Documents"], summary: "List documents", security: bearerSec,
     description: "Filter by your own reference: `externalId=…`, and `metadata[key]=value` (repeat for more keys; a document must match all).",
-    request: { query: z.object({ state: z.string().optional(), limit: z.coerce.number().int().min(1).max(200).optional(), cursor: z.string().optional(), externalId: z.string().max(200).optional().openapi({ description: "Only documents with this `externalId`." }) }) },
+    request: { query: z.object({ state: z.string().optional().openapi({ enum: DOCUMENT_STATES, description: "Only documents in this state; any other value is refused." }), limit: z.coerce.number().int().min(1).max(200).optional(), cursor: z.string().optional(), externalId: z.string().max(200).optional().openapi({ description: "Only documents with this `externalId`." }) }) },
     responses: { 200: { description: "A page of documents, newest first.", content: { "application/json": { schema: z.object({ documents: z.array(Summary), page: z.object({ limit: z.number().int(), nextCursor: z.string().nullable(), hasMore: z.boolean() }) }) } } }, ...errs } }),
   async (c) => {
     const q = c.req.valid("query"); const limit = q.limit ?? 50;
@@ -135,7 +137,7 @@ export function registerDocumentsV1(app, { tokenRoute }) {
   api.openapi(createRoute({ method: "post", path: "/api/v1/documents/send", tags: ["Documents"], summary: "Send a template to people to sign", security: bearerSec,
     description: "Makes a document from the template, puts each person on their seat and sends it. Needs an `Idempotency-Key` header (8–200 characters): a retry with the same key and body does not send again.",
     request: { body: { content: { "application/json": { schema: SendBody } }, required: true } },
-    responses: { 201: { description: "Sent.", content: { "application/json": { schema: z.object({ id: Id, state: z.string(), emailed: z.number().int().openapi({ description: "How many signing emails went out now." }), notEmailed: z.array(z.object({ seat: z.string(), email: z.string(), reason: z.string(), detail: z.string().nullable() })).openapi({ description: "Anyone who was NOT emailed, and why (for example `limit_reached`: the daily email limit). The document is still sent; fetch their link or send a reminder later." }) }) } } }, ...errs } }),
+    responses: { 201: { description: "Sent.", content: { "application/json": { schema: z.object({ id: Id, state: z.string(), externalId: ExternalId.nullable().optional(), metadata: Meta.optional(), emailed: z.number().int().openapi({ description: "How many signing emails went out now." }), notEmailed: z.array(z.object({ seat: z.string(), email: z.string(), reason: z.string(), detail: z.string().nullable() })).openapi({ description: "Anyone who was NOT emailed, and why (for example `limit_reached`: the daily email limit). The document is still sent; fetch their link or send a reminder later." }) }) } } }, ...errs } }),
   async (c) => {
     const body = c.req.valid("json");
     const key = requireIdempotencyKey({ "idempotency-key": c.req.header("idempotency-key") });
@@ -198,16 +200,21 @@ const AiDraftBody = z.object({ prompt: z.string().max(4000).optional(), brief: B
     if (out?.failed) throw out.failed; return c.json(out, 201);
   });
   api.openapi(createRoute({ method: "post", path: "/api/v1/documents/ai/draft", tags: ["Documents"], summary: "Ask for an AI-written draft", security: bearerSec,
-    description: "Starts a draft and answers at once with a job id; poll `GET /api/v1/documents/ai/jobs/{id}`. The draft is a suggestion for a person to read; nothing is saved or sent. Refused plainly when AI drafting is switched off for the workspace or a limit is reached.",
+    description: "Starts a draft and answers at once with a job id; poll `GET /api/v1/documents/ai/jobs/{id}`. Send an `Idempotency-Key` header to make a retry safe: the same key and body answer the first job and spend no second draft. The draft is a suggestion for a person to read; nothing is saved or sent. Refused plainly when AI drafting is switched off for the workspace or a limit is reached.",
     request: { body: { content: { "application/json": { schema: AiDraftBody } }, required: true } },
     responses: { 202: { description: "Started.", content: { "application/json": { schema: z.object({ jobId: Id, state: z.string() }) } } }, ...errs } }),
   async (c) => {
     const body = c.req.valid("json");
+    // R13-D198: an Idempotency-Key, when sent, is honoured (a repeat answers the first job and spends no second draft); it stays optional
+    const key = c.req.header("idempotency-key") ? requireIdempotencyKey({ "idempotency-key": c.req.header("idempotency-key") }) : null;
     const out = await run(c, "POST", "/api/v1/documents/ai/draft", async (db) => {
-      const { rows: [t] } = await db.query(`SELECT keystone.current_tenant_id() AS t`); const ownerId = await asOwner(db);
-      return createAiJob(db, { tenantId: t.t, actorUserId: ownerId, prompt: body.prompt ?? "", brief: body.brief ?? null, mode: body.mode ?? "template", vocabulary: "docustay", kind: "draft", baseSource: null, baseTemplateId: null });
+      const { rows: [t] } = await db.query(`SELECT keystone.current_tenant_id() AS t`);
+      const start = async () => createAiJob(db, { tenantId: t.t, actorUserId: await asOwner(db), prompt: body.prompt ?? "", brief: body.brief ?? null, mode: body.mode ?? "template", vocabulary: "docustay", kind: "draft", baseSource: null, baseTemplateId: null });
+      if (!key) return start();
+      const op = await withIdempotency(db, t.t, key, fingerprint("POST", "/api/v1/documents/ai/draft", body), async () => ({ status: 202, body: await start() }));
+      return op.failed ? { failed: op.error } : op.body;
     });
-    return c.json(out, 202);
+    if (out?.failed) throw out.failed; return c.json(out, 202);
   });
   api.openapi(createRoute({ method: "get", path: "/api/v1/documents/ai/jobs/{id}", tags: ["Documents"], summary: "Read an AI draft job", security: bearerSec,
     request: { params: z.object({ id: Id }) },
@@ -216,9 +223,19 @@ const AiDraftBody = z.object({ prompt: z.string().max(4000).optional(), brief: B
 
   // ── Usage (6 Oct 2026, pricing predictability): the same numbers the Billing page shows, readable with a key ──
   api.openapi(createRoute({ method: "get", path: "/api/v1/usage", tags: ["Account"], summary: "Documents, templates and emails used against your plan", security: bearerSec,
-    description: "Documents sent this calendar month (UTC), new templates made this month and emails sent today, with the plan's limits. `limit` is null when the plan has no limit (Pro has no template limit; a self-hosted install has no limits).",
-    responses: { 200: { description: "Usage.", content: { "application/json": { schema: z.object({ plan: z.string().nullable(), period: z.object({ start: z.string(), end: z.string() }).nullable(), documents: z.object({ used: z.number().int(), limit: z.number().int().nullable() }).nullable(), emails: z.object({ usedToday: z.number().int(), limitPerDay: z.number().int(), resetsAt: z.string() }).nullable(), templates: z.object({ used: z.number().int(), limit: z.number().int().nullable(), resetsAt: z.string().nullable() }).nullable().optional().openapi({ description: "New templates made this calendar month (UTC), documents and forms together. Free includes 5; `limit` is null on Pro." }) }).openapi("Usage") } } }, ...errs } }),
+    description: "Documents sent this period, AI drafts, new templates made this period and emails sent today, with the plan's limits, plus what the period costs so far on a plan with per-unit prices (`billing`). The period is the billing period on Pay as you go, Pro and Lifetime (`periodStart` to `periodEnd`, UTC; everything resets on `periodEnd`) and the UTC calendar month on Free. `limit` is null when the plan has no limit (Pro has no template limit; a self-hosted install has no limits).",
+    responses: { 200: { description: "Usage.", content: { "application/json": { schema: z.object({ plan: z.string().nullable(), period: z.object({ start: z.string(), end: z.string() }).nullable(), periodStart: z.string().nullable().optional().openapi({ description: "When this allowance period began (ISO 8601, UTC): the start of the billing period on Pay as you go, Pro and Lifetime, the 1st of the month on Free." }), periodEnd: z.string().nullable().optional().openapi({ description: "When it ends and every count resets (ISO 8601, UTC); shown in the app as 'Resets Nov 19'." }), documents: z.object({ used: z.number().int(), limit: z.number().int().nullable() }).nullable(), limits: z.object({ documentsPerPeriod: z.number().int().nullable(), perDocumentMinor: z.number().int().nullable(), draftsPerPeriod: z.number().int().nullable(), perDraftMinor: z.number().int().nullable(), templatesPerPeriod: z.number().int().nullable(), signersPerPeriod: z.number().int().nullable(), people: z.number().int().nullable(), personMonthlyMinor: z.number().int().nullable(), uploadMb: z.number().int().nullable(), emailsPerDay: z.number().int().nullable().openapi({ description: "The plan's daily email limit. Today's actual limit is emails.limitPerDay, which is lower in a workspace's first 7 days." }), bulkSendMax: z.number().int().nullable(), paymentsFeePercent: z.number() }).nullable().optional().openapi({ description: "The plan's limits and prices in one place (whole cents; null = no limit or no price): documents, AI drafts, new templates and different signers per period, what each extra document and draft costs, team members, the Pay as you go price per team member a month, the largest upload in MB, emails a day, the most rows in one list on Free, and the fee on payments in percent." }), drafts: z.object({ used: z.number().nullable(), included: z.number().nullable() }).nullable().optional().openapi({ description: "AI drafts used this period against the plan's included amount (hosted plans)." }), billing: z.object({ perDocumentMinor: z.number().int().nullable(), perDraftMinor: z.number().int().nullable(), billableDocuments: z.number().int(), billableDrafts: z.number().int(), unbilledMinor: z.number().int(), budgetMinor: z.number().int(), percentOfBudget: z.number().int(), paused: z.boolean(), currency: z.string() }).nullable().optional().openapi({ description: "Usage that costs money on Pay as you go, Pro and Lifetime: what has been billed per unit this period, the budget (default $50), and whether sending is paused at 100% of it. Amounts are whole cents." }), emails: z.object({ usedToday: z.number().int(), limitPerDay: z.number().int().openapi({ description: "The most emails this workspace may send today. In a workspace's first 7 days it is lower than the plan's limits.emailsPerDay (10 on Free, 100 on a paid plan)." }), resetsAt: z.string() }).nullable(), templates: z.object({ used: z.number().int(), limit: z.number().int().nullable(), resetsAt: z.string().nullable() }).nullable().optional().openapi({ description: "New templates made this period, documents and forms together. Free includes 5 and Pay as you go 25 (from 1 November 2026); `limit` is null on Pro and Lifetime." }), signers: z.object({ used: z.number().int().nullable(), limit: z.number().int().nullable(), resetsAt: z.string().nullable() }).nullable().optional().openapi({ description: "Different signers sent to this period, counted once by email address (your own team does not count). Free includes 15 from 1 November 2026; `limit` and `used` are null on the paid plans, where signers are free and unlimited." }) }).openapi("Usage") } } }, ...errs } }),
   async (c) => c.json(await run(c, "GET", "/api/v1/usage", async (db) => { const { rows: [t] } = await db.query(`SELECT keystone.current_tenant_id() AS t`); await asOwner(db); return apiUsage(db, { tenantId: t.t }); }), 200));
+
+  // ── Preflight (Part 2, plan-aware prompting): ask BEFORE acting — may I, what does it cost, what are my options. Reads only; nothing is sent, charged or stored. ──
+  const PreflightBody = z.object({ action: z.enum(PREFLIGHT_ACTIONS).openapi({ description: "What you are about to do: `send_document`, `bulk_send` (with `documents`), `invite_person` or `remove_person` (with `people`), `ai_draft`, `ai_edit`, `ai_read_file`, `create_template`, `upload` (with `bytes`), `use_feature` (with `item`) or `connect_payments`." }),
+    documents: z.number().int().min(1).max(100000).optional(), people: z.number().int().min(1).max(1000).optional(), recipients: z.array(z.string().max(254)).max(1000).optional().openapi({ description: "For `send_document`: the email addresses you are about to send to, so a Free workspace is told how many of them are new signers this month (anyone already sent to this month, and your own team, do not count)." }), bytes: z.number().int().min(0).optional(), item: z.string().max(60).optional().openapi({ description: "For `use_feature`: the plan-bound item, for example `custom_plays`." }) }).openapi("PreflightRequest");
+  const PreflightOption = z.object({ key: z.enum(["payg", "pro", "lifetime", "raise_budget", "wait"]), label: z.string(), priceMinor: z.number().int().nullable().openapi({ description: "Whole cents; null when the option has no price of its own (raising the budget)." }), per: z.string().nullable().openapi({ description: "`team member a month`, `month`, `once` or null." }), founders: z.boolean().optional(), unlocks: z.array(z.string()) }).openapi("PreflightOption");
+  api.openapi(createRoute({ method: "post", path: "/api/v1/preflight", tags: ["Account"], summary: "Ask what an action would do to your plan, before doing it", security: bearerSec,
+    description: "Answers, for one action, whether it is allowed (`allowed`), what it costs this time in whole cents (`cost.minor`, 0 inside the allowance; for `invite_person` it is a monthly amount, `cost.prorated`), where the meter stands and where it will stand (`meter`, `afterThis`), how loud the moment is (`severity`: `none`, `info` from 50 percent of the meter, `warn` from 80, `limit` at 100 while still allowed, `blocked` when the action would be refused), the stable refusal code the action would carry (`reason`, the same codes the refusals use: `plan_document_limit`, `plan_people_limit`, `plan_template_limit`, `plan_pro_required`, `budget_reached`, `ai_limit_credits`, `too_big`), the options that would let you go on with their prices (`options`, cheapest first) and one plain sentence (`message`). Every number is read from the one price list and your workspace's own counts; nothing is changed. The refusals the other routes return carry the same `options` and `severity` in `error.detail`.",
+    request: { body: { content: { "application/json": { schema: PreflightBody } }, required: true } },
+    responses: { 200: { description: "The answer.", content: { "application/json": { schema: z.object({ action: z.string(), allowed: z.boolean(), plan: z.object({ key: z.string(), name: z.string() }).nullable(), period: z.object({ start: z.string(), end: z.string(), resets: z.string(), kind: z.string() }).nullable(), meter: z.record(z.string(), z.any()).nullable(), cost: z.object({ minor: z.number().int(), currency: z.string(), units: z.number(), perUnitMinor: z.number().nullable(), per: z.string().nullable(), prorated: z.boolean(), feePercent: z.number().optional() }), afterThis: z.record(z.string(), z.any()).nullable(), severity: z.enum(["none", "info", "warn", "limit", "blocked"]), reason: z.string().nullable(), options: z.array(PreflightOption), message: z.string(), allowedCount: z.number().int().optional().openapi({ description: "For `bulk_send` on a limit: how many of the rows can go now." }) }).openapi("PreflightAnswer") } } }, ...errs } }),
+  async (c) => { const b = c.req.valid("json"); return c.json(await run(c, "POST", "/api/v1/preflight", async (db) => { const { rows: [t] } = await db.query(`SELECT keystone.current_tenant_id() AS t`); await asOwner(db); return preflight(db, { tenantId: t.t, action: b.action, size: { documents: b.documents, people: b.people, bytes: b.bytes, recipients: b.recipients }, item: b.item ?? null }); }), 200); });
 
   // ── Field detection (8 Oct 2026): the boxes a person would draw, found for them. Nothing is stored. ──
   const DetectBody = z.object({ fileName: z.string().min(1).max(255).optional(), file: z.string().min(1).openapi({ description: "The file, base64-encoded: a PDF file." }), minConfidence: z.number().min(0).max(1).optional(), ocr: z.boolean().optional().openapi({ description: "Read pages that are only a picture by character recognition (default true; English)." }) }).openapi("DetectFieldsRequest");
@@ -230,9 +247,9 @@ const AiDraftBody = z.object({ prompt: z.string().max(4000).optional(), brief: B
   async (c) => { const b = c.req.valid("json"); return c.json(await run(c, "POST", "/api/v1/documents/detect-fields", async (db) => { await asOwner(db); return apiDetectFields(db, { bytes: Buffer.from(b.file, "base64"), fileName: b.fileName, minConfidence: b.minConfidence, ocr: b.ocr }); }), 200); });
 
   // ── AI usage: the allowance the Settings card shows, for a key ──
-  const AiUsageOut = z.object({ mode: z.enum(["hosted", "own_key", "unmetered"]), plan: z.string().nullable(), allowance: z.number().nullable(), used: z.number().nullable(), remaining: z.number().nullable(), percent: z.number().nullable(), state: z.string(), resetsAt: z.string().nullable(), byFeature: z.record(z.string(), z.object({ calls: z.number(), credits: z.number() })), thinkHarder: z.object({ available: z.boolean() }).passthrough(), paused: z.boolean() }).openapi("AiUsage");
-  api.openapi(createRoute({ method: "get", path: "/api/v1/ai/usage", tags: ["Account"], summary: "AI credits used against your plan", security: bearerSec,
-    description: "The AI allowance for the current period: credits included, used and remaining, when it resets, and the split by kind of work. `mode` is `own_key` (you bring your own provider key, so nothing is metered) or `unmetered` (self-hosted).",
+  const AiUsageOut = z.object({ mode: z.enum(["hosted", "own_key", "unmetered"]), plan: z.string().nullable(), allowance: z.number().nullable(), used: z.number().nullable(), remaining: z.number().nullable(), percent: z.number().nullable(), state: z.string(), resetsAt: z.string().nullable(), byFeature: z.record(z.string(), z.object({ calls: z.number(), credits: z.number() })), paused: z.boolean() }).openapi("AiUsage");
+  api.openapi(createRoute({ method: "get", path: "/api/v1/ai/usage", tags: ["Account"], summary: "AI drafts used against your plan", security: bearerSec,
+    description: "The AI allowance for the current period: drafts included, used and remaining, when it resets, and the split by kind of work. `mode` is `own_key` (you bring your own provider key, so nothing is metered) or `unmetered` (self-hosted).",
     responses: { 200: { description: "AI usage.", content: { "application/json": { schema: AiUsageOut } } }, ...errs } }),
   async (c) => c.json(await run(c, "GET", "/api/v1/ai/usage", async (db) => { const { rows: [t] } = await db.query(`SELECT keystone.current_tenant_id() AS t`); await asOwner(db); return apiAiUsage(db, { tenantId: t.t }); }), 200));
 
@@ -268,63 +285,35 @@ const AiDraftBody = z.object({ prompt: z.string().max(4000).optional(), brief: B
     return c.json(await run(c, "POST", "/api/v1/documents/:id/embed-session", async (db) => { const { rows: [t] } = await db.query(`SELECT keystone.current_tenant_id() AS t`); await asOwner(db); await guard(c, db, id); return apiEmbedSession(db, { tenantId: t.t, instanceId: id, seat: b?.seat, origin: b?.origin }); }), 200);
   });
 
-  const Counted = z.object({ name: z.string(), sent: z.number().int(), completed: z.number().int() });
-  api.openapi(createRoute({ method: "get", path: "/api/v1/reports", tags: ["Reports"], summary: "Counts of what was sent and completed", security: bearerSec,
-    description: "Real documents only — documents made in test mode are never counted. Dates are in the workspace's own time zone; `to` is inclusive; the default window is the last 30 days.",
-    request: { query: z.object({ from: z.string().optional().openapi({ example: "2026-10-01" }), to: z.string().optional().openapi({ example: "2026-10-31" }), team: Id.optional() }) },
-    responses: { 200: { description: "The report.", content: { "application/json": { schema: z.object({ window: z.object({ from: z.string(), to: z.string(), days: z.number().int() }), timezone: z.string(),
-      totals: z.object({ sent: z.number().int(), completed: z.number().int(), declined: z.number().int(), expired: z.number().int(), voided: z.number().int(), waitingNow: z.number().int(), completionRate: z.number().nullable(), averageHoursToComplete: z.number().nullable(), medianHoursToComplete: z.number().nullable() }),
-      byDay: z.array(z.object({ date: z.string(), sent: z.number().int(), completed: z.number().int() })), byTemplate: z.array(Counted), byTeam: z.array(Counted), bySender: z.array(Counted) }).openapi("Report") } } }, ...errs } }),
-  async (c) => { const q = c.req.valid("query"); return c.json(await run(c, "GET", "/api/v1/reports", async (db) => { const { rows: [t] } = await db.query(`SELECT keystone.current_tenant_id() AS t`); await asOwner(db); return documentReport(db, { tenantId: t.t, from: q.from ?? null, to: q.to ?? null, teamId: q.team ?? null }); }), 200); });
-
   api.openapi(createRoute({ method: "get", path: "/api/v1/teams", tags: ["Teams"], summary: "Teams and their members", security: bearerSec,
     responses: { 200: { description: "The teams.", content: { "application/json": { schema: z.object({ teams: z.array(z.object({ id: Id, name: z.string(), members: z.array(z.object({ id: Id, name: z.string() })), documents: z.number().int(), templates: z.number().int() })) }) } } }, ...errs } }),
   async (c) => c.json({ teams: await run(c, "GET", "/api/v1/teams", async (db) => { await asOwner(db); return listTeams(db); }) }, 200));
 
-  // FP-K4 — the workspace's own email wording and the log of email about documents, for a key.
-  const Kind = z.string().openapi({ description: "invitation, reminder, completed, declined, voided, expired, code or receipt", example: "invitation" });
-  const Wording = z.object({ locale: z.string().optional(), subject: z.string().max(200).nullable().optional(), preview: z.string().max(200).nullable().optional(), body: z.string().max(5000).nullable().optional(), buttonLabel: z.string().max(60).nullable().optional(), footer: z.string().max(500).nullable().optional() }).openapi("EmailWording");
-  const tenantOf = async (db) => (await db.query(`SELECT keystone.current_tenant_id() AS t`)).rows[0].t;
-  api.openapi(createRoute({ method: "get", path: "/api/v1/email-templates", tags: ["Email"], summary: "The workspace's email wording", security: bearerSec,
-    request: { query: z.object({ locale: z.string().optional() }) }, responses: { 200: { description: "The eight message types with the standard and the saved wording.", content: { "application/json": { schema: z.object({ templates: z.array(z.record(z.string(), z.any())) }) } } }, ...errs } }),
-  async (c) => c.json({ templates: await run(c, "GET", "/api/v1/email-templates", async (db) => { await asOwner(db); return listEmailMessages(db, { locale: c.req.valid("query").locale ?? "en" }); }) }, 200));
-  api.openapi(createRoute({ method: "put", path: "/api/v1/email-templates/{kind}", tags: ["Email"], summary: "Set the wording of one email", security: bearerSec,
-    description: "Variables look like `{{document.title}}`; each message type accepts only its own (see GET). A blank field means the standard wording.",
-    request: { params: z.object({ kind: Kind }), body: { content: { "application/json": { schema: Wording } }, required: true } }, responses: { 200: { description: "The saved wording.", content: { "application/json": { schema: z.record(z.string(), z.any()) } } }, ...errs } }),
-  async (c) => { const { kind } = c.req.valid("param"); const b = c.req.valid("json");
-    return c.json(await run(c, "PUT", "/api/v1/email-templates/:kind", async (db) => { const ownerId = await asOwner(db); return saveEmailMessage(db, { tenantId: await tenantOf(db), kind, locale: b.locale ?? "en", draft: b, userId: ownerId }); }), 200); });
-  api.openapi(createRoute({ method: "delete", path: "/api/v1/email-templates/{kind}", tags: ["Email"], summary: "Back to the standard wording", security: bearerSec,
-    request: { params: z.object({ kind: Kind }), query: z.object({ locale: z.string().optional() }) }, responses: { 200: { description: "The standard wording again.", content: { "application/json": { schema: z.record(z.string(), z.any()) } } }, ...errs } }),
-  async (c) => { const { kind } = c.req.valid("param");
-    return c.json(await run(c, "DELETE", "/api/v1/email-templates/:kind", async (db) => { await asOwner(db); return resetEmailMessage(db, { tenantId: await tenantOf(db), kind, locale: c.req.valid("query").locale ?? "en" }); }), 200); });
-  api.openapi(createRoute({ method: "post", path: "/api/v1/email-templates/{kind}/preview", tags: ["Email"], summary: "Preview an email with made-up names", security: bearerSec,
-    request: { params: z.object({ kind: Kind }), body: { content: { "application/json": { schema: Wording } }, required: false } }, responses: { 200: { description: "Subject, preview line, body and the HTML.", content: { "application/json": { schema: z.record(z.string(), z.any()) } } }, ...errs } }),
-  async (c) => { const { kind } = c.req.valid("param"); const b = (await c.req.json().catch(() => ({}))) ?? {};
-    return c.json(await run(c, "POST", "/api/v1/email-templates/:kind/preview", async (db) => { await asOwner(db); return previewEmailMessage(db, { tenantId: await tenantOf(db), kind, locale: b.locale ?? "en", draft: Object.keys(b).length ? b : null }); }), 200); });
+  // FP-K4 — the log of email about documents, for a key (the editable wording was removed in Docustay v1).
   api.openapi(createRoute({ method: "get", path: "/api/v1/emails", tags: ["Email"], summary: "The log of email about your documents", security: bearerSec,
     description: "Every email sent about a document, to a person named on it: kind, subject, status (sent, delivered, bounced, complained, failed, paused). Filter by `documentId`, `to`, `status`, `kind`. No bodies, no links.",
-    request: { query: z.object({ documentId: Id.optional(), to: z.string().optional(), status: z.string().optional(), kind: z.string().optional(), limit: z.coerce.number().int().min(1).max(200).optional(), cursor: z.string().optional() }) },
+    request: { query: z.object({ documentId: Id.optional(), to: z.string().optional(), status: z.enum(["sent", "delivered", "bounced", "complained", "failed", "skipped", "paused", "limit_reached"]).optional().openapi({ description: "Only emails in this state; any other value is refused (R13-D205)." }), kind: z.enum(["invitation", "reminder", "completed", "declined", "voided", "expired", "code", "receipt", "hold_lapsed", "other"]).optional().openapi({ description: "Only emails of this kind; any other value is refused (R13-D346)." }), limit: z.coerce.number().int().min(1).max(200).optional(), cursor: z.string().optional() }) },
     responses: { 200: { description: "A page of emails, newest first.", content: { "application/json": { schema: z.object({ emails: z.array(z.record(z.string(), z.any())), nextCursor: z.string().nullable() }) } } }, ...errs } }),
   async (c) => c.json(await run(c, "GET", "/api/v1/emails", async (db) => { await asOwner(db); return listEmails(db, c.req.valid("query")); }), 200));
 
   // FP-D2 — sign one seat of a TEST document with sample answers, so an integration's automated tests can finish a signature with no email and no browser. A live key is refused.
   api.openapi(createRoute({ method: "post", path: "/api/v1/documents/{id}/test-sign", tags: ["Documents"], summary: "Sign a test document (test mode only)", security: bearerSec,
     description: "Signs one seat of a **test** document with sample answers, through the same code a person's signature uses: consent, signing order, the audit trail and your webhooks all happen. Only a test key (`dsk_test_…`) may call it, and only on a test document; a live key gets `403`. A seat with a payment field cannot be test-signed: pay it with a Stripe test card.",
-    request: { params: z.object({ id: Id }), body: { content: { "application/json": { schema: z.object({ seat: z.string().openapi({ description: "The seat to sign, for example `signer_1`.", example: "signer_1" }) }) } }, required: true } },
-    responses: { 200: { description: "Signed.", content: { "application/json": { schema: z.object({ id: Id, seat: z.string(), signed: z.boolean(), state: z.string(), progress: z.object({ signed: z.number().int(), of: z.number().int() }), finished: z.boolean() }) } } }, ...errs } }),
+    request: { params: z.object({ id: Id }), body: { content: { "application/json": { schema: z.object({ seat: z.string().openapi({ description: "The seat to sign, for example `signer_1`.", example: "signer_1" }), decline: z.boolean().optional().openapi({ description: "Decline the seat instead of signing it: the document becomes `declined` and `documents.document.declined` fires, as when a person declines." }), reason: z.string().max(500).optional().openapi({ description: "With `decline`, the reason the sender sees." }) }).strict() } }, required: true } },
+    responses: { 200: { description: "Signed, or declined with `decline: true`.", content: { "application/json": { schema: z.object({ id: Id, seat: z.string(), signed: z.boolean(), declined: z.boolean().optional(), state: z.string(), progress: z.object({ signed: z.number().int(), of: z.number().int() }), finished: z.boolean() }) } } }, ...errs } }),
   async (c) => {
     const { id } = c.req.valid("param"); const b = c.req.valid("json");
     return c.json(await run(c, "POST", "/api/v1/documents/:id/test-sign", async (db) => {
       // Run 8 S3: checked AFTER the key is authenticated, so a call with no key gets 401 (it got 403 before)
       if (!testKey(c)) throw forbidden("test signing is only available to test keys (dsk_test_…): use a test key, or sign with a real person");
       const { rows: [t] } = await db.query(`SELECT keystone.current_tenant_id() AS t`); await asOwner(db); await guard(c, db, id);
-      return apiTestSign(db, { tenantId: t.t, instanceId: id, seat: b.seat });
+      return apiTestSign(db, { tenantId: t.t, instanceId: id, seat: b.seat, decline: b.decline === true, reason: b.reason ?? null });
     }), 200);
   });
 
   api.openapi(createRoute({ method: "post", path: "/api/v1/documents/{id}/void", tags: ["Documents"], summary: "Void a document that is still out for signature", security: bearerSec,
     request: { params: z.object({ id: Id }), body: { content: { "application/json": { schema: z.object({ reason: z.string().max(500).optional() }) } }, required: false } },
-    responses: { 200: { description: "Voided.", content: { "application/json": { schema: z.object({ id: Id, state: z.string() }) } } }, ...errs } }),
+    responses: { 200: { description: "Voided.", content: { "application/json": { schema: z.object({ id: Id, state: z.string(), notified: z.number().int().openapi({ description: "How many people were emailed that it is cancelled. A test document sends one [TEST] notice to its sender." }) }) } } }, ...errs } }),
   async (c) => {
     const { id } = c.req.valid("param");
     const b = await c.req.json().catch(() => ({}));
@@ -335,9 +324,23 @@ const AiDraftBody = z.object({ prompt: z.string().max(4000).optional(), brief: B
   });
 
 
+  // R13-D385: a draft made through the API (and never sent) can be discarded through the API too; void is only for a sent document.
+  api.openapi(createRoute({ method: "delete", path: "/api/v1/documents/{id}", tags: ["Documents"], summary: "Delete a draft that was never sent", security: bearerSec,
+    description: "Removes a draft and its files. A document that was sent cannot be deleted: void it instead (`POST /api/v1/documents/{id}/void`), which keeps its record.",
+    request: { params: z.object({ id: Id }) },
+    responses: { 200: { description: "Deleted.", content: { "application/json": { schema: z.object({ id: Id, deleted: z.boolean() }) } } }, 401: { description: "No or bad key.", content: { "application/json": { schema: Err } } }, 404: { description: "No such document.", content: { "application/json": { schema: Err } } }, 409: { description: "The document was sent; void it instead.", content: { "application/json": { schema: Err } } } } }),
+  async (c) => {
+    const { id } = c.req.valid("param");
+    return c.json(await run(c, "DELETE", "/api/v1/documents/:id", async (db) => {
+      const { rows: [t] } = await db.query(`SELECT keystone.current_tenant_id() AS t`); await asOwner(db); await guard(c, db, id);
+      await deletePdfDraft(db, { tenantId: t.t, instanceId: id });
+      return { id, deleted: true };
+    }), 200);
+  });
+
   // ── B10 (7 Oct 2026): the v2 flow — people first, roles as words, template questions, revise, check, defaults, AI edit, payments status. Anything the screens can do, a key can do. ──
   const Person = z.object({ externalId: ExternalId.optional(), metadata: Meta.optional(), name: z.string().min(1).max(120), email: z.string().email(), role: z.string().max(80).optional().openapi({ description: "The role word in the text (Client, Provider). Left out, people take the roles in the order they appear." }), action: z.enum(["signer", "approver", "viewer", "assistant", "cc"]).optional(), order: z.number().int().min(1).max(30).optional().openapi({ description: "Signing order when signingOrder is sequential." }) }).openapi("Person");
-  const SendChoice = z.object({ replyTo: z.string().email().optional(), senderName: z.string().min(1).max(120).optional(), subject: z.string().max(200).optional(), message: z.string().max(4000).optional(), expiryDays: z.number().int().min(0).max(365).nullable().optional(), reminderDays: z.array(z.number().int().min(1).max(60)).max(3).optional(), signingOrder: z.enum(["any", "sequential"]).optional(), language: z.string().optional(), internalNote: z.string().max(2000).optional().openapi({ description: "A note only the sender sees; never in anything a signer gets." }), requireDeclineReason: z.boolean().optional() }).openapi("SendChoices");
+  const SendChoice = z.object({ replyTo: z.string().email().optional(), senderName: z.string().min(1).max(120).optional(), subject: z.string().max(200).optional(), message: z.string().max(4000).optional(), expiryDays: z.number().int().min(0).max(365).nullable().optional(), reminderDays: z.array(z.number().int().min(1).max(60)).max(3).optional(), signingOrder: z.enum(["any", "sequential"]).optional(), internalNote: z.string().max(2000).optional().openapi({ description: "A note only the sender sees; never in anything a signer gets." }), requireDeclineReason: z.boolean().optional() }).openapi("SendChoices");
   const Source = z.record(z.string(), z.any()).openapi({ description: "A written document: TipTap JSON `{type:\"doc\",content:[…]}`. Field tags (`fieldTag` with name, type, role, required, autofill, editable, placeholder, tooltip, locked, options, default…), merge chips (`variableChip`; `custom.<key>` chips are the template's questions), and headings with `audience: \"sender\"` (Sender only: in nothing a signer sees, signs or receives)." });
   const Approval = z.object({ id: z.string(), status: z.string(), instanceId: z.string().optional() }).openapi({ description: "Set when a draft-only key asked to send: a person approves or declines in the app, and the document stays a draft until then." });
   const Made = z.object({ approval: Approval.optional(),  externalId: ExternalId.nullable().optional(), metadata: Meta.optional(), id: Id, state: z.enum(["draft", "sent"]), roles: z.array(z.object({ key: z.string(), label: z.string() })).optional(), emailed: z.number().int().optional(), notEmailed: z.array(z.any()).optional(), warnings: z.array(z.any()).optional() }).openapi("DocumentMade");
@@ -387,9 +390,9 @@ const AiDraftBody = z.object({ prompt: z.string().max(4000).optional(), brief: B
 
   api.openapi(createRoute({ method: "post", path: "/api/v1/documents/{id}/send", tags: ["Documents"], summary: "Send a draft", security: bearerSec,
     description: "Sends a draft made with `POST /api/v1/documents`. The same checks as the screen's Send; a payment field needs Stripe connected. Needs an `Idempotency-Key`.",
-    request: { params: z.object({ id: Id }) }, responses: { 201: { description: "Sent.", content: { "application/json": { schema: z.object({ id: Id, state: z.string(), emailed: z.number().int(), notEmailed: z.array(z.any()) }) } } }, 202: { description: "A draft-only key: the request waits for a person to approve it in the app. The document is still a draft.", content: { "application/json": { schema: z.object({ id: Id, state: z.string(), approval: Approval }) } } }, ...errs } }),
-  async (c) => { const { id } = c.req.valid("param"); const test = testKey(c);
-    const out = await idem(c, "/api/v1/documents/:id/send", {}, async (db, tenantId, ownerId) => { await guard(c, db, id); return sendGated(db, { tenantId, ownerId, instanceId: id, test }); }, `/api/v1/documents/${id}/send`);
+    request: { params: z.object({ id: Id }), body: { content: { "application/json": { schema: z.object({ values: SendBody.shape.values }) } }, required: false } }, responses: { 201: { description: "Sent.", content: { "application/json": { schema: z.object({ id: Id, state: z.string(), emailed: z.number().int(), notEmailed: z.array(z.any()) }) } } }, 202: { description: "A draft-only key: the request waits for a person to approve it in the app. The document is still a draft.", content: { "application/json": { schema: z.object({ id: Id, state: z.string(), approval: Approval }) } } }, ...errs } }),
+  async (c) => { const { id } = c.req.valid("param"); const test = testKey(c); const values = (await c.req.json().catch(() => ({})))?.values ?? null;
+    const out = await idem(c, "/api/v1/documents/:id/send", values ? { values } : {}, async (db, tenantId, ownerId) => { await guard(c, db, id); if (values) await setSendValues(db, id, values); return sendGated(db, { tenantId, ownerId, instanceId: id, test }); }, `/api/v1/documents/${id}/send`);
     return c.json(done(out), out?.approval ? 202 : 201); });
 
   api.openapi(createRoute({ method: "post", path: "/api/v1/templates/{id}/documents", tags: ["Templates"], summary: "Use a written template for people", security: bearerSec,
@@ -430,7 +433,6 @@ const AiDraftBody = z.object({ prompt: z.string().max(4000).optional(), brief: B
   api.get("/api/v1/openapi.json", (c) => c.json(published ??= polish(api.getOpenAPI31Document(BASE_CONFIG))));
   api.get("/api/v1/docs", Scalar({ url: "/api/v1/openapi.json", pageTitle: "Docustay API" }));
   registerPlaysV1(api, { run, asOwner, testKey });
-  registerFormsV1(api, { run, asOwner, errs, errBody });
   registerWebhooksV1(api, { run, errs });   // FP-D1/D4/F5
   registerBuilderV1(api, { run, errs });    // the embeddable template builder
   registerRun9V1(api, { run, asOwner, idem, errs, errBody });   // Run 9: search, contracts and key dates, payments and refunds, playbooks that run

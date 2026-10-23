@@ -19,13 +19,33 @@ export { SETTING_GROUPS, DOCUMENT_SETTINGS, SETTING_KEYS, validateDocumentSettin
 
 
 
+// Docustay v1 settings trim (TESTING-BLUEPRINT 5.3): 25 keys are not offered in Docustay. A read returns the default, a write is refused, the screen omits them. the platform's list is untouched (settingsSchema.mjs is shared).
+// brand.hide_footer is hidden on the hosted service only (a self-hoster may hide it).
+export const DOCUSTAY_CUT_KEYS = Object.freeze(new Set([
+  "signed_copy.header_text", "signed_copy.page_numbers", "signed_copy.font", "signed_copy.signature_style", "signed_copy.show_signer_email", "signed_copy.show_signer_ip", "signed_copy.closing_line",
+  "download.link_days", "retention_years", "resign_months", "ai.review", "ai.allow_edit", "ai.read_files", "ai.require_review", "ai.chat_retention_days",
+  "upload.expiry_days", "upload.template_approval", "teams.restrict_visibility", "signing.allow_resubmit",
+  "forms.verify_email", "forms.fill_again", "forms.notify_owner", "forms.confirm_respondent", "forms.copy_to", "forms.embed_sites"]));
+export const DOCUSTAY_HOSTED_CUT_KEYS = Object.freeze(["ai.provider", "ai.model", "email.provider", "email.from_address", "email.smtp_host", "email.smtp_port", "email.smtp_user", "email.smtp_security"]);
+const docustayOf = new WeakMap();
+async function docustayCut(tx) {
+  if (!docustayOf.has(tx)) docustayOf.set(tx, (async () => { try { return !!(await (await ports()).brand?.isDocustay?.(tx)); } catch { return false; } })());
+  if (!(await docustayOf.get(tx))) return null;
+  const cut = new Set(DOCUSTAY_CUT_KEYS);
+  // the hosted service only: no footer switch (item 12) and no own sending domain, SMTP server or mailbox (item 9), and no AI provider or model picker (item 18: one model, Sonnet 5.5). A self-hoster keeps all of them. From name and Reply-to stay on both.
+  if (process.env.KEYSTONE_SELF_HOST !== "1") for (const k of ["brand.hide_footer", ...DOCUSTAY_HOSTED_CUT_KEYS]) cut.add(k);
+  return cut;
+}
+
 /** All settings for the caller's practice, defaults filled in. `tx` is a tenant transaction. */
 export async function getDocumentSettings(tx) {
   const { rows } = await tx.query(`SELECT key, value FROM keystone.document_setting`);
   const out = settingDefaults();
-  for (const r of rows) if (r.key in out) out[r.key] = r.value;
+  const cut = await docustayCut(tx);
+  for (const r of rows) if (r.key in out && !cut?.has(r.key)) out[r.key] = r.value;
   // ★ the email.* values live in the mail module (one sending identity per organisation), not in this island's table
   Object.assign(out, await identitySettings(tx));
+  if (cut) for (const k of cut) if (k in out) out[k] = structuredClone(DOCUMENT_SETTINGS[k].default);
   return out;
 }
 
@@ -35,6 +55,7 @@ export function sentenceCase(text) {
 }
 export async function getDocumentSetting(tx, key) {
   if (!(key in DOCUMENT_SETTINGS)) throw invalid(`"${key}" is not a document setting`);
+  if ((await docustayCut(tx))?.has(key)) return structuredClone(DOCUMENT_SETTINGS[key].default);
   if (isIdentitySettingKey(key)) return (await identitySettings(tx))[key];
   const { rows } = await tx.query(`SELECT value FROM keystone.document_setting WHERE key = $1`, [key]);
   const v = rows.length ? rows[0].value : structuredClone(DOCUMENT_SETTINGS[key].default);
@@ -48,6 +69,7 @@ const PLAN_ITEM_OF_SETTING = Object.freeze({ "brand.hide_footer": "hide_footer",
 export async function setDocumentSetting(tx, { tenantId, key, value, updatedBy = null }) {
   const problem = validateDocumentSetting(key, value);
   if (problem) throw invalid(`${DOCUMENT_SETTINGS[key]?.label ?? key}: ${problem}`, { field: key });
+  if ((await docustayCut(tx))?.has(key)) throw invalid(`${DOCUMENT_SETTINGS[key]?.label ?? key} is not a setting in Docustay`, { field: key });
   if (!tenantId) throw invalid("setDocumentSetting needs a tenantId — call it inside withTenant()");
   // a list of skill or pack names must name skills or packs that exist (the settings sweep saved "not-a-thing" and kept it; the Plays and Playbooks switches refuse an unknown name already)
   if (key === "plays.off" || key === "packs.enabled") {
@@ -91,6 +113,7 @@ export async function setDocumentSetting(tx, { tenantId, key, value, updatedBy =
 /** The shape the settings screen renders: groups of fields, each with its current value and its default. */
 export async function describeDocumentSettings(tx) {
   const values = await getDocumentSettings(tx);
+  const cutKeys = await docustayCut(tx);
   // D-079 / D-001: a setting that belongs to a paid plan item is shown as locked on a plan without it (the screen disables it and says so), instead of letting a click be refused after the fact
   const lockedByPlan = new Set();
   let uploadMaxMb = null;   // D-049 / D-066: the real biggest upload (the setting, capped by the plan), so a screen never quotes a number that is not the limit
@@ -101,7 +124,7 @@ export async function describeDocumentSettings(tx) {
     if (who?.t && P.entitlements?.isEntitled) for (const [k, item] of Object.entries(PLAN_ITEM_OF_SETTING)) if (!(await P.entitlements.isEntitled(tx, { tenantId: who.t, item }))) lockedByPlan.add(k);
   } catch { /* a host with no plans never locks anything */ }
   // the model picker: a hosted workspace without a key of its own sees only the approved models; a self-host or an own-key workspace sees them all (AI-COST-AND-USAGE-SPEC §3)
-  const ownKey = (await tx.query(`SELECT 1 FROM keystone.document_ai_secret WHERE tenant_id = keystone.current_tenant_id() LIMIT 1`).catch(() => ({ rowCount: 0 }))).rowCount > 0;
+  const ownKey = await (async () => { try { const { rows: [w] } = await tx.query(`SELECT keystone.current_tenant_id() AS t`); const { ownKeyState } = await import("./engine/ai/gateway.mjs"); return w?.t ? (await ownKeyState(tx, { tenantId: w.t })).usable : false; } catch { return false; } })();
   const hosted = process.env.KEYSTONE_SELF_HOST !== "1" && !ownKey;
   const fakeOk = fakeAllowed();
   const { rows } = await tx.query(`SELECT key, updated_at FROM keystone.document_setting`);
@@ -110,7 +133,7 @@ export async function describeDocumentSettings(tx) {
     path: "/documents/settings", title: "Documents", intro: "How signing works, how a signed copy looks, and how long things are kept.",
     groups: SETTING_GROUPS.map((g) => ({
       ...g,
-      fields: SETTING_KEYS.filter((k) => DOCUMENT_SETTINGS[k].group === g.key && !DOCUMENT_SETTINGS[k].deprecated && !DOCUMENT_SETTINGS[k].elsewhere).map((k) => {
+      fields: SETTING_KEYS.filter((k) => DOCUMENT_SETTINGS[k].group === g.key && !DOCUMENT_SETTINGS[k].deprecated && !DOCUMENT_SETTINGS[k].elsewhere && !cutKeys?.has(k)).map((k) => {
         const d = DOCUMENT_SETTINGS[k];
         return { key: k, label: d.label, help: d.help, type: d.type, widget: settingWidget(k, d), choices: SETTING_CHOICES[k] ?? null, modelChoices: k === "ai.model" ? modelChoicesFor({ hosted }) : null, options: d.widget === "styles" ? AGENT_KINDS.map((k) => ({ value: k.id, label: k.label, hint: k.hint })) : (k === "ai.provider" ? (d.options ?? []).filter((o) => fakeOk || (o.value !== "fake" && o.value !== "test_double")) : d.options) ?? null, value: values[k], default: d.default, changedAt: touched.get(k) ?? null, ...(lockedByPlan.has(k) ? { lockedByPlan: true } : {}), ...(PLAN_ITEM_OF_SETTING[k] ? { planItem: PLAN_ITEM_OF_SETTING[k] } : {}) };
       }),

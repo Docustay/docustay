@@ -97,10 +97,11 @@ export const TOPICS = Object.freeze({
               //     events are added to the catalogue first"); `db/gates/s3_topic_emitters.mjs`
               //     enumerates which task owns each one.
               'documents.document.opened', 'documents.document.reminder_due', 'documents.document.bounced', 'documents.document.changes_requested',
-              // ★ Run 9 Part 3.4 (R9-i): a signed contract's notice date is 30 or 7 days away (Pro renewal reminders; src/documents/keyDates.mjs KEY_DATE_DUE_FACT)
-              'documents.key_date.due', 'documents.playbook.ran', 'documents.playbook.step_due',
               // ★ Run 9 Part 3.7 (R9-l): a signature held for its payment lapsed unpaid after 7 days (src/documents/pdfSigning.mjs PAYMENT_HOLD_LAPSED_FACT); the sender's notice
               'documents.payment.hold_lapsed',
+              // ★ R13-D354: a signer's payment was taken (src/documents/pdfPayments.mjs markPaid), or a payment plan's invoice failed (recordSubscriptionEvent). The docs promised
+              //   documents.payment.received and the Notifications screen offered switches for both, but neither was in this catalogue, so the switches could never be turned off.
+              'documents.payment.received', 'documents.payment.failed',
               'documents.clause.created', 'documents.clause.updated',
               'documents.template.published',
               'documents.ai.draft_generated', 'documents.ai.check_run',

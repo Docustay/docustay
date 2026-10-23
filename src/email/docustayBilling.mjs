@@ -43,7 +43,7 @@ const billingUrl = () => `${APP()}/billing`;
 /** change: pro_started | cancel_scheduled | resumed | pro_ended | renewal_reminder | payment_failed. `facts` comes from the event: { amountMinor, currency, interval, periodEnd, cancelAt, founders }. `lang` is the person's language (English when Docustay has no words for it).
  *  → { subject, text, html } or null for a change that needs no email. */
 export function billingEmail(change, { name = null, facts = {}, lang = "en" } = {}) {
-  const w = billingWords(lang), L = w.lang;
+  const w = billingWords(lang, facts.planKey), L = w.lang;
   const hi = first(name) ? w("hi", { name: first(name) }) : w("hiNoName");
   const amount = facts.amountMinor != null ? `${money(facts.amountMinor, facts.currency, L)} ${facts.interval === "year" ? w("perYear") : w("perMonth")}` : null;
   const amountOnly = facts.amountMinor != null ? money(facts.amountMinor, facts.currency, L) : null;
@@ -95,8 +95,8 @@ export function billingEmail(change, { name = null, facts = {}, lang = "en" } = 
 }
 
 /** The receipt for one paid Pro invoice (renewals; the first payment's receipt is inside the "Welcome to Docustay Pro" email). `invoice` is Stripe's invoice object. */
-export function receiptEmail({ name = null, invoice, ours = null, lang = "en" }) {
-  const w = billingWords(lang), L = w.lang;
+export function receiptEmail({ name = null, invoice, ours = null, lang = "en", planKey = null }) {
+  const w = billingWords(lang, planKey), L = w.lang;
   const hi = first(name) ? w("hi", { name: first(name) }) : w("hiNoName");
   const amount = money(invoice.amount_paid, invoice.currency, L);
   const per = invoice.lines?.data?.[0]?.period;
@@ -111,7 +111,13 @@ export function receiptEmail({ name = null, invoice, ours = null, lang = "en" })
 }
 
 /** In-app bell words for a plan change (the browser translates these). */
-export const planNoticeTitle = (change) => ({
+export const planNoticeTitle = (change, planKey = null) => planKey === "docustay_payg" ? ({
+  pro_started: "Welcome to Docustay Pay as you go",
+  cancel_scheduled: "Your Pay as you go plan is cancelled. It stays on until the end of what you paid for.",
+  resumed: "Pay as you go is back on. Nothing changes.",
+  pro_ended: "Your Pay as you go plan has ended. Your workspace is on Free.",
+  payment_failed: "Your last payment did not go through.",
+}[change] ?? "Your Docustay plan was updated.") : ({
   pro_started: "Welcome to Docustay Pro",
   cancel_scheduled: "Your Pro plan is cancelled. Pro stays on until the end of what you paid for.",
   resumed: "Pro is back on. Nothing changes.",

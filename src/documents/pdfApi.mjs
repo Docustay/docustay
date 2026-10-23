@@ -3,8 +3,8 @@
 //   which scope each needs; the document is made AS the practice's owner (people port) so it has an author, and every event it causes is the ordinary one, so webhooks fire for API sends exactly as for screen sends.
 import { invalid, notFound, conflict } from "../http/errors.mjs";
 import { parsePdfBodyData } from "./pdfBody.mjs";
-import { createPdfFromTemplate, savePdfDocument, LANGUAGES } from "./pdfDocs.mjs";
-import { signAsParty } from "./pdfSigning.mjs";
+import { createPdfFromTemplate, savePdfDocument } from "./pdfDocs.mjs";
+import { signAsParty, declineAsParty } from "./pdfSigning.mjs";
 import { sendPdfDocument, trackPdfDocument, voidPdfDocument, remindPdfParties, embedSessionLink } from "./pdfSend.mjs";
 import { listPdfTemplates } from "./pdfTemplates.mjs";
 import { readFileBytes } from "./files.mjs";
@@ -12,12 +12,12 @@ import { cleanReference, saveDocumentReference, documentReference } from "./refe
 import { cleanName } from "./textSafety.mjs";
 
 const EMAIL = /^[^\s@<>"]+@[^\s@<>"]+\.[^\s@<>"]+$/;
-const STATES = ["draft", "sent", "partially_signed", "executed", "declined", "void", "expired"];
+export const DOCUMENT_STATES = ["draft", "sent", "partially_signed", "executed", "declined", "void", "expired"];
 const iso = (v) => (v instanceof Date ? v.toISOString() : v ?? null);
 
 /** A page of documents, newest first. `hasMore` is known from one extra row. */
 export async function apiListDocuments(tx, { state = null, limit = 50, offset = 0, after = null, testOnly = false, filter = null } = {}) {
-  if (state && !STATES.includes(state)) throw invalid(`state must be one of ${STATES.join(", ")}`, { field: "state" });
+  if (state && !DOCUMENT_STATES.includes(state)) throw invalid(`state must be one of ${DOCUMENT_STATES.join(", ")}`, { field: "state" });
   const { rows } = await tx.query(
     `SELECT i.id, i.title, i.state, i.created_at, i.sent_at, i.executed_at, i.expires_at, i.is_test, i.external_id, i.metadata,
             to_char(i.created_at AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.US"Z"') AS cursor_t,
@@ -84,10 +84,15 @@ export function checkedText(raw, { max, label, field }) {
 }
 
 /** Make a document from a template, put the named people on its seats, and send it. Every seat must be filled, once. */
-export async function apiSendFromTemplate(tx, { tenantId, ownerId, templateId, title = null, parties, message = null, subject = null, language = null, expiryDays = null, test = false, embedded = [], metadata, externalId, replyTo = null, senderName = null }) {
+/** R13-D344: the sender's own boxes ("Filled in by: Sender") and send-time amounts given with a send, kept as the document's custom values (senderBoxes.mjs reads custom.<key> at send). */
+export async function setSendValues(tx, instanceId, values) {
+  const vals = Object.fromEntries(Object.entries(values && typeof values === "object" && !Array.isArray(values) ? values : {}).filter(([k, v]) => /^[a-z][a-z0-9_]{0,40}$/.test(k) && typeof v === "string" && v.trim()).map(([k, v]) => [k, v.trim().slice(0, 300)]));
+  if (Object.keys(vals).length) await tx.query(`UPDATE keystone.document_instance SET custom_values = COALESCE(custom_values, '{}'::jsonb) || $2::jsonb WHERE id = $1`, [instanceId, JSON.stringify(vals)]);
+}
+
+export async function apiSendFromTemplate(tx, { tenantId, ownerId, templateId, title = null, parties, message = null, subject = null, expiryDays = null, test = false, embedded = [], metadata, externalId, replyTo = null, senderName = null, values = null }) {
   const reference = cleanReference({ metadata, externalId, people: parties });
   if (!Array.isArray(parties) || parties.length === 0) throw invalid("parties is required: one entry for each seat of the template", { field: "parties" });
-  if (language && !LANGUAGES.includes(language)) throw invalid(`language must be one of ${LANGUAGES.join(", ")}`, { field: "language" });
   // Round 3 (W1-6): the title (at most 300) and each person's name (at most 200) are cleaned and bounded before anything is stored — an over-long or NUL-carrying value is a 400, never a 500
   if (title != null && String(title).trim() !== "") title = checkedText(title, { max: 300, label: "title", field: "title" });
   const names = parties.map((p, i) => (p && typeof p === "object" && String(p.name ?? "").trim() ? checkedText(p.name, { max: 200, label: `parties[${i}].name`, field: "parties" }) : null));
@@ -111,9 +116,9 @@ export async function apiSendFromTemplate(tx, { tenantId, ownerId, templateId, t
   if (bad) throw invalid(`embedded seat “${bad}” is not a seat of this template`, { field: "embedded" });
   const made = await createPdfFromTemplate(tx, { tenantId, templateId, actorUserId: ownerId, title });
   await saveDocumentReference(tx, made.instanceId, reference);
+  await setSendValues(tx, made.instanceId, values);
   const { rows: [cur] } = await tx.query(`SELECT send_options FROM keystone.document_instance WHERE id = $1`, [made.instanceId]);
   const sendOptions = { ...(cur?.send_options ?? {}) };      // savePdfDocument REPLACES the options, so start from what the template already set
-  if (language) sendOptions.language = language;
   if (expiryDays != null) sendOptions.expiry_days = expiryDays;
   if (subject) sendOptions.subject = subject;
   if (replyTo) sendOptions.reply_to = replyTo;
@@ -138,8 +143,8 @@ export async function apiEmbedSession(tx, { tenantId, instanceId, seat, origin }
 export async function apiVoid(tx, { tenantId, instanceId, reason = null, ownerId = null }) {
   const t = await trackPdfDocument(tx, { tenantId, instanceId });
   if (!["sent", "partially_signed"].includes(t.state)) throw conflict(`this document is ${t.state} and cannot be voided`);
-  await voidPdfDocument(tx, { tenantId, instanceId, reason, actorUserId: ownerId });
-  return { id: instanceId, state: "void" };
+  const v = await voidPdfDocument(tx, { tenantId, instanceId, reason, actorUserId: ownerId });
+  return { id: instanceId, state: "void", notified: v?.notified ?? 0 };   // R13-D222: how many people were emailed that it is cancelled (a test document: the one [TEST] notice to its sender)
 }
 
 /** The sealed copy of an executed document (with its certificate), read from the island's own file store and checked against its recorded fingerprint. 404 until it is signed and sealed. */
@@ -191,7 +196,7 @@ function sampleValue(field) {
   return SAMPLE_BY_VALIDATION[field.validation] ?? "Sample answer";
 }
 
-export async function apiTestSign(tx, { tenantId, instanceId, seat }) {
+export async function apiTestSign(tx, { tenantId, instanceId, seat, decline = false, reason = null }) {
   if (!seat || typeof seat !== "string") throw invalid("seat is required", { field: "seat" });
   const { rows: [doc] } = await tx.query(`SELECT id, is_test, state, template_body_snapshot AS body FROM keystone.document_instance WHERE id = $1 AND builder = 'pdf'`, [instanceId]);
   if (!doc) throw notFound("no such document");
@@ -199,6 +204,12 @@ export async function apiTestSign(tx, { tenantId, instanceId, seat }) {
   if (!["sent", "partially_signed"].includes(doc.state)) throw conflict(`this document is ${doc.state}; only a sent document can be signed`);
   const { rows: [party] } = await tx.query(`SELECT id, name, role, action_role, status FROM keystone.document_party WHERE instance_id = $1 AND role = $2`, [instanceId, seat]);
   if (!party) throw invalid(`seat must be one of the document's seats`, { field: "seat" });
+  // R13-D220: `decline: true` declines the seat through the signer's own decline path (state, audit, documents.document.declined), instead of being ignored and signing
+  if (decline === true) {
+    await declineAsParty(tx, { tenantId, leadId: instanceId, partyId: party.id, reason: reason ?? "Declined by test-sign" });
+    const t = await trackPdfDocument(tx, { tenantId, instanceId });
+    return { id: instanceId, seat, signed: false, declined: true, state: t.state, progress: t.progress, finished: false };
+  }
   const fields = (parsePdfBodyData(doc.body).fields ?? []).filter((f) => f.role === seat);
   if (fields.some((f) => f.type === "payment")) throw invalid("this seat has a payment field: pay it with a Stripe test card instead of test-signing", { field: "seat", code: "payment_field" });
   if (fields.some((f) => f.type === "file" && f.required)) throw invalid("this seat has a required file upload, which a test cannot supply", { field: "seat", code: "file_field" });

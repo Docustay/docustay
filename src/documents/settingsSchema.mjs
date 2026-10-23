@@ -1,6 +1,7 @@
 // src/documents/settingsSchema.mjs — THE ISLAND'S SETTINGS SCHEMA: every key, type, default, label and help text, with NO imports so the browser can read it too
 // (the signed-copy preview and the document view use the same defaults as the server). Storage and writes live in settings.mjs.
-import { PRICES, INTERNAL_MODEL } from "./engine/ai/prices.mjs";   // the model names live in one pure file (no imports of its own)
+import { PRICES, INTERNAL_MODEL } from "./engine/ai/prices.mjs";
+import { AGENT_KINDS } from "./flowDefinition.mjs";   // pure, no imports of its own   // the model names live in one pure file (no imports of its own)
 export const SETTING_GROUPS = Object.freeze([
   { key: "sending", label: "Sending and reminders" },
   { key: "teams", label: "Teams" },
@@ -89,8 +90,10 @@ const smtpHost = (v) => {
 const aiEndpoint = (v) => {
   if (typeof v !== "string") return "must be text";
   if (v === "") return null;
-  if (!/^(https:\/\/[^\s]+|http:\/\/(localhost|127\.0\.0\.1)(:\d{1,5})?(\/[^\s]*)?)$/.test(v)) return "must be an https address (or http://localhost)";
-  if (v.startsWith("http://")) return onDevelopersMachine() ? null : "must be an https address";
+  // R13-D258: http://localhost is for a model on the same machine, so it is allowed on a self-hosted install (and a developer's); the hosted service would be calling itself
+  const localOk = onDevelopersMachine() || (typeof process !== "undefined" && process?.env?.KEYSTONE_SELF_HOST === "1");
+  if (!/^(https:\/\/[^\s]+|http:\/\/(localhost|127\.0\.0\.1)(:\d{1,5})?(\/[^\s]*)?)$/.test(v)) return localOk ? "must be an https address (or http://localhost)" : "must be an https address";
+  if (v.startsWith("http://")) return localOk ? null : "must be an https address";
   const authority = v.slice("https://".length).split(/[/?#]/)[0];
   if (authority.includes("@")) return "must not contain a username or password";
   const host = authority.startsWith("[") ? authority.slice(0, authority.indexOf("]") + 1) : authority.replace(/:\d*$/, "");
@@ -191,7 +194,7 @@ export const DOCUMENT_SETTINGS = Object.freeze({
   // ── AI drafting (shared document engine, design §6) ──
   "ai.enabled": {
     group: "ai", type: "bool", default: false, label: "Let people describe a document and have a draft written",
-    help: "Off by default. A draft is only ever a suggestion for a person to read; nothing is sent or published by it. What you type is sent to the AI provider you choose below.",
+    help: "On for a new hosted workspace, off by default on a self-hosted install. A draft is only ever a suggestion for a person to read; nothing is sent or published by it. What you type is sent to the AI provider you choose below.",
     validate: bool,
   },
   "ai.provider": {
@@ -202,7 +205,7 @@ export const DOCUMENT_SETTINGS = Object.freeze({
   "ai.model": {
     group: "ai", type: "text", default: "", label: "Model name",
     help: "Leave empty to use the provider's default. Set it to pick a different model without waiting for a release.",
-    validate: str(80),
+    validate: (v) => str(80)(v) ?? (/^[A-Za-z0-9._:/@-]*$/.test(v) ? null : "must be a model name: letters, digits and . _ - : / @ only, no spaces"),   // R13-D322
   },
   "ai.endpoint": {
     group: "ai", type: "text", default: "", label: "Endpoint address",
@@ -252,7 +255,7 @@ export const DOCUMENT_SETTINGS = Object.freeze({
   "ai.agent_kinds": {
     group: "ai", type: "text", widget: "styles", default: "", label: "Which writer styles are offered",
     help: "Empty offers all of them. Otherwise pick the styles to offer.",
-    validate: str(200),
+    validate: (v) => { const e = str(200)(v); if (e) return e; const ids = AGENT_KINDS.map((k) => k.id), bad = v.split(",").map((x) => x.trim()).filter((x) => x && !ids.includes(x)); return bad.length ? `must be one or more of: ${ids.join(", ")} (not ${bad.join(", ")})` : null; },   // R13-D322: an unknown style was silently ignored
   },
   "ai.chat_retention_days": {
     group: "ai", type: "number", default: 30, label: "Keep chat conversations for (days, 0 = do not keep)",

@@ -1,5 +1,5 @@
 <script>
-  // NOTIFICATIONS (Run 9 board "Notifications"; ruling R9-k). The bell with its unread count, and the panel: tabs All / Signed / Forms / Limits, Mark all read, Settings. Each row is worded
+  // NOTIFICATIONS (Run 9 board "Notifications"; ruling R9-k). The bell with its unread count, and the panel: tabs All / Signed / Limits, Mark all read, Settings. Each row is worded
   // here from the facts the server sends (src/product/docustayInbox.mjs), so it reads in the person's own language. Opening a row marks it read and goes to its document. The count is
   // refreshed by the one shared poller (inbox.svelte.js).
   import { Popover } from "@ark-ui/svelte/popover";
@@ -10,15 +10,17 @@
   import { inbox, useCount } from "./inbox.svelte.js";
   import Icon from "$lib/ui/Icon.svelte";
   import { relativeTime } from "$lib/ui/relativeTime.js";
-  import { t, i18n } from "$lib/i18n/index.svelte.js";
+  import { t, i18n, whenText } from "$lib/i18n/index.svelte.js";
   import { exploreProFrom } from "$lib/pro/proSheet.svelte.js";
   let { compact = false } = $props();
   let open = $state(false), tab = $state("all"), data = $state(null), busy = $state(false), problem = $state(null);
   const unread = $derived(inbox.unread);
-  const TABS = () => [["all", t("All")], ["signed", t("Signed")], ["forms", t("Forms")], ["limits", t("Limits")]];
+  const TABS = () => [["all", t("All")], ["signed", t("Signed")], ["limits", t("Limits")]];
   const ago = (iso) => relativeTime(iso, { locale: i18n.lang });
   // a calendar day ("2027-08-31") is shown as that day wherever the reader is; a moment keeps the reader's own zone
-  const day = (iso) => (!iso ? "" : /^\d{4}-\d{2}-\d{2}$/.test(iso) ? new Date(`${iso}T12:00:00Z`).toLocaleDateString(i18n.lang, { day: "numeric", month: "long", timeZone: "UTC" }) : new Date(iso).toLocaleDateString(i18n.lang, { day: "numeric", month: "long" }));
+  // R13-D016: a monthly reset is midnight UTC on the 1st; shown in UTC and in Billing's own style ("Nov 1, 2026"), so the bell and Billing give the same day wherever the reader is
+  const atMidnightUtc = (iso) => { const d = new Date(iso); return d.getUTCHours() === 0 && d.getUTCMinutes() === 0; };
+  const day = (iso) => (!iso ? "" : /^\d{4}-\d{2}-\d{2}$/.test(iso) ? new Date(`${iso}T12:00:00Z`).toLocaleDateString(i18n.lang, { day: "numeric", month: "long", timeZone: "UTC" }) : atMidnightUtc(iso) ? whenText(iso, { dateStyle: "medium", timeZone: "UTC" }) : new Date(iso).toLocaleDateString(i18n.lang, { day: "numeric", month: "long" }));
   const money = (minor, cur) => { try { return new Intl.NumberFormat(i18n.lang, { style: "currency", currency: String(cur || "usd").toUpperCase() }).format(minor / 100); } catch { return String(minor / 100); } };
   /** → { head, sub, pro } in the reader's language */
   function words(n) {
@@ -31,19 +33,19 @@
       case "expired": return { head: t("“{title}” expired before everyone signed", { title }) };
       case "bounced": return { head: t("An email about “{title}” could not be delivered", { title }) };
       case "changes": return { head: t("{who} asked for changes to “{title}”", { who, title }) };
+      case "passed_on": return { head: t("“{title}” was passed on to {who}", { who, title }) };
       case "response": return { head: t("New response: {title}", { title }), sub: n.who ?? "" };
       case "limit": { const l = n.limit ?? {}; const head = l.kind === "templates" ? t("You've used {used} of {limit} new templates this month", l) : l.kind === "emails" ? t("You've sent {used} of {limit} emails today", l) : t("You've used {used} of {limit} documents this month", l);
         return { head, sub: l.kind === "emails" ? t("Resets at midnight UTC") : t("Resets on {date}", { date: day(l.resetsAt) }), pro: true }; }
       case "plan": { const c = n.plan?.change;
-        if (c === "pro_started") return { head: t("Welcome to Docustay Pro") };
-        if (c === "cancel_scheduled") return { head: t("Your Pro plan is cancelled"), sub: t("Pro stays on until the end of what you paid for.") };
-        if (c === "resumed") return { head: t("Pro is back on"), sub: t("Nothing changes.") };
-        if (c === "pro_ended") return { head: t("Your Pro plan has ended"), sub: t("Your workspace is on Free.") };
+        // R13 RT21-104 (23 Oct): the notice names the plan that changed (Pay as you go and Lifetime were told "Welcome to Docustay Pro")
+        const pn = { docustay_payg: t("Pay as you go"), docustay_lifetime: t("Lifetime"), docustay_free: t("Free") }[n.plan?.planKey] ?? t("Pro");
+        if (c === "pro_started") return { head: t("Welcome to Docustay {plan}", { plan: pn }) };
+        if (c === "cancel_scheduled") return { head: t("Your {plan} plan is cancelled", { plan: pn }), sub: t("{plan} stays on until the end of what you paid for.", { plan: pn }) };
+        if (c === "resumed") return { head: t("{plan} is back on", { plan: pn }), sub: t("Nothing changes.") };
+        if (c === "pro_ended") return { head: t("Your {plan} plan has ended", { plan: pn }), sub: t("Your workspace is on Free.") };
         if (c === "payment_failed") return { head: t("Your last payment did not go through") };
         return { head: n.plan?.planKey === "docustay_pro" && n.plan?.status === "active" ? t("Your workspace is on Pro") : t("Your plan was updated") }; }
-      case "playbook": { const x = n.extra ?? {}; const name = x.name ?? t("A playbook"); return x.sent && n.title ? { head: t("Playbook “{name}”: “{title}” is not signed yet.", { name, title: n.title }), sub: "" } : { head: t("Playbook “{name}” ran", { name }), sub: n.title ? t("“{title}”", { title: n.title }) : "" }; }   // Run 9 Part 3.6: the notice carries ids and `sent`; the name comes from the inbox
-      // the renewal reminder (R9-i) is about the NOTICE date: the event carries { date, days } (src/documents/keyDates.mjs KEY_DATE_DUE_FACT)
-      case "renewal": { const x = n.extra ?? {}; return { head: t("Notice date in {n, plural, one {# day} other {# days}}: {title}", { n: x.days ?? 0, title: x.title ?? title }), sub: x.date ? t("Notice needed by {date}", { date: day(x.date) }) : "" }; }
       case "paid": { const x = n.extra ?? {}; return { head: t("{who} paid {amount} for “{title}”", { who: x.payer ?? who, amount: money(x.amountMinor ?? 0, x.currency), title }) }; }
       case "payment_failed": return { head: t("A payment for “{title}” did not go through", { title }), sub: t("The signature is kept for 7 days while they try again.") };
       default: return { head: title || t("Something happened") };
@@ -65,7 +67,7 @@
     <div class="ib-list" role="tabpanel" aria-busy={busy}>
       {#if problem}<p class="ib-note" role="alert">{problem}</p>
       {:else if !data}<p class="ib-note">{t("Loading…")}</p>
-      {:else if !data.items.length}<p class="ib-note" data-testid="inbox-empty">{tab === "all" ? t("Nothing new. When someone signs, fills in a form or a limit gets close, it shows here.") : t("Nothing here yet.")}</p>
+      {:else if !data.items.length}<p class="ib-note" data-testid="inbox-empty">{tab === "all" ? t("Nothing new. When someone signs or a limit gets close, it shows here.") : t("Nothing here yet.")}</p>
       {:else}<ul>{#each data.items as n (n.id)}{@const w = words(n)}<li class="ib-row" class:unread={!n.read} data-testid={`inbox-${n.kind}`}>
         <button class="ib-btn" onclick={() => openRow(n)}><span class="dot" aria-hidden="true"></span><span class="ib-text"><span class="ib-h">{w.head}{#if !n.read}<span class="sr-only"> ({t("unread")})</span>{/if}</span><span class="ib-s">{[w.sub, ago(n.at)].filter(Boolean).join(" · ")}</span></span></button>
         {#if w.pro}<button class="lnk ib-pro" onclick={(e) => { open = false; exploreProFrom(n.limit?.kind === "templates" ? "unlimited_templates" : "unlimited_documents", e.currentTarget); }} data-testid="inbox-explore-pro">{t("Explore Pro")}</button>{/if}

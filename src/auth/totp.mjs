@@ -171,11 +171,11 @@ function randomCrockfordBase32(len) {
   return out;
 }
 
-function buildProvisioningUri({ email, secretBase32 }) {
-  const label = `Workbench:${encodeURIComponent(email)}`;
+function buildProvisioningUri({ email, secretBase32, issuer = "Workbench" }) {
+  const label = `${encodeURIComponent(issuer)}:${encodeURIComponent(email)}`;
   const query = new URLSearchParams();
   query.set("secret", secretBase32);
-  query.set("issuer", "Workbench");
+  query.set("issuer", issuer);
   query.set("algorithm", "SHA1");
   query.set("digits", String(TOTP_DIGITS));
   query.set("period", String(TOTP_STEP_SECONDS));
@@ -219,7 +219,7 @@ function openFactorSecretBytes(factor) {
  *   so the caller passes the address it already holds; Firebase is asked only when it was not given.
  * @returns {Promise<{ factorId: string, provisioningUri: string }>}
  */
-export async function beginEnrolment({ firebaseUid, email = null } = {}) {
+export async function beginEnrolment({ firebaseUid, email = null, issuer = "Workbench" } = {}) {
   assertUid(firebaseUid);
 
   // ★ Fetch the email BEFORE any write — a lookup failure must leave nothing behind.
@@ -240,7 +240,7 @@ export async function beginEnrolment({ firebaseUid, email = null } = {}) {
 
   // ★★★ THE PLAIN SECRET AND THE PROVISIONING URI ARE RETURNED ONCE, HERE, AND NEVER AGAIN. Not
   //     stored, not logged.
-  const provisioningUri = buildProvisioningUri({ email: user.email, secretBase32 });
+  const provisioningUri = buildProvisioningUri({ email: user.email, secretBase32, issuer });
   return { factorId, provisioningUri };
 }
 
@@ -327,9 +327,10 @@ export async function verifyTotp({ firebaseUid, code } = {}, { now = Date.now() 
   }
 
   // ─── fall through to a backup code ──────────────────────────────────────────
-  const hash = hashSecret(code);
+  // 0766: a recovery code is its own set per person (so a passkey-only person has them too); the old authenticator backup codes are still honoured by the same function
+  const hash = hashSecret(String(code).toUpperCase().replace(/[\s-]/g, ""));
   const usedBackupCode = await withCredentialLookup(async (db) => {
-    const { rows } = await q(db, `SELECT keystone.spend_backup_code($1, $2) AS ok`, [firebaseUid, hash]);
+    const { rows } = await q(db, `SELECT keystone.spend_recovery_code($1, $2) AS ok`, [firebaseUid, hash]);
     return rows[0].ok === true;
   });
   if (usedBackupCode) {
@@ -400,4 +401,22 @@ export async function disableTotp({ firebaseUid, code } = {}, { now = Date.now()
     throw forbidden("That code was not accepted.");
   }
   return { disabled: true };
+}
+
+/**
+ * 0766: remove the authenticator-app factor WITHOUT asking for a code here. The caller has already proved the person's current second step (a code, a recovery code or a passkey),
+ * which is why this is a separate function from `disableTotp`; the operator-grant refusal is the same.
+ */
+export async function removeTotpFactor({ firebaseUid } = {}) {
+  assertUid(firebaseUid);
+  const { hasActiveOperatorGrant } = await import("./operatorSession.mjs");
+  const grant = await hasActiveOperatorGrant(firebaseUid);
+  if (grant?.active) throw forbidden("Two-step cannot be turned off while you hold the operator grant.");
+  return withCredentialLookup(async (db) => (await q(db, `SELECT keystone.disable_totp_factor($1) AS ok`, [firebaseUid])).rows[0].ok === true);
+}
+
+/** 0766: a person who already holds recovery codes adds an app: the ten codes that confirming it created are retired, so the person keeps the one set they saved. */
+export async function retireBackupCodes({ firebaseUid } = {}) {
+  assertUid(firebaseUid);
+  return withCredentialLookup(async (db) => (await q(db, `SELECT keystone.retire_backup_codes($1) AS n`, [firebaseUid])).rows[0].n);
 }

@@ -4,7 +4,7 @@
   import Icon from "$lib/ui/Icon.svelte";
   import { t } from "$lib/i18n/index.svelte.js";
   let { value = $bindable(""), busy = false, disabled = false, name = "", attached = null, onsend, onstop, onrecall = () => null, onattach = null, box = $bindable(null), variant = "plain", placeholder = "", foot = "", extra = null } = $props();
-  // Run 8 looks: `plain` (A, C: a soft field on #fafafb), `soft` (B: a grey rounded field with a send square), `dark` (D: the dark command bar). `extra` is a snippet beside the send (D's Think harder tag).
+  // Run 8 looks: `plain` (A, C: a soft field on #fafafb), `soft` (B: a grey rounded field with a send square), `dark` (D: the dark command bar). `extra` is a snippet beside the send.
   let file = $state(null), recallAt = $state(-1);
   function grow() { if (!box) return; box.style.height = "auto"; box.style.height = `${Math.min(box.scrollHeight, 6 * 24 + 20)}px`; }
   $effect(() => { value; grow(); });

@@ -15,5 +15,5 @@
   .t1 { background: var(--lilac-soft); } .t2 { background: var(--lilac-soft); } .t3 { background: var(--card); }
   .rows { padding-block: clamp(1.5rem, 4vw, 3rem); } .row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: clamp(1rem, 4vw, 3.5rem); padding-block: clamp(1.5rem, 3vw, 2.5rem); border-top: 1px solid var(--line); } .row:first-child { border-top: 0; }
   .row h2 { position: sticky; top: 5.5rem; align-self: start; } .row p { color: var(--ink); opacity: .85; line-height: 1.75; font-size: 1.08rem; max-width: 44rem; } .row p + p { margin-top: 1rem; }
-  @media (max-width: 799px) { .tiles { grid-template-columns: 1fr; } .row { grid-template-columns: 1fr; } .row h2 { position: static; } }
+  @media (max-width: 799px) { .tiles { grid-template-columns: minmax(0, 1fr); } .row { grid-template-columns: minmax(0, 1fr); } .row h2 { position: static; } }
 </style>

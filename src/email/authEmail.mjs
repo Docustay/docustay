@@ -47,6 +47,15 @@ function codeEmailHtml(subject, text, lang = "en") {
   return { html: docustayFrame({ preheader: code, heading: subject, intro: paras, code, lang: w.lang, footer: w("footer") }).html };
 }
 
+/** 21 Oct 2026: the password reset CODE mail: the code large, and the link as a button for people who open the mail on another device. */
+function resetCodeEmailHtml(subject, text, link) {
+  const code = String(text).match(/\b(\d{6})\b/)?.[1] ?? null; const url = String(link ?? "");
+  if (!code) return {};
+  const paras = String(text).split(/\n\s*\n/).map((x) => x.trim()).filter((x) => x && !x.includes(code) && !x.includes(url));
+  const w = billingWords("en"); const [first, ...rest] = paras;
+  return { html: docustayFrame({ preheader: code, heading: subject.replace(/: \d{6}$/, ""), intro: first ? [first] : [], code, button: url ? { label: "Open the link instead", url } : null, after: rest.slice(0, -1), fine: rest.at(-1) ?? null, lang: "en", footer: w("footer") }).html };
+}
+
 /** Run 10 (EK-002): the Docustay password-reset mail in Docustay's frame (it went out as plain text only, a bare link). Built from the words the plain email carries, so every language still applies; the link becomes the button and stays in the text twin. */
 function resetEmailHtml(subject, text, link, lang = "en") {
   const url = String(link ?? ""); if (!url) return {};
@@ -62,6 +71,15 @@ function inviteEmailHtml(subject, text, vars) {
   const w = billingWords("en");
   const [first, ...rest] = paras;
   return { html: docustayFrame({ preheader: first ?? subject, heading: subject, intro: first ? [first] : [], button: { label: "Accept the invitation", url }, after: rest.slice(0, -1), fine: rest.at(-1) ?? null, lang: "en", footer: w("footer") }).html };
+}
+
+/** 0766: the security notices (two-step turned on or off, a method changed, a recovery code used, an owner's notice, a reminder) in Docustay's frame, with one clear button. Built from the words the plain email carries. */
+const SECURITY_KEYS = new Set(["auth.two_step_changed", "auth.two_step_method", "auth.recovery_code_used", "auth.two_step_owner_notice", "auth.two_step_reminder", "auth.two_step_reset", "auth.password_changed"]);
+const BUTTONS = { "auth.two_step_reminder": "Set up two-step sign-in", "auth.two_step_reset": "Set it up again", "auth.two_step_owner_notice": "Open security settings", "auth.password_changed": "Reset my password" };
+function securityEmailHtml(key, subject, text, vars) {
+  const url = String(vars?.link ?? ""); const paras = String(text).split(/\n\s*\n/).map((x) => x.trim()).filter((x) => x);
+  const w = billingWords("en"); const [first, ...rest] = paras;
+  return { html: docustayFrame({ preheader: first ?? subject, heading: subject, intro: first ? [first] : [], button: url ? { label: BUTTONS[key] ?? "Secure my account", url } : null, after: rest.slice(0, -1), fine: rest.at(-1) ?? null, lang: "en", footer: w("footer") }).html };
 }
 
 export async function sendAuthEmail({ to, templateKey, vars = {}, tx, tenantId, product = null, lang = null, variant = null }, { fetchImpl, env = process.env } = {}) {
@@ -86,9 +104,9 @@ export async function sendAuthEmail({ to, templateKey, vars = {}, tx, tenantId, 
   // a code asked for while SIGNING UP verifies an address; it is not a sign-in, and the email must not call it one
   const verify = variant === "verify" && templateKey === "auth.email_code";
   const brand = (t) => (typeof t !== "string" ? t : (docustay ? t.replace(/Workbench/g, "Docustay") : t).replace(verify ? /sign-in code/g : /(?!)/g, "verification code"));
-  // A Docustay person who asked in another language gets the two before-sign-in mails (code, reset) in it; anything else, or a language without words, stays English.
-  const words = docustay && lang && lang !== "en" ? authEmailWords(lang, templateKey === "auth.email_code" ? (verify ? "verify" : "code") : templateKey === "auth.password_reset" ? "reset" : null, vars) : null;
-  const out = await deliverAsOrganisation(tx ?? null, { tenantId: tenantId ?? null, to, subject: words ? words.subject : brand(rendered.subject), text: words ? words.text : brand(rendered.text), ...(docustay && templateKey === "auth.email_code" ? codeEmailHtml(words ? words.subject : brand(rendered.subject), words ? words.text : brand(rendered.text), words ? lang : "en") : {}), ...((docustay || vars?.productName === "Docustay") && templateKey === "auth.invite" ? inviteEmailHtml(brand(rendered.subject), brand(rendered.text), vars) : {}), ...(docustay && templateKey === "auth.password_reset" ? resetEmailHtml(words ? words.subject : brand(rendered.subject), words ? words.text : brand(rendered.text), vars?.link, words ? lang : "en") : {}), purpose: "auth", product }, { fetchImpl, env });
+  // Docustay v1 is English only: a Docustay person always gets the standard English words. the platform keeps its own languages.
+  const words = !docustay && lang && lang !== "en" ? authEmailWords(lang, templateKey === "auth.email_code" ? (verify ? "verify" : "code") : templateKey === "auth.password_reset" ? "reset" : null, vars) : null;
+  const out = await deliverAsOrganisation(tx ?? null, { tenantId: tenantId ?? null, to, subject: words ? words.subject : brand(rendered.subject), text: words ? words.text : brand(rendered.text), ...(docustay && templateKey === "auth.password_reset_code" ? resetCodeEmailHtml(brand(rendered.subject), brand(rendered.text), vars?.link) : {}), ...(docustay && templateKey === "auth.email_code" ? codeEmailHtml(words ? words.subject : brand(rendered.subject), words ? words.text : brand(rendered.text), words ? lang : "en") : {}), ...((docustay || vars?.productName === "Docustay") && templateKey === "auth.invite" ? inviteEmailHtml(brand(rendered.subject), brand(rendered.text), vars) : {}), ...(docustay && SECURITY_KEYS.has(templateKey) ? securityEmailHtml(templateKey, brand(rendered.subject), brand(rendered.text), vars) : {}), ...(docustay && templateKey === "auth.password_reset" ? resetEmailHtml(words ? words.subject : brand(rendered.subject), words ? words.text : brand(rendered.text), vars?.link, words ? lang : "en") : {}), purpose: "auth", product }, { fetchImpl, env });
   if (out.status === "skipped") console.warn(`sendAuthEmail: not sent "${templateKey}" — ${out.error}`);
   return { status: out.status === "limit_reached" ? "skipped" : out.status, providerMessageId: out.providerMessageId, error: out.error };
 }

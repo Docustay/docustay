@@ -39,7 +39,7 @@ export function typeOf(p) {
   if (p === "/developers" || p.startsWith("/developers/")) return "developers";
   if (p.startsWith("/docs/")) return p === "/docs/api-reference" ? "reference" : "docs";
   if (p.startsWith("/tools/") || p === "/verify" || p === "/contact" || p === "/self-host") return "tool";
-  if (p.startsWith("/legal/") || p === "/changelog" || p === "/status") return "reference";
+  if (p === "/legal" || p.startsWith("/legal/") || p === "/changelog" || p === "/status") return "reference";
   if (p.startsWith("/sign-pdf/")) return "developers";
   return "other";
 }

@@ -4,10 +4,13 @@
 // ★ The guard watches the last 30 days. A workspace whose emails bounce at 2% or draw spam complaints at 0.05% (the provider's own limits for the WHOLE account are 4% and 0.08%) is paused automatically; its owner resumes
 //   it after cleaning the list. A paused workspace's mail is refused with a plain sentence — it is never silently dropped.
 import { emit } from "../events/outbox.mjs";
-import { invalid } from "../http/errors.mjs";
+import { invalid, forbidden } from "../http/errors.mjs";
+import { ports } from "./ports.mjs";
 
 const GUARD = Object.freeze({ bounceRate: 0.02, complaintRate: 0.0005, minSample: 50, windowDays: 30 });
-const KINDS = ["invitation", "reminder", "completed", "declined", "voided", "expired", "code", "receipt", "form_response", "hold_lapsed", "other"];
+// 21 Oct 2026 (the maintainer, pricing integrity, decision 6): in a workspace's first 7 days spam reports are judged on a smaller sample and a stricter line, because that is when a bad sender shows itself
+const GUARD_NEW = Object.freeze({ days: 7, minSample: 20, complaintRate: 0.001 });
+export const KINDS = ["invitation", "reminder", "completed", "declined", "voided", "expired", "code", "receipt", "hold_lapsed", "other"];
 const STATUS_OF = { sent: "sent", skipped: "skipped", failed: "failed", limit_reached: "limit_reached" };
 
 /** Record one send. Never throws: a log that cannot be written must not stop the email or the action that caused it. */
@@ -66,19 +69,24 @@ export async function ratesFor(tx, { tenantId = null } = {}) {   // with a tenan
     `SELECT count(*) FILTER (WHERE status <> 'paused' AND status <> 'skipped' AND status <> 'limit_reached' AND status <> 'failed')::int AS sent, count(*) FILTER (WHERE status = 'bounced')::int AS bounced, count(*) FILTER (WHERE status = 'complained')::int AS complained
        FROM keystone.document_email_log WHERE created_at > now() - make_interval(days => $1) AND NOT is_test AND ($2::uuid IS NULL OR tenant_id = $2::uuid)`, [GUARD.windowDays, tenantId]);
   const bounceRate = r.sent ? r.bounced / r.sent : 0, complaintRate = r.sent ? r.complained / r.sent : 0;
-  const over = r.sent >= GUARD.minSample && (bounceRate >= GUARD.bounceRate || complaintRate >= GUARD.complaintRate);
+  let young = false;
+  if (tenantId) { const { rows: [t] } = await tx.query(`SELECT created_at FROM keystone.tenant WHERE id = $1`, [tenantId]); young = Boolean(t?.created_at) && Date.now() - new Date(t.created_at).getTime() < GUARD_NEW.days * 86_400_000; }
+  const over = (r.sent >= GUARD.minSample && (bounceRate >= GUARD.bounceRate || complaintRate >= GUARD.complaintRate))
+    || (young && r.sent >= GUARD_NEW.minSample && complaintRate >= GUARD_NEW.complaintRate);
   return { sent: r.sent, bounced: r.bounced, complained: r.complained, bounceRate, complaintRate, over, limits: GUARD };
 }
 
 async function checkGuard(tx, { tenantId }) {
   const rates = await ratesFor(tx, { tenantId });
   if (!rates.over) return { paused: false, rates };
+  const { rows: [was] } = await tx.query(`SELECT paused_at FROM keystone.document_email_guard WHERE tenant_id = $1`, [tenantId]);
   const reason = rates.bounceRate >= GUARD.bounceRate ? `${(rates.bounceRate * 100).toFixed(1)}% of the last ${rates.sent} emails bounced` : `${(rates.complaintRate * 100).toFixed(2)}% of the last ${rates.sent} emails were reported as spam`;
   const { rows: [g] } = await tx.query(
     `INSERT INTO keystone.document_email_guard (tenant_id, paused_at, paused_reason) VALUES ($1, now(), $2)
      ON CONFLICT (tenant_id) DO UPDATE SET paused_at = COALESCE(keystone.document_email_guard.paused_at, now()), paused_reason = COALESCE(keystone.document_email_guard.paused_reason, EXCLUDED.paused_reason), updated_at = now()
      RETURNING (xmax = 0) AS first`, [tenantId, reason]);
   await emit(tx, { tenantId, topic: "documents.email.paused", emittedBy: "documents", actor: "system", payload: { cause: rates.bounceRate >= GUARD.bounceRate ? "bounced" : "spam_reports", sent: rates.sent, bounced: rates.bounced, complained: rates.complained } });   // FIX PASS 3 (the payload may hold only ids, numbers and enum-like words, so the sentence stays in the guard row): it named a subject type ("workspace") that does not exist, so emit() threw and the bounce webhook that should pause sending failed instead
+  if (!was?.paused_at) { try { await (await ports()).entitlements?.noteEmailPaused?.(tx, { tenantId, cause: rates.bounceRate >= GUARD.bounceRate ? "bounced" : "spam_reports", reason }); } catch (e) { console.error(`email pause notice: ${e?.message ?? e}`); } }   // the host tells the Owners and flags it for review
   return { paused: true, reason, rates };
 }
 
@@ -90,6 +98,9 @@ export async function guardState(tx, { tenantId = null } = {}) {   // with a ten
 
 /** The owner resumes sending after cleaning the list. The 30-day window still counts what happened, so a list that is still bad pauses again at the next bounce. */
 export async function resume(tx, { tenantId, userId = null }) {
+  // 21 Oct 2026: a pause for SPAM REPORTS is lifted by us, not by the sender: people said they did not want this mail, and a button would let the same list be sent again
+  const g0 = await guardState(tx, { tenantId });
+  if (g0.paused && /reported as spam/i.test(String(g0.reason))) throw forbidden("Sending was paused because recipients reported your emails as spam. Email support and we will look at it with you.", { code: "email_paused_for_spam" });
   await tx.query(`UPDATE keystone.document_email_guard SET paused_at = NULL, paused_reason = NULL, resumed_at = now(), resumed_by = $2, updated_at = now() WHERE tenant_id = $1`, [tenantId, userId]);
   return guardState(tx, { tenantId });
 }

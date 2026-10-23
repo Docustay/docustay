@@ -95,6 +95,23 @@ const CLIENT_ROLES = Object.freeze(["adult_client", "adolescent_client"]);
  *    — and would then believe the client can see less than they can. The CRM is where staff look.
  *  ★ Fail CLOSED on an unknown role: a role nobody has taught this module about gets nothing.
  */
+// ★★★ SECURITY, 22 Oct 2026 (booking everywhere, recon 7b). A client may act only on a booking they are a `client`
+//     participant of, or one of a teen they are the guardian of. Booking RLS is tenant-only for SELECT and UPDATE
+//     (0197:100-105), so "RLS handles visibility" was not true: any signed-in client could cancel or move ANY booking in
+//     their practice by id. A booking that is not theirs is answered exactly like one that does not exist.
+async function ownBooking(db, principal, bookingId) {
+  const { rows: [booking] } = await db.query(
+    `SELECT b.service_id FROM keystone.booking b
+      WHERE b.id = $1 AND b.tenant_id = $2
+        AND EXISTS (SELECT 1 FROM keystone.booking_participant bp
+                     WHERE bp.tenant_id = b.tenant_id AND bp.booking_id = b.id AND bp.party = 'client'
+                       AND (bp.app_user_id = $3
+                            OR bp.app_user_id IN (SELECT g.child_user_id FROM keystone.guardian g
+                                                   WHERE g.tenant_id = b.tenant_id AND g.guardian_user_id = $3)))`,
+    [bookingId, principal.user.tenant_id, principal.appUserId]);
+  return booking;
+}
+
 function assertClientRole(principal) {
   // ★★ THE ROLE LIVES AT `principal.user.role`, NOT `principal.role` — [MEASURED] src/http/app.mjs:345
   //    builds `principal.user = { role, staff_role, tenant_id }` from the person the session resolves
@@ -1019,9 +1036,7 @@ export function registerAppRoutes(app, { scoped }) {
       //   answer 403 first, with an audit line, rather than a 404 that leaves no trace of the
       //   refusal. `booking?.service_id ?? null` reads the practice's own default policy when the
       //   booking does not exist at all, so even that case is refused by a real setting.
-      const { rows: [booking] } = await db.query(
-        `SELECT service_id FROM keystone.booking WHERE id = $1 AND tenant_id = $2`,
-        [bookingId, principal.user.tenant_id]);
+      const booking = await ownBooking(db, principal, bookingId);
 
       // ★★★ TASK C1.1 — CHECK `client_may_cancel` POLICY. Server-side enforcement only.
       const policy = await policyFor(db, principal.user.tenant_id, booking?.service_id ?? null);
@@ -1052,9 +1067,7 @@ export function registerAppRoutes(app, { scoped }) {
 
       // ★ Get the booking to read its serviceId — WITHOUT throwing yet. Same order as cancel,
       //   above, and for the same reason (13.11): the switch answers before the not-found.
-      const { rows: [booking] } = await db.query(
-        `SELECT service_id FROM keystone.booking WHERE id = $1 AND tenant_id = $2`,
-        [bookingId, principal.user.tenant_id]);
+      const booking = await ownBooking(db, principal, bookingId);
 
       // ★★★ TASK C1.1 — CHECK `client_may_reschedule` POLICY. Separate switch from cancel — it is
       //     read and checked independently here, never derived from `client_may_cancel`, so a

@@ -1,5 +1,4 @@
 <script>
-  import { cardTable } from "$lib/ui/cardTable.js";
   import { live } from "$lib/live.js";
   // The AI activity log: what the assistant proposed and what people did with it. Counts only, never what anyone typed.
   import { t, whenText } from "$lib/i18n/index.svelte.js";
@@ -25,18 +24,36 @@
     return t("{n} undone", { n: n ?? 0 });
   };
   const when = (iso) => whenText(iso);
+  const tone = (a) => (a.action === "failed" ? "bad" : a.action === "accepted" ? "ok" : a.action === "rejected" || a.action === "undone" ? "warn" : "mute");
+  const tokens = (a) => (a.inputTokens ?? 0) + (a.outputTokens ?? 0);
+  const nf = new Intl.NumberFormat();
 </script>
 
-<div class="card p-4 grid gap-3" data-testid="ai-log">
-  <div>
-    <div class="font-semibold">{t("What the assistant did")}</div>
-    <div class="text-mute">{t("Every proposal and every accept or reject. It records what happened, never what anyone typed.")}</div>
-  </div>
-  {#if rows === null}<div class="text-mute">{t("Loading")}…</div>
-  {:else if error}<div class="notice warn" role="alert">{error}</div>
-  {:else if !rows.length}<div class="text-mute" data-testid="ai-log-empty">{t("Nothing yet. When someone uses the assistant, it shows here.")}</div>
+<section data-testid="ai-log">
+  <h2 class="font-semibold">{t("What the assistant did")}</h2>
+  <p class="mt-1 text-sm text-mute">{t("Every proposal and every accept or reject. It records what happened, never what anyone typed.")}</p>
+  {#if rows === null}<p class="mt-4 text-mute">{t("Loading")}…</p>
+  {:else if error}<div class="notice warn mt-4" role="alert">{error}</div>
+  {:else if !rows.length}<p class="mt-4 text-mute" data-testid="ai-log-empty">{t("Nothing yet. When someone uses the assistant, it shows here.")}</p>
   {:else}
-    <div class="overflow-x-auto"><table use:cardTable class="card-table w-full" style="min-width:520px"><thead><tr><th class="text-left">{t("When")}</th><th class="text-left">{t("Who")}</th><th class="text-left">{t("What")}</th><th class="text-left">{t("Model")}</th><th class="text-right">{t("Tokens")}</th></tr></thead>
-      <tbody>{#each rows as a (a.id)}<tr data-testid="ai-log-row"><td>{when(a.at)}</td><td>{a.by ?? "—"}</td><td>{what(a)}{#if a.note}<div class="text-mute">{a.note}</div>{/if}</td><td>{a.model ?? "—"}</td><td class="text-right">{(a.inputTokens ?? 0) + (a.outputTokens ?? 0) || "—"}</td></tr>{/each}</tbody></table></div>
+    <ul class="ai-rows mt-4">{#each rows as a (a.id)}
+      <li class="ai-row" data-testid="ai-log-row">
+        <span class="ai-dot {tone(a)}" aria-hidden="true"></span>
+        <span class="min-w-0">
+          <span class="block text-[14px] font-medium">{what(a)}</span>
+          {#if a.note}<span class="block text-sm text-mute">{a.note}</span>{/if}
+          <span class="ai-meta"><span>{when(a.at)}</span>{#if a.by}<span>{a.by}</span>{/if}{#if a.model}<span class="font-mono">{a.model}</span>{/if}</span>
+        </span>
+        <span class="ai-tok">{#if tokens(a)}{nf.format(tokens(a))} <span class="text-faint">{t("tokens")}</span>{:else}—{/if}</span>
+      </li>{/each}</ul>
   {/if}
-</div>
+</section>
+<style>
+  .ai-rows { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+  .ai-row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: .75rem; align-items: start; padding: .7rem .25rem; border-bottom: 1px solid var(--line); }
+  .ai-row:hover { background: var(--tint); }
+  .ai-dot { width: 8px; height: 8px; margin-top: .45rem; border-radius: 999px; background: var(--faint); } .ai-dot.ok { background: var(--ok, #1f8a4c); } .ai-dot.bad { background: var(--bad, #c0352b); } .ai-dot.warn { background: var(--warn, #b7791f); }
+  .ai-meta { display: flex; flex-wrap: wrap; margin-top: .15rem; font-size: 12px; color: var(--faint); }
+  .ai-meta > span:not(:first-child)::before { content: "·"; margin: 0 .45em; }
+  .ai-tok { font-size: 13px; color: var(--mute); font-variant-numeric: tabular-nums; white-space: nowrap; padding-top: .1rem; }
+</style>

@@ -1,7 +1,7 @@
 <script>
   // A password input with a show/hide button, the rule written before the person submits, and a light strength hint. The hint is a small in-house check (length, mix, a short list of the commonest passwords), not a library: the usual strength libraries ship hundreds of kilobytes of word lists, which is too heavy for a sign-up page.
   import { t } from "$lib/i18n/index.svelte.js";
-  let { value = $bindable(""), id = "p", min = 6, label = "", autocomplete = "new-password", hint = true } = $props();
+  let { value = $bindable(""), id = "p", min = 8, label = "", autocomplete = "new-password", hint = true } = $props();
   let shown = $state(false);
   const COMMON = ["password", "passw0rd", "qwerty", "letmein", "welcome", "admin", "iloveyou", "monkey", "dragon", "abc123", "123456", "111111", "docustay"];
   const level = $derived.by(() => {

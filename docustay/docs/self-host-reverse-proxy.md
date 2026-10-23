@@ -12,7 +12,8 @@ The web container listens on port 8080 (change it with `DOCUSTAY_PORT` in `.env`
 
 Set the address people will type, with no trailing slash, in `.env`, then restart:
 
-```bash
+```ini
+# in .env (a file, not a command)
 KEYSTONE_PUBLIC_URL=https://sign.example.com
 ```
 
@@ -68,6 +69,25 @@ services:
 
 Pass `X-Forwarded-Proto` and `X-Forwarded-For` as shown, **and add `DOCUSTAY_CLIENT_IP_HEADER=X-Forwarded-For` to `.env`** (then `docker compose up -d`). Docustay uses the first to know a request was secure and the second for the address in the audit trail, on the signing certificate and in the rate limits; without the setting it can only see the proxy's own address. Set it only when a proxy you control is in front (otherwise anyone could write their own address into the header); `DOCUSTAY_PROXY_COUNT` is how many proxies there are (default 1). Do not expose ports 5432 (database), 8333 (file store) or 3000 (web) directly.
 
-## Public form links
+## Ports and what listens where
 
-Forms need nothing extra on your own servers. A published form is served at `/f/<workspace>/<link name>` by the same web container as the rest of the app, and the people who fill it in never sign in. Two things to keep in mind at the proxy: pass `/f/` through like any other path, and do not add your own `X-Frame-Options` or `frame-ancestors` header, because Docustay sets `frame-ancestors` itself (only the websites listed on a form may show it in a frame; with none listed, nobody can).
+Inside the compose network the web service listens on 3000, and the compose file publishes it on your machine as port 8080 (`DOCUSTAY_PORT`). A proxy on the same machine forwards to `localhost:8080`, as in the Caddy and nginx examples; Traefik, running in the compose network, names 3000 in its label. The database (5432) and the file store (8333) must not be reachable from the internet.
+
+## Variables this page touches
+
+| Variable | What it does |
+|---|---|
+| `KEYSTONE_PUBLIC_URL` | the start of every signing and reset link in an email; defaults to `http://localhost:` plus your port |
+| `DOCUSTAY_PORT` | the port the web container is published on (host side) |
+| `DOCUSTAY_CLIENT_IP_HEADER` | the header to read the visitor's address from; set it only when a proxy you control is in front |
+| `DOCUSTAY_PROXY_COUNT` | how many proxies are in front (default 1) |
+
+## After changing any of them
+
+Recreate the containers so the new values are read:
+
+```bash
+docker compose up -d
+```
+
+Then repeat the three checks above. If an email link still opens `localhost`, `KEYSTONE_PUBLIC_URL` was not picked up: confirm it is in the `.env` next to the compose file, with no trailing slash and no quotes around the value.

@@ -228,7 +228,6 @@ export const TOPIC_WORDING = Object.freeze({
   "documents.document.expired": "had a document expire unsigned",
   "documents.document.opened": "opened a document",
   "documents.document.reminder_due": "was due a reminder about a document",
-  "documents.key_date.due": "was reminded that a contract's notice date is near",
   "documents.playbook.ran": "was the subject of an automation's notice",
   "documents.payment.hold_lapsed": "had a signature that was not kept because its payment did not arrive",
   "documents.playbook.step_due": "had an automation's wait end",
@@ -260,10 +259,11 @@ export async function listAuditEvents(tx, { limit = 100, since = null, topics = 
   const lim = Math.min(Math.max(Number(limit) || 100, 1), 500);
   const { rows } = await tx.query(
     `SELECT e.id, e.topic, e.emitted_by, e.subject_type, e.subject_id, e.payload, e.created_at,
-            rr.reason, pd.display_name AS actor_name
+            rr.reason, pd.display_name AS actor_name, sd.display_name AS subject_name
        FROM keystone.event e
        LEFT JOIN keystone.record_reason rr ON rr.event_id = e.id
        LEFT JOIN keystone.person_directory pd ON e.actor = 'user:' || pd.id::text
+       LEFT JOIN keystone.person_directory sd ON e.subject_type = 'person' AND e.subject_id = sd.id
       WHERE ($1::timestamptz IS NULL OR e.created_at >= $1)
         AND ($2::text[]      IS NULL OR e.topic = ANY($2))
       ORDER BY e.created_at DESC, e.id DESC
@@ -273,7 +273,8 @@ export async function listAuditEvents(tx, { limit = 100, since = null, topics = 
     id: r.id,
     topic: r.topic,
     section: r.emitted_by,
-    description: describeTopic(r.topic),
+    // an owner resetting a teammate's two-step sign-in is a settings event with a named key and a person as its subject: say so, by name (20 Oct 2026)
+    description: r.topic === "documents.setting.changed" && r.payload?.key === "security.two_step_reset" ? `reset two-step sign-in for ${r.subject_name ?? "a teammate"}` : describeTopic(r.topic),
     actorName: r.actor_name ?? null,
     subjectType: r.subject_type,
     subjectId: r.subject_id,

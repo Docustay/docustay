@@ -410,6 +410,7 @@
  "documentsEmail": "GET /api/documents/email",
  "addEmailDomain": "POST /api/documents/email/domain",
  "verifyEmailDomain": "POST /api/documents/email/domain/verify",
+ "removeEmailDomain": "POST /api/documents/email/domain/remove",
  "saveSmtpPassword": "POST /api/documents/email/smtp-password",
  "sendTestEmail": "POST /api/documents/email/test",
  "saveDocumentSetting": "POST /api/documents/settings",

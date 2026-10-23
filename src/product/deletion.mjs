@@ -7,6 +7,7 @@ import { createHash } from "node:crypto";
 import { conflict, forbidden, invalid, notFound } from "../http/errors.mjs";
 import { revokeSessionsForUser } from "../auth/session.mjs";
 import { deleteWorkspace, removeLeftovers } from "./workspaceDeletion.mjs";
+import { planLossNotice, endPlanForDeletion } from "./docustay.mjs";
 import * as mail from "../mail/index.mjs";
 import { accountEmail } from "../email/docustayAccountEmails.mjs";
 import { languageOfEmail } from "./docustayLanguage.mjs";
@@ -45,7 +46,7 @@ export async function deletionStatus(tx, { tenantId, userId }) {
   const [account, workspace] = [await pendingOf(tx, { tenantId, kind: "account", userId }), await pendingOf(tx, { tenantId, kind: "workspace" })];
   const { rows: [me] } = await tx.query(`SELECT staff_role FROM keystone.app_user WHERE id = $1`, [userId]);
   const { rows: [{ n }] } = await tx.query(`SELECT count(*)::int AS n FROM keystone.app_user WHERE tenant_id = $1 AND staff_role = 'owner' AND lifecycle_status <> 'former'`, [tenantId]);
-  return { account: present(account), workspace: present(workspace), isOwner: me?.staff_role === "owner", soleOwner: me?.staff_role === "owner" && n <= 1, graceDays: { account: graceDays("account"), workspace: graceDays("workspace") }, reauthMinutes: REAUTH_MINUTES };
+  return { account: present(account), workspace: present(workspace), plan: me?.staff_role === "owner" ? await planLossNotice(tx, { tenantId }) : null, isOwner: me?.staff_role === "owner", soleOwner: me?.staff_role === "owner" && n <= 1, graceDays: { account: graceDays("account"), workspace: graceDays("workspace") }, reauthMinutes: REAUTH_MINUTES };
 }
 
 async function tell(tx, { tenantId, to, kind, facts = {} }) {
@@ -78,7 +79,7 @@ export async function requestAccountDeletion(tx, { tenantId, userId, confirm, se
 }
 
 /** Start deleting the whole workspace. Owner only, typed name, paid plan cancelled first (all as before); the work waits out the cooling-off period. */
-export async function requestWorkspaceDeletion(tx, { tenantId, actorUserId, confirm, sessionCreatedAt, now = new Date() }) {
+export async function requestWorkspaceDeletion(tx, { tenantId, actorUserId, confirm, acknowledgePlanLoss = false, sessionCreatedAt, now = new Date() }) {
   requireFreshSession(sessionCreatedAt, { now });
   const { rows: [t] } = await tx.query(`SELECT slug, name, is_reference, is_platform FROM keystone.tenant WHERE id = $1`, [tenantId]);
   if (!t) throw notFound("That workspace does not exist.");
@@ -87,16 +88,18 @@ export async function requestWorkspaceDeletion(tx, { tenantId, actorUserId, conf
   if (a?.staff_role !== "owner") throw forbidden("Only an owner of this workspace can delete it.");
   const typed = String(confirm ?? "").trim().toLowerCase();
   if (!typed || (typed !== String(t.name).trim().toLowerCase() && typed !== String(t.slug).toLowerCase())) throw invalid("Type the workspace's name exactly to confirm.", { field: "confirm", code: "confirm_mismatch" });
-  const { rows: [sub] } = await tx.query(`SELECT plan_key, status, stripe_subscription_id FROM keystone.workbench_subscription WHERE tenant_id = $1 LIMIT 1`, [tenantId]);
-  if (sub?.stripe_subscription_id && ["active", "trialing", "past_due", "unpaid"].includes(String(sub.status)) && sub.plan_key && !/free$/.test(sub.plan_key)) throw forbidden("This workspace has a paid plan. Cancel it first (Billing → Manage plan), then delete the workspace.", { code: "paid_plan" });
   const existing = await pendingOf(tx, { tenantId, kind: "workspace" });
   if (existing) return { ...present(existing), alreadyRequested: true };
+  // A paid plan no longer blocks deletion (21 Oct 2026): it ENDS NOW, but only after the owner has been told, in numbers, what is lost and has said they understand (no refund, no credit, not recoverable).
+  const notice = await planLossNotice(tx, { tenantId, now });
+  if (notice.kind !== "none" && acknowledgePlanLoss !== true) throw conflict(notice.kind === "lifetime" ? "Deleting this workspace ends Lifetime, which was a one-time purchase and cannot be recovered. Confirm that you understand." : `Deleting this workspace ends your ${notice.planName} plan now. Confirm that you understand the paid days left are lost.`, { code: "plan_loss_unacknowledged", notice });
+  const ended = await endPlanForDeletion(tx, { tenantId, actorUserId });
   const days = graceDays("workspace");
   const when = new Date(now.getTime() + days * DAY);
   const { rows: [r] } = await tx.query(`INSERT INTO keystone.deletion_request (tenant_id, kind, requested_by, requested_at, scheduled_for) VALUES ($1,'workspace',$2,$3,$4) RETURNING *`, [tenantId, actorUserId, now, when]);
   const { rows: owners } = await tx.query(`SELECT email FROM keystone.app_user WHERE tenant_id = $1 AND staff_role = 'owner' AND lifecycle_status <> 'former' AND email NOT LIKE '%@deleted.invalid'`, [tenantId]);
-  for (const o of owners) await tell(tx, { tenantId, to: o.email, kind: "workspace_scheduled", facts: { date: dateText(when), name: t.name, immediate: days === 0 } });
-  return { ...present(r), alreadyRequested: false };
+  for (const o of owners) await tell(tx, { tenantId, to: o.email, kind: "workspace_scheduled", facts: { date: dateText(when), name: t.name, immediate: days === 0, planEnded: ended.ended ? ended.planName : "", daysLost: ended.daysLeft ?? 0, lifetime: ended.kind === "lifetime" } });
+  return { ...present(r), alreadyRequested: false, planEnded: ended.ended ? { kind: ended.kind, planName: ended.planName, daysLost: ended.daysLeft ?? 0 } : null };
 }
 
 /** Change my mind. An account request is cancelled by that person; a workspace request by any owner. */

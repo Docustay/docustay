@@ -1,6 +1,6 @@
 # MCP server and agent skills
 
-`@docustay2026/mcp` is a Model Context Protocol server. It runs on your own computer with your own API key and gives an assistant these tools: `list_templates`, `get_template`, `list_documents`, `get_document`, `get_audit_log`, `get_report`, `save_signed_pdf`, `send_document`, `remind`, `void_document`, `create_template_from_html`, and four read-only form tools: `list_forms`, `list_form_templates`, `get_form` and `list_form_responses`. Publishing a form, opening or closing it and unpublishing it are left to a person in the app or the API, because they change a public link.
+`@docustay2026/mcp` is a Model Context Protocol server. It runs on your own computer with your own API key and gives an assistant 39 tools. The main ones are `list_templates`, `get_template`, `list_documents`, `get_document`, `get_audit_log`, `save_signed_pdf`, `send_document`, `remind`, `void_document`, `create_template_from_html`, `detect_fields`, `search_documents`, `list_payments`, `list_plays`, `list_playbooks` and `get_ai_usage`. The rest are listed below.
 
 ```json
 { "mcpServers": { "docustay": { "command": "npx", "args": ["-y", "@docustay2026/mcp"], "env": { "DOCUSTAY_API_KEY": "dsk_test_…" } } } }
@@ -17,7 +17,7 @@ A server other than `https://app.docustay.app` (a self-hosted install or a pract
 
 ## Words and people, and the assistant
 
-Besides sending a template, the server can make a **draft** from written words and people (`create_document`, `use_template`), check it (`check_document`), read and change it (`get_draft_source`, `revise_document`), set a template's defaults (`set_template_defaults`), ask the Docustay assistant to draft or to propose changes (`draft_document_with_ai`, `edit_document_with_ai`, `cancel_ai_job`), read the wizard's questions (`get_wizard`) and ask whether Stripe is ready for a payment (`get_payments_status`). It can also search the workspace (`search_documents`), read signed contracts and their key dates and correct one (`list_contracts`, `set_contract_date`), list payments (`list_payments`) and list the playbooks (`list_playbook_flows`). Refunds and switching a playbook on are left to a person: see [Search, contracts, payments and playbooks](/docs/contracts-payments-playbooks.md). Making or changing a draft emails nobody: `send_draft` is the only step that does, and it previews first. The assistant's edits come back as proposals for a person to accept. See [Documents from words and people](/docs/documents-from-words.md).
+Besides sending a template, the server can make a **draft** from written words and people (`create_document`, `use_template`), check it (`check_document`), read and change it (`get_draft_source`, `revise_document`), set a template's defaults (`set_template_defaults`), ask the Docustay assistant to draft or to propose changes (`draft_document_with_ai`, `edit_document_with_ai`, `cancel_ai_job`), read the wizard's questions (`get_wizard`) and ask whether Stripe is ready for a payment (`get_payments_status`). It can also search the workspace (`search_documents`), list payments (`list_payments`) and list the playbooks (`list_playbooks`). Refunds and switching a playbook on are left to a person: see [Search and payments](/docs/payments-and-playbooks). Making or changing a draft emails nobody: `send_draft` is the only step that does, and it previews first. The assistant's edits come back as proposals for a person to accept. See [Documents from words and people](/docs/documents-from-words.md).
 
 ## Claude Code plugin and skills
 
@@ -33,11 +33,12 @@ You ask the assistant: "Send the mutual NDA to Sam at sam@example.com." It calls
 
 ## Reading and saving
 
-`get_document` returns the state and each person's status. `save_signed_pdf` downloads a finished copy to a folder you name on your own computer. `get_report` returns the workspace's summary report.
+`get_document` returns the state and each person's status. `save_signed_pdf` downloads a finished copy to a folder you name on your own computer.
 
 ## Running it read-only
 
-```bash
+```ini
+# in .env (a file, not a command)
 DOCUSTAY_READ_ONLY=1 DOCUSTAY_API_KEY=dsk_test_… npx -y @docustay2026/mcp
 ```
 

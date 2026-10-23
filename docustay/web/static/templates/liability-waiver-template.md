@@ -1,6 +1,6 @@
 ---
 title: Liability waiver template
-description: A free liability waiver template for events and activities. Share one link, each person signs on their own phone, and you keep a record of every one.
+description: A free liability waiver template for events and activities. Send it to each person, who signs on their own phone, and you keep a record of every one.
 ---
 
 # Liability waiver template

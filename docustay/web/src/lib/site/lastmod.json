@@ -1,0 +1,590 @@
+{
+ "/": {
+  "hash": "6eb2a203da2ea69b",
+  "date": "2026-10-21"
+ },
+ "/features": {
+  "hash": "7c32c72c3d568e16",
+  "date": "2026-10-23"
+ },
+ "/features/how-it-works": {
+  "hash": "6a0bd4489ac1ef05",
+  "date": "2026-10-17"
+ },
+ "/features/scribe": {
+  "hash": "92e63a48442c5aea",
+  "date": "2026-10-23"
+ },
+ "/features/payments": {
+  "hash": "a9b2732dc014f4e0",
+  "date": "2026-10-17"
+ },
+ "/features/proof": {
+  "hash": "ba66a502b98bd7ab",
+  "date": "2026-10-23"
+ },
+ "/features/embedded-signing": {
+  "hash": "37823b8c52894064",
+  "date": "2026-10-17"
+ },
+ "/features/test-mode": {
+  "hash": "55b69643d89e7f55",
+  "date": "2026-10-17"
+ },
+ "/features/agent-ready": {
+  "hash": "404703f36edd4a45",
+  "date": "2026-10-23"
+ },
+ "/features/white-label": {
+  "hash": "dfac2cf616ea7765",
+  "date": "2026-10-17"
+ },
+ "/self-host/requirements": {
+  "hash": "016c5bf336f6c5b1",
+  "date": "2026-10-17"
+ },
+ "/self-host/backups-and-upgrades": {
+  "hash": "794c248c652267d5",
+  "date": "2026-10-16"
+ },
+ "/self-host/sso-and-hardening": {
+  "hash": "df2ff46048f74694",
+  "date": "2026-10-16"
+ },
+ "/use-cases": {
+  "hash": "559367a51b28afc9",
+  "date": "2026-10-17"
+ },
+ "/use-cases/contracts": {
+  "hash": "90afa0a87e258694",
+  "date": "2026-10-21"
+ },
+ "/use-cases/ndas": {
+  "hash": "5daae9db3750f5d2",
+  "date": "2026-10-17"
+ },
+ "/use-cases/waivers-and-consent": {
+  "hash": "cbecb860e11e7523",
+  "date": "2026-10-17"
+ },
+ "/use-cases/hr-and-onboarding": {
+  "hash": "542b3228bd9fd8e3",
+  "date": "2026-10-21"
+ },
+ "/use-cases/real-estate": {
+  "hash": "366ef5405e5729b4",
+  "date": "2026-10-17"
+ },
+ "/use-cases/education": {
+  "hash": "087bbb3029bdcb4e",
+  "date": "2026-10-17"
+ },
+ "/use-cases/agencies": {
+  "hash": "3f7c62d31f193485",
+  "date": "2026-10-17"
+ },
+ "/developers": {
+  "hash": "f34b4ea159ec60d3",
+  "date": "2026-10-21"
+ },
+ "/developers/api": {
+  "hash": "c4de5c0f6aafb4c5",
+  "date": "2026-10-23"
+ },
+ "/developers/sdks": {
+  "hash": "f1b35c687a5ef71e",
+  "date": "2026-10-23"
+ },
+ "/developers/webhooks": {
+  "hash": "2c700b7a90a5bc95",
+  "date": "2026-10-23"
+ },
+ "/developers/test-mode": {
+  "hash": "d6843e1aaeeadee0",
+  "date": "2026-10-17"
+ },
+ "/developers/cli": {
+  "hash": "04b0b9d6b72befdf",
+  "date": "2026-10-23"
+ },
+ "/developers/agents": {
+  "hash": "1e2fec3f42a242e7",
+  "date": "2026-10-16"
+ },
+ "/developers/embedding": {
+  "hash": "fd29fe5df8e01d32",
+  "date": "2026-10-23"
+ },
+ "/developers/keys-and-security": {
+  "hash": "1635c09b5b617a7b",
+  "date": "2026-10-23"
+ },
+ "/developers/plays": {
+  "hash": "b125bea85a422872",
+  "date": "2026-10-23"
+ },
+ "/trust": {
+  "hash": "9275dee65451e860",
+  "date": "2026-10-17"
+ },
+ "/trust/legal-validity": {
+  "hash": "7e942671d68611df",
+  "date": "2026-10-17"
+ },
+ "/about": {
+  "hash": "017ac236d83e2353",
+  "date": "2026-10-23"
+ },
+ "/open-source": {
+  "hash": "a5c59e35feecf8c8",
+  "date": "2026-10-17"
+ },
+ "/licensing": {
+  "hash": "a4928cc2994d2d68",
+  "date": "2026-10-16"
+ },
+ "/guides/how-to-sign-a-pdf": {
+  "hash": "d86b39aef55a3cdf",
+  "date": "2026-10-16"
+ },
+ "/legal/acceptable-use": {
+  "hash": "4929559b75ec1631",
+  "date": "2026-10-17"
+ },
+ "/whats-next": {
+  "hash": "b7ec25f0cc405a2d",
+  "date": "2026-10-18"
+ },
+ "/help": {
+  "hash": "43437dbfa899ae27",
+  "date": "2026-10-21"
+ },
+ "/legal": {
+  "hash": "a453c828edfd1109",
+  "date": "2026-10-17"
+ },
+ "/templates/nda-template": {
+  "hash": "be2747432bb9cc28",
+  "date": "2026-10-16"
+ },
+ "/templates/offer-letter-template": {
+  "hash": "3000b5d5c1b0b04f",
+  "date": "2026-10-16"
+ },
+ "/templates/independent-contractor-agreement-template": {
+  "hash": "e34dee53de677f2a",
+  "date": "2026-10-16"
+ },
+ "/templates/statement-of-work-template": {
+  "hash": "e4df11c646840b34",
+  "date": "2026-10-16"
+ },
+ "/templates/service-agreement-template": {
+  "hash": "1901acfc95d0f090",
+  "date": "2026-10-16"
+ },
+ "/templates/non-solicitation-agreement": {
+  "hash": "a70018e967372624",
+  "date": "2026-10-16"
+ },
+ "/templates/photo-release-form": {
+  "hash": "602998f7c6c6cae9",
+  "date": "2026-10-17"
+ },
+ "/templates/permission-slip-template": {
+  "hash": "71c5e3a6a234ea18",
+  "date": "2026-10-17"
+ },
+ "/templates/liability-waiver-template": {
+  "hash": "5fb6511b892a5d99",
+  "date": "2026-10-17"
+ },
+ "/templates/new-hire-paperwork": {
+  "hash": "53ef9c4e0d456ab3",
+  "date": "2026-10-16"
+ },
+ "/templates/change-order-template": {
+  "hash": "b0aad27c14a54521",
+  "date": "2026-10-16"
+ },
+ "/templates/media-release-form": {
+  "hash": "caa174d5355c08fe",
+  "date": "2026-10-16"
+ },
+ "/templates/rental-application-form": {
+  "hash": "3e592b7511413cc3",
+  "date": "2026-10-17"
+ },
+ "/templates/lease-addendum-template": {
+  "hash": "b172e239412f834b",
+  "date": "2026-10-16"
+ },
+ "/templates/vendor-agreement-template": {
+  "hash": "429582e7ba49d0b9",
+  "date": "2026-10-16"
+ },
+ "/templates/payment-plan-agreement-template": {
+  "hash": "e7ca5f55e535af5f",
+  "date": "2026-10-17"
+ },
+ "/templates/mutual-release-agreement": {
+  "hash": "98b635ca0473a872",
+  "date": "2026-10-16"
+ },
+ "/templates/volunteer-agreement-template": {
+  "hash": "7ea496e777a70e39",
+  "date": "2026-10-16"
+ },
+ "/templates/referral-agreement-template": {
+  "hash": "43cb3a0c1326c5af",
+  "date": "2026-10-16"
+ },
+ "/templates/deposit-agreement": {
+  "hash": "17a864cc2d12aaf1",
+  "date": "2026-10-17"
+ },
+ "/templates/equipment-loan-agreement": {
+  "hash": "9526e4246b5cca51",
+  "date": "2026-10-16"
+ },
+ "/templates/invoice-approval-form": {
+  "hash": "155b976b5cca34ee",
+  "date": "2026-10-16"
+ },
+ "/templates/contact-and-inquiry": {
+  "hash": "475c5068305f70e5",
+  "date": "2026-10-17"
+ },
+ "/templates/event-registration": {
+  "hash": "fe6a5a7d3b0cdbeb",
+  "date": "2026-10-17"
+ },
+ "/templates/rsvp": {
+  "hash": "35f517ac7982685a",
+  "date": "2026-10-17"
+ },
+ "/templates/volunteer-application": {
+  "hash": "830182b951904777",
+  "date": "2026-10-17"
+ },
+ "/templates/job-application": {
+  "hash": "8dac8f2a0d1c71c9",
+  "date": "2026-10-17"
+ },
+ "/templates/new-hire-information": {
+  "hash": "6c2b8773e71e99d6",
+  "date": "2026-10-17"
+ },
+ "/templates/emergency-contact": {
+  "hash": "1672feae5a4785c8",
+  "date": "2026-10-17"
+ },
+ "/templates/customer-feedback-survey": {
+  "hash": "5e985e8251e571e4",
+  "date": "2026-10-17"
+ },
+ "/templates/order-form": {
+  "hash": "d21c73acd22d4020",
+  "date": "2026-10-17"
+ },
+ "/templates/change-of-contact-details": {
+  "hash": "9843b62724a1506d",
+  "date": "2026-10-17"
+ },
+ "/templates/appointment-request": {
+  "hash": "06c83f45df5126d5",
+  "date": "2026-10-17"
+ },
+ "/templates/facility-booking-request": {
+  "hash": "a54a99531ecfd7be",
+  "date": "2026-10-17"
+ },
+ "/templates/suggestions-and-ideas": {
+  "hash": "9139ef706a5beb49",
+  "date": "2026-10-17"
+ },
+ "/templates/vehicle-inspection-checklist": {
+  "hash": "1baf5aa8fcd3cc21",
+  "date": "2026-10-17"
+ },
+ "/templates/incident-report": {
+  "hash": "6ae64769fdb808eb",
+  "date": "2026-10-17"
+ },
+ "/templates/time-off-request": {
+  "hash": "7d502380948a2d69",
+  "date": "2026-10-17"
+ },
+ "/templates/expense-reimbursement": {
+  "hash": "908a45643cfa1d6e",
+  "date": "2026-10-17"
+ },
+ "/templates/purchase-request": {
+  "hash": "e53f2edee75bc172",
+  "date": "2026-10-17"
+ },
+ "/templates/vendor-information": {
+  "hash": "0cdda60b776ad409",
+  "date": "2026-10-17"
+ },
+ "/templates/membership-application": {
+  "hash": "d9dc3a71ac5bc8f4",
+  "date": "2026-10-17"
+ },
+ "/templates/donation-pledge": {
+  "hash": "225464aeab216fb6",
+  "date": "2026-10-17"
+ },
+ "/templates/service-request-work-order": {
+  "hash": "8ddcfec8f4b399b4",
+  "date": "2026-10-17"
+ },
+ "/templates/return-and-refund-request": {
+  "hash": "968f79cf25ad72df",
+  "date": "2026-10-17"
+ },
+ "/templates/maintenance-request": {
+  "hash": "9b0bcbd602abe7d2",
+  "date": "2026-10-17"
+ },
+ "/templates/move-in-move-out-checklist": {
+  "hash": "9454b8d4d46c6b32",
+  "date": "2026-10-17"
+ },
+ "/templates/class-or-course-registration": {
+  "hash": "01144a1f69e739a1",
+  "date": "2026-10-17"
+ },
+ "/templates/reference-check": {
+  "hash": "84536756aae52d0d",
+  "date": "2026-10-17"
+ },
+ "/templates/exit-interview": {
+  "hash": "f27863188be36ec8",
+  "date": "2026-10-17"
+ },
+ "/templates/visitor-sign-in": {
+  "hash": "802d67c9eb275cb1",
+  "date": "2026-10-17"
+ },
+ "/templates/policy-acknowledgement": {
+  "hash": "e8ba7031ad48a99f",
+  "date": "2026-10-17"
+ },
+ "/pricing": {
+  "hash": "b584cad6c4f94301",
+  "date": "2026-10-21"
+ },
+ "/free-templates": {
+  "hash": "3bc4ac1895af55e0",
+  "date": "2026-10-17"
+ },
+ "/verify": {
+  "hash": "9add91eaaa76e260",
+  "date": "2026-10-16"
+ },
+ "/tools/sign-pdf": {
+  "hash": "91a313198f20561a",
+  "date": "2026-10-16"
+ },
+ "/tools/fill-pdf": {
+  "hash": "c73e0375ca54009a",
+  "date": "2026-10-16"
+ },
+ "/tools/signature-generator": {
+  "hash": "c40650501560dfad",
+  "date": "2026-10-16"
+ },
+ "/contact": {
+  "hash": "853c9daa463995e3",
+  "date": "2026-10-16"
+ },
+ "/status": {
+  "hash": "f3707877d924250a",
+  "date": "2026-10-16"
+ },
+ "/changelog": {
+  "hash": "48e0a506a3cc3a07",
+  "date": "2026-10-21"
+ },
+ "/self-host": {
+  "hash": "58a3ede25c53ba4e",
+  "date": "2026-10-16"
+ },
+ "/legal/terms": {
+  "hash": "5978f26387e46582",
+  "date": "2026-10-16"
+ },
+ "/legal/privacy-policy": {
+  "hash": "852c348796804e43",
+  "date": "2026-10-16"
+ },
+ "/legal/notices": {
+  "hash": "4e09419a2a4dc015",
+  "date": "2026-10-16"
+ },
+ "/legal/cookies": {
+  "hash": "1efd63b39102961c",
+  "date": "2026-10-16"
+ },
+ "/legal/dpa": {
+  "hash": "a22efd01012a12cf",
+  "date": "2026-10-16"
+ },
+ "/legal/refunds": {
+  "hash": "f53ee479d817fbf5",
+  "date": "2026-10-23"
+ },
+ "/legal/renewal": {
+  "hash": "0c5de5d402ecd9b5",
+  "date": "2026-10-23"
+ },
+ "/sign-pdf": {
+  "hash": "7ae6bd8cc292a526",
+  "date": "2026-10-16"
+ },
+ "/sign-pdf/javascript": {
+  "hash": "1f6cad89b25f8f7d",
+  "date": "2026-10-16"
+ },
+ "/sign-pdf/typescript": {
+  "hash": "406f550a2bb6b27e",
+  "date": "2026-10-16"
+ },
+ "/sign-pdf/python": {
+  "hash": "982e9c28f8240746",
+  "date": "2026-10-16"
+ },
+ "/sign-pdf/go": {
+  "hash": "7557e54f61cbd131",
+  "date": "2026-10-16"
+ },
+ "/sign-pdf/php": {
+  "hash": "347e2653a74391e0",
+  "date": "2026-10-16"
+ },
+ "/sign-pdf/csharp": {
+  "hash": "ddf3eb27e7e2ada6",
+  "date": "2026-10-16"
+ },
+ "/docs/index": {
+  "hash": "2e9d615f6973fe06",
+  "date": "2026-10-23"
+ },
+ "/docs/quickstart": {
+  "hash": "1a2624ce47b63bce",
+  "date": "2026-10-23"
+ },
+ "/docs/authentication": {
+  "hash": "1f4e611cb06af1b8",
+  "date": "2026-10-23"
+ },
+ "/docs/templates-and-text-tags": {
+  "hash": "d2de15e0a35952b0",
+  "date": "2026-10-23"
+ },
+ "/docs/embedding": {
+  "hash": "112fcc7044962d50",
+  "date": "2026-10-23"
+ },
+ "/docs/field-detection": {
+  "hash": "3b7594f6feebdc2a",
+  "date": "2026-10-23"
+ },
+ "/docs/documents-from-words": {
+  "hash": "39e265c07ba645bc",
+  "date": "2026-10-23"
+ },
+ "/docs/webhooks": {
+  "hash": "e0bbab22f6c36d30",
+  "date": "2026-10-23"
+ },
+ "/docs/test-mode": {
+  "hash": "5198c759f25f7d26",
+  "date": "2026-10-23"
+ },
+ "/docs/errors-and-limits": {
+  "hash": "59bc92d5f7300eb4",
+  "date": "2026-10-23"
+ },
+ "/docs/email-setup": {
+  "hash": "44478251e0c22192",
+  "date": "2026-10-23"
+ },
+ "/docs/sdks": {
+  "hash": "6a77c6280ce51b15",
+  "date": "2026-10-23"
+ },
+ "/docs/mcp-and-skills": {
+  "hash": "f76b44665a6e65a8",
+  "date": "2026-10-23"
+ },
+ "/docs/connector": {
+  "hash": "38a651b4077ce31f",
+  "date": "2026-10-23"
+ },
+ "/docs/licensing": {
+  "hash": "54ea6647dd72952c",
+  "date": "2026-10-16"
+ },
+ "/docs/scribe-embed": {
+  "hash": "801791a4eea5bd3d",
+  "date": "2026-10-23"
+ },
+ "/docs/email-api": {
+  "hash": "9c04f90dfd1cd31b",
+  "date": "2026-10-23"
+ },
+ "/docs/settings-reference": {
+  "hash": "b2db16dd6c93c2f0",
+  "date": "2026-10-23"
+ },
+ "/docs/self-host-upgrade": {
+  "hash": "4a475d5ecbff4951",
+  "date": "2026-10-23"
+ },
+ "/docs/self-host-backup": {
+  "hash": "325852194ef49744",
+  "date": "2026-10-23"
+ },
+ "/docs/self-host-hardening": {
+  "hash": "a5c02d21cf578506",
+  "date": "2026-10-23"
+ },
+ "/docs/self-host-reverse-proxy": {
+  "hash": "470c861e0b1b3382",
+  "date": "2026-10-23"
+ },
+ "/docs/self-host-licence": {
+  "hash": "1583b3144b186be7",
+  "date": "2026-10-23"
+ },
+ "/docs/tutorial-nextjs": {
+  "hash": "5590101cc02b246c",
+  "date": "2026-10-23"
+ },
+ "/docs/tutorial-python": {
+  "hash": "bd0f16c626de77bf",
+  "date": "2026-10-23"
+ },
+ "/docs/tutorial-agent": {
+  "hash": "211b3ac60f990726",
+  "date": "2026-10-23"
+ },
+ "/docs/self-host-sso": {
+  "hash": "6f12cfeec428179d",
+  "date": "2026-10-23"
+ },
+ "/docs/payments-and-playbooks": {
+  "hash": "955e8f5d0778d561",
+  "date": "2026-10-23"
+ },
+ "/docs/template-library": {
+  "hash": "489028255bb2b494",
+  "date": "2026-10-23"
+ },
+ "/docs/api-reference": {
+  "hash": "54d940818e6148c9",
+  "date": "2026-10-16"
+ }
+}

@@ -33,7 +33,7 @@ import { runWithScope } from "../money/idempotencyScope.mjs";
 // ★★★ F690 — `subjectIdFor` is the ONE place that decides which body field names the row a write is
 //     about. Imported here so the `outOfScope`-vs-`forbidden` decision below and `assertMay`'s own
 //     owner lookup read the SAME id; a second copy of that expression is how the two would drift.
-import { assertMay, subjectIdFor, NAMED_ACTIONS } from "../permissions/assertMay.mjs";
+import { assertMay, subjectIdFor, NAMED_ACTIONS, isCapabilityAction } from "../permissions/assertMay.mjs";
 // ★★★ 7.12a / Q7-5 — THE OPERATOR-GRANT CHECK FOR `platform: true` ROUTES. `src/db/index.mjs` is
 //     7.6/7.12b's file; this is an import, not a redefinition — a second copy of "is this caller the
 //     operator" is exactly the drift F594 found and closed.
@@ -51,7 +51,7 @@ import { APP_DOMAIN_VAR } from "../auth/tenantFromHost.mjs";
 // ★ Task 12.14 — ONE function for seat usage (src/people/seats.mjs), so `inviteWithRoleCheck`'s
 //   cap check below and `GET /api/people/team/seats` (src/routes/index.mjs) can never disagree.
 import { teamSeatUsage } from "../people/seats.mjs";
-import { assertEntitled } from "../product/docustay.mjs";
+import { assertEntitled, assertMayAddPerson } from "../product/docustay.mjs";
 
 import { createPerson, updatePerson, inviteTeamMember, setStaffRole, setLifecycleStatus,
          setConsentStatus, assignPerson, setLeadNextStep, setLeadStage, readLeadBoard, removeSamples, findPossibleDuplicate, phoneRequiredFor } from "../people/writes.mjs";
@@ -1056,7 +1056,7 @@ export function assertVerbRoutesDeclareASubject(routes) {
   const missing = [];
   const surplus = [];
   for (const r of routes) {
-    const asksAVerb = !r.platform && !r.signer && r.action != null && !NAMED_ACTIONS.includes(r.action);
+    const asksAVerb = !r.platform && !r.signer && r.action != null && !isCapabilityAction(r.action);
     const declared = Object.prototype.hasOwnProperty.call(r, "subject");
     if (asksAVerb && !declared) missing.push(r.path);
     if (!asksAVerb && declared) surplus.push(r.path);
@@ -1262,6 +1262,7 @@ async function inviteWithRoleCheck(db, { tenantId, email, displayName, phone = n
                                           personId = null, actorUserId = null, message = null }) {
   // ★ Part 29 (A7-4): inviting a colleague (staff) into a Docustay workspace is the Pro item "team roles"; a workspace on Free has one user, the owner. Organisations on no Docustay plan are never limited by this.
   if (role === "staff") await assertEntitled(db, { tenantId, item: "team_roles" });
+  if (role === "staff" && personId == null) await assertMayAddPerson(db, { tenantId });   // v1: Free is one person; a resend is not a new person
   // ★ Task 12.14 (OQ-12.8) — TeamInvite's "A line from you", optional, ≤500 characters after trim.
   //   Refused up front, before either branch below runs, same as every other body-shape check in
   //   this file (`invalid`, never a silent truncation).
@@ -1508,7 +1509,7 @@ export function registerWriteRoutes(app, { runTenantScoped, tenantIsPlatform }) 
             await assertMay(db, principal, route, bodyWithParams);
           } catch (err) {
             if (err instanceof AppError && err.kind === ErrorKind.FORBIDDEN &&
-                subjectId != null && !NAMED_ACTIONS.includes(route.action)) {
+                subjectId != null && !isCapabilityAction(route.action)) {
               throw outOfScope();
             }
             throw err;

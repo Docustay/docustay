@@ -11,7 +11,7 @@
   onMount(() => { loadH(); return live(["email"], loadH); });
   const pct = (x, d = 2) => `${(x * 100).toFixed(d)}%`;
 </script>
-<div class="max-w-5xl space-y-4" data-testid="email-health">
+<div class=" space-y-4" data-testid="email-health">
   <div><h2 class="text-lg font-semibold">{t("Sending health")}</h2>
     <p class="text-sm text-mute">{t("The last {n} days of email about your documents, not counting test mode.", { n: h?.rates?.windowDays ?? 30 })}</p></div>
   {#if h === null}<p class="text-sm text-mute" style="min-height: 15rem">{t("Loading…")}</p>

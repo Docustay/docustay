@@ -38,7 +38,9 @@ export async function rememberParties(tx, { tenantId, parties }) {
 
 const SELECT = `SELECT c.id, c.first_name, c.last_name, c.email, c.language, c.source, c.created_at, c.last_activity_at,
     (SELECT count(*)::int FROM keystone.document_party p WHERE p.tenant_id = c.tenant_id AND lower(p.email) = c.email) AS documents,
-    (SELECT count(*)::int FROM keystone.document_party p WHERE p.tenant_id = c.tenant_id AND lower(p.email) = c.email AND p.status IN ('signed','approved')) AS signed
+    (SELECT count(*)::int FROM keystone.document_party p WHERE p.tenant_id = c.tenant_id AND lower(p.email) = c.email AND p.status IN ('signed','approved')) AS signed,
+    (SELECT coalesce(json_agg(x), '[]'::json) FROM (SELECT i.id, i.state, p.status AS party_status FROM keystone.document_party p JOIN keystone.document_instance i ON i.id = p.instance_id
+       WHERE p.tenant_id = c.tenant_id AND lower(p.email) = c.email AND i.archived_at IS NULL ORDER BY i.created_at DESC LIMIT 3) x) AS recent
   FROM keystone.document_contact c`;
 
 export async function listContacts(tx, { q = "", limit = 100, offset = 0, source = "" } = {}) {

@@ -10,26 +10,29 @@
   import RelativeTime from "$lib/ui/RelativeTime.svelte";
   import EmptyState from "$lib/ui/EmptyState.svelte";
   import StatTile from "$lib/ui/StatTile.svelte";
+  import CursorPager from "$lib/ui/CursorPager.svelte";
   import Bars from "$lib/ui/Bars.svelte";
-  let calls = $state(null), next = $state(null), problem = $state(null), busy = $state(false), days = $state(30);
+  let calls = $state(null), next = $state(null), problem = $state(null), busy = $state(false), days = $state(30), page = $state(1), per = $state(50), cursors = [null];   // cursors[n - 1] opens page n
   let status = $state(""), method = $state(""), path = $state(""), requestId = $state("");
-  const query = (cursor) => { const q = new URLSearchParams({ limit: "50" }); if (status) q.set("status", status); if (method) q.set("method", method); if (path.trim()) q.set("path", path.trim()); if (requestId.trim()) q.set("requestId", requestId.trim()); if (cursor) q.set("cursor", cursor); return q.toString(); };
-  async function load(more = false) {
+  const query = (cursor) => { const q = new URLSearchParams({ limit: String(per) }); if (status) q.set("status", status); if (method) q.set("method", method); if (path.trim()) q.set("path", path.trim()); if (requestId.trim()) q.set("requestId", requestId.trim()); if (cursor) q.set("cursor", cursor); return q; };
+  /** Open page n (1 by default: a new search, a new page size or a live update starts again from the newest calls). */
+  async function load(n = 1) {
     busy = true; problem = null;
-    const r = await api(`/api/product/docustay/api-calls?${query(more ? next : null)}`); busy = false;
-    if (!r.ok) { problem = r.error ?? t("The API log could not be loaded."); if (!more) calls = []; return; }
-    calls = more ? [...(calls ?? []), ...r.json.calls] : r.json.calls; next = r.json.nextCursor; days = r.json.retentionDays ?? 30;
+    if (n === 1) cursors = [null];
+    const r = await api(`/api/product/docustay/api-calls?${query(cursors[n - 1] ?? null)}`); busy = false;
+    if (!r.ok) { problem = r.error ?? t("The API log could not be loaded."); if (n === 1) calls = []; return; }
+    calls = r.json.calls; next = r.json.nextCursor; page = n; cursors[n] = r.json.nextCursor; days = r.json.retentionDays ?? 30;
   }
   let usage = $state(null), range = $state("7");
   async function loadUsage() { const r = await api(`/api/product/docustay/api-usage?days=${range}`); usage = r.ok ? r.json : null; }
-  onMount(() => { load(); return live(["apilog"], () => load()); });
+  onMount(() => { load(); return live(["apilog"], () => { if (page === 1) load(1); }); });   // a new call only moves the list while the newest page is on screen
   $effect(() => { range; loadUsage(); });
   const tone = (s) => (s >= 500 ? "bad" : s >= 400 ? "warn" : "ok");
   const columns = [{ key: "at", label: t("When") }, { key: "key", label: t("Key") }, { key: "method", label: t("Method") }, { key: "path", label: t("Route") }, { key: "status", label: t("Result") }, { key: "ms", label: t("Time"), align: "right" }];
   const statuses = [{ value: "", label: t("All results") }, { value: "2xx", label: t("Succeeded (2xx)") }, { value: "4xx", label: t("Refused (4xx)") }, { value: "5xx", label: t("Failed (5xx)") }, { value: "errors", label: t("Any error") }];
   const methods = [{ value: "", label: t("All methods") }, ...["GET", "POST", "PUT", "PATCH", "DELETE"].map((m) => ({ value: m, label: m }))];
 </script>
-<div class="max-w-5xl space-y-4" data-testid="api-log">
+<div class=" space-y-4" data-testid="api-log">
   <div>
     <h2 class="text-lg font-semibold">{t("API log")}</h2>
     <p class="text-sm text-mute">{t("Every call your API keys made, newest first. Kept {days} days. It records the route and the result, never what was sent.", { days })}</p>
@@ -70,6 +73,6 @@
       {/snippet}
       {#snippet empty()}<EmptyState title={t("No calls yet")} line={t("Calls made with an API key show up here as they happen.")} />{/snippet}
     </DataTable>
-    {#if next}<button class="btn" onclick={() => load(true)} disabled={busy} data-testid="log-more">{t("Load more")}</button>{/if}
+    <CursorPager {page} {per} hasNext={!!next} {busy} onprev={() => load(page - 1)} onnext={() => load(page + 1)} onsize={(n) => { per = n; load(1); }} testid="log-pager" />
   {/if}
 </div>

@@ -94,6 +94,10 @@ class WebhookTests(unittest.TestCase):
             verify_webhook(v["secret"], v["headers"], v["body"] + " ", now=v["ts"])
         with self.assertRaisesRegex(ValueError, "does not match"):
             verify_webhook("whsec_" + "QUJD" * 11, v["headers"], v["body"], now=v["ts"])
+        with self.assertRaisesRegex(ValueError, "not in the whsec_… form"):
+            verify_webhook("whsec_not a secret!", v["headers"], v["body"], now=v["ts"])
+        with self.assertRaisesRegex(ValueError, "not in the whsec_… form"):
+            verify_webhook("whsec_", v["headers"], v["body"], now=v["ts"])
         with self.assertRaisesRegex(ValueError, "tolerance"):
             verify_webhook(v["secret"], v["headers"], v["body"], now=v["ts"] + 4000)
 

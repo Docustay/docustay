@@ -62,16 +62,8 @@ export function doneWords(card, result) {
 
 // The Pro answers (pro.mjs PRO_ANSWERS) and the plan-limit cards (limitCard), keyed by the server's item and English words
 const PRO_BODY = {
-  bulk_send: () => t("Sending one template to a list of people is part of Docustay Pro."),
-  ai_bulk: () => t("Sending to a list from the chat is part of Docustay Pro."),
-  custom_plays: () => t("Your own plays and playbooks are part of Docustay Pro."),
-  recurring_payments: () => t("Installments and subscriptions inside a document are part of Docustay Pro."),
-  auto_reminders: () => t("Automatic reminders are part of Docustay Pro."),
-  team_roles: () => t("Adding people to your team, with roles, is part of Docustay Pro."),
-  hide_footer: () => t("Removing the Docustay footer is part of Docustay Pro."),
-  own_signing_domain: () => t("Signing links on your own domain are part of Docustay Pro."),
-  plays_api: () => t("The plays and drafts API is part of Docustay Pro."),
-  scribe_actions: () => t("Scribe sending, reminding, voiding and making templates for you is part of Docustay Pro."),
+  custom_plays: () => t("Your own plays and playbooks are part of Docustay Pro and Lifetime."),
+  plays_api: () => t("The plays and drafts API is part of Docustay Pro and Lifetime."),
 };
 export const PRO_INSTEAD = {
   "Send it to one person myself": () => t("Send it to one person myself"),
@@ -90,6 +82,7 @@ export const PRO_INSTEAD = {
   "Use one of my templates": () => t("Use one of my templates"),
   "Make a one-off document": () => t("Make a one-off document"),
   "See my usage": () => t("See my usage"),
+  "Send to someone I already sent to": () => t("Send to someone I already sent to"),
 };
 export const PRO_PROMPTS = {
   "Make me a form that everyone on my list can fill in from one link.": () => t("Make me a form that everyone on my list can fill in from one link."),
@@ -104,9 +97,10 @@ export { PRO_BODY };
 /** A Pro or plan-limit card: → { title, body, instead, linkLabel } in the person's language. Anything not in the tables keeps the server's words. */
 export function proWords(card) {
   const when = card?.resetsAt ? whenText(card.resetsAt, { day: "numeric", month: "long", timeZone: "UTC" }) : t("the first of next month");
-  const limit = card?.code === "plan_template_limit" ? { title: t("This month's new templates are used"), body: t("You have made all {limit} new templates your Free plan includes this month. You can still use and edit every template you have. New ones open again on {date}.", { limit: card.limit ?? "?", date: when }) }
+  const limit = card?.code === "plan_signer_limit" ? { title: t("This month's new signers are used"), body: card.body } : card?.code === "plan_template_limit" ? { title: t("This month's new templates are used"), body: t("You have made all {limit} new templates your plan includes this month. You can still use and edit every template you have. New ones open again on {date}.", { limit: card.limit ?? "?", date: when }) }
+    : card?.code === "plan_signer_limit" ? { title: t("This month's new signers are used"), body: t("You have sent to all {limit} different signers your Free plan includes this month. Sending again to someone you already sent to is always allowed. New signers open again on {date}.", { limit: card.limit ?? "?", date: when }) }
     : card?.code === "plan_document_limit" ? { title: t("This month's documents are used"), body: t("You have sent all {limit} documents your Free plan includes this month. Sending opens again on {date}.", { limit: card.limit ?? "?", date: when }) } : null;
-  const pro = !limit && PRO_BODY[card?.item] ? { title: t("This is part of Pro"), body: `${PRO_BODY[card.item]()}${card.instead?.length ? ` ${t("On your plan I can still:")}` : ""}` } : null;
+  const pro = !limit && PRO_BODY[card?.item] ? { title: t("This is part of Pro and Lifetime"), body: `${PRO_BODY[card.item]()}${card.instead?.length ? ` ${t("On your plan I can still:")}` : ""}` } : null;
   const instead = (card?.instead ?? []).map((a) => ({ ...a, label: PRO_INSTEAD[a.label]?.() ?? a.label, ...(a.prompt ? { prompt: PRO_PROMPTS[a.prompt]?.() ?? a.prompt } : {}) }));
   return { title: limit?.title ?? pro?.title ?? card?.title, body: limit?.body ?? pro?.body ?? card?.body, instead, linkLabel: card?.linkLabel === "Explore Pro" || !card?.linkLabel ? t("Explore Pro") : card.linkLabel };
 }

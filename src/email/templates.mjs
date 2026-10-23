@@ -178,6 +178,54 @@ export const TEMPLATES = Object.freeze({
       `If this wasn't you, contact your practice immediately.`,
   },
 
+  "auth.two_step_method": {
+    version: 1,
+    subject: (v, t) => `A sign-in method was changed on your account`,
+    text: (v, t) =>
+      `${v.change} on ${v.when}.\n\nIf this was you, there is nothing to do. If it was not you, open your security settings now and remove it.\n\nSecurity changes to your account are always emailed to you.`,
+  },
+
+  "auth.recovery_code_used": {
+    version: 1,
+    subject: (v, t) => `A recovery code was used on your account`,
+    text: (v, t) =>
+      `A recovery code was used to sign in to your account on ${v.when}. You have ${v.remaining} left.\n\nIf this was you, make new codes when you can. If it was not you, open your security settings now.\n\nSecurity changes to your account are always emailed to you.`,
+  },
+
+  "auth.two_step_owner_notice": {
+    version: 1,
+    subject: (v, t) => `A teammate changed their sign-in security`,
+    text: (v, t) =>
+      `${v.person} ${v.what} on ${v.when}.\n\nYou are getting this because you own or administer the workspace.`,
+  },
+
+  "auth.two_step_reminder": {
+    version: 1,
+    subject: (v, t) => `Please set up two-step sign-in`,
+    text: (v, t) =>
+      `${v.requestedBy} asked you to set up two-step sign-in for your workspace. ${v.deadline}\n\nIt takes about a minute: you confirm it is you with a passkey or an authenticator app after you sign in.`,
+  },
+
+  // 21 Oct 2026: the password reset by CODE (the code is typed on the sign-in screen; the link stays for people who open the mail on another device) and the notice after a password changes
+  "auth.password_reset_code": {
+    version: 1,
+    subject: (v, t) => `Your Docustay password reset code: ${v.code}`,
+    text: (v, t) =>
+      `Your password reset code is ${v.code}\n\nType it on the sign-in screen to choose a new password. It works once and expires in ${v.minutes} minutes.\n\nOpening this email on another device? Use this link instead: ${v.link}\n\nIf you did not ask to reset your password, you can ignore this email: nothing changes unless the code is used.`,
+  },
+  "auth.password_changed": {
+    version: 1,
+    subject: (v, t) => `Your Docustay password was changed`,
+    text: (v, t) =>
+      `Your password was changed on ${v.when}.\n\nOther devices were ${v.signedOut === "yes" ? "signed out" : "left as they were"}, and two-step sign-in is still asked for at your next sign-in if you have it on.\n\nIf this was not you, reset your password now and tell your workspace owner: ${v.link}`,
+  },
+  "auth.two_step_reset": {
+    version: 1,
+    subject: (v, t) => `Your two-step sign-in was reset`,
+    text: (v, t) =>
+      `${v.by} removed your two-step sign-in on ${v.when}.\n\nWe will ask you to set it up again the next time you sign in, or you can do it now in your security settings. If you did not expect this, tell your workspace owner.`,
+  },
+
   // ═══════════════════════════════════════════════════════════════════════════════════════════════
   // ★★★ TASK 13.15 — THE EVENTS F05 PROMISES, FINALLY REACHING PEOPLE. Booked, moved, cancelled, and
   //     a freed slot offered. ★ they/them throughout — `app_user` has no reliable gender column.
@@ -542,6 +590,13 @@ const REQUIRED_VARS = Object.freeze({
   "auth.password_reset":    ["link"],
   "auth.backup_codes_low":  ["remaining"],
   "auth.two_step_changed":  ["what", "when"],
+  "auth.two_step_method": ["change", "when"],
+  "auth.recovery_code_used": ["remaining", "when"],
+  "auth.two_step_owner_notice": ["person", "what", "when"],
+  "auth.two_step_reminder": ["requestedBy", "deadline"],
+  "auth.two_step_reset": ["by", "when"],
+  "auth.password_reset_code": ["code", "minutes", "link"],
+  "auth.password_changed": ["when", "signedOut", "link"],
   // ★ Task 13.15. `booking.cancelled` deliberately omits `whenLocal` — OPTIONAL there, not required
   //   (see that template's own comment and `emailFor`'s booking.cancelled branch in
   //   src/queue/tasks.mjs) — same "absent rather than blank" idiom `booking.reminder`'s

@@ -2,4 +2,4 @@
 from .client import Docustay, DocustayError, verify_webhook
 
 __all__ = ["Docustay", "DocustayError", "verify_webhook"]
-__version__ = "0.1.0"
+__version__ = "0.2.0"

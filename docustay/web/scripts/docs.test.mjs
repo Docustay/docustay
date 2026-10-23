@@ -5,6 +5,8 @@ import path from "node:path";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { build, readPages } from "./build-docs.mjs";
+import { llmsTxt, llmsFull } from "./llms.mjs";
+import { allPages } from "../src/lib/site/pages.js";
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const { files, pages, spec } = build();
@@ -39,10 +41,11 @@ test("every internal link in the pages resolves to a page (and a broken one woul
   assert.ok(!slugs.has("no-such-page"));
 });
 
-test("llms.txt lists every page once with an absolute address, and llms-full.txt contains every page", () => {
-  const idx = files.get("llms.txt");
-  for (const p of pages) { assert.equal(idx.split(`/docs/${p.slug}.md)`).length - 1, 1, `${p.slug} listed once`); assert.ok(files.get("llms-full.txt").includes(`# ${p.title}`) || files.get("llms-full.txt").includes(p.body.split("\n")[0]), `${p.slug} in full`); }
+test("llms.txt lists every docs page once with an absolute address, and llms-full.txt contains every page", () => {
+  const args = { pages: allPages(), docs: pages, base: "https://docustay.app" }; const idx = llmsTxt(args).text, full = llmsFull(args);
+  for (const p of pages) { assert.equal(idx.split(`/docs/${p.slug}.md)`).length - 1, 1, `${p.slug} listed once`); assert.ok(full.includes(p.body.split("\n")[0]), `${p.slug} in full`); }
   assert.ok(/^- \[.+\]\(https:\/\//m.test(idx));
+  assert.ok(!/docs\.docustay\.app/.test(idx), "llms.txt links a host that does not exist");
 });
 
 test("words the product cannot back up are absent from the documentation", () => {

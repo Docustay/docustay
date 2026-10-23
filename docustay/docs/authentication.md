@@ -1,6 +1,6 @@
 ---
 title: Authentication
-description: API keys, the thirteen scopes, test keys and how to keep a key safe.
+description: API keys for the Docustay API: the scopes, expiry and address allowlists, test keys that send nothing real, and how to keep a key safe.
 order: 2
 ---
 
@@ -10,21 +10,20 @@ Send `Authorization: Bearer <key>` on every request. Keys are made in **Settings
 
 ## Scopes
 
-A key carries only the scopes you tick when you make it. The two broad scopes (`documents:read` and `documents:write`) open everything about documents; the narrower ones let you make a key that does one job and nothing else, for example one that only reads reports.
+A key carries only the scopes you tick when you make it. The two broad scopes (`documents:read` and `documents:write`) open everything about documents; the narrower ones let you make a key that does one job and nothing else, for example one that only reads teams and plan usage. A Docustay workspace is offered 12 scopes, and the table lists all of them.
 
 | Scope | Lets the key |
 |---|---|
-| `documents:read` | list and read documents and templates, read the audit log, download signed copies, read reports and teams |
+| `documents:read` | list and read documents and templates, read the audit log, download signed copies, read teams |
 | `documents:write` | send documents, make templates, remind, void, start an embedded signing session |
-| `templates:read` | list and read templates and the wording of your emails |
-| `templates:write` | make and change templates, their defaults and the wording of your emails |
-| `reports:read` | read the reports |
+| `templates:read` | list and read templates |
+| `templates:write` | make and change templates and their defaults |
 | `account:read` | read plan usage, payment status and teams |
 | `webhooks:read` | list your webhook addresses and what was sent to them |
 | `webhooks:write` | add, change, test and remove webhook addresses, and make a new signing secret |
 | `embedded:write` | start an embedded signing session for a seat you marked as embedded |
-| `plays:read` | read skills, playbooks and automations |
-| `plays:write` | make and change skills and playbooks, switch automations on |
+| `plays:read` | read skills and playbooks |
+| `plays:write` | make and change skills and playbooks |
 | `drafts:write` | make drafts only; nothing in it sends a document |
 | `people:read` | list the people in your workspace by name |
 
@@ -50,14 +49,14 @@ List your executed documents with a key that has `documents:read`:
 
 ```bash
 curl https://docustay.app/api/v1/documents?state=executed \
-  -H "Authorization: Bearer $DOCUSTAY_KEY"
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY"
 ```
 
 The same call from JavaScript, using the SDK, which adds the header for you:
 
 ```js
 import { Docustay } from "@docustay2026/sdk";
-const docustay = new Docustay(process.env.DOCUSTAY_KEY);
+const docustay = new Docustay(process.env.DOCUSTAY_API_KEY);
 const page = await docustay.listDocuments({ state: "executed", limit: 20 });
 ```
 

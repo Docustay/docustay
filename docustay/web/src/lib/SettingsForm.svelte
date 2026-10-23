@@ -37,11 +37,12 @@
 </script>
 {#if problem}<p class="text-bad" role="alert">{problem}</p>{:else if !data}<p class="text-mute" style={reserve ? `min-height: ${reserve}` : undefined}>{t("Loading…")}</p>{:else}
   {#if data.intro && !bare && intro}<p class="mb-4 max-w-2xl text-mute">{td(data.intro)}</p>{/if}   <!-- D-088: the lead line describes the Documents tab only, so only that tab asks for it -->
+  <div class="pg-sections" style="--col: 36rem; --row: 2rem">
   {#each data.groups.filter(show) as g}
-    <section class="mb-8 max-w-3xl">{#if !bare}<h2 class="mb-2 text-lg font-semibold">{td(g.label)}</h2>{/if}
-      <div class="card divide-y divide-line">
+    <section>{#if !bare}<h2 class="mb-2 text-lg font-semibold">{td(g.label)}</h2>{/if}
+      <div class="divide-y divide-line border-y border-line">
         {#each g.fields.filter((x) => !NOT_ON_A_CERTIFIED_COPY.has(x.key)) as f (f.key)}
-          <div class="grid grid-cols-1 gap-1 px-4 py-3 md:grid-cols-[minmax(0,1fr)_280px] md:gap-6">
+          <div class="grid grid-cols-1 gap-1 px-0 py-3 md:grid-cols-[minmax(0,1fr)_280px] md:gap-6">
             <div><label class="text-sm font-medium" for={"s-" + f.key}>{td(f.label)}</label>{#if f.help}<p class="mt-0.5 text-xs text-mute">{td(f.help)}</p>{/if}</div>
             <div>
               {#key rev[f.key] ?? 0}
@@ -62,6 +63,7 @@
             </div>
           </div>{/each}
       </div></section>{/each}
+  </div>
 {/if}
 <style>
   .flip { display: block; perspective: 600px; } .flip.on :global(> *) { animation: flip-in 420ms cubic-bezier(.2,.8,.2,1); transform-origin: 50% 50%; }

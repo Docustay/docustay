@@ -21,6 +21,7 @@ const MAP = {
   "POST /api/v1/templates/source": ["createTemplateFromSource", "create_template_from_source", "create_template_from_source"],
   "POST /api/v1/documents/ai/draft": ["draftWithAi", "draft_with_ai", "draft_document_with_ai"],
   "GET /api/v1/documents/ai/jobs/{id}": ["getAiDraft", "get_ai_draft", "get_ai_draft"],
+  "POST /api/v1/preflight": ["preflight", "preflight", "preflight"],
   "GET /api/v1/usage": ["usage", "usage", [null, "the person's own billing numbers are not an assistant's business"]],
   "GET /api/v1/templates/{id}": ["getTemplate", "get_template", "get_template"],
   "GET /api/v1/documents/{id}/audit-log.csv": ["auditLogCsv", "audit_log_csv", "get_audit_log"],
@@ -28,14 +29,9 @@ const MAP = {
   "POST /api/v1/documents/{id}/embed-session": ["embedSession", "embed_session", [null, "returns a signing link: a key may start a signature, an assistant never receives a way to sign"]],
   "POST /api/v1/embedded/builder-session": ["builderSession", "builder_session", [null, "returns a link that holds a short-lived key: an assistant is never handed a credential, and a person drives the builder"]],
   "POST /api/v1/embedded/scribe-session": ["scribeSession", "scribe_session", [null, "returns a link that holds a short-lived draft-only key: an assistant is never handed a credential, and a person drives Scribe"]],
-  "GET /api/v1/reports": ["report", "report", "get_report"],
   "GET /api/v1/teams": ["listTeams", "list_teams", [null, "team structure is not a document operation"]],
   "POST /api/v1/documents/{id}/void": ["voidDocument", "void_document", "void_document"],
   // FINAL PUSH Stage 6 — the workspace's email wording is the person's voice: an assistant may read the log, not rewrite the wording.
-  "GET /api/v1/email-templates": ["listEmailTemplates", "list_email_templates", [null, "the workspace's email wording is for people to read and set, not for an assistant"]],
-  "PUT /api/v1/email-templates/{kind}": ["saveEmailTemplate", "save_email_template", [null, "changing what the workspace's emails say is a person's decision"]],
-  "DELETE /api/v1/email-templates/{kind}": ["resetEmailTemplate", "reset_email_template", [null, "changing what the workspace's emails say is a person's decision"]],
-  "POST /api/v1/email-templates/{kind}/preview": ["previewEmailTemplate", "preview_email_template", [null, "previewing wording belongs with editing it, which is a person's job"]],
   "GET /api/v1/emails": ["listEmails", "list_emails", "list_emails"],
   "POST /api/v1/documents/{id}/test-sign": ["testSign", "test_sign", "test_sign_document"],
   // B10 — the v2 flow
@@ -62,14 +58,6 @@ const MAP = {
   "DELETE /api/v1/plays/{name}": ["archivePlay", "archive_play", [null, "removing a play from use is the person's decision, not an assistant's"]],
   "GET /api/v1/playbooks": ["listPlaybooks", "list_playbooks", "list_playbooks"],
   "POST /api/v1/playbooks": ["savePlaybook", "save_playbook", [null, "bundling plays is authoring work for a person, not an assistant"]],
-  // Run 7 — forms. An assistant may read forms and their responses; putting a public link on the internet, opening, closing or taking it down is the person's decision.
-  "GET /api/v1/forms": ["listForms", "list_forms", "list_forms"],
-  "GET /api/v1/forms/templates": ["listFormTemplates", "list_form_templates", "list_form_templates"],
-  "GET /api/v1/forms/{id}": ["getForm", "get_form", "get_form"],
-  "GET /api/v1/forms/{id}/responses": ["listFormResponses", "list_form_responses", "list_form_responses"],
-  "POST /api/v1/forms/publish": ["publishForm", "publish_form", [null, "publishing puts a public link on the internet that anyone can fill in: that is a person's decision"]],
-  "POST /api/v1/forms/{id}/open": ["setFormOpen", "set_form_open", [null, "opening or closing a public form to strangers is a person's decision"]],
-  "POST /api/v1/forms/{id}/unpublish": ["unpublishForm", "unpublish_form", [null, "taking a public form down changes what the public sees: a person decides it"]],
   // FINAL PUSH Stage 6 — webhooks. Where events are sent is the person's decision: an assistant may read what exists, never add, remove or re-key a destination.
   "GET /api/v1/webhooks/topics": ["listWebhookTopics", "list_webhook_topics", [null, "setting up where events go is the person's job, not an assistant's"]],
   "GET /api/v1/webhooks": ["listWebhooks", "list_webhooks", [null, "setting up where events go is the person's job, not an assistant's"]],
@@ -83,17 +71,14 @@ const MAP = {
   "POST /api/v1/drafts/{draftRef}/answers": ["answerDraft", "answer_draft", "answer_questions"],
   // Run 9
   "GET /api/v1/search": ["search", "search", "search_documents"],
-  "GET /api/v1/contracts": ["listContracts", "list_contracts", "list_contracts"],
-  "POST /api/v1/contracts/{id}/dates": ["setContractDate", "set_contract_date", "set_contract_date"],
   "GET /api/v1/payments": ["listPayments", "list_payments", "list_payments"],
   "POST /api/v1/payments/{id}/refund": ["refundPayment", "refund_payment", [null, "a refund moves money back to a person; that is a person's decision, made in the app or by a direct API call, never by an assistant"]],
-  "GET /api/v1/automations": ["listAutomations", "list_automations", "list_automations"],
-  "POST /api/v1/automations/{id}/enable": ["setAutomationOn", "set_automation_on", [null, "switching an automation on sends documents to people with nobody watching each one; a person does that in the app or by a direct API call"]],
   // Run 9 Part 4R: the template library, packs (playbooks) and drafts from a template
   "GET /api/v1/templates/library": ["listLibraryTemplates", "list_library_templates", "list_library_templates"],
   "GET /api/v1/templates/library/{slug}": ["getLibraryTemplate", "get_library_template", "get_library_template"],
   "POST /api/v1/templates/library/{slug}/documents": ["draftFromLibraryTemplate", "draft_from_library_template", "draft_from_library_template"],
   "POST /api/v1/templates/library/{slug}/customize": ["customizeLibraryTemplate", "customize_library_template", [null, "a customized copy is a new template that counts toward the plan's monthly limit; a person decides that in the app or by a direct API call"]],
+  "DELETE /api/v1/documents/{id}": ["deleteDraft", "delete_draft", [null, "deleting is permanent; an agent leaves an unwanted draft for a person to delete in the app or by a direct API call (R13-D385)"]],
   "POST /api/v1/playbooks/{name}/enable": ["setPlaybookOn", "set_playbook_on", [null, "switching a pack on changes what Scribe offers first for the whole workspace; a person does that in the app or by a direct API call"]],
 };
 const py = fs.readFileSync(new URL("../sdk/python/docustay/client.py", import.meta.url), "utf8");
@@ -114,7 +99,7 @@ t("the published document names every operation (operationId = the JS SDK method
   assert.match(doc.paths["/api/v1/documents/{id}/send"].post.description, /Idempotency-Key/); assert.ok(doc.paths["/api/v1/documents/{id}/send"].post.responses["202"], "draft-only keys get a documented 202");
 });
 t("every operation has a key scope (documents:read for reads, documents:write for writes)", () => {
-  for (const o of ops) { const [m, p] = o.split(" "); const key = `${m} ${p.replace(/\{(\w+)\}/g, ":$1")}`; const sc = ROUTE_SCOPES[key]; assert.ok(sc, `${key} has no scope`); const family = /^\/api\/v1\/webhooks/.test(p) ? "webhooks" : /^\/api\/v1\/plays|^\/api\/v1\/playbooks|^\/api\/v1\/automations/.test(p) ? "plays" : /^\/api\/v1\/drafts/.test(p) ? "drafts" : /^\/api\/v1\/embedded/.test(p) ? "embedded" : "documents"; if (family === "embedded") assert.equal(sc, "embedded:write", key); else if (family === "webhooks") assert.equal(sc, m === "GET" ? "webhooks:read" : "webhooks:write", key); else if (family === "drafts") assert.equal(sc, "drafts:write", key); else if (family === "plays") assert.equal(sc, m === "GET" || /test$/.test(p) ? "plays:read" : "plays:write", key); else if (m === "POST" && !/(check|detect-fields)$/.test(p)) assert.equal(sc, "documents:write", key); else if (/detect-fields$/.test(p)) assert.equal(sc, "documents:read", `${key}: it reads a file and stores nothing, so a read scope is enough`); }
+  for (const o of ops) { const [m, p] = o.split(" "); const key = `${m} ${p.replace(/\{(\w+)\}/g, ":$1")}`; const sc = ROUTE_SCOPES[key]; assert.ok(sc, `${key} has no scope`); const family = /^\/api\/v1\/webhooks/.test(p) ? "webhooks" : /^\/api\/v1\/plays|^\/api\/v1\/playbooks|^\/api\/v1\/automations/.test(p) ? "plays" : /^\/api\/v1\/drafts/.test(p) ? "drafts" : /^\/api\/v1\/embedded/.test(p) ? "embedded" : "documents"; if (family === "embedded") assert.equal(sc, "embedded:write", key); else if (family === "webhooks") assert.equal(sc, m === "GET" ? "webhooks:read" : "webhooks:write", key); else if (family === "drafts") assert.equal(sc, "drafts:write", key); else if (family === "plays") assert.equal(sc, m === "GET" || /test$/.test(p) ? "plays:read" : "plays:write", key); else if (m === "POST" && !/(check|detect-fields|preflight)$/.test(p)) assert.equal(sc, "documents:write", key); else if (/(detect-fields|preflight)$/.test(p)) assert.equal(sc, "documents:read", `${key}: it reads and stores nothing, so a read scope is enough`); }
 });
 t("every operation has a JavaScript SDK method and a Python SDK method", () => {
   for (const [o, [js, pyName]] of Object.entries(MAP)) { assert.equal(typeof Docustay.prototype[js], "function", `${o}: JS ${js}`); assert.match(py, new RegExp(`def ${pyName}\\(`), `${o}: Python ${pyName}`); }

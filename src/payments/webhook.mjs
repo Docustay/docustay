@@ -91,6 +91,8 @@ export class WebhookRejected extends Error {
  * @param tx     a pg client inside a transaction, tenant context set
  * @param event  { id, type, data } — already signature-verified by the caller
  */
+import { docustayMoment } from "../product/posthogListener.mjs";
+import { amountBucket } from "../product/posthog.mjs";
 import { emit } from "../events/outbox.mjs";
 import { runWithScope } from "../money/idempotencyScope.mjs";
 import { handlePaymentIntentSucceeded, handleStripeInvoicePaid } from "../money/payments.mjs";
@@ -483,6 +485,7 @@ export async function handlePaymentWebhook(tx, event, { tenantId, now = new Date
         [tenantId, stripeRefundId, amountMinor, event.id, d.charge ?? d.id]);
 
       if (ins.rowCount === 0) return { applied: false, reason: 'replay', stripeRefundId };
+      await docustayMoment(tx, tenantId, 'refund_issued', { amount_bucket: amountBucket(amountMinor), currency: d.currency ?? null });   // PH1: Docustay workspaces only, ids and a bucket
 
       await emit(tx, {
         tenantId,
@@ -707,6 +710,7 @@ export async function handlePaymentWebhook(tx, event, { tenantId, now = new Date
          d.charge ?? null, d.reason ?? null, d.evidence_details?.due_by ?? null]);
 
       if (ins.rowCount === 0) return { applied: false, reason: 'replay', stripeDisputeId };
+      await docustayMoment(tx, tenantId, 'dispute_opened', { amount_bucket: amountBucket(amountMinor), currency: d.currency ?? null });   // PH1: Docustay workspaces only, ids and a bucket
 
       await emit(tx, {
         tenantId,

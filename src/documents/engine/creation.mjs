@@ -5,6 +5,7 @@
 //   profile "typeset"   → the starters' pipeline: the source is compiled to HTML + text tags (sourceToHtml), printed by Gotenberg, fields read back, a `pdf` row
 // Both keep `source`, `source_version`, `source_hash`, `render_profile` and `origin` on the row, so a template can be opened again in the editor and so its text has a hash.
 // A new version is a new row (the rule every builder here keeps); a sent document never re-reads its template.
+import { assertNoNewRules, sourceRuleItems, assertNoNewPaymentModes, sourcePaymentModeItems } from "../ruleAuthoring.mjs";
 import { assertNotBuiltin } from "../library.mjs";
 import { invalid, notFound, conflict } from "../../http/errors.mjs";
 import { createTemplate, newTemplateVersion } from "../templates.mjs";
@@ -14,7 +15,7 @@ import { starter, starterFields } from "../starters/index.mjs";
 import { htmlToSource } from "./fromHtml.mjs";
 import { resolvableVariableCatalogue } from "../variableCatalogue.mjs";
 import { parseTemplateBody } from "../body.mjs";
-import { SOURCE_VERSION, parseSource, sourceHash, stripSenderOnly, stripByRules } from "./source.mjs";
+import { SOURCE_VERSION, parseSource, sourceHash, stripSenderOnly, stripByRules, senderOnlySignerParts } from "./source.mjs";
 import { sourceToSections, sectionsToSource } from "./compileBody.mjs";
 import { sourceToHtml } from "./compileHtml.mjs";
 import { validateSource } from "./validate.mjs";
@@ -42,6 +43,8 @@ function compileSource({ source, profile = "typeset", facts = {}, requireSignatu
   // Run 9: conditional sections are decided now, from the sender's own values, and the text reflows (a reusable template has no values yet, so it keeps every section until a document is made from it)
   const ruled = forTemplateCompile ? { source: p.source, removed: 0, hidden: [] } : stripByRules(p.source, (name) => factsResolver(facts).resolve(name));
   // Docustay flow v2: what a signer receives never contains a Sender-only section (and the rest must still stand on its own: someone signs, merge fields resolve)
+  const misplaced = senderOnlySignerParts(ruled.source);
+  if (misplaced.length) { const m = misplaced.map(({ section, part }) => `“${section}” is a Sender only section, so the ${part} in it would never reach a signer: move it out of that section or remove it`); throw invalid(m[0], { field: "source", details: m.slice(0, 12) }); }
   const stripped0 = stripSenderOnly(ruled.source);
   const stripped = { source: stripped0.source, removed: stripped0.removed + ruled.removed };
   if (stripped.removed) {
@@ -51,7 +54,14 @@ function compileSource({ source, profile = "typeset", facts = {}, requireSignatu
   const h = sourceToHtml(stripped.source, { resolver: factsResolver(facts) });
   const senderHtml = stripped.removed ? (() => { try { const x = sourceToHtml(p.source, { resolver: factsResolver(facts) }); return x.errors.length ? null : x.html; } catch { return null; } })() : null;
   if (h.errors.length) throw invalid(`A field in the document is not right: ${h.errors[0]}`, { field: "source", details: h.errors });
-  if (h.unresolved.length) throw invalid(`These merge fields have no value when a reusable document is saved: ${h.unresolved.join(", ")}. A reusable document can use the organisation and sender fields; for anything else, add a field the signer or sender fills in.`, { field: "source", details: h.unresolved });
+  if (h.unresolved.length) {
+    // said in the words of what is missing: the address line is a setting, the rest are boxes
+    const words = { "org.name": "the organisation name", "org.address": "the organisation address", "sender.name": "the sender's name", "sender.email": "the sender's email" };
+    const list = h.unresolved.map((n) => words[n] ?? n).join(", ");
+    const hints = [...(h.unresolved.includes("org.address") ? ["Set the organisation address in Settings, Appearance, Signed copy (Address line), or take it out of the text."] : []),
+      ...(h.unresolved.some((n) => !words[n]) ? [forTemplateCompile ? "A reusable document can use the organisation and sender fields; for anything else, add a box the signer or sender fills in." : "Take them out of the text, or use a box that someone fills in."] : [])];
+    throw invalid(`These merge fields have no value yet: ${list}. ${hints.join(" ")}`.trim(), { field: "source", details: h.unresolved });
+  }
   return { source: p.source, hash: sourceHash(p.source), warnings: [...p.warnings, ...v.warnings], roles: v.roles, html: h.html, senderHtml, senderOnlyBlocks: stripped0.removed, sectionsLeftOut: ruled.hidden, tagCount: h.tags.length };
 }
 
@@ -61,10 +71,12 @@ const stamp = (tx, { id, source, hash, profile, origin }) => tx.query(
 
 /** Make a reusable template from a source. Returns { templateId, profile, version, hash, warnings, fields? }. */
 export async function saveSourceTemplate(tx, { tenantId, actorUserId = null, name, source, profile = "typeset", origin = "written", paper = "letter", facts = {}, requireSignature = true, description = null, kind = "document" }) {
-  if (!["document", "form"].includes(kind)) throw invalid("kind must be document or form", { field: "kind" });
+  if (kind !== "document") throw invalid("kind must be document", { field: "kind" });
   const title = String(name ?? "").trim();
   if (!title) throw invalid("The template needs a name.", { field: "name" });
   if (!ORIGINS.includes(origin)) throw invalid(`origin must be one of ${ORIGINS.join(", ")}`, { field: "origin" });
+  assertNoNewRules(sourceRuleItems, source, null);   // v1 item 6
+  assertNoNewPaymentModes(sourcePaymentModeItems, source, null);   // v1 item 10
   const c = compileSource({ source, profile, facts: profile === "typeset" ? withPlaceholders(source, facts) : facts, requireSignature, forTemplateCompile: true });
   if (profile === "contract") {
     const { id } = await createTemplate(tx, { tenantId, builder: "contract", name: title, body: c.body, actorUserId, description });
@@ -76,7 +88,6 @@ export async function saveSourceTemplate(tx, { tenantId, actorUserId = null, nam
   }
   const made = await createTemplateFromSource(tx, { tenantId, actorUserId, name: title, source: { html: c.html }, paper, typeset: { ref: null, initials: [] } });
   await stamp(tx, { id: made.templateId, source: c.source, hash: c.hash, profile, origin });
-  if (kind === "form") await tx.query(`UPDATE keystone.document_template SET kind = 'form', collects_many = true WHERE id = $1`, [made.templateId]);   // ★ Run 7: the type is chosen where the template is made
   return { templateId: made.templateId, profile, version: 1, hash: c.hash, warnings: [...c.warnings, ...made.warnings], fields: made.fields, kind };
 }
 
@@ -88,6 +99,9 @@ export async function saveSourceVersion(tx, { tenantId, actorUserId = null, temp
   if (!t.render_profile) throw invalid("That template was not written in the editor, so it has no source to change. Make a copy in the editor instead.", { field: "templateId" });
   if (!t.active) throw conflict("Only the current version of a template can be changed — open the current one.");
   const profile = t.render_profile;
+  const prevSource = (await tx.query(`SELECT source FROM keystone.document_template WHERE id = $1`, [templateId])).rows[0]?.source ?? null;
+  assertNoNewRules(sourceRuleItems, source, prevSource);   // v1 item 6
+  assertNoNewPaymentModes(sourcePaymentModeItems, source, prevSource);   // v1 item 10
   const c = compileSource({ source, profile, facts: profile === "typeset" ? withPlaceholders(source, facts) : facts, requireSignature, forTemplateCompile: true });
   if (c.hash === t.source_hash) throw invalid("Nothing has changed.", { code: "no_change" });
   if (profile === "contract") {

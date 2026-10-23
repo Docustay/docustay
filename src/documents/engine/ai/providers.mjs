@@ -8,6 +8,7 @@ import { callOutside } from "../../../http/outside.mjs";
 import { fakeCall } from "./fake.mjs";
 import { DEFAULT_MODEL } from "./prices.mjs";
 
+import { anthropicHeaders } from "../../anthropicHeaders.mjs";
 const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
 const PROVIDERS = Object.freeze(["anthropic", "openai_compatible", "own_endpoint", "test_double", "fake"]);
 
@@ -46,7 +47,7 @@ export async function callModel({ provider, model = "", effort = null, endpoint 
   if (provider === "anthropic") {
     if (!apiKey) return fail("AI drafting is not set up: no key is available for this provider.", { kind: "not_configured" });
     const r = await callOutside("anthropic", ANTHROPIC_URL, {
-      method: "POST", headers: { "x-api-key": apiKey, "anthropic-version": "2023-06-01", "content-type": "application/json" },
+      method: "POST", headers: anthropicHeaders(apiKey, env),
       body: JSON.stringify({ model: model || env.KEYSTONE_AI_DEFAULT_MODEL || DEFAULT_MODEL, max_tokens: maxTokens, system, messages: [{ role: "user", content: user }], ...(schema || (effort && env.KEYSTONE_AI_EFFORT !== "off") ? { output_config: { ...(schema ? { format: { type: "json_schema", schema } } : {}), ...(effort && env.KEYSTONE_AI_EFFORT !== "off" ? { effort } : {}) } } : {}) }),
     }, { fetchImpl, timeoutMs });
     if (!r.ok) return fail(r.status === 401 || r.status === 403 ? "The AI provider refused the key." : r.status === 429 ? "The AI provider is busy; try again in a minute." : "The AI provider did not answer; try again.", { kind: r.kind, status: r.status, retryable: r.retryable });

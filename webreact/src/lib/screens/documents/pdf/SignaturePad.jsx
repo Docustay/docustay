@@ -23,7 +23,7 @@ const savedKey = (label) => `docustay.saved.${label}`;
 const readSaved = (label) => { try { const v = window.localStorage.getItem(savedKey(label)); return typeof v === "string" && v.startsWith("data:image/png;base64,") && v.length <= MAX ? v : null; } catch { return null; } };
 const writeSaved = (label, url) => { try { if (url) window.localStorage.setItem(savedKey(label), url); else window.localStorage.removeItem(savedKey(label)); } catch { /* private window or blocked storage: it simply is not kept */ } };
 
-export default function SignaturePad({ label = "signature", defaultName = "", onDone, onCancel, canRemember = true }) {
+export default function SignaturePad({ label = "signature", defaultName = "", onDone, onCancel, canRemember = true, allowTyped = true }) {
   const [saved, setSaved] = useState(() => (canRemember ? readSaved(label) : null));
   const [remember, setRemember] = useState(false);
   const [tab, setTab] = useState("draw");
@@ -58,7 +58,7 @@ export default function SignaturePad({ label = "signature", defaultName = "", on
     }
     if (!url) return setProblem("That picture is too large — try a simpler one.");
     if (canRemember && remember) writeSaved(label, url);
-    onDone(url);
+    onDone(url, tab === "draw" ? "drawn" : tab === "type" ? "typed" : "uploaded");
   }
   function onFile(f) {
     if (!f) return;
@@ -76,12 +76,12 @@ export default function SignaturePad({ label = "signature", defaultName = "", on
       {saved && (
         <div className="flex items-center gap-3 rounded border border-line bg-paper p-2" data-testid="pad-saved">
           <img src={saved} alt={`Your saved ${label}`} className="h-10 max-w-[160px] bg-white object-contain" />
-          <Button size="sm" onClick={() => onDone(saved)} data-testid="pad-use-saved">Use my saved {label}</Button>
+          <Button size="sm" onClick={() => onDone(saved, "drawn")} data-testid="pad-use-saved">Use my saved {label}</Button>
           <Button size="sm" variant="ghost" onClick={() => { writeSaved(label, null); setSaved(null); }} data-testid="pad-forget">Forget it</Button>
         </div>
       )}
       <div role="tablist" className="flex gap-2">
-        {[["draw", "Draw"], ["type", "Type"], ["upload", "Upload"]].map(([k, l]) => <button key={k} role="tab" aria-selected={tab === k} type="button" onClick={() => { setTab(k); setProblem(null); }} className={`rounded-full px-3 py-1 text-caption ${tab === k ? "bg-ink text-surface" : "bg-paper text-ink-2"}`} data-testid={`pad-tab-${k}`}>{l}</button>)}
+        {[["draw", "Draw"], ["type", "Type"], ["upload", "Upload"]].filter(([k]) => allowTyped || k !== "type").map(([k, l]) => <button key={k} role="tab" aria-selected={tab === k} type="button" onClick={() => { setTab(k); setProblem(null); }} className={`rounded-full px-3 py-1 text-caption ${tab === k ? "bg-ink text-surface" : "bg-paper text-ink-2"}`} data-testid={`pad-tab-${k}`}>{l}</button>)}
       </div>
       {tab === "draw" && <canvas ref={canvas} className="block h-[160px] w-full touch-none rounded border border-line bg-white" aria-label={`Draw your ${label} here`} data-testid="pad-canvas" />}
       {tab === "type" && <div className="space-y-2"><Input value={typed} onChange={(e) => setTyped(e.currentTarget.value)} placeholder="Your full name" aria-label="Type your name" data-testid="pad-typed" /><p className="m-0 flex h-[100px] items-center rounded border border-line bg-white px-4 text-[44px] text-ink" style={{ fontFamily: '"Snell Roundhand","Segoe Script","Brush Script MT",cursive' }} aria-hidden="true">{typed}</p></div>}

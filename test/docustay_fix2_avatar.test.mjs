@@ -14,6 +14,10 @@ test("positive control: the old colour did fail for some hue", () => {
   let worst = 99; for (let h = 0; h < 360; h += 1) worst = Math.min(worst, ratio(hsl(h, 55, 48)));
   assert.ok(worst < 3);
 });
-test("the Documents list uses the accessible colour", () => {
-  assert.match(fs.readFileSync(new URL("../docustay/web/src/routes/(app)/documents/+page.svelte", import.meta.url), "utf8"), /hsl\(\{hue\(n\)\} 50% 28%\)/);
+test("an avatar uses the accessible colour pair, and the contrast gate holds that pair", () => {
+  // the redesigned Documents list has no avatars (page thumbnails and a ribbon); People and the document page draw the one Avatar: initials in the accent ink on the accent tint, one colour for everyone
+  const av = fs.readFileSync(new URL("../docustay/web/src/lib/ui/Avatar.svelte", import.meta.url), "utf8");
+  assert.match(av, /bg-accent-soft/); assert.match(av, /text-accent-ink/); assert.doesNotMatch(av, /hsl\(/);
+  const gate = fs.readFileSync(new URL("../docustay/web/scripts/contrast-gate.mjs", import.meta.url), "utf8");
+  assert.match(gate, /accent-ink/);
 });

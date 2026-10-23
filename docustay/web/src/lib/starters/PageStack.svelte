@@ -3,7 +3,7 @@
   // with each field's rectangle drawn over its page from the template's real field map. Own CSS 3D, transform and opacity only: no layout shift, 3 KB, no library (StPageFlip is a two-page book viewer, ~28 KB gzip).
   // Keyboard: the stage takes focus; Left/Right turn. Touch: swipe or drag the top sheet. prefers-reduced-motion: a crossfade, no 3D turn. "Open full size" uses a native <dialog> (Escape leaves it).
   import { t } from "$lib/i18n/index.svelte.js";
-  let { slug, title, pages, fields = [], seats = [], showFields = true, sizes = "(min-width: 1024px) 560px, 92vw" } = $props();
+  let { slug, title, pages, fields = [], seats = [], showFields = true, sizes = "(min-width: 1024px) 560px, 92vw", eager = 1 } = $props();
   let cur = $state(0), busy = false, stage = $state(null), full = $state(null), overlay = $state(true), drag = $state(null);
   const n = $derived(pages);
   const src = (i, size, ext) => `/starters/${slug}/p${i + 1}-${size}.${ext}`;
@@ -61,7 +61,7 @@
             {#if near(i)}
               <picture>
                 <source type="image/webp" srcset="{src(i, 'sm', 'webp')} 440w, {src(i, 'lg', 'webp')} 1000w" {sizes} />
-                <img src={src(i, "lg", "jpg")} srcset="{src(i, 'sm', 'jpg')} 440w, {src(i, 'lg', 'jpg')} 1000w" {sizes} width="1000" height="1294" loading={i === 0 ? "eager" : "lazy"} decoding="async" draggable="false"
+                <img src={src(i, "lg", "jpg")} srcset="{src(i, 'sm', 'jpg')} 440w, {src(i, 'lg', 'jpg')} 1000w" {sizes} width="1000" height="1294" loading={i < eager ? "eager" : "lazy"} fetchpriority={i === 0 ? "high" : "auto"} decoding="async" draggable="false"
                   alt={t("Page {page} of {total} of the {title} template", { page: i + 1, total: n, title })} />
               </picture>
             {/if}

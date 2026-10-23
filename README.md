@@ -68,6 +68,17 @@ docker compose up -d
 
 Migrations run on start. See [the upgrade guide](docustay/docs/self-host-upgrade.md).
 
+## Uninstall
+
+Take a backup first if you may want your documents again ([Back up and restore](docustay/docs/self-host-backup.md)). Then, in the `docustay` folder:
+
+```sh
+docker compose down --volumes --rmi local   # stops the six containers, deletes the database, the signed files and the images built here
+cd ../.. && rm -rf docustay                 # the cloned folder, including .env and its secrets
+```
+
+Without `--volumes` the containers go but your data stays in Docker volumes, ready for a later `docker compose up -d`. `docker volume ls` lists what is left.
+
 ## What this edition does not do (yet)
 
 * One organisation per install, with its owner. Inviting teammates uses the hosted product's sign-in; on a self-hosted install add people by sharing the owner login for now.

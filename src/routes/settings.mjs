@@ -43,6 +43,7 @@ import { authoriseSection, atLeastRank } from "../nav/authorise.mjs";
 //     grant seeded `none`/`none`). That floor now lives in `src/nav/authorise.mjs` as
 //     `atLeastRank(user, minRole)` over the one surviving `RANK` ladder — imported here in its place.
 import { assertMay } from "../permissions/assertMay.mjs";
+import { ROLE_WORDS } from "../permissions/docustayRoleTable.mjs";
 import { getSetting, getSettings, setSetting } from "../settings/writes.mjs";
 import { SETTING_KEYS, SettingViolation, REACH_KEYS, LOCKED_KEYS } from "../settings/keys.mjs";
 // ★★★ Task 11.23 (CT-F44) — the consequence engine `POST /api/settings` calls before any write.
@@ -2135,6 +2136,7 @@ export function registerSettingsRoutes(app, { runTenantScoped, tenantIsPlatform 
       if (!got.ok) return null;
       return { body: got.body, type: sniffImage(got.body)?.type ?? "application/octet-stream" };
     }, { bucket: "settings" });
+    if (!out && c.req.query("probe") === "1") return c.body(null, 204);   // the settings card asks "is there a logo?" without a red 404 in the browser console
     if (!out) return c.json({ error: { kind: "not_found", message: "no logo" } }, 404);
     return c.body(out.body, 200, { "content-type": out.type, "cache-control": "private, max-age=86400",
       "x-content-type-options": "nosniff" });
@@ -2551,6 +2553,7 @@ export function registerSettingsRoutes(app, { runTenantScoped, tenantIsPlatform 
   //     Both routes stay `authoriseSection`'d against the same `"/settings/roles"` navPath, so the
   //     security floor (`read()`'s own guard) is unchanged for either door.
   async function loadRolesView(db) {
+    const docustay = (await db.query(`SELECT product FROM keystone.tenant WHERE id = keystone.current_tenant_id()`)).rows[0]?.product === "docustay";
     const { rows: roles } = await db.query(
       `SELECT r.id, r.key, r.label, r.is_builtin, r.rank,
               (SELECT count(*)::int FROM keystone.user_role ur WHERE ur.role_id = r.id) AS members,
@@ -2579,6 +2582,8 @@ export function registerSettingsRoutes(app, { runTenantScoped, tenantIsPlatform 
       path: "/settings/roles", title: "Roles and permissions",
       roles: roles.map((r) => ({
         ...r,
+        // a Docustay workspace says Owner / Admin / Member in Docustay's own words (the stored label of a built-in role is the platform's: "Coach")
+        ...(docustay && r.is_builtin && ROLE_WORDS[r.key] ? { label: ROLE_WORDS[r.key].label, description: ROLE_WORDS[r.key].description } : {}),
         grants: grants.filter((g) => g.role_id === r.id),
         actions: actions.filter((a) => a.role_id === r.id).map((a) => a.action),
       })),

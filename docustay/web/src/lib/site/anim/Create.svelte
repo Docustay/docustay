@@ -19,5 +19,5 @@
   :global(.anim.armed) .f3 { animation: drop .5s ease-out 4s both; } :global(.anim.armed) .f4 { animation: drop .5s ease-out 3.4s both; } :global(.anim.armed) .chip { animation: tag 1.2s ease-in-out 3s both; }
   @keyframes slide { from { transform: translateX(-24px); opacity: 0; } } @keyframes type { from { transform: scaleX(0); } } @keyframes drop { from { transform: translateY(-14px); opacity: 0; } }
   @keyframes tag { 0% { opacity: 0; transform: translateX(14px); } 25%, 70% { opacity: 1; transform: none; } 100% { opacity: 0; transform: translateX(-30px); } }
-.real { filter: drop-shadow(0 1px 3px rgb(0 0 0 / .2)); }
+.real { filter: drop-shadow(0 1px 3px rgb(60 40 140 / 0.09)); }
 </style>

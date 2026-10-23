@@ -1679,17 +1679,6 @@ export const AUTOMATIONS = Object.freeze([
     locked: true,
     configFields: [],
   },
-  {
-    key: "settings.usage_reconciled",
-    name: "Monthly usage, and a warning at 80%",
-    line: 220,
-    family: "money",
-    topics: ["settings.usage.reconciled"],
-    runner: "n8n",
-    defaultOn: true,
-    locked: true,
-    configFields: [],
-  },
 
   // ═══════════════════════════════════════════════════════════════════════════════════════════════
   // GROWTH — 9 events from EVENT-AUTOMATION-MAP (STAGE 20 ADDITIONS)

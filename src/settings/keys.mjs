@@ -390,6 +390,8 @@ export const SETTING_KEYS = Object.freeze({
   'practice.name':            { validate: nonEmptyString(120), item: 'P6.60' },
   // Part 30 item 5 — when true every staff member must have two-step sign-in set up before anything but its setup screens will answer (src/auth/requireTwoStep.mjs)
   'security.require_two_step': { validate: bool, item: 'P30.5' },
+  // 0766 (20 Oct 2026) — the end of a grace period before two-step is required for everyone (an ISO date; empty = no grace period). After the date the workspace is treated as 'required now'. Read by src/auth/requireTwoStep.mjs
+  'security.two_step_grace_until': { validate: (v) => (v === '' || (typeof v === 'string' && !Number.isNaN(Date.parse(v))) ? null : 'a date, or empty to clear it'), item: 'TS20' },
   // Run 7 part 6 — sign a person out after this many minutes without activity (0 = never, the default; optional). Read by src/auth/idleSignOut.mjs
   // Launch plan Part 3 (13 Oct 2026) — a Docustay workspace's separate billing email: receipts and billing emails go to it as well as to the owners. Empty = none. Written by src/product/docustayBillingContact.mjs
   'billing.email': { validate: (v) => (v === '' || (typeof v === 'string' && v.length <= 254 && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) ? null : 'must be an email address, or empty to remove it'), item: 'LAUNCH.3' },

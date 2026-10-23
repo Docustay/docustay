@@ -2,12 +2,17 @@
 const deref = (spec, s) => (s?.$ref ? deref(spec, spec.components.schemas[s.$ref.split("/").pop()]) : s);
 const typeOf = (spec, s) => { s = deref(spec, s) ?? {}; if (s.enum) return s.enum.join(" | "); if (s.type === "array") return `array of ${typeOf(spec, s.items)}`; return Array.isArray(s.type) ? s.type.join(" or ") : (s.type ?? "object"); };
 export const example = (spec, schema, depth = 0) => {
-  const s = deref(spec, schema) ?? {};
+  let s = deref(spec, schema) ?? {};
   if (s.example !== undefined) return s.example;
+  if (Array.isArray(s.type)) s = { ...s, type: s.type.find((t) => t !== "null") ?? "null" };   // a nullable field shows its real type
   if (depth > 4) return {};
   if (s.type === "array") return [example(spec, s.items, depth + 1)];
   if (s.properties) return Object.fromEntries(Object.entries(s.properties).map(([k, v]) => [k, example(spec, v, depth + 1)]));
-  return s.type === "integer" || s.type === "number" ? 0 : s.type === "boolean" ? false : s.enum?.[0] ?? (s.format === "uuid" ? "6f1c1f0e-7a0c-4d1d-9b5e-2f0a7b1c3d4e" : "string");
+  const alt = s.anyOf ?? s.oneOf; if (alt?.length) return example(spec, alt[0], depth + 1);
+  if (s.additionalProperties && typeof s.additionalProperties === "object") return { key: example(spec, s.additionalProperties, depth + 1) };   // a map (z.record): R13-D319, it was shown as "string"
+  if (s.type === "object") return {};
+  if (s.type === "integer" || s.type === "number") return s.minimum ?? (s.exclusiveMinimum !== undefined ? s.exclusiveMinimum + 1 : 0);
+  return s.type === "boolean" ? false : s.enum?.[0] ?? (s.format === "uuid" ? "6f1c1f0e-7a0c-4d1d-9b5e-2f0a7b1c3d4e" : "string");
 };
 const fieldsOf = (spec, schema) => {
   const s = deref(spec, schema); if (!s?.properties) return [];

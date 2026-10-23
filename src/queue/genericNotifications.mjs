@@ -20,12 +20,14 @@
 //     the comment, before assuming either way.
 //   - `link`: the deep link the email/notification points at.
 
-import { documentNoticeFacts, playbookNoticeFacts } from "../documents/frontDoor.mjs";
+import { documentNoticeFacts } from "../documents/frontDoor.mjs";
 // Run 8 (R8-35): the document notices name the document and the person who acted, and link to it, from the island's own facts (through the door)
 const documentFacts = (tx, tenantId, ev) => documentNoticeFacts(tx, { tenantId, instanceId: ev.subject_id, role: ev.payload?.role ?? null });
 const documentLink = (ev) => (ev.payload?.builder === "pdf" ? `/documents/pdf/${ev.subject_id}` : `/record/document/${ev.subject_id}`);
 
 import { planNoticeTitle } from "../email/docustayBilling.mjs";
+/** "Oct 19 to Nov 19" from a usage notice's period (UTC); empty when the notice carries none. */
+const usageRange = (p) => { const d = (x) => (x ? new Date(x).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" }) : null), a = d(p?.period_start), b = d(p?.period_end); return a && b ? `${a} to ${b}` : "this month"; };
 export const GENERIC_NOTIFICATIONS = Object.freeze({
   // ── people.* — DIRECT (subjectId is the recipient) ─────────────────────────────────────────
   "people.person.created": {
@@ -153,10 +155,20 @@ export const GENERIC_NOTIFICATIONS = Object.freeze({
   // ★ Free workspace used 80% / 100% of its monthly document limit, its daily emails, or 4 / 5 of its 5 new templates a month (src/product/docustay.mjs usageAlerts, templateUsageAlerts) — told once each, to the workspace owner, in plain words that name no other product.
   "documents.usage.threshold": {
     recipient: "owner", templateKey: "workbench.owner_notice",
-    summary: (ev) => (ev.payload?.kind === "templates"
+    summary: (ev) => (ev.payload?.kind === "summary"
+      ? `Your billing period ${usageRange(ev.payload)} on Docustay: ${ev.payload?.documents ?? 0} documents and ${ev.payload?.drafts ?? 0} AI drafts past your plan's included amount, $${((ev.payload?.amount_minor ?? 0) / 100).toFixed(2)} in all. It is on your next invoice. See the detail in Billing.`
+      : ev.payload?.kind === "budget"
       ? (ev.payload?.percent >= 100
-        ? `You have made all ${ev.payload?.limit} new templates your Free plan includes this month. You can still use and edit every template you have; new ones open again on ${ev.payload?.period_end ? new Date(ev.payload.period_end).toLocaleDateString("en-US", { month: "long", day: "numeric", timeZone: "UTC" }) : "the 1st"}, or upgrade to Pro for unlimited templates.`
-        : `You have made ${ev.payload?.used} of the ${ev.payload?.limit} new templates your Free plan includes this month.`)
+        ? `Your usage this billing period (${usageRange(ev.payload)}) has reached your $${((ev.payload?.limit_minor ?? 0) / 100).toFixed(2)} budget, so sending and AI drafting are paused. Raise the budget in Billing to go on. Nothing is deleted.`
+        : `Your usage this billing period (${usageRange(ev.payload)}) is at ${ev.payload?.percent}% of your $${((ev.payload?.limit_minor ?? 0) / 100).toFixed(2)} budget ($${((ev.payload?.used_minor ?? 0) / 100).toFixed(2)} so far).`)
+      : ev.payload?.kind === "signers"
+      ? (ev.payload?.percent >= 100
+        ? `You have sent to ${ev.payload?.limit} different signers, all your Free plan includes this month. Sending again to someone you already sent to is always allowed. New signers open again on ${ev.payload?.period_end ? new Date(ev.payload.period_end).toLocaleDateString("en-US", { month: "long", day: "numeric", timeZone: "UTC" }) : "the 1st"}, or choose Pay as you go or Pro.`
+        : `You have sent to ${ev.payload?.used} of the ${ev.payload?.limit} different signers your Free plan includes this month.`)
+      : ev.payload?.kind === "templates"
+      ? (ev.payload?.percent >= 100
+        ? `You have made all ${ev.payload?.limit} new templates your ${ev.payload?.plan === "docustay_payg" ? "Pay as you go" : "Free"} plan includes this month. You can still use and edit every template you have; new ones open again on ${ev.payload?.period_end ? new Date(ev.payload.period_end).toLocaleDateString("en-US", { month: "long", day: "numeric", timeZone: "UTC" }) : "the 1st"}, or upgrade to Pro for unlimited templates.`
+        : `You have made ${ev.payload?.used} of the ${ev.payload?.limit} new templates your ${ev.payload?.plan === "docustay_payg" ? "Pay as you go" : "Free"} plan includes this month.`)
       : ev.payload?.kind === "emails"
       ? (ev.payload?.percent >= 100
         ? `You have sent ${ev.payload?.limit} emails today, the daily limit for your plan. Signing emails go out again at midnight UTC.`
@@ -223,12 +235,8 @@ export const GENERIC_NOTIFICATIONS = Object.freeze({
   "settings.subscription.updated": {
     recipient: "owner", templateKey: "workbench.owner_notice",
     // a Docustay workspace is never told about "the platform" (found on the localhost stack, 9 Oct 2026: a Docustay purchase sent "Your the platform subscription was updated.")
-    summary: (ev) => (String(ev.payload?.planKey ?? "").startsWith("docustay_") ? planNoticeTitle(ev.payload?.change) : "Your Workbench subscription was updated."),
+    summary: (ev) => (String(ev.payload?.planKey ?? "").startsWith("docustay_") ? planNoticeTitle(ev.payload?.change, ev.payload?.planKey) : "Your Workbench subscription was updated."),
     link: (ev) => (String(ev?.payload?.planKey ?? "").startsWith("docustay_") ? "/billing" : "/settings/billing"),
-  },
-  "settings.usage.reconciled": {
-    recipient: "owner", templateKey: "workbench.owner_notice",
-    summary: () => "Usage was reconciled for this billing period.", link: () => "/settings/billing",
   },
   "accounts.account.created": {
     recipient: "owner", templateKey: "workbench.owner_notice",
@@ -298,8 +306,12 @@ export const GENERIC_NOTIFICATIONS = Object.freeze({
     summary: (ev, f) => (f?.title ? `Everyone has signed “${f.title}”. It is complete.` : "A document is now complete: everyone has signed."), link: (ev) => documentLink(ev),
   },
   "documents.document.changes_requested": {
-    recipient: "lookup", lookupKey: "document", fallbackOwner: true, templateKey: "documents.changes_requested",
-    summary: () => "Someone asked for changes to a document you sent — their words are on the document's timeline.", link: (ev) => documentLink(ev),
+    recipient: "lookup", lookupKey: "document", fallbackOwner: true, templateKey: "documents.changes_requested", facts: documentFacts,   // R13-D316: say who and which document, as a decline does
+    summary: (ev, f) => (f?.title ? `${f.who || "Someone"} asked for changes to “${f.title}”. Their words are on the document's timeline.` : "Someone asked for changes to a document you sent — their words are on the document's timeline."), link: (ev) => documentLink(ev),
+  },
+  "documents.document.delegated": {   // R13-D265: the event fires after the seat moves, so the facts name the new person
+    recipient: "lookup", lookupKey: "document", fallbackOwner: true, templateKey: "documents.delegated", facts: documentFacts,
+    summary: (ev, f) => (f?.title ? `“${f.title}” was passed on: ${f.who || "someone else"} signs it now.` : "Someone passed a document you sent on to another person."), link: (ev) => documentLink(ev),
   },
   "documents.document.bounced": {
     recipient: "lookup", lookupKey: "document", fallbackOwner: true, templateKey: "documents.bounced",
@@ -308,19 +320,6 @@ export const GENERIC_NOTIFICATIONS = Object.freeze({
   "documents.document.reminder_due": {
     recipient: "lookup", lookupKey: "document", fallbackOwner: true, templateKey: "documents.reminder_due",
     summary: () => "A document is still waiting to be signed.", link: (ev) => `/record/document/${ev.subject_id}`,
-  },
-  // ★ Run 9 (R9-i) — a signed contract's notice date is near (Pro renewal reminders; emitted by src/documents/keyDates.mjs KEY_DATE_DUE_FACT, 30 and 7 days before)
-  "documents.key_date.due": {
-    recipient: "lookup", lookupKey: "document", fallbackOwner: true, templateKey: "documents.key_date_due", facts: documentFacts,
-    summary: (ev, f) => { const d = Number(ev.payload?.days); const when = d === 0 ? "today" : d === 1 ? "tomorrow" : `in ${d} days (${ev.payload?.date})`;
-      return f?.title ? `The notice date for “${f.title}” is ${when}.` : `A signed contract's notice date is ${when}.`; },
-    link: (ev) => documentLink(ev),
-  },
-  "documents.playbook.ran": {
-    recipient: "lookup", lookupKey: "document", fallbackOwner: true, templateKey: "documents.playbook_ran",
-    facts: (tx, tenantId, ev) => playbookNoticeFacts(tx, { tenantId, instanceId: ev.subject_id, playbookId: ev.payload?.playbook_id ?? null }),
-    summary: (ev, f) => { const p = f?.playbookTitle ?? "An automation"; return ev.payload?.sent && f?.title ? `Automation “${p}”: “${f.title}” is not signed yet.` : f?.title ? `Automation “${p}” ran for “${f.title}”.` : `Automation “${p}” ran.`; },   // Run 9 Part 4R: the "playbook that runs" is an automation   // "tell me" after a send: what it sent is still waiting (a run whose document was signed in time stops before this step)
-    link: (ev) => documentLink(ev),
   },
   // ★ Run 9 Part 3.7 (R9-l) — a signature kept for its payment lapsed unpaid (the signer is emailed by the island itself)
   "documents.payment.hold_lapsed": {

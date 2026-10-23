@@ -1,4 +1,4 @@
-// The AI usage numbers, one copy for the settings card, the Scribe footer and the Think harder switch: GET /api/documents/ai/usage (the allowance, what is used, when it resets, by kind of work).
+// The AI usage numbers, one copy for the settings card, and the Scribe footer: GET /api/documents/ai/usage (the allowance, what is used, when it resets, by kind of work).
 import { api } from "$lib/api.js";
 export const aiUsage = $state({ data: null, loaded: false });
 let inflight = null;

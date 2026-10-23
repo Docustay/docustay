@@ -16,9 +16,12 @@ export async function listPlays(tx, { includeArchived = false } = {}) {
     .map((p) => ({ ...p, on: !off.has(p.name) }));
 }
 // Run 9 Part 4R: a skill (built-in or the workspace's own) can be switched off for the workspace. Using and switching is every plan's; MAKING a skill is Pro.
+// R13-D293: each switch is a read-modify-write of one list setting; two quick clicks ran side by side and the later write dropped the earlier change. One lock per workspace and list, held to the end of the transaction, puts them in a line.
+const lockList = (tx, tenantId, key) => tx.query(`SELECT pg_advisory_xact_lock(hashtextextended($1::text, 0))`, [`documents.setting:${tenantId}:${key}`]);
 const playsOff = async (tx) => new Set(((await (await import("../settings.mjs")).getDocumentSetting(tx, "plays.off")) ?? []).map(String));
 export async function setPlayOn(tx, { tenantId, name, on }) {
   const n = String(name ?? ""); if (!builtinPlay(n) && !(await tx.query(`SELECT 1 FROM keystone.document_play WHERE name = $1`, [n])).rowCount) throw notFound("That skill was not found.");
+  await lockList(tx, tenantId, "plays.off");
   const off = await playsOff(tx); if (on) off.delete(n); else off.add(n);
   await (await import("../settings.mjs")).setDocumentSetting(tx, { tenantId, key: "plays.off", value: [...off].sort() });
   return { name: n, on: on === true };
@@ -127,6 +130,7 @@ export async function setPlaybookEnabled(tx, { tenantId, name, on }) {
   const n = String(name ?? "");
   const { BUILTIN_PACKS } = await import("./packs.mjs");
   if (BUILTIN_PACKS.some((b) => b.name === n)) {
+    await lockList(tx, tenantId, "packs.enabled");
     const S = await import("../settings.mjs"); const cur = new Set(((await S.getDocumentSetting(tx, "packs.enabled")) ?? []).map(String));
     if (on) cur.add(n); else cur.delete(n);
     await S.setDocumentSetting(tx, { tenantId, key: "packs.enabled", value: [...cur].sort() });
@@ -137,6 +141,9 @@ export async function setPlaybookEnabled(tx, { tenantId, name, on }) {
   return { name: n, enabled: on === true, builtin: false };
 }
 /** What the switched-on packs bring: their skills (play names) and templates (refs), for the Templates page and for Scribe. */
+/** R13-D336/D337: a switched-on pack's items come first, in their own order, and say so (`inPack`). Pure; `key` gives an item's pack reference. */
+export const packsFirst = (items, packRefs, key) => { const on = new Set(packRefs); return items.map((x) => ({ ...x, inPack: on.has(key(x)) })).sort((a, b) => Number(b.inPack) - Number(a.inPack)); };
+
 export async function enabledPackContents(tx) {
   const packs = (await listPlaybooks(tx)).filter((p) => p.enabled);
   return { packs: packs.map((p) => ({ name: p.name, title: p.title })), plays: [...new Set(packs.flatMap((p) => p.plays))], templates: [...new Set(packs.flatMap((p) => p.templates))] };

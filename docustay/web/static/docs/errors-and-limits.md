@@ -26,14 +26,19 @@ Each key has its own per-minute budget; over it you get `429` with a `Retry-Afte
 
 A document is a **sent** document. A package of several documents sent together counts once. Drafts, signers, reminders, resends and test-mode documents never count.
 
-The count is per calendar month in UTC and resets on the 1st.
+The count is per workspace. On Free it is per calendar month in UTC and resets on the 1st. On Pay as you go, Pro and Lifetime it follows your billing month: it starts the day you subscribe (or buy Lifetime) and resets on the same day each month, the same window Stripe invoices. `GET /api/v1/usage` returns it as `periodStart` and `periodEnd`.
 
-- **Free:** 15 documents a month. At the limit, sending is blocked with a `403` whose `error.detail.code` is `plan_document_limit` (with `used`, `limit` and `resetsAt`) and whose message says the plan allows 15 documents a month and to upgrade to Pro. Nothing is ever billed for going over: there are no overage bills.
-- **Pro:** no monthly document limit.
+- **Free:** 15 documents a month. At the limit, sending is blocked with a `403` whose `error.detail.code` is `plan_document_limit` (with `used`, `limit` and `resetsAt`) and whose message says the plan allows 15 documents a month and to switch to Pay as you go or Pro. Free is never billed.
+- **Pay as you go:** 15 documents each billing month are free, then $0.50 each, counted toward your budget. When the budget (default $50) is reached, sending is paused with a `403` and `error.detail.code` `budget_reached`; raise the budget in Billing to go on.
+- **Pro and Lifetime:** no monthly document limit.
+
+## Signer limits
+
+A Free workspace can send to 15 different signers a month. A signer is anyone you send a document to, counted once a month by email address however many documents they get. Sending to your own team does not count, sending again to someone you already sent to this month never counts, and reminders and resends are free. At 12 you get a soft warning and at 14 a note that one is left; a 16th new person is refused with a `403` whose `error.detail.code` is `plan_signer_limit` (`used`, `limit`, `newSigners`, `resetsAt`). Everything already made keeps working. Pay as you go, Pro and Lifetime have no signer limit. This limit starts on 1 November 2026.
 
 ## Template limits
 
-A Free workspace can make 5 new templates a month, document and form templates together, however they are made: written, uploaded, customized from a built-in template, duplicated, described in words, made by Scribe or created through the API, SDKs, CLI or MCP. A new version of a template you already have does not count, and nor does sending straight from a built-in template (the built-in is read-only; only "Customize" makes your own copy, and that counts). Deleting a template does not give one back. The count is per calendar month in UTC and resets on the 1st.
+A Free workspace can make 5 new templates a month, however they are made: written, uploaded, customized from a built-in template, duplicated, described in words, made by Scribe or created through the API, SDKs, CLI or MCP. A new version of a template you already have does not count, and nor does sending straight from a built-in template (the built-in is read-only; only "Customize" makes your own copy, and that counts). Deleting a template does not give one back. The count is per calendar month in UTC and resets on the 1st.
 
 - **Free:** 5 new templates a month. Every template you already have stays usable and editable. At the limit, making a new one is refused with a `403` whose `error.detail.code` is `plan_template_limit`:
 
@@ -49,31 +54,40 @@ A Free workspace can make 5 new templates a month, document and form templates t
 }
 ```
 
-- **Pro:** no template limit.
+- **Pay as you go:** 25 new templates a month from 1 November 2026, refused with the same `plan_template_limit` code (the prompt offers Pro, not a per-template charge).
+- **Pro and Lifetime:** no template limit.
 - **Self-hosted:** no template limit.
 
 ## Email limits
 
-Each workspace can send 25 emails a day on Free and 500 a day on Pro. Signing requests, reminders and completed copies sent to signers count. Alerts to the workspace owner, sign-in emails and the usage warning emails do not count and are never blocked. A self-hosted install has no limit. The day is a UTC day and the count resets at midnight UTC. When the limit is reached the send is refused with a plain message.
+Each workspace can send 25 emails a day on Free and 500 a day on every paid plan. In a workspace's first 7 days the lines are lower (10 a day on Free, 100 a day on a paid plan), because a brand-new workspace that mails many people on day one is the usual shape of misuse; they go back to the plan's number on day 8. Signing requests, reminders and completed copies sent to signers count. Alerts to the workspace owner, sign-in emails and the usage warning emails do not count and are never blocked. A self-hosted install has no limit. The day is a UTC day and the count resets at midnight UTC. When the limit is reached the send is refused with a plain message.
 
-If you send from your own connected mailbox or your own verified domain, the From address uses your provider's sending. That option is in **Settings → Email**; see [Email setup](/docs/email-setup.md).
+Hosted email is sent by Docustay with your name and reply-to. A self-hosted install sends from its own domain or SMTP server: see [Email setup](/docs/email-setup).
 
 ## API limits
 
-Each API key may make 600 requests per minute. Over that, the API answers `429` with a `Retry-After` header (in seconds). Nothing is lost if you wait and retry. Retried `POST` requests with the same `Idempotency-Key` never send twice. There are no per-call or per-API-document fees on any plan.
+Each API key may make 600 requests per minute. Over that, the API answers `429` with a `Retry-After` header (in seconds). Three limits can answer `429`, and the message says which one: `rate limit exceeded for this API key` (the key's 600 a minute), `rate limit exceeded for <bucket>` (one kind of call, such as `documents` for field detection), and `too many requests from this address` (all callers from one IP address). Each answer carries its own wait in both `Retry-After` and `error.detail.retryAfterSeconds`, always the same number; two different `429`s can name different waits. Nothing is lost if you wait and retry. Retried `POST` requests with the same `Idempotency-Key` never send twice. There are no per-call or per-API-document fees on any plan.
 
-## Fair use on Pro
+## Fair use on Pro and Lifetime
 
-Pro is unlimited for one organisation's own documents. If your use becomes far above normal (many thousands of documents a month) we will contact you first and agree a plan. We do not bill extra charges automatically.
+Pro and Lifetime are unlimited for one organisation's own documents. A login belongs to one person. We look at, and may ask you about, a workspace with more than 50 team members or more than 2,000 documents sent in a month. On any plan we also look at a workspace that stores more than 10 GB. We contact you first and agree a plan; we do not pause or bill extra charges automatically for volume alone. Sending that draws spam complaints is different: the email guard pauses it (see the email section) and we look at it with you.
+
+## Other plan rules and their errors
+
+- **Using your own AI provider key** is part of Pay as you go, Pro and Lifetime. You save it in the app under **Settings → AI drafting** (the API has no route that takes a provider key). On Free, saving a key is refused with `own_key_needs_plan` (403).
+- **Switching plans** from Billing credits the unused, already-paid time against the new plan when you move up; the confirm box shows the amount first. If the amount changed while you looked, the switch is refused with `switch_numbers_changed` (400) and the new amount is returned. A declined card is `switch_card_declined`; nothing is changed.
+- **A lost dispute** on a plan payment pauses sending and AI drafting in that workspace: sends are refused with `workspace_on_hold` (403) until we lift it.
+- **A spam-report pause** (the email guard) cannot be resumed from the app: `email_paused_for_spam` (403). Contact support.
+- **Free workspaces** may be signed in on three devices at once; a fourth sign-in signs out the oldest.
 
 ## Usage and alerts
 
-The Billing and Reports pages show documents sent this month, new templates made this month and emails sent today. We email the workspace owner once when 80% and once when 100% of the Free monthly document limit is used (the 12th and the 15th document), and once a day when 80% and 100% of the daily email limit is used (Free: the 20th and the 25th email; Pro: the 400th and the 500th).
+The Billing page shows documents sent this month, new templates made this month and emails sent today. We email the workspace owner once when 80% and once when 100% of the Free monthly document limit is used (the 12th and the 15th document). On Pay as you go the alerts come at 50%, 80% and 100% of your budget, and arrive as the `documents.usage.threshold` webhook too, and once a day when 80% and 100% of the daily email limit is used (Free: the 20th and the 25th email; paid plans: the 400th and the 500th).
 
 `GET /api/v1/usage` returns the same numbers. It needs an API key with `documents:read`.
 
 ```bash
-curl https://app.docustay.app/api/v1/usage -H "Authorization: Bearer $DOCUSTAY_KEY"
+curl https://app.docustay.app/api/v1/usage -H "Authorization: Bearer $DOCUSTAY_API_KEY"
 ```
 
 ```json
@@ -86,15 +100,17 @@ curl https://app.docustay.app/api/v1/usage -H "Authorization: Bearer $DOCUSTAY_K
 }
 ```
 
+`emails.limitPerDay` is the most this workspace may send **today**. For a workspace's first 7 days it is lower than the plan's `limits.emailsPerDay`: 10 a day on Free and 100 on a paid plan. After that the two are the same.
+
 ## Pagination
 
 Lists take `limit` (1 to 200) and `cursor`. The answer carries `page.nextCursor` (null on the last page).
 
 ## Upload limits
 
-Files uploaded for signing in the app are limited to 25 MB on Free and 100 MB on Pro.
+Files uploaded for signing in the app are limited to 25 MB on Free and Pay as you go, and 100 MB on Pro and Lifetime.
 
-Through the API a request body is limited to 1 MB, whatever the plan. A file goes in the body as base64, so a file of about 700 KB is the most one request can carry; a bigger file is refused with `413`. Upload larger files in the app.
+Through the API most request bodies are limited to 1 MB (`413` above that); written documents and HTML templates take up to 3 MB. The two routes that take a file, `POST /api/v1/templates/file` and `POST /api/v1/documents/detect-fields`, take a file up to your plan's upload limit (sent as base64); a bigger file is refused with `400` and the code `too_big`.
 
 ## A retry loop that is safe
 
@@ -106,7 +122,7 @@ async function sendWithRetry(body) {
   for (let attempt = 0; attempt < 5; attempt += 1) {
     const r = await fetch("https://docustay.app/api/v1/documents/send", {
       method: "POST", body: JSON.stringify(body),
-      headers: { Authorization: `Bearer ${process.env.DOCUSTAY_KEY}`, "Idempotency-Key": key, "Content-Type": "application/json" },
+      headers: { Authorization: `Bearer ${process.env.DOCUSTAY_API_KEY}`, "Idempotency-Key": key, "Content-Type": "application/json" },
     });
     if (r.status !== 429 && r.status < 500) return r;
     await new Promise((ok) => setTimeout(ok, (Number(r.headers.get("retry-after")) || 2 ** attempt) * 1000));
@@ -122,3 +138,7 @@ async function sendWithRetry(body) {
 ```
 
 `retryable: false` means sending the same thing again will fail the same way: fix the request. `retryable: true` means try again with the same key.
+
+## Finding fields through the API
+
+`POST /api/v1/documents/detect-fields` runs on our server and does not use an AI model, so it is not counted as an AI draft and costs nothing. To keep one workspace from using all of it, each workspace may make 30 calls an hour; past that the answer is a `429` with `Retry-After`.

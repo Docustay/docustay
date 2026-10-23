@@ -1,17 +1,26 @@
 # Docustay's web app (SvelteKit, adapter-node). BUILD CONTEXT = the repository root:  docker build -f docustay/web/Dockerfile .
 # (the build drafts the legal pages from src/legal, the starter templates from src/documents/starters and their parser, and the Markdown docs from docustay/docs; all live at the root)
-FROM node:22-alpine AS build
+FROM node:22.23.4-alpine AS build
 WORKDIR /repo
 COPY src/legal ./src/legal
 COPY src/documents ./src/documents
 COPY src/http ./src/http
+COPY src/product/docustayPrices.mjs ./src/product/docustayPrices.mjs
+COPY src/product/docustayWords.mjs ./src/product/docustayWords.mjs
 COPY docustay/docs ./docustay/docs
 COPY docustay/web ./docustay/web
 WORKDIR /repo/docustay/web
 # the build scripts import island modules from /repo/src (the starters parser needs json-logic-js): let node find this folder's packages from there
+# the Content-Security-Policy is written at build time and names the analytics server only when these are set; the prerendered pages also bake the website id in at build time (Railway hands a service variable to the build only if the Dockerfile declares it)
+ARG DOCUSTAY_UMAMI_URL
+ARG DOCUSTAY_UMAMI_ID
+# PH1: PostHog's PUBLIC project token (the kind meant for web pages) and host; with either missing, no PostHog code runs and the CSP does not name it
+ARG DOCUSTAY_POSTHOG_TOKEN
+ARG DOCUSTAY_POSTHOG_HOST
+ENV DOCUSTAY_UMAMI_URL=$DOCUSTAY_UMAMI_URL DOCUSTAY_UMAMI_ID=$DOCUSTAY_UMAMI_ID DOCUSTAY_POSTHOG_TOKEN=$DOCUSTAY_POSTHOG_TOKEN DOCUSTAY_POSTHOG_HOST=$DOCUSTAY_POSTHOG_HOST
 RUN npm ci && ln -s /repo/docustay/web/node_modules /repo/node_modules && npm run build
 
-FROM node:22-alpine
+FROM node:22.23.4-alpine
 WORKDIR /app
 ENV NODE_ENV=production PORT=3000
 # adapter-node refuses a request body over 512 KB by default; an upload part is up to 768 KiB, so every file over about half a megabyte failed with "Part 1 of the upload failed (502)" (measured 6 Oct 2026, sandbox: a 1 MB PDF).

@@ -14,9 +14,9 @@ step "sandbox app /readyz says ready (the body, not the code: the app answers 20
 step "API refuses a request with no key (401)"; c=$(curl -s -o /dev/null -w '%{http_code}' --max-time 20 "$WEB/api/v1/usage"); echo "no-key $c" >>"$OUT"; [ "$c" = 401 ] || bad=$((bad+1))
 step "marketing SITE origin proxies /api (R10-92)"; node "$HERE/../../scripts/proofs/site-origin-gate.mjs" "${DOCUSTAY_CANARY_SITE:-https://host.example.com}" >>"$OUT" 2>&1 || bad=$((bad+1))
 if [ -n "${DOCUSTAY_CANARY_KEY:-}" ]; then
-  step "API answers a sandbox key (200) and the published spec lists 77 operations"
+  step "API answers a sandbox key (200) and the published spec lists the operations in facts.gen.json"
   c=$(curl -s -o /dev/null -w '%{http_code}' --max-time 20 -H "Authorization: Bearer $DOCUSTAY_CANARY_KEY" "$WEB/api/v1/usage"); echo "with-key $c" >>"$OUT"; [ "$c" = 200 ] || bad=$((bad+1))
-  n=$(curl -s --max-time 20 "$WEB/api/v1/openapi.json" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const p=JSON.parse(s).paths;console.log(Object.values(p).reduce((a,o)=>a+Object.keys(o).filter(k=>/^(get|post|put|patch|delete)$/.test(k)).length,0))})'); echo "operations $n" >>"$OUT"; [ "$n" = 77 ] || bad=$((bad+1))
+  n=$(curl -s --max-time 20 "$WEB/api/v1/openapi.json" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const p=JSON.parse(s).paths;console.log(Object.values(p).reduce((a,o)=>a+Object.keys(o).filter(k=>/^(get|post|put|patch|delete)$/.test(k)).length,0))})'); echo "operations $n" >>"$OUT"; want=$(node -p "require('$(cd "$(dirname "$0")" && pwd)/../../docustay/web/src/lib/site/facts.gen.json').operations"); [ "$n" = "$want" ] || bad=$((bad+1))
 else echo "SKIPPED authenticated step: DOCUSTAY_CANARY_KEY not set" >>"$OUT"; fi
 if [ "$bad" -eq 0 ]; then echo "CANARY OK" >>"$OUT"; else echo "CANARY FAILED ($bad step(s))" >>"$OUT"; osascript -e 'display notification "Docustay nightly canary failed; see run12/canary" with title "Docustay canary"' 2>/dev/null; fi
 tail -1 "$OUT"; exit $bad

@@ -1338,7 +1338,7 @@
      "page": 1,
      "x": 0.27328,
      "y": 0.12595,
-     "w": 0.2451,
+     "w": 0.24509,
      "h": 0.02273
     },
     {
@@ -1349,9 +1349,9 @@
      "seat": "signer_2",
      "required": true,
      "page": 1,
-     "x": 0.56373,
+     "x": 0.56371,
      "y": 0.12595,
-     "w": 0.2451,
+     "w": 0.24509,
      "h": 0.02273
     },
     {
@@ -1364,8 +1364,8 @@
      "required": true,
      "page": 1,
      "x": 0.11765,
-     "y": 0.20739,
-     "w": 0.2451,
+     "y": 0.20738,
+     "w": 0.24509,
      "h": 0.02273
     },
     {
@@ -1377,9 +1377,9 @@
      "sender": true,
      "required": true,
      "page": 1,
-     "x": 0.57598,
-     "y": 0.20739,
-     "w": 0.2451,
+     "x": 0.57597,
+     "y": 0.20738,
+     "w": 0.24509,
      "h": 0.02273
     },
     {
@@ -1393,7 +1393,7 @@
      "page": 1,
      "x": 0.11765,
      "y": 0.23106,
-     "w": 0.2451,
+     "w": 0.24509,
      "h": 0.02273
     },
     {
@@ -1404,9 +1404,9 @@
      "seat": "signer_2",
      "required": true,
      "page": 1,
-     "x": 0.53676,
+     "x": 0.53675,
      "y": 0.23106,
-     "w": 0.2451,
+     "w": 0.24509,
      "h": 0.02273
     },
     {
@@ -1419,7 +1419,7 @@
      "page": 1,
      "x": 0.11765,
      "y": 0.25473,
-     "w": 0.2451,
+     "w": 0.24509,
      "h": 0.02273
     },
     {
@@ -1432,8 +1432,8 @@
      "required": true,
      "page": 1,
      "x": 0.17034,
-     "y": 0.33902,
-     "w": 0.68627,
+     "y": 0.33901,
+     "w": 0.68626,
      "h": 0.06818
     },
     {
@@ -1445,9 +1445,9 @@
      "sender": true,
      "required": true,
      "page": 1,
-     "x": 0.46324,
-     "y": 0.55587,
-     "w": 0.2451,
+     "x": 0.46323,
+     "y": 0.55586,
+     "w": 0.24509,
      "h": 0.02273,
      "options": [
       "a fixed fee",
@@ -1466,8 +1466,8 @@
      "required": true,
      "page": 1,
      "x": 0.17034,
-     "y": 0.57955,
-     "w": 0.2451,
+     "y": 0.57953,
+     "w": 0.24509,
      "h": 0.02273
     },
     {
@@ -1479,9 +1479,9 @@
      "sender": true,
      "required": true,
      "page": 1,
-     "x": 0.44853,
-     "y": 0.60985,
-     "w": 0.2451,
+     "x": 0.44852,
+     "y": 0.60984,
+     "w": 0.24509,
      "h": 0.02273,
      "options": [
       "monthly",
@@ -1500,8 +1500,8 @@
      "required": true,
      "page": 1,
      "x": 0.35784,
-     "y": 0.63352,
-     "w": 0.2451,
+     "y": 0.63351,
+     "w": 0.24509,
      "h": 0.02273,
      "options": [
       "7 days",
@@ -1518,9 +1518,9 @@
      "sender": true,
      "required": true,
      "page": 2,
-     "x": 0.60172,
-     "y": 0.26705,
-     "w": 0.2451,
+     "x": 0.6017,
+     "y": 0.26704,
+     "w": 0.24509,
      "h": 0.02273,
      "options": [
       "7 days",
@@ -1537,9 +1537,9 @@
      "sender": true,
      "required": true,
      "page": 3,
-     "x": 0.33211,
+     "x": 0.3321,
      "y": 0.24905,
-     "w": 0.2451,
+     "w": 0.24509,
      "h": 0.02273,
      "options": [
       "Yes",
@@ -1556,8 +1556,8 @@
      "required": true,
      "page": 3,
      "x": 0.17034,
-     "y": 0.5464,
-     "w": 0.2451,
+     "y": 0.54639,
+     "w": 0.24509,
      "h": 0.02273,
      "options": [
       "Alabama",
@@ -1621,8 +1621,8 @@
      "required": true,
      "page": 4,
      "x": 0.11765,
-     "y": 0.4678,
-     "w": 0.2451,
+     "y": 0.46779,
+     "w": 0.24509,
      "h": 0.02273
     },
     {
@@ -1634,8 +1634,8 @@
      "required": true,
      "page": 4,
      "x": 0.11765,
-     "y": 0.52746,
-     "w": 0.2451,
+     "y": 0.52745,
+     "w": 0.24509,
      "h": 0.02273
     },
     {
@@ -1647,8 +1647,8 @@
      "required": true,
      "page": 4,
      "x": 0.11765,
-     "y": 0.5928,
-     "w": 0.27819,
+     "y": 0.59279,
+     "w": 0.27818,
      "h": 0.05303
     },
     {
@@ -1660,7 +1660,7 @@
      "required": true,
      "page": 4,
      "x": 0.11765,
-     "y": 0.68182,
+     "y": 0.6818,
      "w": 0.15686,
      "h": 0.02273
     },
@@ -1672,9 +1672,9 @@
      "seat": "signer_2",
      "required": true,
      "page": 4,
-     "x": 0.5,
-     "y": 0.4678,
-     "w": 0.2451,
+     "x": 0.50122,
+     "y": 0.46779,
+     "w": 0.24509,
      "h": 0.02273
     },
     {
@@ -1685,9 +1685,9 @@
      "seat": "signer_2",
      "required": true,
      "page": 4,
-     "x": 0.5,
-     "y": 0.52746,
-     "w": 0.2451,
+     "x": 0.50122,
+     "y": 0.52745,
+     "w": 0.24509,
      "h": 0.02273
     },
     {
@@ -1698,9 +1698,9 @@
      "seat": "signer_2",
      "required": true,
      "page": 4,
-     "x": 0.5,
-     "y": 0.5928,
-     "w": 0.27819,
+     "x": 0.50122,
+     "y": 0.59279,
+     "w": 0.27695,
      "h": 0.05303
     },
     {
@@ -1711,8 +1711,8 @@
      "seat": "signer_2",
      "required": true,
      "page": 4,
-     "x": 0.5,
-     "y": 0.68182,
+     "x": 0.50122,
+     "y": 0.6818,
      "w": 0.15686,
      "h": 0.02273
     },
@@ -1985,7 +1985,7 @@
      "sender": true,
      "required": true,
      "page": 1,
-     "x": 0.41667,
+     "x": 0.41789,
      "y": 0.83807,
      "w": 0.2451,
      "h": 0.02273,
@@ -5381,7 +5381,7 @@
      "seat": "signer_1",
      "required": false,
      "page": 2,
-     "x": 0.3701,
+     "x": 0.37132,
      "y": 0.72822,
      "w": 0.2451,
      "h": 0.02273
@@ -10016,7 +10016,7 @@
    ],
    "pages": 3,
    "words": 685,
-   "minutes": 12,
+   "minutes": 11,
    "fields": [
     {
      "id": "Agreement_date",
@@ -10268,20 +10268,6 @@
      "h": 0.02273
     },
     {
-     "id": "FirstInstallment",
-     "label": "First installment (USD)",
-     "type": "text",
-     "role": "You, before sending",
-     "seat": "signer_2",
-     "sender": true,
-     "required": true,
-     "page": 1,
-     "x": 0.44363,
-     "y": 0.80871,
-     "w": 0.2451,
-     "h": 0.02273
-    },
-    {
      "id": "Pay_first_installment",
      "label": "Pay first installment",
      "type": "payment",
@@ -10289,9 +10275,9 @@
      "seat": "signer_2",
      "required": true,
      "page": 1,
-     "x": 0.49387,
-     "y": 0.83239,
-     "w": 0.21201,
+     "x": 0.46936,
+     "y": 0.8267,
+     "w": 0.21324,
      "h": 0.03314
     },
     {
@@ -10503,8 +10489,8 @@
      "h": 0.02273
     }
    ],
-   "text": "Payment Plan Agreement\nPaying a balance in installments\nThis agreement is made on ____ (Date of this agreement) between ____ (Business name) (the “Business”) and ____ (Customer’s full name) (the “Customer”).\n\nSection 1: What is owed\n1.1 The Customer owes the Business a balance of ____ (The balance, with currency) for ____ (what it is for) (the “Balance”).\n1.2 The Customer agrees that the Balance is correct and owed, and that the Business has not agreed to reduce it, except as set out below. ____ (Any agreed reduction, such as a discount for paying on time)\n\nSection 2: How the Customer will pay\n2.1 The Customer will pay the Balance in ____ (Number of installments) equal installments, paid ____ (How often). The first payment is due on ____ (First payment due).\n2.2 The amount of each installment and its due date is shown below.\n#   Due date   Amount (US dollars)\n1   ____ (Installment 1 due)   ____ (Installment 1 amount)\n2   ____ (Installment 2 due)   ____ (Installment 2 amount)\n3   ____ (Installment 3 due)   ____ (Installment 3 amount)\n4   ____ (Installment 4 due)   ____ (Installment 4 amount)\n2.3 The Customer may pay earlier, or pay more, at any time without charge. Extra payments reduce the last installments first.\n\nSection 3: The first payment\n3.1 The first installment, in US dollars: ____ (First installment (USD)). The Customer pays it by card, on a secure page, before signing: ____ (Pay first installment)\n3.2 The Business will give a receipt for each payment.\n\nSection 4: If a payment is missed\n4.1 If an installment is not paid within ____ (Days of grace) of its due date, the Business will write to the Customer. If it is still not paid ____ (Days to put it right) after that, the whole of the unpaid Balance becomes due at once.\n4.2 The Business will not charge interest or fees on the Balance while the Customer is keeping to this plan, unless the law or the original agreement says it may. ____ (Late fee, if any, and how it is calculated)\n\nSection 5: If the Customer’s situation changes\n5.1 If the Customer expects to have trouble paying, the Customer should say so before a due date. The Business will consider in good faith a change to the plan, which takes effect only if it is agreed in writing by both sides.\n\nSection 6: What stays the same\n6.1 Nothing in this agreement is an admission by the Customer that the Balance is more than is properly owed, and nothing in it limits the Customer’s rights under the law to dispute a charge or to ask for information about how the Balance was calculated.\n6.2 While the Customer keeps to this plan, the Business will not pass the Balance to a collection agency, start a court case to recover it, or report it as overdue to a credit reporting agency, unless the law requires it to.\n\nSection 7: Receipts and statements\n7.1 The Business will give the Customer a receipt for each payment and, on request, a statement showing what has been paid, what is left and when the next payment is due, within seven days of the request.\n7.2 When the last installment has been paid, the Business will confirm in writing that the Balance has been paid in full and that nothing more is owed under this plan.\n\nSection 8: The whole agreement\n8.1 This agreement is the whole agreement about the repayment of the Balance and replaces any earlier plan. It does not waive any right the Business has under the original agreement or the law, except that the Business will not demand the Balance faster than this plan provides for as long as the Customer keeps to it.\n\nSection 9: Governing law\n9.1 This document, and any dispute arising out of it, is governed by the laws of the State of ____ (Governing law (state)), without regard to its rules about conflicts of laws.\n\nSection 10: General\n10.1 Changes in writing. A change to this agreement is effective only if it is in writing and signed by both sides. An email exchange does not change it unless each side expressly says that it is a change and signs it electronically.\n10.2 Counterparts and electronic signatures. This agreement may be signed in separate copies, which together are one document. A signature made electronically, including by typing, drawing or selecting a signature, is as effective as a handwritten one, and each side agrees to sign and keep this agreement in electronic form.\n\nSignatures\nBy signing below, each party agrees to this document and confirms that the person signing has the authority to do so.\nBusiness\n\n____ (Printed name)\nPrinted name\n\n____ (Title or capacity)\nTitle or capacity\n\n____ (Business signature)\nSignature\n\n____ (Business date signed)\nDate\n   Customer\n\n____ (Printed name)\nPrinted name\n\n____ (Customer signature)\nSignature\n\n____ (Customer date signed)\nDate",
-   "sha": "189342be7c87bf3b"
+   "text": "Payment Plan Agreement\nPaying a balance in installments\nThis agreement is made on ____ (Date of this agreement) between ____ (Business name) (the “Business”) and ____ (Customer’s full name) (the “Customer”).\n\nSection 1: What is owed\n1.1 The Customer owes the Business a balance of ____ (The balance, with currency) for ____ (what it is for) (the “Balance”).\n1.2 The Customer agrees that the Balance is correct and owed, and that the Business has not agreed to reduce it, except as set out below. ____ (Any agreed reduction, such as a discount for paying on time)\n\nSection 2: How the Customer will pay\n2.1 The Customer will pay the Balance in ____ (Number of installments) equal installments, paid ____ (How often). The first payment is due on ____ (First payment due).\n2.2 The amount of each installment and its due date is shown below.\n#   Due date   Amount (US dollars)\n1   ____ (Installment 1 due)   ____ (Installment 1 amount)\n2   ____ (Installment 2 due)   ____ (Installment 2 amount)\n3   ____ (Installment 3 due)   ____ (Installment 3 amount)\n4   ____ (Installment 4 due)   ____ (Installment 4 amount)\n2.3 The Customer may pay earlier, or pay more, at any time without charge. Extra payments reduce the last installments first.\n\nSection 3: The first payment\n3.1 The first installment, in US dollars: ____ (custom.first_installment). The Customer pays it by card, on a secure page, before signing: ____ (Pay first installment)\n3.2 The Business will give a receipt for each payment.\n\nSection 4: If a payment is missed\n4.1 If an installment is not paid within ____ (Days of grace) of its due date, the Business will write to the Customer. If it is still not paid ____ (Days to put it right) after that, the whole of the unpaid Balance becomes due at once.\n4.2 The Business will not charge interest or fees on the Balance while the Customer is keeping to this plan, unless the law or the original agreement says it may. ____ (Late fee, if any, and how it is calculated)\n\nSection 5: If the Customer’s situation changes\n5.1 If the Customer expects to have trouble paying, the Customer should say so before a due date. The Business will consider in good faith a change to the plan, which takes effect only if it is agreed in writing by both sides.\n\nSection 6: What stays the same\n6.1 Nothing in this agreement is an admission by the Customer that the Balance is more than is properly owed, and nothing in it limits the Customer’s rights under the law to dispute a charge or to ask for information about how the Balance was calculated.\n6.2 While the Customer keeps to this plan, the Business will not pass the Balance to a collection agency, start a court case to recover it, or report it as overdue to a credit reporting agency, unless the law requires it to.\n\nSection 7: Receipts and statements\n7.1 The Business will give the Customer a receipt for each payment and, on request, a statement showing what has been paid, what is left and when the next payment is due, within seven days of the request.\n7.2 When the last installment has been paid, the Business will confirm in writing that the Balance has been paid in full and that nothing more is owed under this plan.\n\nSection 8: The whole agreement\n8.1 This agreement is the whole agreement about the repayment of the Balance and replaces any earlier plan. It does not waive any right the Business has under the original agreement or the law, except that the Business will not demand the Balance faster than this plan provides for as long as the Customer keeps to it.\n\nSection 9: Governing law\n9.1 This document, and any dispute arising out of it, is governed by the laws of the State of ____ (Governing law (state)), without regard to its rules about conflicts of laws.\n\nSection 10: General\n10.1 Changes in writing. A change to this agreement is effective only if it is in writing and signed by both sides. An email exchange does not change it unless each side expressly says that it is a change and signs it electronically.\n10.2 Counterparts and electronic signatures. This agreement may be signed in separate copies, which together are one document. A signature made electronically, including by typing, drawing or selecting a signature, is as effective as a handwritten one, and each side agrees to sign and keep this agreement in electronic form.\n\nSignatures\nBy signing below, each party agrees to this document and confirms that the person signing has the authority to do so.\nBusiness\n\n____ (Printed name)\nPrinted name\n\n____ (Title or capacity)\nTitle or capacity\n\n____ (Business signature)\nSignature\n\n____ (Business date signed)\nDate\n   Customer\n\n____ (Printed name)\nPrinted name\n\n____ (Customer signature)\nSignature\n\n____ (Customer date signed)\nDate",
+   "sha": "2b5d2ceae3fb3725"
   },
   {
    "slug": "deposit-agreement",
@@ -10524,7 +10510,7 @@
    ],
    "pages": 3,
    "words": 652,
-   "minutes": 8,
+   "minutes": 7,
    "fields": [
     {
      "id": "Agreement_date",
@@ -10582,20 +10568,6 @@
      "h": 0.06818
     },
     {
-     "id": "Deposit",
-     "label": "Deposit (USD)",
-     "type": "text",
-     "role": "You, before sending",
-     "seat": "signer_2",
-     "sender": true,
-     "required": true,
-     "page": 1,
-     "x": 0.34926,
-     "y": 0.47917,
-     "w": 0.2451,
-     "h": 0.02273
-    },
-    {
      "id": "Pay_deposit",
      "label": "Pay deposit",
      "type": "payment",
@@ -10603,9 +10575,9 @@
      "seat": "signer_2",
      "required": true,
      "page": 1,
-     "x": 0.38971,
-     "y": 0.50284,
-     "w": 0.21324,
+     "x": 0.29044,
+     "y": 0.49716,
+     "w": 0.21201,
      "h": 0.0322
     },
     {
@@ -10618,7 +10590,7 @@
      "required": true,
      "page": 1,
      "x": 0.4375,
-     "y": 0.58617,
+     "y": 0.58049,
      "w": 0.2451,
      "h": 0.02273,
      "options": [
@@ -10636,7 +10608,7 @@
      "required": true,
      "page": 1,
      "x": 0.56618,
-     "y": 0.6714,
+     "y": 0.66572,
      "w": 0.2451,
      "h": 0.02273,
      "options": [
@@ -10655,7 +10627,7 @@
      "required": true,
      "page": 1,
      "x": 0.17034,
-     "y": 0.69413,
+     "y": 0.68845,
      "w": 0.2451,
      "h": 0.02273
     },
@@ -10669,7 +10641,7 @@
      "required": true,
      "page": 1,
      "x": 0.17034,
-     "y": 0.82292,
+     "y": 0.81723,
      "w": 0.2451,
      "h": 0.02273
     },
@@ -10845,8 +10817,8 @@
      "h": 0.02273
     }
    ],
-   "text": "Deposit Agreement\nHolding something with a deposit\nThis agreement is made on ____ (Date of this agreement) between ____ (Business name) (the “Business”) and ____ (Customer’s full name) (the “Customer”).\n\nSection 1: What the deposit holds\n1.1 The Customer pays a deposit to hold the following for the Customer: ____ (What the deposit holds) (the “Booking”).\n1.2 While the deposit is held, the Business will not offer the Booking to anyone else, and will keep it available on the terms that were quoted to the Customer.\n\nSection 2: The deposit\n2.1 Amount, in US dollars: ____ (Deposit (USD)). The Customer pays it by card, on a secure page, before signing: ____ (Pay deposit)\n2.2 The Business will give a receipt. The deposit is part of the price of the Booking and will be deducted from what the Customer pays for it, unless it is refunded as set out below.\n2.3 The Business will hold the deposit ____ (How the deposit is held). No interest is paid on it unless the law requires.\n\nSection 3: When the deposit is refunded\n3.1 The Business will refund the deposit in full, within ____ (Refund within), if: ____ (the condition for a refund).\n3.2 The Business will also refund the deposit in full if it cannot provide the Booking, or if it changes the terms in a way that is materially worse for the Customer.\n\nSection 4: When the Business keeps the deposit\n4.1 If the Customer cancels, or does not go ahead with the Booking, after ____ (Date after which the deposit is kept), the Business may keep the deposit.\n4.2 The Customer agrees that the deposit is a fair estimate of the cost to the Business of holding the Booking and of the loss it would suffer if the Customer does not go ahead, and is not a penalty. If the Business has lost more than the deposit, it may not claim the difference unless the original terms allow it.\n\nSection 5: How to cancel\n5.1 The Customer may cancel by writing to the Business. The date that counts is the date the Business receives the message.\n\nSection 6: If the Booking changes\n6.1 If the Customer asks to move the Booking to a different date or to change what it includes, the Business will tell the Customer within five business days whether it can, and any difference in price. If it can, the deposit carries across to the changed Booking.\n6.2 If the Business has to change the Booking in a way that makes it materially different, such as a different date or place, the Customer may choose to accept the change or to cancel and receive a full refund of the deposit.\n\nSection 7: Paying the rest\n7.1 The rest of the price, which is ____ (Remaining balance and when it is due), is paid on the terms quoted by the Business. The Business will give the Customer a receipt for every payment.\n7.2 If the Customer does not pay the remaining price when it is due, the Business may treat the Booking as canceled after giving written notice and a reasonable chance to pay, and the deposit is then treated as described in section 4.\n\nSection 8: Governing law\n8.1 This document, and any dispute arising out of it, is governed by the laws of the State of ____ (Governing law (state)), without regard to its rules about conflicts of laws.\n\nSection 9: General\n9.1 Changes in writing. A change to this agreement is effective only if it is in writing and signed by both sides. An email exchange does not change it unless each side expressly says that it is a change and signs it electronically.\n9.2 Counterparts and electronic signatures. This agreement may be signed in separate copies, which together are one document. A signature made electronically, including by typing, drawing or selecting a signature, is as effective as a handwritten one, and each side agrees to sign and keep this agreement in electronic form.\n\nSignatures\nBy signing below, each party agrees to this document and confirms that the person signing has the authority to do so.\nBusiness\n\n____ (Printed name)\nPrinted name\n\n____ (Title or capacity)\nTitle or capacity\n\n____ (Business signature)\nSignature\n\n____ (Business date signed)\nDate\n   Customer\n\n____ (Printed name)\nPrinted name\n\n____ (Customer signature)\nSignature\n\n____ (Customer date signed)\nDate",
-   "sha": "009a7793b4cabad3"
+   "text": "Deposit Agreement\nHolding something with a deposit\nThis agreement is made on ____ (Date of this agreement) between ____ (Business name) (the “Business”) and ____ (Customer’s full name) (the “Customer”).\n\nSection 1: What the deposit holds\n1.1 The Customer pays a deposit to hold the following for the Customer: ____ (What the deposit holds) (the “Booking”).\n1.2 While the deposit is held, the Business will not offer the Booking to anyone else, and will keep it available on the terms that were quoted to the Customer.\n\nSection 2: The deposit\n2.1 Amount, in US dollars: ____ (custom.deposit). The Customer pays it by card, on a secure page, before signing: ____ (Pay deposit)\n2.2 The Business will give a receipt. The deposit is part of the price of the Booking and will be deducted from what the Customer pays for it, unless it is refunded as set out below.\n2.3 The Business will hold the deposit ____ (How the deposit is held). No interest is paid on it unless the law requires.\n\nSection 3: When the deposit is refunded\n3.1 The Business will refund the deposit in full, within ____ (Refund within), if: ____ (the condition for a refund).\n3.2 The Business will also refund the deposit in full if it cannot provide the Booking, or if it changes the terms in a way that is materially worse for the Customer.\n\nSection 4: When the Business keeps the deposit\n4.1 If the Customer cancels, or does not go ahead with the Booking, after ____ (Date after which the deposit is kept), the Business may keep the deposit.\n4.2 The Customer agrees that the deposit is a fair estimate of the cost to the Business of holding the Booking and of the loss it would suffer if the Customer does not go ahead, and is not a penalty. If the Business has lost more than the deposit, it may not claim the difference unless the original terms allow it.\n\nSection 5: How to cancel\n5.1 The Customer may cancel by writing to the Business. The date that counts is the date the Business receives the message.\n\nSection 6: If the Booking changes\n6.1 If the Customer asks to move the Booking to a different date or to change what it includes, the Business will tell the Customer within five business days whether it can, and any difference in price. If it can, the deposit carries across to the changed Booking.\n6.2 If the Business has to change the Booking in a way that makes it materially different, such as a different date or place, the Customer may choose to accept the change or to cancel and receive a full refund of the deposit.\n\nSection 7: Paying the rest\n7.1 The rest of the price, which is ____ (Remaining balance and when it is due), is paid on the terms quoted by the Business. The Business will give the Customer a receipt for every payment.\n7.2 If the Customer does not pay the remaining price when it is due, the Business may treat the Booking as canceled after giving written notice and a reasonable chance to pay, and the deposit is then treated as described in section 4.\n\nSection 8: Governing law\n8.1 This document, and any dispute arising out of it, is governed by the laws of the State of ____ (Governing law (state)), without regard to its rules about conflicts of laws.\n\nSection 9: General\n9.1 Changes in writing. A change to this agreement is effective only if it is in writing and signed by both sides. An email exchange does not change it unless each side expressly says that it is a change and signs it electronically.\n9.2 Counterparts and electronic signatures. This agreement may be signed in separate copies, which together are one document. A signature made electronically, including by typing, drawing or selecting a signature, is as effective as a handwritten one, and each side agrees to sign and keep this agreement in electronic form.\n\nSignatures\nBy signing below, each party agrees to this document and confirms that the person signing has the authority to do so.\nBusiness\n\n____ (Printed name)\nPrinted name\n\n____ (Title or capacity)\nTitle or capacity\n\n____ (Business signature)\nSignature\n\n____ (Business date signed)\nDate\n   Customer\n\n____ (Printed name)\nPrinted name\n\n____ (Customer signature)\nSignature\n\n____ (Customer date signed)\nDate",
+   "sha": "9ce8091d3df8f079"
   }
  ]
 }

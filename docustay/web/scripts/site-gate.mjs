@@ -33,7 +33,7 @@ for (const f of pages) {
     const h = m[1].replace(/\/$/, "") || "/";
     if (h.startsWith("/api/")) continue;           // served by the backend at run time
     if (h.startsWith("/media/") || /\.(md|txt|json|xml|svg|png|jpg|js)$/.test(h)) { if (/\.(md|txt|json|xml)$/.test(h) && !fs.existsSync(path.join(ROOT, "static", h)) && !fs.existsSync(path.join(PRE, h))) problems.push(`${r}: link to missing file ${h}`); continue; }
-    if (!known.has(h) && !fs.existsSync(path.join(ROOT, "src", "routes", "(app)", h.split("/")[1] ?? "__none"))) problems.push(`${r}: broken link ${h}`);
+    if (!known.has(h) && !["(app)", "(auth)"].some((g) => fs.existsSync(path.join(ROOT, "src", "routes", g, h.split("/")[1] ?? "__none")))) problems.push(`${r}: broken link ${h}`);
   }
 }
 for (const f of [...files(path.join(ROOT, "src", "routes", "(site)")), ...files(path.join(ROOT, "src", "lib", "site"))].filter((x) => /\.(svelte|js)$/.test(x))) {
@@ -41,6 +41,15 @@ for (const f of [...files(path.join(ROOT, "src", "routes", "(site)")), ...files(
 }
 for (const f of files(path.join(ROOT, "static", "docs"))) { const t = fs.readFileSync(f, "utf8"); if (/workbench/i.test(t)) problems.push(`static/docs/${path.basename(f)}: mentions Workbench`); if (BANNED.find(([, n]) => n === "another product's name")[0].test(t)) problems.push(`static/docs/${path.basename(f)}: names another product`); }
 for (const f of ["llms.txt", "llms-full.txt", "sitemap.xml"]) if (BANNED.find(([, n]) => n === "another product's name")[0].test(fs.readFileSync(path.join(ROOT, "static", f), "utf8"))) problems.push(`static/${f}: names another product`);
+// llms.txt covers the sitemap: every sitemap page is listed (as its Markdown address), and every Markdown file it lists exists on disk (a positive control proves the check can fail)
+{ const sm = fs.readFileSync(path.join(ROOT, "static", "sitemap.xml"), "utf8"), llms = fs.readFileSync(path.join(ROOT, "static", "llms.txt"), "utf8");
+  const listed = new Set([...llms.matchAll(/\]\((https:\/\/[^)\s]+)\)/g)].map((m) => m[1]));
+  const base = "https://docustay.app"; const missing = [];
+  for (const m of sm.matchAll(/<loc>([^<]+)<\/loc>/g)) { const u = m[1]; const p0 = u.replace(base, "") || "/"; if (p0 === "/") continue; if (!listed.has(`${base}${p0}.md`)) missing.push(p0); }
+  for (const p0 of missing) problems.push(`llms.txt does not list the sitemap page ${p0}`);
+  for (const u of listed) if (u.endsWith(".md")) { const rel = u.replace(base + "/", ""); if (!fs.existsSync(path.join(ROOT, "static", rel))) problems.push(`llms.txt lists ${u}, which has no Markdown file`); }
+  if (llms.includes("docs.docustay.app")) problems.push("llms.txt links docs.docustay.app, a host that does not exist");
+  const probe = new Set([...listed].filter((u) => u !== `${base}/pricing.md`)); if (probe.has(`${base}/pricing.md`) || ![...sm.matchAll(/<loc>([^<]+)<\/loc>/g)].some((m) => m[1] === `${base}/pricing` && !probe.has(`${base}/pricing.md`))) problems.push("control: removing /pricing from llms.txt was not noticed"); }
 // positive control: the ban catches a competitor name and passes a clean sentence
 const NAMEBAN = BANNED.find(([, n]) => n === "another product's name")[0]; if (!NAMEBAN.test("compare with DocuSign") || NAMEBAN.test("Docustay sends documents")) { console.error("SITE GATE FAIL: control for the product-name ban"); process.exit(1); }
 if (problems.length) { console.error(`SITE GATE FAIL: ${problems.length} problem(s)\n` + problems.slice(0, 60).map((p) => "  " + p).join("\n")); process.exit(1); }

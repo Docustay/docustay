@@ -27,5 +27,7 @@ export function entitled(item) {
   if (item === "unlimited_templates") { const u = plan.data?.usage; return u?.templatesLimit == null || (u.templatesThisMonth ?? 0) < u.templatesLimit; }   // locked only once this month's new templates are used
   return e[item] !== false;
 }
+/** R13-D020: true once the plan is known and this workspace is the public demo. Screens that would ask for billing-only data (deletion state, Stripe payments) skip those calls in a demo, which would only answer 403. */
+export async function inDemo() { await loadPlan(); return Boolean(plan.data?.demo); }
 /** On the Free plan (a hosted workspace that can upgrade). */
 export const onFree = () => Boolean(plan.data?.plan && plan.data.plan.key === "docustay_free");

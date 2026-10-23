@@ -13,11 +13,11 @@ import { ports } from "./ports.mjs";
 import { sendSigningMail, recordInvitation } from "./emailIdentity.mjs";
 import { sendVoidedNotices } from "./emailNotices.mjs";
 import { resolveMessageTemplate } from "./variables.mjs";
-import { parsePdfBodyData, freezePdfBody, checkPdfDraft } from "./pdfBody.mjs";
+import { parsePdfBodyData, freezePdfBody, checkPdfDraft, validateFieldValue } from "./pdfBody.mjs";
 import { resolveBoxValues } from "./senderBoxes.mjs";
 import { pdfStatus, actionsFor, can } from "./pdfFlow.mjs";
 import { documentsOfSend } from "./parties.mjs";
-import { savePdfTemplate } from "./pdfDocs.mjs";
+import { savePdfTemplate, defaultExpiryDays, isFromTemplate } from "./pdfDocs.mjs";
 import { getDocumentSetting, getDocumentSettings } from "./settings.mjs";
 import { parseOrigins } from "./settingsSchema.mjs";
 import { assertDocumentVisible, teamOf } from "./teams.mjs";
@@ -97,6 +97,16 @@ async function boxFacts(tx, { tenantId, instanceId, parties }) {
 
 /** Run 9 (bulk preflight): what a send of THIS template to ONE row of a list would still lack, as plain sentences — the sender's own boxes with nothing to fill them (and a value that names
  *  something the send does not have). The same rule the send applies (resolveBoxValues), worked out without creating a draft, so "Check the list" says what the send will say. Nothing is written. */
+/** R13-D364: who an activity line names. A group seat holds several people: an event that names its party (detail.party_id) names that person, an older event in a group seat names the one who signed for it, any other event names the seat's person. */
+export function actorName(parties, e) {
+  if (!e?.actor_role) return null;
+  const byId = e.detail?.party_id ? parties.find((p) => p.id === e.detail.party_id) : null;
+  if (byId) return byId.name ?? null;
+  const seat = parties.filter((p) => p.role === e.actor_role);
+  if (seat.length > 1) return (seat.find((p) => p.status === "signed") ?? seat[0]).name ?? null;
+  return seat[0]?.name ?? null;
+}
+
 export async function templateBoxProblems(tx, { tenantId, actorUserId = null, body, seat, custom = {}, name = "", email = "" }) {
   const P = await ports();
   const { practiceName } = await P.brand.get(tx, { tenantId });
@@ -174,24 +184,25 @@ async function collectSendProblems(tx, { tenantId, members, parties, opts, now =
     // (an empty sender box with nothing to work out is already a Check row, from checkPdfDraft below; here only a value that names something this send does not have)
     const resolved = resolveBoxValues(body, await boxFacts(tx, { tenantId, instanceId: m.id, parties }));
     for (const p of resolved.problems) if (String(body.fields.find((f) => f.id === p.id)?.default ?? "").trim()) problems.push(members.length > 1 ? `“${row.title}”: ${p.text}` : p.text);
+    // the sender's own answer must be one the signer's page can accept (a date box holds a date): otherwise the box is locked with a value nobody can fix and the document can never be signed
+    for (const f of resolved.body.fields) if (f.sender === true && typeof f.default === "string" && f.default.trim()) { const bad = validateFieldValue({ ...f, required: false }, f.default); if (bad) problems.push(`${members.length > 1 ? `“${row.title}”: ` : ""}“${f.label || f.id}” ${bad}`); }
+    // R13-D305: the body as it will be frozen must still be the one permitted shape; a mismatch is a refusal in words here, not a 500 later when the sealed copy is made
+    try { parsePdfBodyData(resolved.body); } catch (e) { problems.push(`“${row.title}”: ${e.message}`); continue; }
     bodies.set(m.id, resolved.body);
     if (body.fields.some((f) => f.type === "payment") && (await ports()).payments?.configured?.() && (await ports()).payments?.ready) {
       const st = (await (await ports()).payments.ready(tx, { tenantId })).status;
-      if (st !== "connected") problems.push(`“${row.title}” has a payment field, but Stripe is ${st === "needs_attention" ? "connected and needs attention (Stripe still needs information from you)" : "not connected for this workspace"}. Connect Stripe in Settings, or keep the payment terms as text only.`);
+      if (st === "paused") problems.push(`“${row.title}” has a payment field, but payments are paused for this workspace. An Admin or Owner can turn them back on in Billing, Payments.`);
+      else if (st !== "connected") problems.push(`“${row.title}” has a payment field, but Stripe is ${st === "needs_attention" ? "connected and needs attention (Stripe still needs information from you)" : "not connected for this workspace"}. Connect Stripe in Settings, or keep the payment terms as text only.`);
     }
     if (body.fields.some((f) => f.type === "payment") && !(await ports()).payments?.configured?.()) problems.push(`“${row.title}” has a payment field, but payments are not set up here (Stripe is not connected for this practice)`);
-    // FINAL PUSH Stage 5 — installments and subscriptions are Pro; a deposit and a signer-chosen amount are open on every plan
-    if (body.fields.some((f) => f.type === "payment" && f.plan)) {
-      try { await (await ports()).entitlements?.assertEntitled?.(tx, { tenantId, item: "recurring_payments" }); }
-      catch (e) { problems.push(`“${row.title}”: ${e.message}`); }
-    }
     // Part 30 item 11 — a Stripe price or payment link is looked up on the workspace's own Stripe account NOW, so a typo or an archived price stops the send instead of failing in front of the signer
     for (const f of body.fields.filter((x) => x.type === "payment" && (x.price_id || x.payment_link))) {
       const P = await ports();
       try { if (f.price_id) await P.payments.priceInfo(tx, { tenantId, priceId: f.price_id }); else await P.payments.linkInfo(tx, { tenantId, url: f.payment_link }); }
       catch (e) { problems.push(`“${row.title}”: the payment “${f.label || "payment"}” — ${e.message}`); }
     }
-    const check = checkPdfDraft(body, parties.map((p) => ({ ...p, in_person: (opts.in_person ?? []).includes(p.role) })), { order: opts.order ?? null });
+    // R13-D372: judged on the body as it will be sent, with the sender's boxes already filled from this send's values (custom.<key>); judging the unfilled body refused a send whose values were given
+    const check = checkPdfDraft(resolved.body, parties.map((p) => ({ ...p, in_person: (opts.in_person ?? []).includes(p.role) })), { order: opts.order ?? null });
     for (const it of check.items) if (!it.ok && it.severity !== "warning") problems.push(members.length > 1 ? `“${row.title}”: ${it.text}` : it.text);
     if (body.file && (await tx.query(`SELECT 1 FROM keystone.document_file WHERE id = $1 AND (meta->>'already_signed') = 'true'`, [body.file.file_id])).rowCount && body.fields.length) problems.push(`“${row.title}” already carries a digital signature; fields cannot be placed on it`);
     // Run 9: the rule-order check (decision 6) is part of checkPdfDraft above, so Check and Send say the same thing
@@ -233,7 +244,7 @@ export async function sendPdfDocument(tx, { tenantId, instanceId, actorUserId = 
     // D-051: an email goes out only to someone who is not signing on this device
     const onDevice = new Set(opts.in_person ?? []);
     const needsEmail = parties.some((p) => p.email && !onDevice.has(p.role));
-    try { await (await ports()).entitlements?.assertMaySend?.(tx, { tenantId, needsEmail }); }
+    try { await (await ports()).entitlements?.assertMaySend?.(tx, { tenantId, needsEmail, recipients: forVisitor ? null : parties.map((p) => p.email).filter(Boolean) }); }   // a stranger filling in a public form is not a signer the workspace chose, so the Free signers allowance does not count them
     catch (e) {
       // D-072: a stranger filling in a public form is not the owner — they must not be told about the owner's plan or sent to "upgrade". The owner already gets the usage notices.
       if (forVisitor) throw conflict(VISITOR_UNAVAILABLE, { code: "form_unavailable" });
@@ -255,9 +266,8 @@ export async function sendPdfDocument(tx, { tenantId, instanceId, actorUserId = 
 
   if (isTest) await tx.query(`UPDATE keystone.document_instance SET is_test = true WHERE id = ANY($1::uuid[])`, [members.map((m) => m.id)]);
   const settings = await getDocumentSettings(tx);
-  // the workspace-wide "signature request expires after N days" wins over the upload starting deadline when it is set (F923: it was read only by the old builder, so setting it did nothing); a deadline the sender chose for THIS send wins over both
-  const workspaceDays = Number.isInteger(settings.signature_validity_days) && settings.signature_validity_days > 0 ? settings.signature_validity_days : null;
-  const expiryDays = opts.expiry_days === undefined ? (workspaceDays ?? settings["upload.expiry_days"]) : opts.expiry_days;
+  // R13-D010: with no deadline chosen for THIS send, a document made from a template takes the workspace's "signature request expires after N days" (0 = never) and an upload takes "uploaded documents expire after N days" — the same value the Send step showed. A deadline the sender chose wins over both.
+  const expiryDays = opts.expiry_days === undefined ? defaultExpiryDays(settings, { fromTemplate: await isFromTemplate(tx, lead.id) }) : opts.expiry_days;
   const remindersOn = opts.reminders?.on !== false;
   const firstReminder = (opts.reminders?.days ?? settings.reminder_days)?.[0] ?? 3;
   for (const m of members) {
@@ -277,6 +287,7 @@ export async function sendPdfDocument(tx, { tenantId, instanceId, actorUserId = 
       if (fm?.fp && frozen.fields.length) { const { rememberLayout } = await import("./detect/remember.mjs"); await rememberLayout(tx, { tenantId, pages: fm.fp, name: m.title, fields: frozen.fields, roles: frozen.roles, actorUserId }); }
       await tx.query("RELEASE SAVEPOINT remember_layout");
     } catch { await tx.query("ROLLBACK TO SAVEPOINT remember_layout"); }
+    if (!isTest) await (await ports()).entitlements?.noteDocumentSent?.(tx, { tenantId, instanceId: m.id });   // usage billing: one billable unit when this document is past the plan's included amount (never a practice run)
     await emit(tx, {
       tenantId, topic: "documents.document.sent", emittedBy: "documents", subjectType: "document", subjectId: m.id,
       actor: userActor(actorUserId), payload: { builder: "pdf", state: "sent", sent_by: actorUserId ?? lead.created_by ?? null, test: isTest },
@@ -291,6 +302,7 @@ export async function sendPdfDocument(tx, { tenantId, instanceId, actorUserId = 
   const due = [...activeParties(everyone), ...immediateParties(everyone)];
   for (const p of due) {
     const outcome = await emailParty(tx, { tenantId, leadId: lead.id, party: p });
+    if (p.external_ref) { const { notifyTeammate } = await import("./teamRecipients.mjs"); const { createNotification } = await import("../notifications/writes.mjs"); await notifyTeammate(tx, { tenantId, leadId: lead.id, party: p, createNotification }); }   // a teammate also gets a notice in the app
     if (outcome?.status === "sent") emailed += 1;
     else if (outcome) notEmailed.push({ seat: p.role, email: p.email, reason: outcome.status, detail: outcome.error ?? null });   // never silent: the caller learns who was not mailed and why
   }
@@ -469,9 +481,6 @@ export async function embedSessionLink(tx, { tenantId, instanceId, seat, origin 
 export async function embedOriginsForParty(tx, { leadId, partyId }) {
   const { rows: [r] } = await tx.query(`SELECT d.send_options, d.tenant_id, p.role FROM keystone.document_instance d JOIN keystone.document_party p ON p.instance_id = d.id WHERE d.id = $1 AND p.id = $2`, [leadId, partyId]);
   if (!r) return [];
-  // Run 7: a form response is framed by the websites the FORM lists (its own embed setting), so a form embedded on a site keeps working through signing
-  const { formEndFor } = await import("./forms.mjs"); const f = await formEndFor(tx, { tenantId: r.tenant_id, leadId });
-  if (f) return f.embedSites;
   if (!(r.send_options?.embedded ?? []).includes(r.role)) return [];
   return embedAllowedOrigins(tx);
 }
@@ -539,7 +548,7 @@ export async function advanceSequence(tx, { tenantId, leadId }) {
   const parties = await partiesOf(tx, leadId);
   const due = activeParties(parties).filter((p) => !p.invited_at);       // viewers and assistants were invited at send
   let n = 0;
-  for (const p of due) { const o = await emailParty(tx, { tenantId, leadId, party: p }); if (o?.status === "sent") n += 1; }
+  for (const p of due) { const o = await emailParty(tx, { tenantId, leadId, party: p }); if (p.external_ref) { const { notifyTeammate } = await import("./teamRecipients.mjs"); const { createNotification } = await import("../notifications/writes.mjs"); await notifyTeammate(tx, { tenantId, leadId, party: p, createNotification }); } if (o?.status === "sent") n += 1; }
   await refreshNextReminder(tx, leadId);
   return n;
 }
@@ -567,7 +576,7 @@ export async function trackPdfDocument(tx, { tenantId, instanceId }) {
   const status = pdfStatus(i.state);
   const { rows: events } = await tx.query(
     `SELECT e.kind, e.actor_role, e.occurred_at, e.detail, e.instance_id FROM keystone.document_audit_event e WHERE e.instance_id = ANY($1::uuid[]) AND e.kind <> 'saved' ORDER BY date_trunc('second', e.occurred_at), CASE e.kind WHEN 'uploaded' THEN 0 WHEN 'sent' THEN 2 WHEN 'embed_session' THEN 3 WHEN 'opened' THEN 4 WHEN 'reminded' THEN 5 WHEN 'consented' THEN 6 WHEN 'signed' THEN 7 WHEN 'executed' THEN 8 WHEN 'voided' THEN 9 ELSE 5 END, e.occurred_at, e.id`, [memberIds]);
-  const nameBySeat = Object.fromEntries(parties.map((p) => [p.role, p.name]));
+  const whoDid = (e) => actorName(parties, e);
   const { rows: sigs } = await tx.query(`SELECT instance_id, role FROM keystone.signature_record WHERE instance_id = ANY($1::uuid[])`, [memberIds]);
   const signedCount = (docId) => sigs.filter((s) => s.instance_id === docId).length;
   const signers = parties.filter((p) => p.action_role === "signer");
@@ -587,7 +596,7 @@ export async function trackPdfDocument(tx, { tenantId, instanceId }) {
   const groupSigner = (p) => (p.group_label ? parties.find((x) => x.role === p.role && x.group_label === p.group_label && x.status === "signed")?.name ?? null : null);
   return {
     team: await teamOf(tx, { kind: "document", id: leadId }), test: (await tx.query(`SELECT is_test FROM keystone.document_instance WHERE id = $1`, [leadId])).rows[0]?.is_test === true,
-    id: i.id, leadId, title: i.title, state: i.state, status, actions: actionsFor(status), sentAt: i.sent_at, expiresAt: i.expires_at, executedAt: i.executed_at, voidedAt: i.voided_at, voidReason: i.void_reason, scheduledSendAt: i.scheduled_send_at,
+    id: i.id, leadId, title: i.title, state: i.state, status, actions: actionsFor(status), sentAt: i.sent_at, expiresAt: i.expires_at, executedAt: i.executed_at, fingerprint: i.final_sha256 ?? null, voidedAt: i.voided_at, voidReason: i.void_reason, scheduledSendAt: i.scheduled_send_at,
     progress: (() => { /* R10-56: a signing group is ONE seat; it counts as signed when any member signed it */ const seats = new Map(); for (const p of blockers) { const k = p.group_label ? `g:${p.role}:${p.group_label}` : p.id; seats.set(k, (seats.get(k) ?? false) || ["signed", "approved"].includes(p.status)); } return { signed: [...seats.values()].filter(Boolean).length, of: seats.size }; })(),
     parties: parties.map((p) => ({
       id: p.id, seat: p.role, seatLabel: seatLabels[p.role] ?? null, name: p.name, email: p.email, actionRole: p.action_role, position: p.position, status: status === "voided" && !isFinished(p) ? "cancelled" : p.status,   // D-075: a cancelled document's people are not "Pending" any more
@@ -602,7 +611,7 @@ export async function trackPdfDocument(tx, { tenantId, instanceId }) {
     documents: members.map((m) => ({ id: m.id, title: m.title, state: m.state, position: m.package_position ?? 1, signed: signedCount(m.id), of: signers.length })),
     payments: await paymentsOfSend(tx, { memberIds }),
     timeline: events.map((e) => ({
-      at: e.occurred_at, kind: e.kind, text: e.kind === "uploaded" && e.detail?.origin === "created" ? "Document created" : (KIND_TEXT[e.kind] ?? e.kind), who: e.actor_role ? nameBySeat[e.actor_role] ?? null : null, documentId: e.instance_id, detail: e.detail ?? null,
+      at: e.occurred_at, kind: e.kind, text: e.kind === "uploaded" && e.detail?.origin === "created" ? "Document created" : (KIND_TEXT[e.kind] ?? e.kind), who: whoDid(e), documentId: e.instance_id, detail: e.detail ?? null,
     })),
   };
 }

@@ -179,6 +179,14 @@ export const NOTIFICATION_TOPICS = Object.freeze([
     locked: false,
   },
   {
+    // R13-D265 — emitted by pdfSigning.delegateAsParty when a person passes their part to someone else.
+    topic: "documents.document.delegated",
+    label: "Someone passes a document on to another person",
+    family: "documents",
+    defaultOn: true,
+    locked: false,
+  },
+  {
     // ★ §23.15.1 — emitted by src/documents/emailIdentity.mjs when the mail provider reports an invitation bounced.
     topic: "documents.document.bounced",
     label: "A document's email bounces",

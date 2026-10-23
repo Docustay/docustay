@@ -105,9 +105,9 @@ export async function sendSignedCopyEmail({
   const attachments = downloadUrl ? [] : [{ filename: `${safeName}.pdf`, content: pdfBytes.toString("base64") }];
   if (!downloadUrl && Buffer.isBuffer(certificateBytes) && certificateBytes.length) attachments.push({ filename: `${safeName} - certificate.pdf`, content: certificateBytes.toString("base64") });
   if (deliver) {
-    const out = await deliver({ to, subject, html, text, attachments });
+    const out = await deliver({ to, subject, html, text, ...(attachments.length ? { attachments } : {}) });   // R13-D056: a link-only copy has NO attachments; Resend refuses an empty list, so the key is left out
     return { status: out.status, providerMessageId: out.providerMessageId ?? null, error: out.error ?? null };
   }
-  const out = await deliverAsOrganisation(tx ?? null, { tenantId: tenantId ?? null, to, subject, text, html, attachments }, { fetchImpl, env });
+  const out = await deliverAsOrganisation(tx ?? null, { tenantId: tenantId ?? null, to, subject, text, html, ...(attachments.length ? { attachments } : {}) }, { fetchImpl, env });
   return { status: out.status === "limit_reached" ? "skipped" : out.status, providerMessageId: out.providerMessageId, error: out.error };
 }

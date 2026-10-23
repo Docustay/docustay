@@ -22,5 +22,5 @@
   :global(.anim.armed) .tick { animation: draw .5s ease-out .6s both; } :global(.anim.armed) .sig { animation: draw 1.8s ease-in-out 1.4s both; }
   :global(.anim.armed) .btn { animation: press .35s ease-in-out 3.7s both; } :global(.anim.armed) .btnck { animation: draw .4s ease-out 4s both; }
   @keyframes draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } } @keyframes press { 50% { transform: scale(.94); } }
-.real { filter: drop-shadow(0 1px 2px rgb(0 0 0 / .22)); }
+.real { filter: drop-shadow(0 1px 2px rgb(60 40 140 / 0.099)); }
 </style>

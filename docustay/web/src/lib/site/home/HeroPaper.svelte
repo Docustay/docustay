@@ -14,7 +14,7 @@
   </div>
 </div>
 <style>
-  .paper { transform: translate(-50%, -50%) rotate(-5deg); box-shadow: 0 40px 80px -30px rgb(0 0 0 / .7), 0 0 0 1px rgb(0 0 0 / .06); animation: hp-float 6s ease-in-out infinite; }
+  .paper { transform: translate(-50%, -50%) rotate(-5deg); box-shadow: 0 40px 80px -30px rgb(60 40 140 / 0.3), 0 0 0 1px rgb(60 40 140 / 0.027); animation: hp-float 6s ease-in-out infinite; }
   .sig { stroke-dasharray: 1; stroke-dashoffset: 1; animation: hp-draw 1.8s ease-out .8s forwards; }
   .seal { transform: scale(0); animation: hp-pop .6s cubic-bezier(.3, 1.5, .5, 1) 2.4s forwards; }
   @keyframes hp-float { 0%, 100% { transform: translate(-50%, -50%) rotate(-5deg); } 50% { transform: translate(-50%, calc(-50% - 10px)) rotate(-4deg); } }

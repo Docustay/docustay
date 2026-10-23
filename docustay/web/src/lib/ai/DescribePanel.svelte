@@ -6,16 +6,21 @@
   import { tl } from "$lib/flow/flowLabels.js";
   import GuidedForm from "./GuidedForm.svelte";
   import Pick from "$lib/ui/Pick.svelte";
-  import { languageLabel } from "$lib/i18n.js";
   import StripeGate from "./StripeGate.svelte";
   import JobSteps from "./JobSteps.svelte";
   import AiUsageBar from "./AiUsageBar.svelte";
-  import ThinkHarder from "./ThinkHarder.svelte";
+  import PromptBox from "$lib/ui/PromptBox.svelte";
+  import { handleRefusal } from "$lib/pro/planPrompt.svelte.js";
   import { aiUsage } from "./usage.svelte.js";
   let stage = $state("queued");
   import { WIZARD_UNIVERSAL, WIZARD_TYPES, WIZARD_FINAL_QUESTION, WIZARD_PAYMENT, PAYMENT_CURRENCIES, AGENT_KINDS, AGENT_DEFAULT_NAME } from "$lib/flow/flowDefinition.js";
 
-  let { mode = "template", onopen } = $props();
+  // `questions` shows the questionnaire (a kind of document, who writes it, the questions); otherwise the Scribe prompt box: say what you need in your own words (the server takes a plain `prompt`)
+  let { mode = "template", onopen, onguided = null, seed = $bindable(null), questions: askQuestions = false, onattach = null, ontemplate = null } = $props();
+  // R13-D391: the questions form returns a finished source, not a job id, so it opens through its own handler (onopen takes a job id: given a source it built "job=[object Object]")
+  let promptText = $state("");
+  // an example link on New document fills the form (a kind of document and a first answer); nothing is sent until the person presses the button
+  $effect(() => { if (seed) { if (seed.type) typeId = seed.type; if (seed.answers) answers = { ...answers, ...seed.answers }; if (seed.answers?.purpose) promptText = seed.answers.purpose; if (seed.final) final = seed.final; seed = null; } });
 
   const BASE = "/api/documents/engine";
   let status = $state(null);
@@ -29,10 +34,7 @@
   let jobId = $state("");
   let error = $state("");
   let showGuided = $state(false);
-  let think = $state(false);   // Think harder (Pro): this one request runs on the stronger model
   const flagged = $derived(job?.patches?.validator?.problems ?? []);
-  const thinkOk = $derived(aiUsage.data?.mode !== "hosted" || aiUsage.data?.thinkHarder?.available === true);
-  async function rerunThinking() { think = true; again(); await write(); }
   let timer = null;
   let alive = true;
 
@@ -44,7 +46,7 @@
   onDestroy(() => { alive = false; if (timer) clearTimeout(timer); });
 
   const type = $derived(WIZARD_TYPES.find((x) => x.id === typeId) ?? null);
-  const questions = $derived(type ? [...WIZARD_UNIVERSAL, ...type.pack] : []);
+  const questions = $derived(type ? [...WIZARD_UNIVERSAL, ...type.pack].filter((q) => q.key !== "language") : []);   // Docustay v1: English only, so the shared flow definition's language question is not asked
   const agent = $derived(status?.agentName || AGENT_DEFAULT_NAME);
   const missingAll = $derived(questions.filter((q) => q.required && !(answers[q.key] ?? q.default ?? "").toString().trim()));   // D-017: every missing answer is named, not one at a time
   const missing = $derived(missingAll[0]);
@@ -96,8 +98,16 @@
 
   async function write() {
     error = ""; job = null;
-    const r = await api(`${BASE}/ai/jobs`, { method: "POST", body: { ...(think ? { thinkHarder: true } : {}), brief: { type: typeId, kind: kindId, answers: Object.fromEntries(questions.map((q) => [q.key, (answers[q.key] ?? q.default ?? "").toString()])), final: final.trim(), ...(payOn ? { payment: { collect: true, ...pay } } : {}) }, mode, vocabulary: "docustay", kind: "draft" } });
-    if (!r.ok) { error = r.error ?? ""; phase = "idle"; return; }
+    const r = await api(`${BASE}/ai/jobs`, { method: "POST", body: { brief: { type: typeId, kind: kindId, answers: Object.fromEntries(questions.map((q) => [q.key, (answers[q.key] ?? q.default ?? "").toString()])), final: final.trim(), ...(payOn ? { payment: { collect: true, ...pay } } : {}) }, mode, vocabulary: "docustay", kind: "draft" } });
+    if (!r.ok) { phase = "idle"; if (await handleRefusal(r, { action: "ai_draft" })) return; error = r.error ?? ""; return; }
+    jobId = (r.json?.data ?? r.json).jobId;
+    phase = "running"; stage = "queued";
+    poll(Date.now());
+  }
+  async function writePrompt(text) {
+    error = ""; job = null;
+    const r = await api(`${BASE}/ai/jobs`, { method: "POST", body: { prompt: text, mode, vocabulary: "docustay", kind: "draft" } });
+    if (!r.ok) { phase = "idle"; if (await handleRefusal(r, { action: "ai_draft" })) return; error = r.error ?? ""; return; }
     jobId = (r.json?.data ?? r.json).jobId;
     phase = "running"; stage = "queued";
     poll(Date.now());
@@ -120,11 +130,17 @@
       {!status.enabled ? t("AI drafting is switched off for this workspace") : t("Writing a new document with AI is switched off for this workspace")}.
       <a href="/settings?tab=ai" class="underline">{t("Open the AI settings")}</a>
     </div>
-    <GuidedForm {onopen} />
+    <GuidedForm onopen={onguided} />
+  {:else if !askQuestions && phase === "idle"}
+    <div class="grid gap-3" data-testid="describe-prompt">
+      <PromptBox bind:value={promptText} hint={t("Usually under a minute")} onsubmit={writePrompt} {onattach} {ontemplate} testid="ai-prompt" />
+      <div class="grid gap-2" data-testid="ai-meter"><AiUsageBar compact preClick /></div>
+      {#if error}<div class="notice warn" role="alert" data-testid="ai-error">{error}</div>{/if}
+    </div>
   {:else}
-    <div class="card p-4 grid gap-3">
-      <div class="font-semibold">{t("Answer a few questions and {name} writes a draft", { name: agent })}</div>
-      {#if phase === "idle" || phase === "failed"}
+    <div class="rounded-[10px] border border-line-strong p-4 grid gap-3" data-testid="describe-card">
+      {#if askQuestions}<div class="text-[13px] text-mute">{t("Answer a few questions and {name} writes a draft", { name: agent })}</div>{/if}
+      {#if (phase === "idle" || phase === "failed") && askQuestions}
         <div class="grid gap-3 sm:grid-cols-2">
           <Pick options={WIZARD_TYPES.map((x) => ({ value: x.id, label: tl(x.label) }))} value={typeId} onchange={(v) => (typeId = v)} label={t("What kind of document is it?")} placeholder={t("Choose one")} testid="ai-type" />
           <Pick options={kinds.map((k) => ({ value: k.id, label: tl(k.label), hint: tl(k.hint) }))} value={kindId} onchange={(v) => (kindId = v)} label={t("Who should write it?")} testid="ai-kind" />
@@ -136,7 +152,7 @@
                 <span class="font-medium">{tl(q.label)}{#if q.required} <span class="text-mute">*</span>{/if}</span>
                 {#if q.hint}<span class="text-mute">{tl(q.hint)}</span>{/if}
                 {#if q.type === "choice"}
-                  <Pick options={q.options.map((o) => ({ value: o.value, label: q.key === "language" ? languageLabel(o.value) : tl(o.label) }))} value={answers[q.key] ?? q.default ?? ""} onchange={(v) => (answers[q.key] = v)} placeholder={t("Choose one")} testid={`ai-q-${q.key}`} />
+                  <Pick options={q.options.map((o) => ({ value: o.value, label: tl(o.label) }))} value={answers[q.key] ?? q.default ?? ""} onchange={(v) => (answers[q.key] = v)} placeholder={t("Choose one")} testid={`ai-q-${q.key}`} />
                 {:else if q.type === "longtext"}
                   <textarea class="field" rows="3" maxlength="1200" placeholder={q.placeholder ? tl(q.placeholder) : ""} bind:value={answers[q.key]} data-testid={`ai-q-${q.key}`}></textarea>
                 {:else}
@@ -163,9 +179,9 @@
             </label>
           </div>
         {/if}
-        <div class="grid gap-2 sm:max-w-md" data-testid="ai-meter"><AiUsageBar compact /><ThinkHarder bind:checked={think} testid="describe-think" /></div>
+        <div class="grid gap-2" data-testid="ai-meter"><AiUsageBar compact preClick /></div>
         <div class="flex items-center gap-3 flex-wrap">
-          <button class="btn primary" style="min-height:40px" data-testid="ai-go" disabled={!ready} onclick={write}>{t("Write a draft")}</button>
+          <button class="btn primary final" data-testid="ai-go" disabled={!ready} onclick={write}>{t("Draft it")}</button>
           {#if type && !ready}<span class="text-mute" data-testid="ai-need">{missing ? t("Still needed: {list}", { list: missingAll.map((q) => tl(q.label)).join(", ") }) : t("Answer the last question to go on.")}</span>{/if}
           {#if status?.limitPerDay}<span class="text-mute">{t("{used} of {max} drafts used today", { used: status.usedToday ?? 0, max: status.limitPerDay })}</span>{/if}
           {#if status?.limitPerMonth}<span class="text-mute">{t("{used} of {max} drafts used this month", { used: status.usedThisMonth ?? 0, max: status.limitPerMonth })}</span>{/if}
@@ -194,7 +210,7 @@
         <div class="grid gap-3" data-testid="ai-result">
           <div class="font-semibold" data-testid="ai-title">{title}</div>
           <div class="notice info" data-testid="ai-finished">{mode === "form" ? t("{name} finished your form. Review it, AI can make mistakes.", { name: job.patches?.agent?.name || agent }) : t("{name} finished your document. Review it, AI can make mistakes.", { name: job.patches?.agent?.name || agent })}</div>
-          {#if flagged.length}<div class="notice warn grid gap-2" role="alert" data-testid="ai-flagged"><div class="font-medium">{t("{name} could not fix {n, plural, one {# problem} other {# problems}} in this draft. Fix them by hand, or try again with Think harder.", { name: job.patches?.agent?.name || agent, n: flagged.length })}</div><ul class="list-disc pl-5" data-testid="ai-flagged-list">{#each flagged as f}<li>{f}</li>{/each}</ul>{#if job.patches?.validator?.offerThink}<div><button class="btn" style="min-height:40px" disabled={!thinkOk} data-testid="ai-think-again" onclick={rerunThinking}>{t("Try again with Think harder")}</button>{#if !thinkOk} <span class="text-sm text-mute">{t("Pro feature")}</span>{/if}</div>{/if}</div>{/if}
+          {#if flagged.length}<div class="notice warn grid gap-2" role="alert" data-testid="ai-flagged"><div class="font-medium">{t("{name} could not fix {n, plural, one {# problem} other {# problems}} in this draft. Fix them by hand, or try again.", { name: job.patches?.agent?.name || agent, n: flagged.length })}</div><ul class="list-disc pl-5" data-testid="ai-flagged-list">{#each flagged as f}<li>{f}</li>{/each}</ul></div>{/if}
           {#if assumed.length}<div><div class="font-medium">{t("What {name} assumed", { name: job.patches?.agent?.name || agent })}</div><ul class="list-disc pl-5" data-testid="ai-assumed">{#each assumed as n}<li>{n}</li>{/each}</ul></div>{/if}
           {#if openQ.length}<div><div class="font-medium">{t("Questions to settle")}</div><ul class="list-disc pl-5" data-testid="ai-open-questions">{#each openQ as n}<li>{n}</li>{/each}</ul></div>{/if}
           {#if careful.length}<div><div class="font-medium">{t("Check these carefully")}</div><ul class="list-disc pl-5" data-testid="ai-careful">{#each careful as n}<li>{n}</li>{/each}</ul></div>{/if}
@@ -210,6 +226,6 @@
         </div>
       {/if}
     </div>
-    {#if showGuided}<GuidedForm {onopen} />{/if}
+    {#if showGuided}<GuidedForm onopen={onguided} />{/if}
   {/if}
 </div>

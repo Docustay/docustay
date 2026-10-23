@@ -22,6 +22,7 @@ export { default as PersonDocumentsTab } from "@/lib/record/PersonDocumentsTab.j
 
 // Public pages for uploaded documents: the recipient's signing page (/sign/pdf) and the certificate's verify page (/verify/<ref>) — QUEUE §23.4, §23.5.1.
 export { default as SignPdfPage } from "@/lib/screens/documents/SignPdfPage.jsx";
+export { default as DownloadPage } from "@/lib/screens/documents/DownloadPage.jsx";   // the page a signed-copy email links to (/download), also served on an organisation's own signing address (R13-D069)
 export { default as VerifyDocPage } from "@/lib/screens/documents/VerifyDocPage.jsx";
 export { default as ToolSignPdfPage } from "@/lib/screens/documents/ToolSignPdfPage.jsx";      // the free "sign a PDF online" page (/tools/sign-pdf) — §23.5.14
 export { default as SignatureMakerPage } from "@/lib/screens/documents/SignatureMakerPage.jsx";    // the free signature maker (/tools/signature-maker) — §23.5.15

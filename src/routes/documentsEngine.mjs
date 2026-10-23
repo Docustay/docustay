@@ -19,6 +19,8 @@
 //   GET  /api/documents/engine/clauses                     the clause library as source pieces, for the writer's Clauses tab
 //   GET  /api/documents/engine/guided/questions            the guided builder's questions (the same list both screens draw)
 import { invalid, forbidden } from "../http/errors.mjs";
+import { ports as documentsPorts } from "../documents/ports.mjs";
+import { getDocumentSetting } from "../documents/settings.mjs";
 import { authoriseSection } from "../nav/authorise.mjs";
 import { assertMay } from "../permissions/assertMay.mjs";
 import { checkSource, saveSourceTemplate, saveSourceVersion, getTemplateSource, createSourceDocument, listClauseFragments, saveTemplateDefaults } from "../documents/engine/creation.mjs";
@@ -37,14 +39,32 @@ const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
 const FACT_KEYS = ["org.name", "org.address", "sender.name", "sender.email", "document.title"];
 /** Facts a reusable typeset document may be printed with: only the few the caller names, only text. */
 const cleanFacts = (f) => { const out = {}; for (const k of FACT_KEYS) if (typeof f?.[k] === "string" && f[k].length <= 300) out[k] = f[k]; for (const [k, v] of Object.entries(f ?? {})) if (/^custom\.[a-z][a-z0-9_]{0,40}$/.test(k) && typeof v === "string" && v.length <= 300) (out.custom ??= {})[k.slice(7)] = v;   /* Docustay flow v2: a value the sender fills in before sending */ return out; };
+
+/** What the workspace itself knows about the merge fields org.name, org.address, sender.name and sender.email, read here so the page never has to send them (it never did, so any draft that used one
+ *  was refused with "no value"). What the page does send still wins. A fact the workspace has not set (no address line yet) is left out and is named in the refusal. */
+async function workspaceFacts(tx, a) {
+  const out = {};
+  try {
+    const P = await documentsPorts();
+    const { practiceName } = await P.brand.get(tx, { tenantId: a.tenantId });
+    const sender = a.actorUserId ? (await P.people.byIds(tx, [a.actorUserId]))[0] : null;
+    const address = String((await getDocumentSetting(tx, "signed_copy.address_line")) ?? "").trim();
+    if (practiceName) out["org.name"] = practiceName;
+    if (address) out["org.address"] = address;
+    if (sender?.display_name || practiceName) out["sender.name"] = sender?.display_name || practiceName;
+    if (sender?.email) out["sender.email"] = sender.email;
+  } catch { /* the page's own facts are used alone */ }
+  return out;
+}
+const factsFor = async (tx, a) => ({ ...(await workspaceFacts(tx, a)), ...cleanFacts(a.facts) });
 const uuid = (v, field) => { if (!UUID_RE.test(String(v ?? ""))) throw invalid(`${field} must be an id`, { field }); return v; };
 
-const check = async (_tx, { source, profile, facts, requireSignature, forTemplate }) => checkSource({ source, profile, facts: cleanFacts(facts), requireSignature: requireSignature !== false, forTemplate: forTemplate === true });
+const check = async (tx, a) => checkSource({ source: a.source, profile: a.profile, facts: await factsFor(tx, a), requireSignature: a.requireSignature !== false, forTemplate: a.forTemplate === true });
 const cleanValues = (v) => (v && typeof v === "object" && !Array.isArray(v) ? Object.fromEntries(Object.entries(v).filter(([k, x]) => /^[a-z][a-z0-9_]{0,40}$/.test(k) && typeof x === "string" && x.length <= 300)) : null);
-const saveTemplate = (tx, a) => saveSourceTemplate(tx, { tenantId: a.tenantId, actorUserId: a.actorUserId, name: a.name, source: a.source, profile: a.profile, origin: a.origin, kind: a.kind === "form" ? "form" : "document", paper: a.paper === "a4" ? "a4" : "letter", facts: cleanFacts(a.facts), requireSignature: a.requireSignature !== false, description: a.description ?? null });
-const saveVersion = (tx, a) => saveSourceVersion(tx, { tenantId: a.tenantId, actorUserId: a.actorUserId, templateId: uuid(a.templateId, "templateId"), source: a.source, facts: cleanFacts(a.facts), requireSignature: a.requireSignature !== false, changeNote: a.changeNote ?? null });
+const saveTemplate = async (tx, a) => saveSourceTemplate(tx, { tenantId: a.tenantId, actorUserId: a.actorUserId, name: a.name, source: a.source, profile: a.profile, origin: a.origin, kind: "document", paper: a.paper === "a4" ? "a4" : "letter", facts: await factsFor(tx, a), requireSignature: a.requireSignature !== false, description: a.description ?? null });
+const saveVersion = async (tx, a) => saveSourceVersion(tx, { tenantId: a.tenantId, actorUserId: a.actorUserId, templateId: uuid(a.templateId, "templateId"), source: a.source, facts: await factsFor(tx, a), requireSignature: a.requireSignature !== false, changeNote: a.changeNote ?? null });
 const saveDefaults = (tx, a) => saveTemplateDefaults(tx, { templateId: uuid(a.templateId, "templateId"), description: a.description, clientDescription: a.clientDescription, message: a.message, sendDefaults: a.sendDefaults, aiRules: a.aiRules });
-const revise = (tx, a) => reviseSourceDocument(tx, { tenantId: a.tenantId, actorUserId: a.actorUserId, instanceId: uuid(a.instanceId, "instanceId"), source: a.source, facts: cleanFacts(a.facts), paper: a.paper ?? null, variableValues: a.variableValues === undefined ? undefined : cleanValues(a.variableValues), roleMap: a.roleMap && typeof a.roleMap === "object" && !Array.isArray(a.roleMap) ? Object.fromEntries(Object.entries(a.roleMap).filter(([k, v]) => typeof v === "string" && k.length <= 120 && v.length <= 120)) : {} });
+const revise = async (tx, a) => reviseSourceDocument(tx, { tenantId: a.tenantId, actorUserId: a.actorUserId, instanceId: uuid(a.instanceId, "instanceId"), source: a.source, facts: await factsFor(tx, a), paper: a.paper ?? null, variableValues: a.variableValues === undefined ? undefined : cleanValues(a.variableValues), roleMap: a.roleMap && typeof a.roleMap === "object" && !Array.isArray(a.roleMap) ? Object.fromEntries(Object.entries(a.roleMap).filter(([k, v]) => typeof v === "string" && k.length <= 120 && v.length <= 120)) : {} });
 const guided = async (_tx, a) => { const r = assembleGuided(a.answers ?? {}); if (!r.ok) throw invalid(r.errors[0], { field: "answers", details: r.errors }); return { title: r.title, source: r.source, notes: r.notes }; };
 const importMarkdown = async (_tx, a) => {
   if (typeof a.markdown !== "string" || !a.markdown.trim()) throw invalid("Paste or upload the text to import.", { field: "markdown" });
@@ -54,13 +74,13 @@ const importMarkdown = async (_tx, a) => {
   if (!p.ok) throw invalid(`The text could not be turned into a document: ${p.errors[0]}`, { field: "markdown", details: p.errors.slice(0, 8) });
   return { source: p.source };
 };
-const saveDocument = (tx, a) => createSourceDocument(tx, { tenantId: a.tenantId, actorUserId: a.actorUserId, title: a.title, source: a.source, facts: cleanFacts(a.facts), paper: a.paper === "a4" ? "a4" : "letter", saveAsTemplate: a.saveAsTemplate === true, requireSignature: a.requireSignature !== false, variableValues: cleanValues(a.variableValues) });
+const saveDocument = async (tx, a) => createSourceDocument(tx, { tenantId: a.tenantId, actorUserId: a.actorUserId, title: a.title, source: a.source, facts: await factsFor(tx, a), paper: a.paper === "a4" ? "a4" : "letter", saveAsTemplate: a.saveAsTemplate === true, requireSignature: a.requireSignature !== false, variableValues: cleanValues(a.variableValues) });
 const patchesApply = async (_tx, a) => {
   const p = parseSource(a.source); if (!p.ok) throw invalid(`The document is not valid: ${p.errors[0]}`, { field: "source" });
   const r = applyPatches(p.source, a.patches); if (!r.ok) throw invalid(`Those changes would break the document: ${r.errors[0]}`, { field: "patches" });
   return { source: r.source, applied: r.applied.length, rejected: r.rejected };
 };
-const aiJob = (tx, a) => createAiJob(tx, { tenantId: a.tenantId, actorUserId: a.actorUserId, prompt: a.prompt, mode: a.mode, vocabulary: a.vocabulary, kind: a.kind, baseSource: a.baseSource ?? null, baseTemplateId: a.baseTemplateId ? uuid(a.baseTemplateId, "baseTemplateId") : null, brief: a.brief ?? null, variables: Array.isArray(a.variables) ? a.variables : null, thinkHarder: a.thinkHarder === true });
+const aiJob = (tx, a) => createAiJob(tx, { tenantId: a.tenantId, actorUserId: a.actorUserId, prompt: a.prompt, mode: a.mode, vocabulary: a.vocabulary, kind: a.kind, baseSource: a.baseSource ?? null, baseTemplateId: a.baseTemplateId ? uuid(a.baseTemplateId, "baseTemplateId") : null, brief: a.brief ?? null, variables: Array.isArray(a.variables) ? a.variables : null });
 const aiCancel = (tx, a) => cancelAiJob(tx, { jobId: uuid(a.jobId, "jobId") });
 const nat = (v) => (Number.isInteger(v) && v >= 0 && v <= 100000 ? v : 0);
 const aiOutcome = (tx, a) => recordAiOutcome(tx, { tenantId: a.tenantId, actorUserId: a.actorUserId, jobId: uuid(a.jobId, "jobId"), accepted: nat(a.accepted), rejected: nat(a.rejected), undone: a.undone === true, targetType: a.targetType ?? null, targetId: a.targetId && UUID_RE.test(a.targetId) ? a.targetId : null });
@@ -111,6 +131,6 @@ export function registerEngineReads(app, { runTenantScoped, tenantIsPlatform } =
   read("/api/documents/ai/usage", async ({ db, tenantId, principal }) => usageView(db, { tenantId, userId: principal.appUserId ?? null, cfg: await readAiConfig(db) }), { author: false });
   read("/api/documents/engine/ai/status", async ({ db, tenantId }) => {
     const [cfg, key, usage] = await Promise.all([readAiConfig(db), ownKeyStatus(db, { tenantId }), aiUsage(db, { tenantId })]);
-    return { enabled: cfg.enabled, provider: cfg.provider, model: cfg.model || null, limitPerDay: cfg.perDay, limitPerMonth: cfg.perMonth, agentName: cfg.agentName || null, whoMayUse: cfg.whoMayUse, allowDraft: cfg.allowDraft, allowEdit: cfg.allowEdit, requireReview: cfg.requireReview, agentKinds: cfg.agentKinds, chatRetentionDays: cfg.chatRetentionDays, usedToday: usage.today, usedThisMonth: usage.month, ownKey: key.present, serviceKey: Boolean(process.env.ANTHROPIC_API_KEY) && cfg.provider === "anthropic" };
+    return { enabled: cfg.enabled, provider: cfg.provider, model: cfg.model || null, limitPerDay: cfg.perDay, limitPerMonth: cfg.perMonth, agentName: cfg.agentName || null, whoMayUse: cfg.whoMayUse, allowDraft: cfg.allowDraft, allowEdit: cfg.allowEdit, requireReview: cfg.requireReview, agentKinds: cfg.agentKinds, chatRetentionDays: cfg.chatRetentionDays, usedToday: usage.today, usedThisMonth: usage.month, ownKey: key.present, ownKeyUsable: key.usable, ownKeyPlanNeeded: Boolean(key.planNeeded), ownKeyKeptUntil: key.keptUntil ?? null, ownKeyStopped: Boolean(key.stopped), serviceKey: Boolean(process.env.ANTHROPIC_API_KEY) && cfg.provider === "anthropic" };
   });
 }

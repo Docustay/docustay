@@ -61,11 +61,18 @@ const TEMPLATE_COLUMNS_WITH_BUILDER = [
 //      summary off the document returned undefined and read as "nothing has been signed".
 //      Wrong place, not wrong value. Count the rows.
 const instanceList = (where) => `
-  SELECT d.id, d.title, d.builder, d.state, d.sent_at, d.executed_at, d.is_test, (SELECT tm.name FROM keystone.document_team tm WHERE tm.id = d.team_id) AS team,
+  SELECT d.id, d.title, d.builder, d.state, d.sent_at, d.executed_at, d.created_at, d.updated_at, d.is_test, (SELECT tm.name FROM keystone.document_team tm WHERE tm.id = d.team_id) AS team,
          d.source_channel = 'form' AS from_form, (SELECT ft.name FROM keystone.document_template ft WHERE ft.family_id = d.form_id ORDER BY ft.version DESC LIMIT 1) AS form_name,   -- Run 7: the Documents "From a form" filter
          coalesce((SELECT s.display_name FROM keystone.person_directory s WHERE s.id = d.subject_user_id), (SELECT p.name FROM keystone.document_party p WHERE p.instance_id = d.id ORDER BY p.position, p.created_at LIMIT 1)) AS subject,   -- a signed document outlives its person: the island's own snapshot names them (QUEUE §23.3.6)
          (SELECT t.signer_config FROM keystone.document_type t WHERE t.id = d.type_id) AS signer_config,
-         (SELECT count(*)::int FROM keystone.signature_record sr WHERE sr.instance_id = d.id) AS signatures
+         (SELECT count(*)::int FROM keystone.signature_record sr WHERE sr.instance_id = d.id) AS signatures,
+         -- the ribbon (COMBINED-STYLE-SPEC section 7) is read from these true facts: seats that must sign (a signing group is ONE seat), seats that have, people who opened it, who is next, who opened it last
+         (SELECT count(DISTINCT CASE WHEN p.group_label IS NOT NULL THEN 'g:' || p.role || ':' || p.group_label ELSE p.id::text END)::int FROM keystone.document_party p WHERE p.instance_id = coalesce(d.package_lead_id, d.id) AND p.action_role IN ('signer', 'approver')) AS parties_total,
+         (SELECT count(DISTINCT CASE WHEN p.group_label IS NOT NULL THEN 'g:' || p.role || ':' || p.group_label ELSE p.id::text END)::int FROM keystone.document_party p WHERE p.instance_id = coalesce(d.package_lead_id, d.id) AND p.action_role IN ('signer', 'approver') AND p.status IN ('signed', 'approved')) AS parties_signed,
+         (SELECT count(*)::int FROM keystone.document_party p WHERE p.instance_id = coalesce(d.package_lead_id, d.id) AND p.viewed_at IS NOT NULL) AS parties_opened,
+         (SELECT p.name FROM keystone.document_party p WHERE p.instance_id = coalesce(d.package_lead_id, d.id) AND p.action_role IN ('signer', 'approver') AND p.status NOT IN ('signed', 'approved', 'declined', 'cancelled') ORDER BY p.position, p.created_at LIMIT 1) AS next_party,
+         (SELECT p.name FROM keystone.document_party p WHERE p.instance_id = coalesce(d.package_lead_id, d.id) AND p.viewed_at IS NOT NULL ORDER BY p.viewed_at DESC LIMIT 1) AS opened_by,
+         (SELECT array_agg(x.name ORDER BY x.position, x.created_at) FROM (SELECT p.name, p.position, p.created_at FROM keystone.document_party p WHERE p.instance_id = coalesce(d.package_lead_id, d.id) AND p.action_role IN ('signer', 'approver') ORDER BY p.position, p.created_at LIMIT 4) x) AS party_names
     FROM keystone.document_instance d
    WHERE d.archived_at IS NULL AND (${scoped('document', 'd')} OR (d.archived_at IS NULL AND keystone.document_on_team($1::uuid, d.team_id))) AND keystone.document_team_visible($1::uuid, d.team_id, d.created_by) AND (${where})
    ORDER BY coalesce(d.sent_at, d.created_at) DESC, d.id`;

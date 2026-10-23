@@ -23,5 +23,5 @@ Use it when you take a deposit for a rental, a booking or a job. It states the a
 ## The facts
 
 - 3 pages
-- 19 fields
-- About 8 minutes to fill in
+- 18 fields
+- About 7 minutes to fill in

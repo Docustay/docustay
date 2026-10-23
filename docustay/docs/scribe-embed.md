@@ -10,9 +10,10 @@ order: 11
 
 1. **On your server**, with a key that has `embedded:write`:
 
-   ```
-   POST /api/v1/embedded/scribe-session
-   { "origin": "https://app.example.com" }
+   ```bash
+   curl -X POST "${DOCUSTAY_URL:-https://docustay.app}/api/v1/embedded/scribe-session" \
+     -H "Authorization: Bearer $DOCUSTAY_API_KEY" -H "Content-Type: application/json" \
+     -d '{ "origin": "https://app.example.com" }'
    ```
 
    The answer is a `url` that works for one hour. The website must be on your allowed list (Settings → Developers → Embedding), else the answer is 409.
@@ -41,3 +42,5 @@ The session key your server makes is draft-only: it can read documents and templ
 ## When it does not load
 
 If the panel says it cannot start, check three things in order: the session address on your server answered with a token (a key without `embedded:write` gets a refusal), the page's address is on the allowed-sites list under Settings → Developers → Embedding, and the key is a draft-only one. The browser console names the first one that fails.
+
+If all three are right and it still does not start, keep the `requestId` from the failed call: every API error carries one, and it is the quickest way for us to find what happened.

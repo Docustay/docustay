@@ -54,6 +54,7 @@ import { db, run } from "../db/kysely.mjs";
 import { sql } from "kysely";
 
 const EVENT_SECTION = "documents";
+import { anthropicHeaders } from "./anthropicHeaders.mjs";
 const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
 const ANTHROPIC_VERSION = "2023-06-01";
 // ★ Never called in this build (no network — see task banner). The model is named in ONE place (engine/ai/prices.mjs); this file holds no model id (D-015).
@@ -172,11 +173,7 @@ async function callAnthropic(requestPayload, { fetchImpl, timeoutMs } = {}) {
   const key = apiKey();
   return callOutside("anthropic", ANTHROPIC_URL, {
     method: "POST",
-    headers: {
-      "x-api-key": key,
-      "anthropic-version": ANTHROPIC_VERSION,
-      "content-type": "application/json",
-    },
+    headers: anthropicHeaders(key, process.env, ANTHROPIC_VERSION),
     body: JSON.stringify(requestPayload),
   }, { fetchImpl, timeoutMs });
 }

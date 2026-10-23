@@ -1,6 +1,6 @@
 {
   "name": "@docustay2026/sdk",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Docustay API client for JavaScript and TypeScript. No dependencies.",
   "type": "module",
   "license": "MIT",

@@ -70,7 +70,7 @@
     {#if card.rows?.length}<ul class="grid text-sm">{#each card.rows as r (r.id)}
       <li class="res" data-testid="chat-result-row" data-id={r.id} data-state={r.state}>
         <button type="button" class="truncate text-left font-medium text-ink hover:underline" onclick={() => open(`/documents/${r.id}`)}>{r.title}</button>
-        <span class="text-mute">{STATE_WORD[r.state]?.() ?? r.state}{#if r.waitingOn}{" · "}{t("waiting on {who}", { who: r.waitingOn })}{/if}{#if r.ends}{" · "}{t("ends {date}", { date: day(r.ends) })}{/if}{#if r.notice}{" · "}{t("notice by {date}", { date: day(r.notice) })}{/if}</span>
+        <span class="text-mute">{STATE_WORD[r.state]?.() ?? r.state}{#if r.waitingOn}{" · "}{t("waiting on {who}", { who: r.waitingOn })}{/if}</span>
       </li>{/each}</ul>
       {#if (card.total ?? 0) > card.rows.length}<div class="text-xs text-mute">{t("Showing {shown} of {total}.", { shown: card.rows.length, total: card.total })}</div>{/if}{/if}
   </div>

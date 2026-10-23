@@ -26,6 +26,12 @@ export async function mintDownloadLink(tx, { tenantId, leadId, partyId, days }) 
   return { url: `${publicBase}/download?t=${encodeURIComponent(minted.presented)}`, expiresAt: minted.expiresAt };
 }
 
+/** R13-D266: the person whose signature completes the document gets the signed copy from the page they signed on — `out` (what signing answered) gains a week-long download link for them. Anything else passes through. */
+export async function withSignedCopyLink(tx, { tenantId, leadId, partyId, out }) {
+  if (out?.completed !== true || out.held) return out;
+  return { ...out, downloadUrl: (await mintDownloadLink(tx, { tenantId, leadId, partyId, days: 7 })).url };
+}
+
 async function context(tx, { leadId, partyId }) {
   const { rows: [party] } = await tx.query(`SELECT * FROM keystone.document_party WHERE id = $1 AND instance_id = $2`, [partyId, leadId]);
   const { rows: [lead] } = await tx.query(`SELECT id, title, state, send_options FROM keystone.document_instance WHERE id = $1 AND builder = 'pdf' AND archived_at IS NULL`, [leadId]);
@@ -77,7 +83,7 @@ export async function readDownload(tx, { tenantId, leadId, partyId, documentId =
     const r = await fetchArchivedPdf(tx, { instanceId: m.id });
     out = { bytes: r.body, name: `${m.title} (signed).pdf` };
   }
-  await recordAuditEvent(tx, { tenantId, instanceId: leadId, kind: "downloaded", actorRole: party.role, detail: { what: which } });
+  await recordAuditEvent(tx, { tenantId, instanceId: leadId, kind: "downloaded", actorRole: party.role, partyId: party.id, detail: { what: which } });
   await emit(tx, { tenantId, topic: "documents.document.downloaded", emittedBy: "documents", subjectType: "document", subjectId: leadId, actor: userActor(partyId), payload: { what: which } });
   return out;
 }

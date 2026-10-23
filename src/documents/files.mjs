@@ -4,6 +4,7 @@
 // ★ The type comes from the file's own bytes (`file-type`), never from its name or the browser's claim: a .pdf that is a zip is refused, and a .docx that is really an .exe is refused.
 // ★ The ORIGINAL is stored untouched and its SHA-256 is recorded the moment it arrives; every later copy (converted, final) is a separate row with its own hash.
 // ★ Nothing here runs a file: bytes are parsed for structure (pdf-lib, pdf.js with eval off) or handed to the converter service; a file that cannot be read is refused with a sentence, never stored as a document.
+import { NO_RULES, NO_PAYMENT_MODES } from "./ruleAuthoring.mjs";
 import { createHash, randomUUID } from "node:crypto";
 import { fileTypeFromBuffer } from "file-type";
 import { invalid, notFound, dependency } from "../http/errors.mjs";
@@ -73,6 +74,11 @@ export async function acceptUpload(tx, { tenantId, actorUserId = null, name, byt
     const { fieldsFromTags } = await import("./textTags.mjs");
     const found = await locateTags(pdfBytes);
     if (found.errors.length) throw invalid(`A text tag on page ${found.errors[0].page} cannot be used: ${found.errors[0].error}.`, { code: "text_tag_invalid", tags: found.errors });
+    // v1 item 6: a text tag cannot add a show-if rule or a formula (documents that already have them keep working)
+    const ruled = found.tags.find((t) => t.parsed?.rule);
+    if (ruled) throw invalid(`A text tag on page ${ruled.page ?? 1} uses show=… or calc=…. ${NO_RULES}`, { code: "rules_removed" });
+    const planned = found.tags.find((t) => t.parsed?.spec?.plan || t.parsed?.spec?.amount_ask || t.parsed?.spec?.amount_formula || t.parsed?.spec?.price_id || t.parsed?.spec?.payment_link);   // v1 item 10
+    if (planned) throw invalid(`A payment tag on page ${planned.page ?? 1} uses a way of setting the amount that is not part of Docustay any more. ${NO_PAYMENT_MODES}`, { code: "payment_modes_removed" });
     if (found.tags.length) {
       tagged = fieldsFromTags(found.tags, found.tags.map((t) => t.box));
       pdfBytes = await coverTags(pdfBytes, found.tags);

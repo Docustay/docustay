@@ -8,6 +8,7 @@ import path from "node:path";
 import { randomUUID } from "node:crypto";
 import { issueLicense } from "./docustayLicense.mjs";
 import { invalid } from "../http/errors.mjs";
+import { installVersion } from "./installVersion.mjs";
 import * as mail from "../mail/index.mjs";
 import { esignExecutionCount, sendCountForPeriod } from "../documents/api.mjs";
 
@@ -105,4 +106,15 @@ function installIdOnDisk() {
   }
   return randomUUID();
 }
-export const usageReportFor = (tx, { tenantId }) => buildUsageReport(tx, { tenantId, installId: installIdOnDisk(), version: process.env.KEYSTONE_VERSION ?? null, startedAt: STARTED });
+export const usageReportFor = (tx, { tenantId }) => buildUsageReport(tx, { tenantId, installId: installIdOnDisk(), version: installVersion(), startedAt: STARTED });
+
+/** What the install's admin sees about its own licence (Settings, Usage): the state of the held note and the shared-key warning the last check brought back. Hosted answers { selfHost: false }. Reads files only; sends nothing. */
+export async function licenceStatusFor() {
+  if (process.env.KEYSTONE_SELF_HOST !== "1") return { selfHost: false };
+  const { selfHostProNote } = await import("../documents/addon.mjs");
+  const dir = process.env.KEYSTONE_DATA_DIR || "/data";
+  let notice = null; try { notice = JSON.parse(readFileSync(path.join(dir, "entitlement.json"), "utf8")).notice ?? null; } catch { /* no note held */ }
+  const n = selfHostProNote();
+  return { selfHost: true, keySet: Boolean(process.env.DOCUSTAY_LICENSE_KEY), state: n.ok ? "valid" : (n.reason === "no_note" || n.reason === "no_public_key" ? "none" : n.reason), until: n.ok ? n.note.expiresAt : null, notice,
+    role: process.env.DOCUSTAY_INSTANCE_ROLE === "test" ? "test" : "production" };
+}

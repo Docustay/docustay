@@ -1,6 +1,7 @@
 import { t, whenText } from "$lib/i18n/index.svelte.js";
 // Documents calls for the workspace screens (the same wire the React screens use: /api/documents/*, /api/list/documents).
 import { api, newKey, tooManyText } from "./api.js";
+import { askPreflight, showPlanSheet, handleRefusal, report } from "$lib/pro/planPrompt.svelte.js";
 const hex = (buf) => Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, "0")).join("");
 export const sha256OfFile = async (file) => hex(await crypto.subtle.digest("SHA-256", await file.arrayBuffer()));
 export const when = (v) => whenText(v);
@@ -8,10 +9,13 @@ export const STATE = { draft: ["Draft", "bg-tint text-mute"], sent: ["Waiting", 
 
 /** Upload a file in numbered parts, resumably (≤ 768 KiB each, SHA-256 checked by the server). Returns { instanceId, … }. */
 export async function uploadFile(file, { onProgress = () => {}, title = null, signal, attachTo = null } = {}) {
+  // Part 2: ask the plan first, so a file over the plan's size is said at once in the plan sheet (with the plans that take it) instead of after hashing it
+  const pf = await askPreflight("upload", { bytes: file.size });
+  if (pf && pf.allowed === false) { report("limit_hit", pf, { form: "sheet" }); showPlanSheet(pf); throw Object.assign(new Error(pf.message), { planShown: true }); }
   onProgress({ phase: "hashing", sent: 0, total: file.size });
   const sha256 = await sha256OfFile(file);
   const st = await api("/api/documents/pdf/uploads", { method: "POST", body: { name: file.name, size: file.size, sha256, ...(attachTo ? { attachTo } : {}) } });
-  if (!st.ok) throw new Error(st.error ?? t("The upload could not start."));
+  if (!st.ok) { const shown = await handleRefusal(st, { action: "upload", size: { bytes: file.size } }); throw Object.assign(new Error(st.error ?? t("The upload could not start.")), { planShown: shown }); }
   const { uploadId, partBytes, partCount } = st.json; let sent = 0;
   for (let n = 1; n <= partCount; n += 1) {
     if (signal?.aborted) throw new DOMException("cancelled", "AbortError");

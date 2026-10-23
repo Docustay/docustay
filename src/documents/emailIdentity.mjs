@@ -3,6 +3,8 @@
 // the signing email's frame, which provider message carried which person's invitation, and what a bounce does to a document.
 // ★ The island reaches the mail module only through src/mail/index.mjs; the module reaches the host only through its ports (src/ports/mail.mjs).
 import * as mail from "../mail/index.mjs";
+import { emailIsConfigured } from "../email/resend.mjs";
+import { conflict } from "../http/errors.mjs";
 import { ports } from "./ports.mjs";
 import { recordAuditEvent } from "./auditTrail.mjs";
 import { leadOf } from "./parties.mjs";
@@ -110,8 +112,14 @@ export async function noteEmailDelivery(tx, { tenantId, providerMessageId, type,
 
 // ── the sending domain and the settings screen's view of it (all of it the module's) ──
 export const identityStatus = (tx, { tenantId }) => mail.mailStatus(tx, { tenantId });
-export async function startDomain(tx, { tenantId, domain }) { await mail.startDomain(tx, { tenantId, domain }); return identityStatus(tx, { tenantId }); }
+// R13-D367: a sending domain is verified through the email provider (Resend). An install that sends through its own mail server has none, and was told to add RESEND_API_KEY although its email worked: say what applies instead.
+export async function startDomain(tx, { tenantId, domain }, env = process.env) {
+  if (env.KEYSTONE_SELF_HOST === "1" && !emailIsConfigured(env)) throw conflict("This install sends email through your own mail server, so the sending address is the one set in Settings, Email; nothing is verified here. A sending domain needs the Resend provider (RESEND_API_KEY on the app and the worker).", { code: "domain_needs_provider" });
+  await mail.startDomain(tx, { tenantId, domain }); return identityStatus(tx, { tenantId });
+}
 export async function verifyDomain(tx, { tenantId }) { await mail.verifyDomainNow(tx, { tenantId }); return identityStatus(tx, { tenantId }); }
+/** R13-D015 — take the sending domain off this workspace (the row only; the domain at the email provider is left as it is, since it may be shared). Returns the screen's new view. */
+export async function removeDomain(tx, { tenantId }) { await mail.removeDomain(tx, { tenantId }); return identityStatus(tx, { tenantId }); }
 export async function saveSmtpPassword(tx, { tenantId, password, updatedBy = null }) { await mail.saveSmtpPassword(tx, { tenantId, password, updatedBy }); return identityStatus(tx, { tenantId }); }
 export const startMailbox = (tx, { tenantId, userId = null, provider }) => mail.startMailboxConnect(tx, { tenantId, userId, provider });
 export const removeMailbox = (tx, { tenantId, updatedBy = null }) => mail.removeMailbox(tx, { tenantId, updatedBy });

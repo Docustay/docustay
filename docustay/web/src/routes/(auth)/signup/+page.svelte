@@ -1,4 +1,5 @@
 <script>
+  import { appEvent } from "$lib/appEvents.js";
   import { goto } from "$app/navigation";
   import { onMount, onDestroy, tick } from "svelte";
   import { t } from "$lib/i18n/index.svelte.js";
@@ -14,7 +15,7 @@
   import { rememberPro, wantedPro } from "$lib/site/wantPro.js";
   // Run 9 (board W3): arriving from "Get Pro" — the plan is remembered, and once the account exists the app goes straight to checkout
   const proQ = typeof location !== "undefined" ? new URLSearchParams(location.search) : null;
-  if (proQ?.get("plan") === "pro") rememberPro(proQ.get("interval") ?? "month");
+  if (["pro", "payg", "lifetime"].includes(proQ?.get("plan"))) rememberPro(proQ.get("interval") ?? "month", proQ.get("plan"));
   const wantsPro = $state(Boolean(wantedPro()));
   let starter = $state(rememberStarter());
   const fromDrop = typeof location !== "undefined" && new URLSearchParams(location.search).get("from") === "drop";
@@ -62,6 +63,7 @@
     catch (err) { problem = err.message; kind = err.kind ?? null; step = "email"; }
   }
   async function enter(r) {
+    void appEvent("signup_complete", { via: "signup" });
     // a chosen template wins over a dropped file: the file stays kept, and the editor tells the person it is still waiting
     if (wantedPro()) { await goto("/upgrade", { invalidateAll: true }); return; }
     const kept = !starter && (await peek()) !== null;

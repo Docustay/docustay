@@ -37,14 +37,16 @@ need(lands("sdk/cli/bin/x.mjs", `import a from "../src/args.mjs"`) === false && 
 need(crossesBoundary(`import x from "../../src/documents/api.mjs"`) && !crossesBoundary(`import x from "./client.js"`), "control: the boundary check does not tell a crossing from a local import");
 
 // 3 and 4. what the pages say
-export const claimProblem = (line) => {
+// The repository went public on 15 Oct 2026 (the maintainer); while it is held the third rule below refuses any claim that the code is published. Set back to true to hold again.
+export const REPO_HELD = false;
+export const claimProblem = (line, held = REPO_HELD) => {
   if (/(theirs:|DocuSeal|Documenso|SignWell|competitor|other product|compare)/i.test(line) || /open-source software/i.test(line)) return null;   // other people's descriptions, and "built from open-source software" (our dependencies)
-  if (/open[- ]source/i.test(line.replace(/"Open source",\s*"\/open-source"/g, "").replace(/["'`]\/open-source["'`]/g, "")) && !/AGPL|MIT/.test(line)) return "says open source without naming a licence";
-  if (/github\.com\/(docustay|foundry)/i.test(line) || /(code|repository) (is|are) (on github|published|public)/i.test(line)) return "claims the code is already published";
+  if (/open[- ]source/i.test(line.replace(/"Open source",\s*"\/open-source"/g, "").replace(/["'`]\/open-source["'`]/g, "").replace(/[\/^(|]open-source/g, "").replace(/"open-source":\s*"Open source"/g, "")) && !/AGPL|MIT/.test(line)) return "says open source without naming a licence";
+  if (held && (/github\.com\/(docustay|foundry)/i.test(line) || /(code|repository) (is|are) (on github|published|public)/i.test(line))) return "claims the code is already published";
   return null;
 };
 const SITE = [...walk("docustay/web/src/lib/site"), ...walk("docustay/web/src/routes/(site)"), ...walk("docustay/docs"), "docustay/web/scripts/build-legal.mjs"].filter((f) => /\.(js|svelte|md|mjs)$/.test(f));
 for (const f of SITE) rd(f).split("\n").forEach((line, i) => { const c = claimProblem(line); if (c) problems.push(`${f}:${i + 1} ${c}`); });
-need(claimProblem("Open source, on your own server.") && !claimProblem("Licensed under the AGPL-3.0, on your own server.") && claimProblem("The code is on GitHub now."), "control: the claims check does not catch a bad sentence");
+need(claimProblem("Open source, on your own server.") && !claimProblem("Licensed under the AGPL-3.0, on your own server.") && claimProblem("The code is on GitHub now.", true) && !claimProblem("The code is on GitHub now.", false), "control: the claims check does not catch a bad sentence");
 
 if (import.meta.url === `file://${process.argv[1]}`) { if (problems.length) { for (const p of problems) console.log("  FAIL " + p); console.log("PROJECT LICENCE GATE FAIL"); process.exit(1); } console.log(`PROJECT LICENCE GATE PASS: AGPL-3.0 files, ${SDKS.length} MIT packages with their own licence, no SDK imports server code, ${SITE.length} source files read for licence claims`); }

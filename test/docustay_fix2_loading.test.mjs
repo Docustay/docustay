@@ -2,9 +2,9 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-// Plays moved its list into the Skills screen (Launch step 7); the loaded flag lives where the list does
+// Plays moved its list into the Skills screen (Launch step 7); the loaded flag lives where the list does. People is the Contacts page now (/people redirects there; R13-D268)
 const page = (n) => readFileSync(new URL(n === "plays" ? "../docustay/web/src/lib/screens/Skills.svelte" : `../docustay/web/src/routes/(app)/${n}/+page.svelte`, import.meta.url), "utf8");
-for (const n of ["plays", "people", "forms"]) test(`${n}: the empty sentence is behind the loaded flag, and the flag is set by the first answer`, () => {
+for (const n of ["plays", "contacts"]) test(`${n}: the empty sentence is behind the loaded flag, and the flag is set by the first answer`, () => {
   const s = page(n);
   assert.match(s, /let (?:.*\b)?loaded = \$state\(false\)/);
   assert.match(s, /loaded = true/);

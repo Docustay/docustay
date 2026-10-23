@@ -31,11 +31,17 @@ export const SENDER_BOX_KEY = "“{label}” is yours to fill in before sending 
  * At send: every box's starting value worked out. `values` holds the organisation's and the send's facts (org.name, sender.email, custom.x …); `seatValues[role]` holds signer.* for
  * the person on that seat. A sender box must end with a value — otherwise it is a problem — and is then frozen as the seat's locked answer. Returns a NEW body and the problems.
  */
+// R13-D216: a sender's box with no starting value of its own takes the send's custom value named after it — its label as a key ("Event name" → custom.event_name), else its id — so a
+// list sent to many people can carry one column per sender box (a CSV column becomes custom.<column>, spaces as underscores).
+const boxKey = (s) => String(s ?? "").toLowerCase().trim().replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "");
+const fromCustom = (f, values) => { for (const k of [boxKey(f.label), boxKey(f.id)]) { const v = k ? values[`custom.${k}`] : undefined; if (typeof v === "string" && v.trim()) return v.trim(); } return ""; };
+
 export function resolveBoxValues(body, { values = {}, seatValues = {} } = {}) {
   const problems = [];
   const fields = (body?.fields ?? []).map((f) => {
     if (f.default === undefined && !f.sender) return f;
-    const filled = f.default === undefined ? { text: "", missing: [] } : fillTokens(f.default, { ...values, ...(seatValues[f.role] ?? {}) });
+    const own = f.default === undefined || f.default === "" ? (f.sender ? fromCustom(f, values) : "") : null;
+    const filled = own !== null ? { text: own, missing: [] } : fillTokens(f.default, { ...values, ...(seatValues[f.role] ?? {}) });
     if (f.sender) {
       if (!filled.text && f.required === false) return { ...f, default: "", locked: true };   // an optional box the sender left empty stays empty: no signer may write in it
       if (!filled.text) { problems.push({ id: f.id, label: f.label || f.id, text: senderBoxMessage(f), key: SENDER_BOX_KEY, vars: { label: f.label || f.id } }); return f; }

@@ -7,6 +7,9 @@
     "static/llms-full.txt"
   ],
   "words": [
+    "hashlib",
+    "Installment",
+    "installments",
     "DigiCert",
     "DKIM",
     "DMARC",
@@ -81,6 +84,7 @@
     "Enroll",
     "enroll",
     "enrolled",
-    "selfhost"
+    "selfhost",
+    "POSTHOG"
   ]
 }

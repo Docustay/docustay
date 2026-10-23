@@ -12,7 +12,7 @@ import { APP_DOMAIN_VAR } from "../auth/tenantFromHost.mjs";
 import { bookingFactsFor, invoiceFactsFor, subscriptionFactsFor } from "../booking/facts.mjs";
 import { recordUsage } from "../billing/usage.mjs";
 import { renderSigningEmail } from "../email/signLinkEmail.mjs";
-import { aiPolicy as planAiPolicy, assertMaySend as planAssertMaySend, sendAllowance as planSendAllowance, assertMayCreateTemplate as planAssertMayCreateTemplate, noteTemplateCreated as planNoteTemplateCreated, assertEntitled as planAssertEntitled, currentPlan as planCurrent , communityRefuses } from "../product/docustay.mjs";
+import { aiPolicy as planAiPolicy, assertMaySend as planAssertMaySend, noteDocumentSent as planNoteDocumentSent, assertAiBudget as planAssertAiBudget, noteAiBilled as planNoteAiBilled, sendAllowance as planSendAllowance, assertMayCreateTemplate as planAssertMayCreateTemplate, noteTemplateCreated as planNoteTemplateCreated, assertEntitled as planAssertEntitled, currentPlan as planCurrent , communityRefuses } from "../product/docustay.mjs";
 import { entitled as planEntitled } from "../product/docustayPlans.mjs";
 import * as documentsMail from "./documentsMail.mjs";
 import { renderTemplate } from "../email/templates.mjs";
@@ -63,6 +63,8 @@ const secrets = {
 };
 
 const brand = {
+  // Docustay v1: the island asks, never learns the product by name (settings trim)
+  isDocustay: async (tx) => { if (process.env.KEYSTONE_PRODUCT === "docustay") return true; const { rows: [t] } = await tx.query(`SELECT product FROM keystone.tenant WHERE id = keystone.current_tenant_id()`); return t?.product === "docustay"; },
   async get(tx, { tenantId }) {
     const { rows } = await tx.query(`SELECT name, slug, timezone, product FROM keystone.tenant WHERE id = $1`, [tenantId]);
     const t = rows[0] ?? {};
@@ -75,7 +77,10 @@ const brand = {
     //   its pages and documents carry "Sent with Docustay" unless the workspace is on Pro and chose to hide it (the island makes that choice; it owns the setting).
     const docustay = t.product === "docustay" || process.env.KEYSTONE_PRODUCT === "docustay";
     const docustayBase = process.env.KEYSTONE_DOCUSTAY_SIGN_URL ? process.env.KEYSTONE_DOCUSTAY_SIGN_URL.replace(/\/+$/, "") : null;
-    const publicBase = chooseDocumentsBase({ own, docustay, docustayBase, fallback: () => publicBaseFor(t.slug) });
+    // ★ R13 decision 42 (17 Oct): a HOSTED Docustay workspace no longer has its own signing address, so a hostname left over from before is not used; self-hosters keep theirs.
+    //   (Found by R13-C-F13-121: an old sign.<x>.docustay.app link was served with X-Frame-Options SAMEORIGIN, so the embedded signer stayed blank on the customer's site.)
+    const ownForLinks = docustay && process.env.KEYSTONE_SELF_HOST !== "1" ? null : own;
+    const publicBase = chooseDocumentsBase({ own: ownForLinks, docustay, docustayBase, fallback: () => publicBaseFor(t.slug) });
     return { practiceName, logoUrl, tenantName: t.name ?? "", slug: t.slug ?? "", timezone: t.timezone ?? "UTC", publicBase, productName: docustay ? "Docustay" : "Workbench", ...(docustay ? { footerBrand: "Sent with Docustay" } : {}) };
   },
 };
@@ -196,6 +201,13 @@ const entitlements = {
   assertEntitled: (tx, a) => planAssertEntitled(tx, a),
   // the biggest upload the plan allows (Free 25 MB, Pro 100 MB); null for an organisation on no Docustay plan, which the island's own setting then limits
   maxUploadMb: async (tx, { tenantId }) => (await planCurrent(tx, { tenantId }))?.uploadMb ?? null,
+  // the most rows one list send may carry on this plan (Free 15); null = no plan cap (the island's own 50-row request limit still applies)
+  // usage billing (v1 item 21): a document sent past the included amount, the AI budget check, and a successful AI draft past its allowance
+  noteDocumentSent: (tx, a) => planNoteDocumentSent(tx, a),
+  assertAiBudget: (tx, a) => planAssertAiBudget(tx, a),
+  noteEmailPaused: async (tx, a) => (await import("../product/docustayDaily.mjs")).noteEmailPaused(tx, a),   // 21 Oct 2026: the email guard paused a workspace; its Owners are told, and a spam-report pause goes on the review list
+  noteAiBilled: (tx, a) => planNoteAiBilled(tx, a),
+  bulkCap: async (tx, { tenantId }) => (await planCurrent(tx, { tenantId }))?.bulkCap ?? null,
   aiPolicy: (tx, a) => planAiPolicy(tx, a),
   aiDraftsPerMonth: async (tx, { tenantId }) => (await planCurrent(tx, { tenantId }))?.aiDraftsPerMonth ?? null,
   isEntitled: async (tx, { tenantId, item }) => { const plan = await planCurrent(tx, { tenantId }); return plan ? planEntitled(plan, item) : !communityRefuses(item); },

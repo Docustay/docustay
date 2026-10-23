@@ -3,14 +3,15 @@
 import { forbidden, invalid } from "../http/errors.mjs";
 import { authoriseSection } from "../nav/authorise.mjs";
 import { listDomains, addDomain, checkDomain, removeDomain } from "../domains/proDomains.mjs";
+import { notOnHostedDocustay } from "../documents/frontDoor.mjs";   // Docustay v1 item 9: the hosted service has no own signing address (a self-hoster keeps it)
 
 const SECTION = "/settings/domains";
 const need = (v, name) => { if (typeof v !== "string" || !v.trim()) throw invalid(`${name} is required`, { field: name }); return v; };
 
 export const CUSTOM_DOMAIN_WRITES = Object.freeze([
-  { path: "/api/domains", section: SECTION, fn: (tx, a) => addDomain(tx, { tenantId: a.tenantId, hostname: need(a.hostname, "hostname"), actorUserId: a.actorUserId ?? null }), object: "setting", action: "edit", subject: null },
-  { path: "/api/domains/check", section: SECTION, fn: (tx, a) => checkDomain(tx, { id: need(a.id, "id") }), object: "setting", action: "edit", subject: null },
-  { path: "/api/domains/remove", section: SECTION, fn: (tx, a) => removeDomain(tx, { id: need(a.id, "id") }), object: "setting", action: "edit", subject: null },
+  { path: "/api/domains", section: SECTION, fn: async (tx, a) => { await notOnHostedDocustay(tx); return addDomain(tx, { tenantId: a.tenantId, hostname: need(a.hostname, "hostname"), actorUserId: a.actorUserId ?? null }); }, object: "setting", action: "edit", subject: null },
+  { path: "/api/domains/check", section: SECTION, fn: async (tx, a) => { await notOnHostedDocustay(tx); return checkDomain(tx, { id: need(a.id, "id") }); }, object: "setting", action: "edit", subject: null },
+  { path: "/api/domains/remove", section: SECTION, fn: async (tx, a) => { await notOnHostedDocustay(tx); return removeDomain(tx, { id: need(a.id, "id") }); }, object: "setting", action: "edit", subject: null },
 ]);
 
 export function registerCustomDomainReads(app, { runTenantScoped, tenantIsPlatform }) {
@@ -18,6 +19,7 @@ export function registerCustomDomainReads(app, { runTenantScoped, tenantIsPlatfo
     runTenantScoped(c, async ({ db, principal, tenantId }) => {
       const decision = authoriseSection(principal.user, SECTION, { tenantIsPlatform: await tenantIsPlatform(db, tenantId) });
       if (!decision.allowed) throw forbidden(`refused: ${decision.reason}`);
+      await notOnHostedDocustay(db);
       let out = await listDomains(db);
       for (const d of out.domains.filter((x) => x.status === "pending" || x.status === "verifying")) {
         if (Date.now() - new Date(d.lastCheckedAt ?? 0).getTime() < 8_000) continue;

@@ -15,7 +15,8 @@ export const check = (role, name, label) => `{{${clean(name)};type=checkbox;role
 export const checkText = (role, name, label) => `${check(role, name, label)}&nbsp; ${label ?? name}`;
 export const pick = (role, name, options, label) => `{{${clean(name)};type=dropdown;role=${clean(role)};options=${options.map(clean).join(",")};label=${clean(label ?? name)}}}`;
 export const optional = (tag) => tag.replace(/}}$/, ";required=false}}");
-export const pay = (role, name, formula) => `{{${clean(name)};type=payment;role=${clean(role)};formula=${clean(formula)};currency=usd}}`;
+// Docustay v1 item 10: the amount is one the sender sets before sending (a custom value of this send, e.g. custom.deposit), never typed by the signer and never a formula.
+export const pay = (role, name, key) => `{{${clean(name)};type=payment;role=${clean(role)};amount=custom.${clean(key)};currency=usd}}`;
 
 /** The fifty US states, for a governing-law dropdown (a dropdown takes at most fifty options). */
 export const STATES = Object.freeze(["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"]);

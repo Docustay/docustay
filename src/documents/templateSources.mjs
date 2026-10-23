@@ -21,6 +21,12 @@ export async function createTemplateFromSource(tx, { tenantId, actorUserId = nul
     ? await createFromHtml(tx, { tenantId, actorUserId, name, html: source.html, paper, typeset })
     : await acceptUpload(tx, { tenantId, actorUserId, name: source.fileName, bytes: source.bytes, title: name });
   let placed = draft.tags ?? draft.flags?.tagged ?? 0, detected = null;
+  // R13-D199: an upload only checks page fingerprints (a form sent before), so `fields: "auto"` runs the full detector here, the same pass as the editor's "Find fields"
+  if (source.html === undefined && !placed && fieldsAuto && !draft.detection?.remembered) {
+    const { findFieldsOnDraft } = await import("./detect/find.mjs");
+    const f = await findFieldsOnDraft(tx, { instanceId: draft.instanceId }).catch(() => null);
+    if (f) draft.detection = f.note;
+  }
   if (source.html === undefined && !placed && draft.detection) {
     // `fields: "auto"`: the boxes the detector is sure about become the template's fields; the rest are left out (a template keeps no suggestions)
     detected = { fields: draft.detection.fields, signers: draft.detection.signers, lowConfidence: draft.detection.lowConfidence, placed: 0 };

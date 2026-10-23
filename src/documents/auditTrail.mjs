@@ -1,7 +1,9 @@
 // src/documents/auditTrail.mjs — records and reads the events that populate the audit-trail page.
 import { db, run } from "../db/kysely.mjs";
 
-export async function recordAuditEvent(tx, { tenantId, instanceId, kind, actorRole = null, occurredAt = null, detail = null }) {
+export async function recordAuditEvent(tx, { tenantId, instanceId, kind, actorRole = null, occurredAt = null, detail = null, partyId = null }) {
+  // R13-D364: a signing group is several people in one seat, so the role alone named the wrong person; the party id (an id, not personal data) says which one
+  if (partyId) detail = { ...(detail ?? {}), party_id: partyId };
   await run(tx, db.insertInto("keystone.document_audit_event").values({
     tenant_id: tenantId, instance_id: instanceId, kind, actor_role: actorRole,
     ...(occurredAt ? { occurred_at: occurredAt } : {}),

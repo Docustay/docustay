@@ -1,0 +1,58 @@
+{
+ "page": "/",
+ "browser": "chromium",
+ "width": 1280,
+ "device": null,
+ "theme": "light",
+ "reduced": false,
+ "nowebgl": false,
+ "zoom": 1,
+ "height": 8291,
+ "status": 200,
+ "cls": 0.0006070594787597656,
+ "strips": [
+  "home-chromium-1280-light.s01.jpg",
+  "home-chromium-1280-light.s02.jpg",
+  "home-chromium-1280-light.s03.jpg",
+  "home-chromium-1280-light.s04.jpg",
+  "home-chromium-1280-light.s05.jpg",
+  "home-chromium-1280-light.s06.jpg",
+  "home-chromium-1280-light.s07.jpg",
+  "home-chromium-1280-light.s08.jpg",
+  "home-chromium-1280-light.s09.jpg",
+  "home-chromium-1280-light.s10.jpg",
+  "home-chromium-1280-light.s11.jpg"
+ ],
+ "findings": [
+  {
+   "sev": "V2",
+   "kind": "target under 24x24",
+   "detail": "a \"How it works\" 83x21"
+  },
+  {
+   "sev": "V2",
+   "kind": "target under 24x24",
+   "detail": "a \"Templates\" 66x21"
+  },
+  {
+   "sev": "V2",
+   "kind": "target under 24x24",
+   "detail": "a \"Pricing\" 44x21"
+  },
+  {
+   "sev": "V2",
+   "kind": "target under 24x24",
+   "detail": "a.df-mark.svelte-wycnwv \"docustay\" 93x22"
+  },
+  {
+   "sev": "V2",
+   "kind": "target under 24x24",
+   "detail": "button.svelte-wycnwv \"Cookie settings\" 92x20"
+  },
+  {
+   "sev": "V2",
+   "kind": "text under 12px",
+   "detail": "p.fig-note.svelte-1ewzqr7 \"Every step is recorded on the \""
+  }
+ ]
+}

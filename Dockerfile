@@ -11,7 +11,7 @@
 # in CI, later, looking like an unrelated infrastructure failure. P12.3 says to pin it HERE so
 # that cannot happen. ★ If P13.2 instead pins firebase-admin ^13.10.0, this line may relax; it
 # must not be relaxed for any other reason.
-FROM node:22.21-bookworm-slim AS deps
+FROM node:22.23.4-bookworm-slim AS deps
 
 WORKDIR /app
 
@@ -58,7 +58,7 @@ RUN npm ci --omit=dev --legacy-peer-deps
 # ★ ITS OWN package.json AND ITS OWN node_modules, exactly as the retired Svelte stage had. The
 #   server image never sees webreact's build tooling, and adding to it cannot disturb the root
 #   package-lock.json a backend-only session works against.
-FROM node:22.21-bookworm-slim AS web
+FROM node:22.23.4-bookworm-slim AS web
 
 WORKDIR /app
 
@@ -83,7 +83,7 @@ RUN set -e; \
     test -f ../web/reactdist/signup.html || { echo "FATAL: webreact produced no web/reactdist/signup.html"; exit 1; }
 
 # ─────────────────────────────────────────────────────────────────────────────
-FROM node:22.21-bookworm-slim AS runtime
+FROM node:22.23.4-bookworm-slim AS runtime
 
 # ★★ Run as a NON-ROOT user. The node image ships an unprivileged `node` user (uid 1000); a
 #    container process running as root shares that uid with the host namespace in several common
@@ -94,6 +94,11 @@ WORKDIR /app
 COPY --from=deps --chown=node:node /app/node_modules ./node_modules
 COPY --chown=node:node package.json package-lock.json ./
 COPY --chown=node:node src ./src
+# ★ R13-D045 (16 Oct 2026, found by a Run 13 tester on the beta): the hosted service loads the Pro add-on from ../../pro/index.mjs (src/documents/addon.mjs). The Pro split (14 Oct) moved
+#   automations, playbooks, bulk send and the own signing domain there; without this line the image shipped no add-on and every Pro door answered "install the Pro add-on".
+# [p]ro matches only a folder named exactly pro (not the probe_*.mjs files at the root). The PUBLIC release builds this same file from a tree that has no pro/ (the add-on is closed source): there
+#   the line copies only the root package.json into ./pro, which addon.mjs ignores (no index.mjs). package.json comes first so the add-on's own package.json wins when pro/ is present.
+COPY --chown=node:node package.json [p]ro ./pro/
 # ★ db/ is copied because the readiness probe reads db/migrations to answer "are migrations
 #   current" by CHECKSUM (src/health/probes.mjs). Without it /readyz cannot distinguish a current
 #   schema from a drifted one, and would have to guess — which is the F2 failure shape again.

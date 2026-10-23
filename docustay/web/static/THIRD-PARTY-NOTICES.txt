@@ -2,7 +2,7 @@ THIRD-PARTY NOTICES — Docustay
 
 This lists the open-source software Docustay's website is built from, with each package's licence. Each package's own licence text is in its package; nothing here changes those terms.
 
-== Shipped with the site (326 packages) ==
+== Shipped with the site (336 packages) ==
 @antfu/install-pkg@2.1.0  MIT  https://github.com/antfu-collective/install-pkg
 @ark-ui/svelte@5.24.3  MIT  https://github.com/chakra-ui/ark
 @braintree/sanitize-url@7.1.2  MIT  https://github.com/braintree/sanitize-url
@@ -29,6 +29,9 @@ This lists the open-source software Docustay's website is built from, with each 
 @napi-rs/canvas-darwin-arm64@1.0.10  MIT  https://github.com/Brooooooklyn/canvas
 @pdf-lib/standard-fonts@1.0.0  MIT  https://github.com/Hopding/standard-fonts
 @pdf-lib/upng@1.0.1  MIT  https://github.com/Hopding/upng
+@posthog/browser-common@0.9.5  MIT  https://github.com/PostHog/posthog-js
+@posthog/core@1.59.1  MIT  https://github.com/PostHog/posthog-js
+@posthog/types@1.416.0  MIT  https://github.com/PostHog/posthog-js
 @stripe/stripe-js@10.0.0  MIT  https://github.com/stripe/stripe-js
 @svelte-put/shortcut@4.2.0  MIT  https://github.com/vnphanquang/svelte-put
 @sveltejs/acorn-typescript@1.0.13  MIT  https://github.com/sveltejs/acorn-typescript
@@ -186,6 +189,7 @@ color-convert@2.0.1  MIT  https://github.com/Qix-/color-convert
 color-name@1.1.4  MIT  https://github.com/colorjs/color-name
 commander@7.2.0  MIT  https://github.com/tj/commander.js
 commander@8.3.0  MIT  https://github.com/tj/commander.js
+core-js@3.50.0  MIT  https://github.com/zloirock/core-js
 cose-base@1.0.3  MIT  https://github.com/iVis-at-Bilkent/cose-base
 cose-base@2.2.0  MIT  https://github.com/iVis-at-Bilkent/cose-base
 csstype@3.2.3  MIT  https://github.com/frenic/csstype
@@ -240,6 +244,7 @@ es-toolkit@1.52.0  MIT  https://github.com/toss/es-toolkit
 esm-env@1.2.2  MIT  https://github.com/benmccann/esm-env
 esrap@2.4.0  MIT  https://github.com/sveltejs/esrap
 fastdom@1.0.12  MIT  https://github.com/wilsonpage/fastdom
+fflate@0.4.9  MIT  https://github.com/101arrowz/fflate
 find-up@4.1.0  MIT  https://github.com/sindresorhus/find-up
 get-caller-file@2.0.5  ISC  https://github.com/stefanpenner/get-caller-file
 hachure-fill@0.5.2  MIT  https://github.com/pshihn/hachure-fill
@@ -280,6 +285,8 @@ perfect-freehand@1.2.3  MIT  https://github.com/steveruizok/perfect-freehand
 pngjs@5.0.0  MIT  https://github.com/lukeapage/pngjs
 points-on-curve@0.2.0  MIT  https://github.com/pshihn/bezier-points
 points-on-path@0.2.1  MIT  https://github.com/pshihn/points-on-path
+posthog-js@1.435.5  (Apache-2.0 AND MIT)  https://github.com/PostHog/posthog-js
+preact@10.29.8  MIT  https://github.com/preactjs/preact
 prosemirror-changeset@2.4.4  MIT  git+https://code.haverbeke.berlin/prosemirror/prosemirror-changeset
 prosemirror-commands@1.7.2  MIT  git+https://code.haverbeke.berlin/prosemirror/prosemirror-commands
 prosemirror-dropcursor@1.8.4  MIT  git+https://code.haverbeke.berlin/prosemirror/prosemirror-dropcursor
@@ -296,6 +303,7 @@ prosemirror-view@1.42.6  MIT  git+https://code.haverbeke.berlin/prosemirror/pros
 proxy-compare@3.0.1  MIT  https://github.com/dai-shi/proxy-compare
 proxy-memoize@3.0.1  MIT  https://github.com/dai-shi/proxy-memoize
 qrcode@1.5.4  MIT  https://github.com/soldair/node-qrcode
+query-selector-shadow-dom@1.0.1  MIT  https://github.com/webdriverio/query-selector-shadow-dom
 require-directory@2.1.1  MIT  https://github.com/troygoode/node-require-directory
 require-main-filename@2.0.0  ISC  https://github.com/yargs/require-main-filename
 robust-predicates@3.0.3  Unlicense  https://github.com/mourner/robust-predicates
@@ -323,6 +331,8 @@ tslib@2.8.1  0BSD  https://github.com/Microsoft/tslib
 uqr@0.1.3  MIT  https://github.com/unjs/uqr
 uuid@14.0.2  MIT  https://github.com/uuidjs/uuid
 w3c-keyname@2.2.8  MIT  https://github.com/marijnh/w3c-keyname
+web-vitals@6.2.1  Apache-2.0  https://github.com/GoogleChrome/web-vitals
+web-vitals@6.2.3  Apache-2.0  https://github.com/GoogleChrome/web-vitals
 which-module@2.0.1  ISC  https://github.com/nexdrew/which-module
 wrap-ansi@6.2.0  MIT  https://github.com/chalk/wrap-ansi
 y18n@4.0.3  ISC  https://github.com/yargs/y18n
@@ -336,7 +346,21 @@ Inter and Fraunces, SIL Open Font Licence 1.1 (texts in /fonts/LICENSE-OFL-*.txt
 == Film and clips ==
 Pexels footage, Pexels License. Clip ids: 5483220, 8814718, 8471105, 7821621, 5486226, 7287527, 8902485, 7580446, 5637933, 8061370, 8632187, 8279150, 4115791
 
-== Build and test tools, not shipped (114 packages) ==
+== Build and test tools, not shipped (208 packages) ==
+@eslint-community/eslint-utils@4.10.1  MIT
+@eslint-community/regexpp@4.12.2  MIT
+@eslint/config-array@0.21.2  Apache-2.0
+@eslint/config-helpers@0.4.2  Apache-2.0
+@eslint/core@0.17.0  Apache-2.0
+@eslint/eslintrc@3.3.7  MIT
+@eslint/js@9.39.5  MIT
+@eslint/object-schema@2.1.7  Apache-2.0
+@eslint/plugin-kit@0.4.1  Apache-2.0
+@humanfs/core@0.19.2  Apache-2.0
+@humanfs/node@0.16.8  Apache-2.0
+@humanfs/types@0.15.0  Apache-2.0
+@humanwhocodes/module-importer@1.0.1  Apache-2.0
+@humanwhocodes/retry@0.4.3  Apache-2.0
 @oxc-project/types@0.152.0  MIT
 @polka/url@1.0.0-next.29  MIT
 @rolldown/binding-darwin-arm64@1.2.12  MIT
@@ -366,41 +390,93 @@ Pexels footage, Pexels License. Clip ids: 5483220, 8814718, 8471105, 7821621, 54
 @tailwindcss/vite@4.3.3  MIT
 @types/cookie@0.6.0  MIT
 @types/hast@3.0.5  MIT
+@types/json-schema@7.0.15  MIT
 @types/mdast@4.0.4  MIT
 @types/resolve@1.20.2  MIT
 @types/unist@3.0.3  MIT
 @ungap/structured-clone@1.4.0  ISC
+acorn-jsx@5.3.2  MIT
+ajv@6.15.0  MIT
+argparse@2.0.1  Python-2.0
+balanced-match@1.0.2  MIT
+brace-expansion@1.1.21  MIT
+callsites@3.1.0  MIT
 ccount@2.0.1  MIT
+chalk@4.1.2  MIT
 character-entities-html4@2.1.0  MIT
 character-entities-legacy@3.0.0  MIT
 chokidar@4.0.3  MIT
 comma-separated-tokens@2.0.3  MIT
 commondir@1.0.1  MIT
+concat-map@0.0.1  MIT
 cookie@0.6.0  MIT
+cross-spawn@7.0.6  MIT
+cssesc@3.0.0  MIT
+debug@4.4.3  MIT
+deep-is@0.1.4  MIT
 deepmerge@4.3.1  MIT
 dequal@2.0.3  MIT
 detect-libc@2.1.2  Apache-2.0
 devlop@1.1.0  MIT
 enhanced-resolve@5.26.0  MIT
 es-errors@1.3.0  MIT
+escape-string-regexp@4.0.0  MIT
+eslint@9.39.5  MIT
+eslint-plugin-svelte@3.23.1  MIT
+eslint-scope@8.4.0  BSD-2-Clause
+eslint-visitor-keys@3.4.3  Apache-2.0
+eslint-visitor-keys@4.2.1  Apache-2.0
+espree@10.4.0  BSD-2-Clause
+esquery@1.7.0  BSD-3-Clause
+esrecurse@4.3.0  BSD-2-Clause
+estraverse@5.3.0  BSD-2-Clause
 estree-walker@2.0.2  MIT
+esutils@2.0.3  BSD-2-Clause
+fast-deep-equal@3.1.3  MIT
+fast-json-stable-stringify@2.1.0  MIT
+fast-levenshtein@2.0.6  MIT
 fdir@6.5.0  MIT
+file-entry-cache@8.0.0  MIT
+find-up@5.0.0  MIT
+flat-cache@4.0.1  MIT
+flatted@3.4.4  ISC
 fsevents@2.3.3  MIT
 function-bind@1.1.2  MIT
+glob-parent@6.0.2  ISC
+globals@14.0.0  MIT
+globals@16.5.0  MIT
+globals@17.13.0  MIT
 graceful-fs@4.2.11  ISC
+has-flag@4.0.0  MIT
 hasown@2.0.4  MIT
 hast-util-to-html@9.0.5  MIT
 hast-util-whitespace@3.0.0  MIT
 html-void-elements@3.0.0  MIT
+ignore@5.3.2  MIT
+import-fresh@3.3.1  MIT
+imurmurhash@0.1.4  MIT
 is-core-module@2.17.0  MIT
+is-extglob@2.1.1  MIT
+is-glob@4.0.3  MIT
 is-module@1.0.0  MIT
 is-reference@1.2.1  MIT
+isexe@2.0.0  ISC
 jiti@2.7.0  MIT
+js-yaml@4.3.2  MIT
+json-buffer@3.0.1  MIT
+json-schema-traverse@0.4.1  MIT
+json-stable-stringify-without-jsonify@1.0.1  MIT
+keyv@4.5.4  MIT
 kleur@4.1.5  MIT
+known-css-properties@0.37.0  MIT
+levn@0.4.1  MIT
 lightningcss@1.32.0  MPL-2.0
 lightningcss@1.33.0  MPL-2.0
 lightningcss-darwin-arm64@1.32.0  MPL-2.0
 lightningcss-darwin-arm64@1.33.0  MPL-2.0
+lilconfig@2.1.0  MIT
+locate-path@6.0.0  MIT
+lodash.merge@4.6.2  MIT
 magic-string@1.4.2  MIT
 mdast-util-to-hast@13.2.1  MIT
 micromark-util-character@2.1.1  MIT
@@ -408,46 +484,74 @@ micromark-util-encode@2.0.1  MIT
 micromark-util-sanitize-uri@2.0.1  MIT
 micromark-util-symbol@2.0.1  MIT
 micromark-util-types@2.0.3  MIT
+minimatch@3.1.5  ISC
 mri@1.2.0  MIT
 mrmime@2.0.1  MIT
+ms@2.1.3  MIT
 nanoid@3.3.19  MIT
+natural-compare@1.4.0  MIT
 obug@2.2.1  MIT
 oniguruma-parser@0.12.2  MIT
 oniguruma-to-es@4.3.6  MIT
+optionator@0.9.4  MIT
+p-limit@3.1.0  MIT
+p-locate@5.0.0  MIT
+parent-module@1.0.1  MIT
+path-key@3.1.1  MIT
 path-parse@1.0.7  MIT
 picocolors@1.1.1  ISC
 picomatch@4.0.7  MIT
 postcss@8.5.28  MIT
+postcss-load-config@3.1.4  MIT
+postcss-safe-parser@7.1.0  MIT
+postcss-scss@4.0.9  MIT
+postcss-selector-parser@7.1.6  MIT
+prelude-ls@1.2.1  MIT
 property-information@7.2.0  MIT
+punycode@2.3.1  MIT
 readdirp@4.1.2  MIT
 regex@6.1.0  MIT
 regex-recursion@6.0.2  MIT
 regex-utilities@2.3.0  MIT
 resolve@1.22.12  MIT
+resolve-from@4.0.0  MIT
 rolldown@1.2.12  MIT
 rollup@4.64.0  MIT
 sade@1.8.1  MIT
+semver@7.8.5  ISC
 set-cookie-parser@3.1.2  MIT
+shebang-command@2.0.0  MIT
+shebang-regex@3.0.0  MIT
 shiki@4.5.0  MIT
 sirv@3.0.2  MIT
 source-map-js@1.2.2  BSD-3-Clause
 space-separated-tokens@2.0.2  MIT
 stringify-entities@4.0.4  MIT
+strip-json-comments@3.1.1  MIT
+supports-color@7.2.0  MIT
 supports-preserve-symlinks-flag@1.0.0  MIT
 svelte-check@4.7.6  MIT
+svelte-eslint-parser@1.9.0  MIT
 tailwindcss@4.3.3  MIT
 tapable@2.3.3  MIT
 tinyglobby@0.2.17  MIT
 totalist@3.0.1  MIT
 trim-lines@3.0.1  MIT
+type-check@0.4.0  MIT
 typescript@6.0.3  Apache-2.0
 unist-util-is@6.0.1  MIT
 unist-util-position@5.0.0  MIT
 unist-util-stringify-position@4.0.0  MIT
 unist-util-visit@5.1.0  MIT
 unist-util-visit-parents@6.0.2  MIT
+uri-js@4.4.1  BSD-2-Clause
+util-deprecate@1.0.2  MIT
 vfile@6.0.3  MIT
 vfile-message@4.0.3  MIT
 vite@8.3.2  MIT
 vitefu@1.1.3  MIT
+which@2.0.2  ISC
+word-wrap@1.2.5  MIT
+yaml@1.10.3  ISC
+yocto-queue@0.1.0  MIT
 zwitch@2.0.4  MIT

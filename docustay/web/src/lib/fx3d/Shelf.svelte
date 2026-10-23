@@ -15,7 +15,7 @@
     return () => { el.removeEventListener("scroll", on); removeEventListener("resize", on); cancelAnimationFrame(raf); };
   });
 </script>
-<div class="shelf" bind:this={el} role="list" aria-label={label} data-testid={testid}>{@render children?.()}</div>
+<div class="shelf" bind:this={el} tabindex="0" role="list" aria-label={label} data-testid={testid}>{@render children?.()}</div>
 <style>
   .shelf { display: flex; gap: var(--s-4); overflow-x: auto; scroll-snap-type: x mandatory; padding: var(--s-5) var(--s-2); scrollbar-width: thin; transform-style: preserve-3d; }
   .shelf > :global(*) { flex: none; scroll-snap-align: center; transition: transform 120ms linear, opacity 120ms linear; will-change: transform; }

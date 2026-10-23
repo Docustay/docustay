@@ -24,3 +24,12 @@ export async function listen({ docustay, webhookId, target, onEvent, onError, si
     }
   }
 }
+
+// R13-D342: the topics of the relay webhook `listen` reuses, and which one `trigger` sends
+export const sameTopics = (a = [], b = []) => a.length === b.length && [...a].sort().join(",") === [...b].sort().join(",");
+export const DEFAULT_TRIGGER_TOPIC = "documents.document.executed";
+export function triggerTopic(topics = [], asked = null) {
+  if (asked) return topics.includes(asked) ? { topic: asked } : { error: `the listen webhook does not receive ${asked}. Run  docustay listen --events ${asked}  (it makes a new listen webhook for those events) and try again` };
+  if (!topics.length) return { error: "the listen webhook receives no events. Run  docustay listen --events documents.document.executed  and try again" };
+  return { topic: topics.includes(DEFAULT_TRIGGER_TOPIC) ? DEFAULT_TRIGGER_TOPIC : topics[0] };
+}

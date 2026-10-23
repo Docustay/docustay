@@ -4,6 +4,7 @@
 import { withCredentialLookup, withTenant } from "../db/index.mjs";
 import { callOutside } from "../http/outside.mjs";
 import { stripeSecretFor } from "./stripeFor.mjs";
+import { planItem } from "../billing/subscriptionPeriod.mjs";
 
 /** Every paid Docustay workspace, walked a page at a time (after a tenant id), so the 201st is read as well as the first. `limit` is the page size; `maxPages` is only a runaway guard. */
 async function listDocustaySubscriptions({ limit = 200, maxPages = 50 } = {}) {
@@ -24,6 +25,7 @@ export async function reconcileDocustaySubscriptions({ now = new Date(), apiKey 
     try {
       const sub = fetchSubscription ? await fetchSubscription(id) : await stripeGet(apiKey, `/subscriptions/${encodeURIComponent(id)}`);
       if (!sub?.id) throw new Error("Stripe did not return the subscription");
+      await (await import("./docustayUsage.mjs")).ensureEarlyInvoiceThreshold({ subscription: sub, apiKey }).catch(() => false);   // v1 item 21: an early invoice at about $50 unbilled
       await withTenant(tenantId, async (tx) => {
         const { rows: [before] } = await tx.query(`SELECT status, cancel_at, plan_key FROM keystone.workbench_subscription WHERE tenant_id = $1`, [tenantId]);
         const r = await mirrorSubscriptionFromStripe(tx, { tenantId, subscription: sub, why: "reconcile" });
@@ -56,7 +58,7 @@ async function maybeRemindRenewal(tx, { tenantId, now = new Date() }) {
   const { rows: owners } = await tx.query(`SELECT DISTINCT id, email, display_name FROM keystone.app_user WHERE tenant_id = $1 AND role = 'staff' AND staff_role IN ('owner','admin') AND archived_at IS NULL AND email IS NOT NULL`, [tenantId]);
   const { languageOfUser } = await import("./docustayLanguage.mjs");
   let amountMinor = null, currency = "usd";
-  try { const apiKey = stripeSecretFor("docustay"); const sub = apiKey ? await stripeGet(apiKey, `/subscriptions/${encodeURIComponent(s.stripe_subscription_id)}`) : null; const price = sub?.items?.data?.[0]?.price; if (price) { amountMinor = price.unit_amount; currency = price.currency; } } catch { /* the email is sent without the amount rather than not at all */ }
+  try { const apiKey = stripeSecretFor("docustay"); const sub = apiKey ? await stripeGet(apiKey, `/subscriptions/${encodeURIComponent(s.stripe_subscription_id)}`) : null; const price = planItem(sub)?.price; if (price) { amountMinor = price.unit_amount; currency = price.currency; } } catch { /* the email is sent without the amount rather than not at all */ }
   for (const o of owners) {
     const built = billingEmail("renewal_reminder", { lang: await languageOfUser(tx, { tenantId, userId: o.id }), name: o.display_name, facts: { amountMinor, currency, interval: "year", periodEnd: new Date(s.current_period_end).toISOString() } });
     await mail.sendMail(tx, { tenantId, to: o.email, purpose: "platform", product: "docustay", subject: built.subject, text: built.text, html: built.html, idempotencyKey: `docustay-renewal:${tenantId}:${new Date(s.current_period_end).toISOString()}:${o.email}` });

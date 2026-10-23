@@ -26,6 +26,7 @@ import { handleApiTokenRequest, recognizeApiToken } from "../paths/index.mjs";  
 //     hand-typed a second time — the same "resolved against the nav, not retyped" discipline
 //     `SettingsHome` (`src/routes/settings.mjs`) already uses for its own card list.
 import { SETTINGS_CHILDREN } from "../nav/sections.mjs";
+import { apiKeyFirst } from "../http/apiKeyFirst.mjs";
 import { createApiToken, revokeApiToken, listApiTokens, TokenError, TokenConfigError } from "../auth/apiToken.mjs";
 import { listAuditEvents, auditSummary } from "../audit/queries.mjs";
 import { unauthenticated, forbidden, invalid, notFound } from "../http/errors.mjs";
@@ -48,7 +49,8 @@ import { authoriseSection } from "../nav/authorise.mjs";
 //      `minRank` stays in the signature as an inert residual, the same treatment
 //      `src/routes/platform.mjs:37` got by ruling; retiring the parameter is a later cleanup.
 import { emit, ALL_TOPICS, TOPICS, userActor } from "../events/outbox.mjs";
-import { createWebhookEndpoint, sendTestEvent, rotateEndpointSecret } from "../webhooks/outbound.mjs";
+import { DOCUSTAY_WEBHOOK_TOPICS } from "../developer/webhookTopics.mjs";
+import { createWebhookEndpoint, sendTestEvent, recordTestSend, rotateEndpointSecret } from "../webhooks/outbound.mjs";
 import { randomBytes } from "node:crypto";
 import { effectiveGrants } from "../permissions/resolve.mjs";
 
@@ -352,9 +354,11 @@ export function registerDeveloperRoutes(app, { runTenantScoped, tenantIsPlatform
   //   cannot import `src/events/topics.mjs` directly (a backend-only module); this is that
   //   boundary's real fix, not a stale copy re-declared client-side (TOPICS is ~80 entries and
   //   changes whenever a new event ships).
-  app.get("/api/developer/webhook-topics", session(WEBHOOKS_ROW, "admin", async () => ({
-    topics: TOPICS,
-  })));
+  app.get("/api/developer/webhook-topics", session(WEBHOOKS_ROW, "admin", async ({ db, tenantId }) => {
+    // R13-D230: a Docustay workspace is offered only the document events the product really sends
+    const { rows: [ws] } = await db.query(`SELECT product FROM keystone.tenant WHERE id = $1`, [tenantId]);
+    return { topics: ws?.product === "docustay" ? { documents: [...DOCUSTAY_WEBHOOK_TOPICS] } : TOPICS };
+  }));
 
   app.get("/api/developer/webhook-endpoints", session(WEBHOOKS_ROW, "admin", async ({ db }) => ({
     endpoints: (await db.query(
@@ -381,7 +385,7 @@ export function registerDeveloperRoutes(app, { runTenantScoped, tenantIsPlatform
 
       // LAUNCH (G1 finding): a Docustay workspace is a document product. It may subscribe to document events only, never to the CRM, money, booking or internal developer topics (the picker already offers only these; this makes the server say the same).
       { const { rows: [ws] } = await db.query(`SELECT product FROM keystone.tenant WHERE id = $1`, [tenantId]);
-        if (ws?.product === "docustay") { const outside = eventTypes.filter((t) => !String(t).startsWith("documents.")); if (outside.length) throw invalid(`a Docustay workspace can subscribe to document events only (documents.*); not: ${outside.slice(0, 5).join(", ")}${outside.length > 5 ? ", …" : ""}`); } }
+        if (ws?.product === "docustay") { const outside = eventTypes.filter((t) => !DOCUSTAY_WEBHOOK_TOPICS.includes(String(t))); /* R13-D230: only events the product really sends */ if (outside.length) throw invalid(`a Docustay workspace can subscribe only to the document events it sends (the webhook topics list); not: ${outside.slice(0, 5).join(", ")}${outside.length > 5 ? ", …" : ""}`); } }
 
       // ★★★ THE SECRET IS GENERATED HERE AND RETURNED EXACTLY ONCE, like the API key at :191.
       //     A caller-supplied secret would mean the plaintext had already travelled somewhere we
@@ -426,11 +430,11 @@ export function registerDeveloperRoutes(app, { runTenantScoped, tenantIsPlatform
          FROM keystone.webhook_delivery d JOIN keystone.event ev ON ev.id = d.event_id AND ev.tenant_id = d.tenant_id
         WHERE d.endpoint_id = $1 ORDER BY d.attempted_at DESC LIMIT 50`, [c.req.param("id")])).rows,
   })));
-  // FP-D1 — send a sample signed event to one endpoint now; the answer comes straight back to the screen. Nothing is stored and the endpoint's failure count is untouched.
+  // FP-D1 — send a sample signed event to one endpoint now; the answer comes straight back to the screen. A one-line record is kept for the API deliveries list (R13-D197); the endpoint's failure count is untouched.
   app.post("/api/developer/webhook-endpoints/:id/test", session(WEBHOOKS_ROW, "admin", async ({ db, c, body, tenantId }) => {
     const { rows: [endpoint] } = await db.query(`SELECT * FROM keystone.webhook_endpoint WHERE id = $1 AND tenant_id = $2`, [c.req.param("id"), tenantId]);
     if (!endpoint) throw notFound("no such endpoint");
-    return sendTestEvent({ tenantId, endpoint, topic: typeof body?.topic === "string" ? body.topic : null, tx: db });
+    return recordTestSend(db, { tenantId, endpointId: endpoint.id, out: await sendTestEvent({ tenantId, endpoint, topic: typeof body?.topic === "string" ? body.topic : null, tx: db }) });
   }, { status: 200, bucket: "write" }));
   // FP-F5 — a new secret, shown once; the old one keeps signing beside it for a window (default 24 hours) so the receiver can switch without a gap.
   app.post("/api/developer/webhook-endpoints/:id/rotate", session(WEBHOOKS_ROW, "admin", async ({ db, c, body, tenantId, principal }) => {
@@ -553,7 +557,7 @@ export function registerDeveloperRoutes(app, { runTenantScoped, tenantIsPlatform
   //     serialises it (the flat `{ error: "<string>" }` bodies this file used to build by hand are gone).
   // FP-C2 — the API-call log. tokenRoute notes WHICH key on the context once it has resolved; this runs after the answer and records the final status. A call that never authenticated has no workspace and is not logged.
   // Run 12 (the 77-operation check): a call with no Bearer header at all is refused with the one plain 401 BEFORE any route validates its path or body (13 routes answered 400 with the schema's complaints to a caller who had not authenticated).
-  app.use("/api/v1/*", async (c, next) => { if (c.req.path !== "/api/v1/openapi.json" && c.req.path !== "/api/v1/docs" && !/^Bearer\s+\S/i.test(c.req.header("authorization") ?? "")) throw unauthenticated("the API token is not valid"); await next(); });
+  app.use("/api/v1/*", apiKeyFirst);   // R13-D191: the key before the body (src/http/apiKeyFirst.mjs)
   // Run 12 (Schemathesis): a method the PUBLISHED spec does not list for a path is 405 with Allow, even when a parameter route ("/documents/{id}") would otherwise have caught the literal path ("/documents/check") and answered 400.
   { const specMethods = specMethodIndex(app);
     app.use("/api/v1/*", async (c, next) => {

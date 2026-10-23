@@ -6,14 +6,40 @@ Register an endpoint in **Settings → Developers → Webhooks**, choose the eve
 
 Deliveries carry the [Standard Webhooks](https://www.standardwebhooks.com) headers `webhook-id`, `webhook-timestamp` and `webhook-signature` (`v1,<base64 HMAC-SHA256 of "id.timestamp.body">`). Verify against the **raw** body, not re-serialised JSON.
 
+Deliveries also carry three older headers, `keystone-event-id`, `keystone-timestamp` and `keystone-signature`, kept for receivers built before the Standard Webhooks ones. New code should ignore them and verify with the `webhook-*` headers above. An event's `data` can also hold fields this page does not show; rely only on the documented ones, since others may change or go without notice.
+
 ```js
+// npm install @docustay2026/sdk  ·  DOCUSTAY_WEBHOOK_SECRET=whsec_… node receiver.mjs
+import http from "node:http";
 import { verifyWebhook } from "@docustay2026/sdk";
-const event = await verifyWebhook(process.env.DOCUSTAY_WEBHOOK_SECRET, req.headers, rawBody);
+
+http.createServer(async (req, res) => {
+  let rawBody = ""; for await (const chunk of req) rawBody += chunk;   // the raw text, before any JSON parser
+  try {
+    const event = await verifyWebhook(process.env.DOCUSTAY_WEBHOOK_SECRET, req.headers, rawBody);
+    console.log(event.topic, event.subject_id);
+    res.writeHead(204).end();
+  } catch { res.writeHead(400).end("bad signature"); }
+}).listen(4000, () => console.log("listening on http://localhost:4000"));
 ```
 
 ```python
+# pip install docustay  ·  DOCUSTAY_WEBHOOK_SECRET=whsec_… python receiver.py
+import os
+from http.server import BaseHTTPRequestHandler, HTTPServer
 from docustay import verify_webhook
-event = verify_webhook(secret, headers, raw_body)
+
+class Receiver(BaseHTTPRequestHandler):
+    def do_POST(self):
+        raw_body = self.rfile.read(int(self.headers.get("content-length", 0)))   # the raw bytes, before any JSON parser
+        try:
+            event = verify_webhook(os.environ["DOCUSTAY_WEBHOOK_SECRET"], self.headers, raw_body)
+            print(event["topic"], event["subject_id"])
+            self.send_response(204); self.end_headers()
+        except ValueError:
+            self.send_response(400); self.end_headers(); self.wfile.write(b"bad signature")
+
+HTTPServer(("localhost", 4000), Receiver).serve_forever()
 ```
 
 Both refuse a changed body, a wrong secret and a timestamp more than five minutes old.
@@ -52,11 +78,11 @@ The body is one JSON object, exactly as signed:
 
 ## Which events
 
-You choose per endpoint. The ones most receivers want are `documents.document.sent`, `documents.document.opened`, `documents.document.signed` (one person signed), `documents.document.executed` (everyone signed and the sealed copy exists), `documents.document.declined`, `documents.document.expired` and `documents.document.voided`. A receiver that only cares about finished documents subscribes to `documents.document.executed` and nothing else.
+You choose per endpoint. The ones most receivers want are `documents.document.sent`, `documents.document.opened`, `documents.document.signed` (one person signed), `documents.document.executed` (everyone signed and the sealed copy exists), `documents.document.declined`, `documents.document.expired` and `documents.document.voided`. A receiver that only cares about finished documents subscribes to `documents.document.executed` and nothing else. If a document takes payment, `documents.payment.received` says a signer paid (the document, the payment id, the amount and currency) and `documents.payment.failed` says a payment plan's charge failed; `GET /api/v1/webhooks/topics` lists every event.
 
-Every document event says where the document came from: `source` is `"form"` for a response to one of your forms and `"sent"` for a document your team sent, and `form` is `{ "id", "name" }` for a form response (otherwise `null`). A receiver that only wants form responses checks `source`.
+Every document event carries `source` (always `"sent"`) and `form` (always `null`). Both stay in the payload so receivers written before version 1 keep working.
 
-Two more come from the workspace rather than a document: `documents.template.fields_detected` (a template was made from an uploaded file and the fields were looked for; the payload says how many were found, how many signers, how many it was unsure of and how many were placed) and `documents.ai.allowance_low` (the workspace's AI credits reached 80% of the period; sent once per period).
+Two more come from the workspace rather than a document: `documents.template.fields_detected` (a template was made from an uploaded file and the fields were looked for; the payload says how many were found, how many signers, how many it was unsure of and how many were placed) and `documents.ai.allowance_low` (the workspace's AI drafts reached 80% of the plan's allowance; sent once per period) and `documents.usage.threshold` (the workspace's bill passed 50%, 80% or 100% of its budget, or an early invoice or monthly summary is ready; `kind` is `budget` or `summary`).
 
 ## A receiver, step by step
 
@@ -67,7 +93,7 @@ Two more come from the workspace rather than a document: `documents.template.fie
 
 ```bash
 curl https://docustay.app/api/v1/documents/DOCUMENT_ID/signed.pdf \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" -o signed.pdf
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY" -o signed.pdf
 ```
 
 ## The delivery log

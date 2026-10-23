@@ -380,14 +380,14 @@ export async function listInvites(tx, tenantId) {
  * spend the token (CCR-11, shipped — peekLinkToken).
  * ★ peek_link_token applies the SAME five predicates as redeem (0170), so a revoked/spent/expired
  *   invite is already refused here — there is no separate "not usable" check to duplicate.
- * @returns {{ email, practiceName, role, expiresAt, inviterName }}
+ * @returns {{ email, practiceName, role, staffRole, expiresAt, inviterName }}
  */
 export async function previewInvite({ presented } = {}) {
   const { tenantId, subjectId } = await peekLinkToken(presented, ["invite", "client_invite"]);
 
   return withTenant(tenantId, async (tx) => {
     const { rows } = await tx.query(
-      `SELECT i.email, i.role, i.expires_at,
+      `SELECT i.email, i.role, i.staff_role, i.expires_at,
               t.name AS practice_name,
               u.display_name AS inviter_name
          FROM keystone.invite i
@@ -404,6 +404,7 @@ export async function previewInvite({ presented } = {}) {
       email: row.email,
       practiceName: row.practice_name,
       role: row.role,
+      staffRole: row.staff_role ?? null,   // R13-D297: the rank a teammate is invited at (role is the account kind, "staff"); the page said "a member" for an Admin invitation
       expiresAt: row.expires_at,
       inviterName: row.inviter_name,
       // Run 7: the accept screen asks for a phone only when accepting would otherwise be refused for the lack of one (a client in a practice that requires it; never a Docustay teammate)

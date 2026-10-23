@@ -18,6 +18,7 @@ import { documentsOfSend } from "./parties.mjs";
 import { requireVerified } from "./pdfVerify.mjs";
 import { formulaMinor, FormulaError } from "./formula.mjs";
 import { recordAuditEvent } from "./auditTrail.mjs";
+import { emit } from "../events/outbox.mjs";
 
 export const money = (minor, currency) => { try { return new Intl.NumberFormat("en-US", { style: "currency", currency: String(currency).toUpperCase() }).format(minor / 100); } catch { return `${(minor / 100).toFixed(2)} ${String(currency).toUpperCase()}`; } };
 
@@ -107,6 +108,16 @@ async function paidAccordingToStripe(P, tx, { tenantId, row, docId, partyId, fie
 /** Stripe's own processing fee, as Stripe's balance transaction says it, kept on the row for the Payments page (read, never worked out; absent until Stripe has settled it). */
 async function stripeFee(tx, id, st) { if (Number.isInteger(st?.stripeFeeMinor)) await tx.query(`UPDATE keystone.document_payment SET stripe_fee_minor = $2, stripe_fee_checked_at = now() WHERE id = $1 AND stripe_fee_minor IS DISTINCT FROM $2`, [id, st.stripeFeeMinor]); }
 
+/** R13-D354: the owner's bell, email and webhooks hear about a payment (ids and amounts only). Inside a savepoint, so an event that cannot be written never undoes the payment it describes. */
+async function paymentEvent(tx, row, { topic, ...extra }) {
+  await tx.query("SAVEPOINT payment_event");
+  try {
+    await emit(tx, { tenantId: row.tenant_id, topic, emittedBy: "documents", subjectType: "document", subjectId: row.instance_id, actor: "system",
+      payload: { document_id: row.instance_id, payment_id: row.id, amount_minor: row.amount_minor, currency: row.currency, ...extra } });
+    await tx.query("RELEASE SAVEPOINT payment_event");
+  } catch (e) { await tx.query("ROLLBACK TO SAVEPOINT payment_event"); console.error(`payment ${row.id}: ${topic} event not written: ${e?.message ?? e}`); }
+}
+
 /** Record "paid" once. The ONLY write that moves a row to paid; idempotent by its WHERE. → true when THIS call made the change. */
 async function markPaid(tx, row, st) {
   const { rowCount } = await tx.query(
@@ -121,6 +132,7 @@ async function markPaid(tx, row, st) {
   // Run 9 Part 3.7: the payment is part of the document's trail (amount and Stripe's reference — no card, no name)
   if (rowCount > 0) await recordAuditEvent(tx, { tenantId: row.tenant_id, instanceId: row.instance_id, kind: "paid", actorRole: (await tx.query(`SELECT role FROM keystone.document_party WHERE id = $1`, [row.party_id])).rows[0]?.role ?? null,
     detail: { amount_minor: row.amount_minor, currency: row.currency, payment_intent: st.intentId ?? null } });
+  if (rowCount > 0) await paymentEvent(tx, row, { topic: "documents.payment.received", payment_intent: st.intentId ?? null });
   // Run 9 Part 3.7: the receipt is no longer sent here — it goes out with the sealed copy (`sendReceiptsForSend`), or on its own if the document never completes (PAYMENT_RECEIPT_DUE_FACT)
   return rowCount > 0;
 }
@@ -167,6 +179,9 @@ export async function sendReceiptsForSend(tx, { tenantId, leadId }) {
   const members = await documentsOfSend(tx, { instanceId: leadId });
   await refreshStripeFees(tx, { tenantId, instanceIds: members.map((m) => m.id) });   // the sealed copy comes seconds after the payment: Stripe's fee is usually there by now
   const { rows } = await tx.query(`UPDATE keystone.document_payment SET receipt_sent_at = now() WHERE instance_id = ANY($1::uuid[]) AND status IN ('paid','partially_refunded','refunded') AND receipt_sent_at IS NULL RETURNING id`, [members.map((m) => m.id)]);
+  // "Also send a receipt from Docustay" (Billing > Payments, 21 Oct 2026): switched off, Stripe's own receipt is the only one. NULL = never chosen: the receipt this workspace has always got.
+  const { rows: [rc] } = await tx.query(`SELECT send_own_receipt FROM keystone.connect_account WHERE tenant_id = $1 ORDER BY (state = 'not_connected'), updated_at DESC LIMIT 1`, [tenantId]);
+  if (rc?.send_own_receipt === false) return 0;
   let sent = 0;
   for (const r of rows) {
     const status = await sendReceipt(tx, { tenantId, paymentId: r.id });
@@ -223,6 +238,7 @@ function returnUrls({ origin, returnPath, fieldId }) {
 /** The signer clicks Pay with Stripe: works the amount out, creates (or re-uses) the hosted Checkout Session, and answers where to go — or `paid: true` when it is already paid. */
 export async function startPayment(tx, { tenantId, leadId, partyId, fieldId, values = {}, origin, returnPath, chosen = null, embedded = false }) {
   const P = await installed();
+  if ((await P.payments.ready?.(tx, { tenantId }))?.status === "paused") throw conflict("Payments are paused for this workspace right now. Your signature is kept; ask the sender to turn payments back on, then come back to this link.", { code: "payments_paused" });
   const { lead, party, docId, title, field, locked } = await loadFor(tx, { leadId, partyId, fieldId });
   // Run 9 Part 3.7: once the signature is held, the amount comes from the answers they signed with — never from what the page sends now
   if (party.status === "awaiting_payment" && party.held_signature?.values) values = party.held_signature.values;
@@ -430,6 +446,7 @@ export async function recordSubscriptionEvent(tx, { tenantId, subscriptionId }) 
   const done = row.amount_kind === "installments" && st.paidInvoices >= (row.plan_count ?? Infinity);
   const status = done ? "completed" : st.status;
   await tx.query(`UPDATE keystone.document_payment SET payments_made = $2, sub_status = $3, updated_at = now() WHERE id = $1`, [row.id, Math.max(row.payments_made, st.paidInvoices), status]);
+  if (["past_due", "unpaid"].includes(status) && row.sub_status !== status) await paymentEvent(tx, row, { topic: "documents.payment.failed", subscription_status: status });   // R13-D354: told once per change into failure
   if (row.sub_status === "needs_cap" && row.amount_kind === "installments") { try { await P.payments.limitSubscription(tx, { tenantId, subscriptionId, every: row.plan_every, count: row.plan_count }); } catch (e) { console.error(`payment ${row.id}: cap retry failed: ${e?.message ?? e}`); } }
   return { applied: true, reason: "subscription_updated", paymentsMade: st.paidInvoices, status };
 }

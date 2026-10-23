@@ -4,7 +4,7 @@
 // The Host header is attacker-controlled, so it decides NOTHING about who may see what: tokens do that. This only narrows which paths a hostname will answer.
 import { withCredentialLookup } from "../db/index.mjs";
 
-const ALLOWED = [/^\/sign(\/|$)/, /^\/verify(\/|$)/, /^\/s\/[^/]+$/, /^\/api\/public\//, /^\/api\/telemetry$/, /^\/webapp\//, /^\/fonts\//, /^\/embed\//, /^\/favicon/, /^\/robots\.txt$/, /^\/readyz$/, /^\/healthz$/, /^\/tools\//];
+const ALLOWED = [/^\/sign(\/|$)/, /^\/download(\/|$)/, /^\/verify(\/|$)/, /^\/s\/[^/]+$/, /^\/api\/public\//, /^\/api\/telemetry$/, /^\/webapp\//, /^\/fonts\//, /^\/embed\//, /^\/favicon/, /^\/robots\.txt$/, /^\/readyz$/, /^\/healthz$/, /^\/tools\//];
 const cache = new Map();           // host -> { at, status }
 const TTL_MS = 30_000;
 

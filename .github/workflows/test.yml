@@ -6,7 +6,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: 25 }
+        with: { node-version: 26 }
       - run: npm ci
       - run: npm ci --prefix docustay/web
       - run: node --test test/docustay_*.test.mjs test/b10_api_contract.test.mjs test/s7_capability_vocabulary.test.mjs

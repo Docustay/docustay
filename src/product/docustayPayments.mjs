@@ -3,7 +3,7 @@
 //     ONBOARDING through an Account Link. Return and refresh addresses travel in each API request, so nothing is registered in the Stripe dashboard and no OAuth client id is needed.
 //   · WHAT THAT REALLY DOES (Stripe's current docs, read 5 Oct 2026 — specs/proofs/part-30/item-11.md): the account made here is a NEW Stripe account that the platform created and controls the relationship of. A person who already has a Stripe login can sign in
 //     during hosted onboarding, and Stripe may offer to reuse their verified business details (networked onboarding), but it is still a new, separate account: the history of an account they already have does NOT come with it. The product says exactly that.
-//   · OAuth stays in the code, behind KEYSTONE_STRIPE_OAUTH_ENABLED=true AND a client id; the button never needs either. (Stripe: OAuth is not recommended for new platforms; the live client id may never be offered to this one.)
+//   · OAuth stays in the code, behind KEYSTONE_STRIPE_OAUTH_ENABLED=true AND a client id; the button never needs either. (21 Oct 2026: Stripe finished the Connect review and OAuth is on in the live account, redirect URI <origin>/api/product/docustay/payments/callback; production gets both variables as part of its release.)
 //   · We store ONE thing: the connected account id, with the workspace and the state (pending → live | restricted). No token, no key. Payments are DIRECT charges on that account (the Stripe-Account header) — see documentsPayments.mjs, which also decides the platform fee.
 //   · The OAuth `state` is signed, expires, and is bound to the tenant AND the signed-in person (CSRF-safe). The hosted return address carries no secret: the return handler re-reads the account from Stripe and trusts only that.
 //   · Disconnect clears the account id and shows "Disconnected" plainly. For an account this platform created Stripe refuses its deauthorize call (no_deauth_on_controlled_account), so we do not make it; we forget the id and the account stays in the person's Stripe login.
@@ -147,7 +147,8 @@ export async function refreshPayments(tx, { tenantId, actorUserId = null, fetchI
   // CONNECTED means ready, not just linked: Stripe says details were submitted AND charges are enabled AND nothing is currently due (a past-due or disabled account is "needs attention", never "connected")
   const state = st.chargesEnabled && st.detailsSubmitted && !st.requirementsDue?.length && !st.pastDue && !st.disabledReason ? "live" : st.detailsSubmitted || st.chargesEnabled ? "restricted" : "pending";
   await connectAccount(tx, { tenantId, stripeAccountId: existing.stripeAccountId, state, actorUserId });
-  return { state };
+  try { (await import("./docustayStripeAccount.mjs")).forgetStripeCache(tenantId); } catch { /* the screen re-reads within a minute anyway */ }
+  return { state, requirementsDue: st.requirementsDue ?? [], deadline: st.deadline ?? null };
 }
 
 /** Disconnect from this side: tell Stripe to drop Docustay's access (best effort), forget the account id, show "Disconnected". The person's Stripe account is untouched. */
@@ -176,6 +177,8 @@ export async function onAccountUpdated(tx, { tenantId, accountId, actorUserId = 
   const s = await getConnectAccountState(tx, tenantId);
   if (!s.stripeAccountId || s.stripeAccountId !== accountId || s.state === "not_connected") return { applied: false, reason: "not_the_connected_account" };
   const r = await refreshPayments(tx, { tenantId, actorUserId, fetchImpl });
+  // Stripe asked for more: the Owners are told once (plain words), and the Activity list says so
+  if (r.requirementsDue?.length) { try { await (await import("./docustayStripeNotices.mjs")).onRequirementsChanged(tx, { tenantId, dueKeys: r.requirementsDue, deadline: r.deadline }); } catch { /* an email problem never fails the webhook */ } }
   return { applied: true, reason: "account_updated", state: r.state };
 }
 
@@ -189,7 +192,9 @@ export async function onDeauthorized(tx, { tenantId, accountId, actorUserId = nu
 
 /** Where Stripe sends the person back to: the server's own public address when it has one, else the address the request came in on (only for the person's own browser). */
 export function returnOrigin({ env = stripeEnv("docustay"), headers, url }) {
-  const fixed = String(env.KEYSTONE_PUBLIC_URL || "").replace(/\/+$/, "");
+  // The server's own public address wins; for Docustay that is its app address (the production API is reached through app.docustay.app, so the forwarded host is the raw Railway host, which Stripe's OAuth redirect list does not hold: found by the production smoke of 21 Oct 2026).
+  // the app address first (23 Oct, R13-D181): the API host has no session cookie, so Stripe sending the person back there showed "You are signed out"
+  const fixed = String(env.KEYSTONE_DOCUSTAY_APP_URL || env.KEYSTONE_PUBLIC_URL || "").replace(/\/+$/, "");
   if (fixed) return fixed;
   const host = headers.get?.("x-forwarded-host") || headers["x-forwarded-host"], proto = headers.get?.("x-forwarded-proto") || headers["x-forwarded-proto"];
   if (host && /^[a-z0-9.-]+(:\d+)?$/i.test(host)) return `${proto === "http" ? "http" : "https"}://${host}`;

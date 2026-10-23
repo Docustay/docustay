@@ -4,6 +4,7 @@
 //   [usage:in=3000,out=4000]   the token counts it reports (default: about a quarter of the request's characters in, 600 out)
 //   [fake:model=NAME]          the model name it reports (priced from the real price table when the name is in it)
 //   [fake:error=timeout|429|500|malformed|toolong|nosig|empty]   an error mode (nosig = a draft where a party who signs has no signature block)
+//   [fake:address]             the draft names the organisation's address with the merge field {{org.address}} (to prove an unset address becomes a box for the sender)
 //   [fake:slow=MS]             answer after MS milliseconds (default 8000 when written as [fake:slow]) — to see queueing
 // Chat turns: [fake:detect] lists a PDF draft's detected boxes; [fake:place] proposes placing the sure ones; [fake:create] makes a draft through the real tool; [fake:propose] proposes a change to the open document; [fake:run_check] runs the checks; [fake:play] looks at the skills; [fake:library=…] looks in the template library. Otherwise it answers in one sentence.
 // Pure apart from the optional delay: no imports.
@@ -34,6 +35,7 @@ export function fakeDraft(request, { nosig = false } = {}) {
     `This agreement is between {{Client name;type=text;role=Client;label=Client name}} (the “Client”) and the Provider (the “Provider”). The Client and the Provider both sign below.`, "",
     "## What this covers", "",
     "The Provider will do the work the Client asked for, on the dates agreed in writing. The Client will pay what was agreed and give the Provider what it needs to do the work.", "",
+    ...(/\[fake:address\]/i.test(String(request)) ? ["The Provider's address is {{org.address}}.", ""] : []),
     "## Signatures", "",
     `Client: {{Client signature;type=signature;role=Client}} {{Client date signed;type=date_signed;role=Client}}`, "",
     ...(nosig ? [] : [`Provider: {{Provider signature;type=signature;role=Provider}} {{Provider date signed;type=date_signed;role=Provider}}`, ""]),

@@ -26,16 +26,13 @@ The first part is the name. After it come `key=value` pairs separated by semicol
 | `max_length` | Most characters a text field takes |
 | `filled` | `signer` (default) or `sender`. `filled=sender` is a box you fill in before sending: your organisation's own details and the terms you set (the trip on a permission slip, the fee in an agreement). The person signing sees your answer and cannot change it. It goes on text, dropdown and multiselect boxes; it makes no seat of its own. A required one with no answer stops the send, and a form with one cannot go live until it has its answer |
 | `from` | With `filled=sender`, where the first answer comes from: `org.name`, `org.email`, `sender.name` or `sender.email`, worked out when you send. You can still type over it before sending |
-| `amount`, `currency` | For `payment`: a fixed amount, `amount=150.00;currency=usd`. A payment takes exactly one of `amount`, `formula`, `price` or `link` (see Payments below) |
-| `formula` | For `payment`: an amount worked out from other fields, `formula=quantity*unit_price*(1+tax/100)` |
-| `price` | For `payment`: a Stripe price on the connected Stripe account, `price=price_1AbC…` |
-| `link` | For `payment`: a Stripe payment link from the connected Stripe account, `link=https://buy.stripe.com/…` |
+| `amount`, `currency` | For `payment`: a fixed amount, `amount=150.00;currency=usd`. A payment takes a fixed `amount` (see Payments below) |
 
 A value that holds a semicolon or an equals sign goes in double quotes: `default="Smith; Jones"`.
 
 ## From HTML
 
-`POST /api/v1/templates/html` with `{ "name", "html", "paper" }` prints your HTML to a PDF and places a field wherever a tag sits. Scripts, styles that load anything, frames, forms and remote addresses are removed before printing; pictures must be `data:` addresses; up to 2 MB. The answer is `{ templateId, fields, warnings }`. A tag that could not be read comes back in `warnings`, naming that tag.
+`POST /api/v1/templates/html` with `{ "name", "html", "paper" }` prints your HTML to a PDF and places a field wherever a tag sits. Scripts, styles that load anything, frames, forms and remote addresses are removed before printing; pictures must be `data:` addresses; the whole request, pictures included, may be up to 1 MB (a larger one gets `413` "request body too large"). The answer is `{ templateId, fields, warnings }`. A tag that could not be read comes back in `warnings`, naming that tag.
 
 ## From a document source
 
@@ -43,7 +40,7 @@ A value that holds a semicolon or an equals sign goes in double quotes: `default
 
 ```bash
 curl -X POST https://docustay.app/api/v1/templates/source \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" -H "Idempotency-Key: $(uuidgen)" -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY" -H "Idempotency-Key: $(uuidgen)" -H "Content-Type: application/json" \
   -d '{ "name": "Notice", "source": { "type": "doc", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "Hello" }] }, { "type": "signatureBlock", "attrs": { "slots": [{ "role": "Client", "label": "Client signature" }] } }] } }'
 ```
 
@@ -55,19 +52,19 @@ AI drafting is off by default; it is refused plainly while it is off for your wo
 
 ```bash
 curl -X POST https://docustay.app/api/v1/documents/ai/draft \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY" -H "Content-Type: application/json" \
   -d '{ "prompt": "A one-page services agreement with a client signature", "mode": "template" }'
 ```
 
 `GET /api/v1/documents/ai/jobs/{id}` returns `{ id, state, message, source, patches }`. `state` is `queued`, `running`, `done`, `failed` or `cancelled`; poll until it is not queued or running. When done, `source` is the draft and `patches.notes` lists what to check.
 
 ```bash
-curl https://docustay.app/api/v1/documents/ai/jobs/$JOB_ID -H "Authorization: Bearer $DOCUSTAY_KEY"
+curl https://docustay.app/api/v1/documents/ai/jobs/$JOB_ID -H "Authorization: Bearer $DOCUSTAY_API_KEY"
 ```
 
 ## From a file
 
-`POST /api/v1/templates/file` with `{ "name", "fileName", "file" }` where `file` is the base64 of a PDF file with tags written in it. Tags are found in the file's text, covered with a white box and replaced by the field.
+`POST /api/v1/templates/file` with `{ "name", "fileName", "file" }` where `file` is the base64 of a PDF file with tags written in it. Tags are found in the file's text, covered with a white box and replaced by the field. The box covers the tag on the page, but its characters stay in the file's hidden text layer, so a search or a copy of the signed PDF can still find them. If that matters, set the tags in white in your source file, or make the template from HTML, which never prints them.
 
 ## Check the seats
 
@@ -77,25 +74,17 @@ curl https://docustay.app/api/v1/documents/ai/jobs/$JOB_ID -H "Authorization: Be
 
 A `payment` field makes the signer pay on Stripe's own page before their signature completes. The money goes to **the Stripe account you connect** (Settings → Payments → Connect Stripe; Stripe's own sign-up page creates it in your name, separate from any Stripe account you already have). Docustay's fee is 2% of each payment on the Free plan and 0% on Pro, on top of Stripe's own fees, which Stripe charges to that Stripe account as usual. Card details are typed on Stripe's page; Docustay never receives or stores them.
 
-A payment field takes exactly one way of setting the amount:
+A payment field takes one fixed amount. To charge a different amount for each document, use `amount=custom.key` and give the amount when you send:
 
 | Amount | Tag | Notes |
 |---|---|---|
 | Fixed | `amount=150.00` | 0.50 to 999,999.99 |
-| Formula | `formula=quantity*unit_price*(1+tax/100)` | Numbers, the names of other text fields filled by the same person, `+ - * /` and brackets. Nothing else is read, and nothing is run. The server works the amount out from the values the signer typed and the answers you gave in `filled=sender` boxes; the browser never sends an amount. If the person changes a number after paying, signing is refused. |
-| Stripe price | `price=price_1AbC…` | A one-time price on your connected Stripe account. The amount comes from Stripe. |
-| Stripe payment link | `link=https://buy.stripe.com/…` | A link from the same Stripe account, with a fixed price. Its items are charged as listed. |
-
-A price or link that cannot be found stops the send, with Stripe's reason, so the signer never meets it. The `payments` list on `GET /api/v1/documents/{id}` shows each payment: status, amount, Stripe's receipt link, refunds, and the Docustay fee (`fee.basisPoints`, `fee.amountMinor`) that was decided when the payment started. A refund returns the fee with it.
 
 ## A tag in an HTML file, sent through the API
 
 ```bash
 curl -X POST https://docustay.app/api/v1/templates/html \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" -H "Idempotency-Key: $(uuidgen)" -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY" -H "Idempotency-Key: $(uuidgen)" -H "Content-Type: application/json" \
   -d '{ "name": "Services agreement", "html": "<p>Client: {{Client signature;type=signature;role=Client}}</p>" }'
 ```
 
-## Forms
-
-A form is a template with one person who fills it in and, if you like, one team member who counter-signs. Publish it once and anyone with the link can fill it in and sign; every response is its own signed document. The thirty built-in [form templates](/form-templates) are written with these same tags.

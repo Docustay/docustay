@@ -3,8 +3,8 @@
   import Doodle from "$lib/doodle/Doodle.svelte";
   import { shown } from "$lib/fx/index.js";
   let { curl } = $props();
-  const js = `import { Docustay } from "@docustay2026/sdk";\nconst docustay = new Docustay(process.env.DOCUSTAY_KEY);\nawait docustay.sendDocument({\n  templateId: "TEMPLATE_ID",\n  parties: [{ seat: "signer_1", name: "Rosa Alvarez", email: "rosa@example.com" }],\n});`;
-  const py = `from docustay import Docustay\nd = Docustay(os.environ["DOCUSTAY_KEY"])\nd.send_document(\n  template_id="TEMPLATE_ID",\n  parties=[{"seat": "signer_1", "name": "Rosa Alvarez", "email": "rosa@example.com"}],\n)`;
+  const js = `import { Docustay } from "@docustay2026/sdk";\nconst docustay = new Docustay(process.env.DOCUSTAY_API_KEY);\nawait docustay.sendDocument({\n  templateId: "TEMPLATE_ID",\n  parties: [{ seat: "signer_1", name: "Rosa Alvarez", email: "rosa@example.com" }],\n});`;
+  const py = `from docustay import Docustay\nd = Docustay(os.environ["DOCUSTAY_API_KEY"])\nd.send_document(\n  template_id="TEMPLATE_ID",\n  parties=[{"seat": "signer_1", "name": "Rosa Alvarez", "email": "rosa@example.com"}],\n)`;
   const tabs = [["curl", curl], ["JavaScript", js], ["Python", py]];
   let tab = $state(0);
 </script>
@@ -27,11 +27,12 @@
   .dev { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: clamp(1.5rem, 5vw, 5rem); align-items: center; }
   .pts { margin: 1.5rem 0 0; padding: 0; list-style: none; } .pts li { padding: .55rem 0 .55rem 1.6rem; position: relative; color: var(--black-mute); border-top: 1px solid var(--black-line); } .pts li:first-child { border-top: 0; }
   .pts li::before { content: ""; position: absolute; left: 0; top: 1.05rem; width: .7rem; height: .7rem; border-radius: 50%; background: var(--periwinkle); }
-  .code { position: relative; background: #0c0b12; border: 1px solid var(--black-line); border-radius: var(--r-4); padding: 0; box-shadow: var(--sh-3); }
+  .code { position: relative; background: #ffffff; border: 1px solid var(--black-line); border-radius: var(--r-4); padding: 0; box-shadow: var(--sh-3); }
   .tabs { display: flex; gap: .25rem; padding: .6rem .6rem 0; border-bottom: 1px solid var(--black-line); }
-  .tab { background: none; border: 0; color: var(--black-mute); padding: .6rem 1rem; border-radius: var(--r-1) var(--r-1) 0 0; font: inherit; cursor: pointer; } .tab.on { color: #fff; box-shadow: inset 0 -2px 0 var(--periwinkle); } .tab:hover { color: #fff; }
-  pre { margin: 0; padding: 1.4rem 1.5rem 2.2rem; overflow-x: auto; color: #e9e4f7; font-size: .92rem; line-height: 1.7; min-height: 13rem; }
+  @media (max-width: 420px) { .tab { padding: .6rem .6rem; white-space: nowrap; } .tabs { gap: 0; overflow-x: auto; } }   /* R13-D093: at 320 and 375 px the three code tabs fit ("Python" was cut to "Pyt") */
+  .tab { background: none; border: 0; color: var(--black-mute); padding: .6rem 1rem; border-radius: var(--r-1) var(--r-1) 0 0; font: inherit; cursor: pointer; } .tab.on { color: var(--tx-1); box-shadow: inset 0 -2px 0 var(--periwinkle); } .tab:hover { color: var(--tx-1); }
+  pre { margin: 0; padding: 1.4rem 1.5rem 2.2rem; overflow-x: auto; color: var(--tx-1); font-size: .92rem; line-height: 1.7; min-height: 13rem; }
   .hook { position: absolute; right: -1rem; bottom: -1.6rem; display: flex; gap: .7rem; align-items: center; background: var(--card); color: var(--ink); padding: .8rem 1.1rem; border-radius: var(--r-3); box-shadow: var(--sh-3); }
   .hook b { display: block; font-size: .9rem; font-family: ui-monospace, monospace; } .hook span { display: block; font-size: .78rem; color: var(--mute); }
-  @media (max-width: 899px) { .dev { grid-template-columns: 1fr; } .hook { right: .5rem; } }
+  @media (max-width: 899px) { .dev { grid-template-columns: minmax(0, 1fr); } .hook { right: .5rem; } }
 </style>

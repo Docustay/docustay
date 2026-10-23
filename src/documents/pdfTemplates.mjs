@@ -1,5 +1,6 @@
 // src/documents/pdfTemplates.mjs — MANAGING UPLOADED-DOCUMENT TEMPLATES (QUEUE §23.5.5): find them (search, folder, tag), clone one, change its fields as a NEW VERSION with a note and a diff against the one before, and — when the
 // practice asks for it — approve a template or version before anyone can send it. A version is a NEW ROW; the old one stays as it was (the rule every builder here keeps). Nothing in this file sends anything.
+import { assertNoNewRules, pdfRuleItems, assertNoNewPaymentModes, pdfPaymentModeItems } from "./ruleAuthoring.mjs";
 import { assertNotBuiltin } from "./library.mjs";
 import { randomUUID } from "node:crypto";
 import { invalid, notFound, conflict } from "../http/errors.mjs";
@@ -158,6 +159,8 @@ export async function newPdfTemplateVersion(tx, { tenantId, templateId, body, ch
   let next;
   try { next = parsePdfBodyData({ ...body, suggestions: undefined }); } catch (e) { throw invalid(e.message, { field: "body" }); }
   delete next.suggestions; delete next.detect;
+  assertNoNewRules(pdfRuleItems, next, old);   // v1 item 6
+  assertNoNewPaymentModes(pdfPaymentModeItems, next, old);   // v1 item 10
   if (next.file.file_id !== old.file.file_id || next.file.sha256 !== old.file.sha256) throw invalid("The pages of a template cannot be replaced — upload the new file and save it as a new template.", { field: "body.file" });
   const note = changeNote == null ? null : String(changeNote).trim().slice(0, 300) || null;
   if (JSON.stringify(diffBodies(old, next)) === "[]") throw invalid("Nothing has changed.", { code: "no_change" });

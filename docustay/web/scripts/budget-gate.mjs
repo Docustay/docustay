@@ -6,7 +6,7 @@ import zlib from "node:zlib";
 const BASE = (process.env.BASE ?? "http://127.0.0.1:5180").replace(/\/$/, "");
 // RAISED 7 Oct 2026 (Final Push Stage 7), reason: the new look (token sets for light, dark, site and signing; Ark wrappers; Frame, CodeWindow, Flow and the other new components; the cookie choice) measured css 24.5 KB and js 172 KB on the heaviest sample pages, against 22 and 150 set on 5 Oct. New ceilings are the measurement plus about 5 percent.
 const BUDGET = { html: 40_000, js: 180_000, css: 26_000 };           // gzip bytes per page
-const PAGES = ["/", "/product", "/pricing", "/use-cases/contracts", "/es", "/ar", "/login"];
+const PAGES = ["/", "/product", "/pricing", "/use-cases/contracts", "/docs/webhooks", "/login"];
 const gz = (b) => zlib.gzipSync(b, { level: 6 }).length;
 const get = async (u) => { const r = await fetch(u, { headers: { "accept-encoding": "identity" } }); if (!r.ok) throw new Error(`${u} answered ${r.status}`); return Buffer.from(await r.arrayBuffer()); };
 let failed = 0; const rows = [];

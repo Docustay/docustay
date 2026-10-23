@@ -16,8 +16,8 @@ export function addonStoreEnv(env = process.env) {
   return o;
 }
 
-export async function deliverAddon(tx, { tenantId, key, installId, version = null }, { get = (a) => getObject(a, { env: addonStoreEnv() }) } = {}) {
-  const entitlement = await checkLicense(tx, { tenantId, key, installId });   // throws the one plain refusal for a bad key
+export async function deliverAddon(tx, { tenantId, key, installId, version = null, role = "production" }, { get = (a) => getObject(a, { env: addonStoreEnv() }) } = {}) {
+  const entitlement = await checkLicense(tx, { tenantId, key, installId, role, version });   // throws the one plain refusal for a bad key
   if (version !== null && !SAFE_VERSION.test(String(version))) throw notFound("that add-on version does not exist");
   const r = await get({ key: addonObjectKey(version) });
   if (!r.ok) { if (r.status === 404) throw notFound("that add-on version does not exist"); throw dependency("the add-on store did not answer", new Error(String(r.error ?? r.status))); }

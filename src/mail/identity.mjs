@@ -37,6 +37,9 @@ export async function resolveIdentity(tx, { tenantId, purpose = "default", produ
   // sign-in and password mail: the product's own address (never an organisation's domain or server, so a broken sender can never lock anyone out), shown "<Org> via <Product>" so the person knows who it is for
   if (purpose === "auth") return { ...base, mode: "platform", fixed: true, smtp: null, fallbackReason: null, fromName: orgName ? `${orgName} via ${product.name}` : product.name, fromAddress: product.sender.address, replyTo: null };
   if (purpose === "platform") return { ...base, mode: "platform", fixed: true, smtp: null, fallbackReason: null, fromName: product.sender.name, fromAddress: product.sender.address, replyTo: null };
+  // Docustay v1 item 9: the HOSTED service sends from Docustay's own address ("<Org> via Docustay", replies to the workspace's reply-to). A sending domain, SMTP server or mailbox saved earlier is kept in the tables but not used.
+  // A self-hosted Docustay install keeps all three.
+  if (product.name === "Docustay" && process.env.KEYSTONE_SELF_HOST !== "1") return { ...base, requested: "platform", mode: "platform", smtp: null, fallbackReason: null };
   if (row.mode === "domain") {
     const d = await domainRow(tx);
     if (d?.status === "verified" && base.fromAddress && base.fromAddress.toLowerCase().endsWith(`@${d.domain}`)) return { ...base, mode: "domain", smtp: null, fallbackReason: null };
@@ -61,7 +64,7 @@ export function fromLine(identity) {
   const q = (n) => String(n).replace(/["\\<>\r\n]/g, "").trim();   // a trailing backslash would escape the closing quote of the display name, and < > would open a second address (T-16)
   if (identity.fixed) return { from: `"${q(identity.fromName)}" <${identity.fromAddress}>`, replyTo: null };
   if ((identity.mode === "domain" || identity.mode === "smtp" || identity.mode === "mailbox") && identity.fromAddress) return { from: `"${q(identity.fromName || identity.orgName)}" <${identity.fromAddress}>`, replyTo: identity.replyTo };
-  return { from: `"${q(identity.orgName || identity.product)} via ${q(identity.product)}" <${identity.platform.address}>`, replyTo: identity.replyTo };
+  return { from: `"${q(identity.fromName || identity.orgName || identity.product)} via ${q(identity.product)}" <${identity.platform.address}>`, replyTo: identity.replyTo };
 }
 
 const KEYS = { "email.provider": "mode", "email.from_name": "from_name", "email.from_address": "from_address", "email.reply_to": "reply_to", "email.smtp_host": "smtp_host", "email.smtp_port": "smtp_port", "email.smtp_user": "smtp_user", "email.smtp_security": "smtp_security" };

@@ -24,5 +24,5 @@
   @keyframes into { 0% { opacity: 1; transform: translateY(-8px); } 70% { opacity: 1; transform: translateY(30px); } 100% { opacity: 0; transform: translateY(30px); } }
   @keyframes close { from { transform: scaleY(-1); } } @keyframes pop { from { transform: scale(0); } }
   @keyframes fly { 0% { opacity: 1; offset-distance: 0%; } 92% { opacity: 1; } 100% { opacity: 0; offset-distance: 100%; } }
-.real { filter: drop-shadow(0 1px 2px rgb(0 0 0 / .22)); }
+.real { filter: drop-shadow(0 1px 2px rgb(60 40 140 / 0.099)); }
 </style>

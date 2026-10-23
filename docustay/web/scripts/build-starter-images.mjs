@@ -28,5 +28,8 @@ for (const slug of Object.keys(manifest)) {
     stats.pages += 1;
   }
   await task.destroy();
+  // the page-and-field map the in-app Preview draws over the pages (a small static file per template: nothing is rendered or looked up when someone opens a Preview)
+  const m = manifest[slug];
+  fs.writeFileSync(path.join(dir, "meta.json"), JSON.stringify({ slug, pages: m.pages, roles: m.roles, fields: m.fields.map((f) => ({ id: f.id, type: f.type, label: f.label, role: f.role, required: f.required, page: f.page, x: f.x, y: f.y, w: f.w, h: f.h, ...(f.sender ? { sender: true } : {}) })) }));
 }
 console.log(`starter pictures: ${Object.keys(manifest).length} starters, ${stats.pages} pages, ${stats.files} files, ${(stats.bytes / 1048576).toFixed(1)} MB`);

@@ -21,13 +21,15 @@
   </ol>
 </nav>
 <style>
-  .flow-steps ol { display: flex; gap: 6px; list-style: none; margin: 0 0 14px; padding: 0; overflow-x: auto; }
-  li { flex: none; }
-  button, .b { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 14px 0 8px; border-radius: 999px; background: var(--tint, #ece4d3); color: var(--mute, #6b6659); border: 0; font: inherit; font-size: 14px; }
-  button { cursor: pointer; }
-  .n { display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: #fff; font-size: 12px; font-weight: 600; }
-  li.on button, li.on .b { background: var(--ink, #1c1b19); color: var(--paper, #fff); }
-  li.on .n { background: var(--paper, #fff); color: var(--ink, #1c1b19); }
-  li.done .n { background: #d9ecd9; }
-  @media (max-width: 640px) { .l { display: none; } li.on .l { display: inline; } }
+  /* combined style: the steps are a quiet breadcrumb (12px text, the current one in ink, a hairline between), not pills */
+  .flow-steps ol { display: flex; align-items: center; gap: 0; list-style: none; margin: 0; padding: 0; overflow-x: auto; scrollbar-width: none; white-space: nowrap; }
+  li { flex: none; display: inline-flex; align-items: center; }
+  li + li::before { content: ""; width: 14px; height: 1px; margin: 0 6px; background: var(--line-strong); }
+  button, .b { display: inline-flex; align-items: center; gap: 5px; min-height: 28px; padding: 0 2px; border: 0; background: transparent; color: var(--mute); font: inherit; font-size: 12px; }
+  button { cursor: pointer; } button:hover { color: var(--ink); }
+  button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+  .n { font-family: var(--font-mono); font-size: 11px; color: var(--faint); }
+  li.on button, li.on .b { color: var(--ink); font-weight: 600; } li.on .n { color: var(--brand); }
+  li.done .n { color: var(--ok); }
+  @media (max-width: 640px) { .l { display: none; } li.on .l { display: inline; } button, .b { min-height: 44px; min-width: 28px; justify-content: center; } }
 </style>

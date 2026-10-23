@@ -1,6 +1,6 @@
 # Settings reference
 
-Every setting you can give a self-hosted Docustay, as environment variables in `.env` (the compose file reads it). `./init.sh` fills in the secrets. Anything not listed in the first tables is internal or belongs to the hosted service and should stay unset.
+Every setting you can give a self-hosted Docustay, as environment variables in `.env` (the compose file reads it). The install folder, `init.sh` and the compose file come from the public repository: `git clone https://github.com/Docustay/docustay.git`, then `cd docustay/docustay`. Run `./init.sh` there once: it makes `.env` and fills in the secrets. Anything not listed in the first tables is internal or belongs to the hosted service and should stay unset.
 
 ## Secrets (init.sh makes them)
 
@@ -98,8 +98,9 @@ Every setting you can give a self-hosted Docustay, as environment variables in `
 
 ## Advanced settings
 
-The code also reads the variables below. They tune limits and connections you will rarely need to change. Another 68 variables (plan prices and limits, and the hosted service's own accounts for Stripe Connect, Firebase, Cloudflare, domains and the like) belong to the hosted service only; a self-hosted install ignores them.
+The code also reads the variables below. They tune limits and connections you will rarely need to change. Another 69 variables (plan prices and limits, and the hosted service's own accounts for Stripe Connect, Firebase, Cloudflare, domains and the like) belong to the hosted service only; a self-hosted install ignores them.
 
+- `ANTHROPIC_WORKSPACE_ID`
 - `DOCUMENT_SIGNING_CERT_P12`
 - `DOCUMENT_SIGNING_CERT_PASSPHRASE`
 - `DOCUSTAY_ADDON_DIR`
@@ -117,6 +118,7 @@ The code also reads the variables below. They tune limits and connections you wi
 - `GOOGLE_OAUTH_CLIENT_ID`
 - `GOOGLE_OAUTH_CLIENT_SECRET`
 - `GOOGLE_TOKEN_URL`
+- `INDEXABLE_HOSTS`
 - `KEYSTONE_ADDON_S3_ENDPOINT`
 - `KEYSTONE_AI_ALLOW_FAKE`
 - `KEYSTONE_AI_CREDITS_CHECK`
@@ -125,7 +127,6 @@ The code also reads the variables below. They tune limits and connections you wi
 - `KEYSTONE_AI_CREDITS_EDIT`
 - `KEYSTONE_AI_CREDITS_FILE_READ`
 - `KEYSTONE_AI_CREDITS_PLAY`
-- `KEYSTONE_AI_CREDITS_THINK`
 - `KEYSTONE_AI_EFFORT`
 - `KEYSTONE_AI_FILE_MB`
 - `KEYSTONE_AI_FILE_PAGES`
@@ -135,10 +136,7 @@ The code also reads the variables below. They tune limits and connections you wi
 - `KEYSTONE_AI_OUTPUT_TOKENS`
 - `KEYSTONE_AI_PER_HOUR`
 - `KEYSTONE_AI_PER_MINUTE`
-- `KEYSTONE_AI_PER_USER_SHARE`
 - `KEYSTONE_AI_SUMMARISE_AFTER`
-- `KEYSTONE_AI_THINK_PER_DAY`
-- `KEYSTONE_AI_THINK_PER_MONTH`
 - `KEYSTONE_AI_TOOL_TURNS`
 - `KEYSTONE_APP_URL`
 - `KEYSTONE_CONTACT_ALERTS`
@@ -158,6 +156,7 @@ The code also reads the variables below. They tune limits and connections you wi
 - `KEYSTONE_DOCUSTAY_MAIL_SENDER`
 - `KEYSTONE_DOCUSTAY_PM_CONFIG`
 - `KEYSTONE_DOCUSTAY_STRIPE_SECRET_KEY`
+- `KEYSTONE_DOCUSTAY_TAX_ON`
 - `KEYSTONE_DRAIN_MS`
 - `KEYSTONE_EMAIL_FROM`
 - `KEYSTONE_IDEMPOTENCY_WAIT_MS`
@@ -167,6 +166,7 @@ The code also reads the variables below. They tune limits and connections you wi
 - `KEYSTONE_OCR_LANG_PATH`
 - `KEYSTONE_PG_IDLE_TX_MS`
 - `KEYSTONE_PG_LOCK_WAIT_MS`
+- `KEYSTONE_PG_NESTED_RESERVE`
 - `KEYSTONE_PRODUCT`
 - `KEYSTONE_SESSION_SECRET`
 - `KEYSTONE_TEST_IP_LIMIT_MULTIPLIER`
@@ -176,14 +176,18 @@ The code also reads the variables below. They tune limits and connections you wi
 - `KEYSTONE_UNSUBSCRIBE_SECRET`
 - `KEYSTONE_VERSION`
 - `KEYSTONE_WORKER_DATABASE_URL`
+- `KEYSTONE_WORKER_LOG`
 - `MICROSOFT_GRAPH_OAUTH_CLIENT_ID`
 - `MICROSOFT_GRAPH_OAUTH_CLIENT_SECRET`
+- `POSTHOG_HOST`
+- `POSTHOG_PROJECT_TOKEN`
 
 ## An example `.env`
 
 `init.sh` writes the secrets for you. Everything else is yours to set in the same file; a small install behind its own address needs only these lines on top of the generated ones:
 
-```bash
+```ini
+# in .env (a file, not a command)
 KEYSTONE_PUBLIC_URL=https://sign.example.com
 KEYSTONE_TRUSTED_PROXY_HOPS=1
 KEYSTONE_MAIL_SENDER=Example Co <documents@example.com>
@@ -193,6 +197,7 @@ KEYSTONE_MAIL_DAILY_LIMIT=500
 Apply a change by recreating the containers, then check the install is up and sees the new address:
 
 ```bash
+# in your install folder: restart with the new settings, then ask the install if it is ready
 docker compose up -d
-curl -s https://sign.example.com/readyz
+U=$(grep ^KEYSTONE_PUBLIC_URL= .env | cut -d= -f2-); curl -s "${U:-http://localhost:8080}/readyz"
 ```

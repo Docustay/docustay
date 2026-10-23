@@ -20,7 +20,8 @@ export function accountEmail(kind, { facts = {}, lang = "en" } = {}) {
     }
     case "workspace_scheduled": {
       const when = facts.immediate ? w("accSoon") : w("wsWhen", v);
-      return frame({ subject: w("wsSub", v), preheader: w("wsSub", v), heading: w("wsSub", v), intro: [w("wsI", v), when, w("keptWs"), w("wsNotExpected")], button: facts.immediate ? null : { label: w("btnKeepWs"), url: keepUrl() } });
+      const lost = facts.lifetime ? [w("wsPlanLifetime")] : facts.planEnded ? [facts.daysLost > 0 ? w("wsPlanEnded", { plan: facts.planEnded, days: `${facts.daysLost} ${facts.daysLost === 1 ? "day" : "days"}` }) : w("wsPlanEndedNoDays", { plan: facts.planEnded })] : [];
+      return frame({ subject: w("wsSub", v), preheader: w("wsSub", v), heading: w("wsSub", v), intro: [w("wsI", v), ...lost, when, w("keptWs"), w("wsNotExpected")], button: facts.immediate ? null : { label: w("btnKeepWs"), url: keepUrl() } });
     }
     case "kept_account": return frame({ subject: w("keptAccSub"), preheader: w("keptAccSub"), heading: w("keptAccSub"), intro: [w("keptAccBody")] });
     case "kept_workspace": return frame({ subject: w("keptWsSub"), preheader: w("keptWsSub"), heading: w("keptWsSub"), intro: [w("keptWsBody")] });

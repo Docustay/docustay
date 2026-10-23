@@ -278,20 +278,6 @@
     "webmCrf": 36
    }
   },
-  "healthcare-intake": {
-   "file": "uc-healthcare-intake.mp4 / .webm / .poster.jpg",
-   "pexels_id": 7981941,
-   "page": "https://www.pexels.com/video/a-person-assisting-another-person-in-filling-out-a-form-7981941/",
-   "author": "Kindel Media",
-   "author_page": "https://www.pexels.com/@kindelmedia",
-   "bytes": {
-    "clip": 7981941,
-    "mp4": 424847,
-    "webm": 306919,
-    "crf": 27,
-    "webmCrf": 40
-   }
-  },
   "education": {
    "file": "uc-education.mp4 / .webm / .poster.jpg",
    "pexels_id": 7710452,

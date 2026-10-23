@@ -55,7 +55,7 @@ export async function searchWorkspace(tx, { q = "", per = 6, now = new Date() } 
     groups: {
       documents: docs.map((d) => ({ id: d.id, title: d.title, state: d.state, form: d.source_channel === "form", signers: d.signers, signed: d.signed, sentAt: d.sent_at, executedAt: d.executed_at, href: `/documents/${d.id}` })),
       templates: tpls.map((t) => ({ id: t.id, title: t.name, kind: t.kind === "form" ? "form" : "template", responses: t.kind === "form" ? t.responses : null, href: t.kind === "form" ? `/forms?open=${t.id}` : `/create/flow?mode=template&template=${t.id}` })),
-      people: people.map((p) => ({ id: p.id, name: `${p.first_name} ${p.last_name}`.trim() || p.email, email: p.email, last: p.last, href: `/people/${p.id}` })),
+      people: people.map((p) => ({ id: p.id, name: `${p.first_name} ${p.last_name}`.trim() || p.email, email: p.email, last: p.last, href: `/contacts/${p.id}` })),
     },
     at: now.toISOString(),
   };

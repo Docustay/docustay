@@ -1,19 +1,20 @@
 <script>
   import { onMount } from "svelte";
   import Logo from "$lib/Logo.svelte";
-  import { t, startLang } from "$lib/i18n/index.svelte.js"; import LangPicker from "$lib/i18n/LangPicker.svelte";
+  import { t, startLang } from "$lib/i18n/index.svelte.js";
   import Stage from "$lib/entry/Stage.svelte";
+  import Consent from "$lib/site/Consent.svelte";
   import { entry } from "$lib/entry/mood.svelte.js";
   let { children } = $props();
   onMount(() => { startLang(); });
 </script>
 <Stage mood={entry.mood} />
+<Consent />
 <div class="auth" data-auth-stage>
   <header class="mark"><span class="pill"><Logo play /></span></header>
   <main class="card" data-testid="auth-card">{@render children()}</main>
   <footer class="foot">
     <p><a href="/legal/terms">{t("Terms")}</a> · <a href="/legal/privacy">{t("Privacy")}</a></p>
-    <div class="lang"><LangPicker /></div>
   </footer>
 </div>
 <style>
@@ -24,7 +25,8 @@
   .card :global(h1), .card :global(.btn) { overflow-wrap: anywhere; }
   .foot { margin-top: 1.4rem; display: flex; flex-direction: column; align-items: center; gap: .75rem; font-size: .75rem; color: rgb(255 255 255 / .72); }
   .foot a { color: inherit; text-decoration: none; display: inline-flex; align-items: center; min-height: 24px; padding: 0 .25rem; } .foot a:hover { color: #fff; text-decoration: underline; }
-  @media (min-width: 1100px) { .auth { align-items: flex-start; padding-left: clamp(2rem, 10vw, 11rem); } .foot { align-items: flex-start; } }
+  /* two equal halves: the card centred in the left half, the sheets (Stage) centred in the right half, at every width */
+  @media (min-width: 1100px) { .auth { width: 50vw; padding-inline: 2rem; } }
   @media (max-width: 480px) { .card { padding: 1.5rem 1.25rem 1.6rem; } .auth { justify-content: flex-start; padding-top: 1.75rem; } }
   @keyframes auth-in { from { opacity: 0; transform: perspective(1200px) rotateX(9deg) translateY(26px); } to { opacity: 1; transform: none; } }
   @keyframes auth-rise { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: none; } }

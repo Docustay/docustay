@@ -1,6 +1,6 @@
 ---
 title: Contact
-description: Write to the Docustay team.
+description: Write to the Docustay team: questions about the product, pricing or self-hosting, security reports and privacy requests. We read every message and reply by email.
 ---
 
 # Contact

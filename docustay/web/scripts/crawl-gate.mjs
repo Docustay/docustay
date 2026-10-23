@@ -13,14 +13,12 @@ import { TEMPLATES } from "../src/lib/site/pages/templates.js";
 import { readPages } from "./build-docs.mjs";
 const ROOT = path.join(path.dirname(new URL(import.meta.url).pathname), "..");
 const UA = { desktop: "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_0) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15", mobile: "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1" };
-import { match as langMatch } from "../src/params/lang.js";
 import legalDocs from "../src/lib/legal.json" with { type: "json" };
-const LANGS = ["es", "fr", "de", "pt", "it", "nl", "pl", "tr", "ru", "ar", "ja", "zh", "ko", "en"].filter(langMatch);   // only the languages the route matcher accepts have a site page today
 const walk = (d, out = []) => { for (const e of fs.readdirSync(d, { withFileTypes: true })) { const p = path.join(d, e.name); if (e.isDirectory()) walk(p, out); else if (/^\+(page|server)/.test(e.name)) out.push(p); } return out; };
 export function routePaths() {
   const base = path.join(ROOT, "src/routes");
   const dirs = new Set(walk(base).filter((f) => /\+page\./.test(f)).map((f) => path.dirname(path.relative(base, f))));
-  const fill = { "[slug]": null, "[doc]": null, "[id]": null, "[lang=lang]": null, "[lang]": null };
+  const fill = { "[slug]": null, "[doc]": null, "[id]": null, "[lang]": null };
   const out = new Set();
   for (const d of dirs) {
     const segs = d.split(path.sep).filter((s) => !/^\(.*\)$/.test(s));
@@ -32,11 +30,10 @@ export function routePaths() {
   for (const p of ALL) out.add(p.path); for (const t of TEMPLATES) out.add(`/templates/${t.slug}`);
   out.add("/sign-pdf"); for (const l of SIGNPDF) out.add(`/sign-pdf/${l.slug}`);
   for (const p of readPages()) out.add(`/docs/${p.slug}`); out.add("/docs/api-reference");
-  for (const l of ["terms", "privacy-policy", "cookies", "dpa", "notices"]) out.add(`/legal/${l}`);
-  for (const l of LANGS) { out.add(`/${l}`); out.add(`/${l}/product`); out.add(`/${l}/trust`); }
-  // every address the sitemap names, <loc> and every hreflang alternate: a hreflang that points at a page that does not exist is a defect
-  try { const sm = fs.readFileSync(path.join(ROOT, "static", "sitemap.xml"), "utf8"); for (const m of sm.matchAll(/(?:<loc>|href=")https:\/\/docustay\.app([^<"]*)/g)) out.add(m[1] || "/"); } catch { /* no sitemap yet */ }
-  for (const f of ["/robots.txt", "/sitemap.xml", "/llms.txt", "/llms-full.txt", "/favicon.svg", "/api/openapi.json"]) out.add(f);
+  for (const l of ["terms", "privacy-policy", "cookies", "dpa", "notices", "refunds", "renewal"]) out.add(`/legal/${l}`);
+  // every address the sitemap names
+  try { const sm = fs.readFileSync(path.join(ROOT, "static", "sitemap.xml"), "utf8"); for (const m of sm.matchAll(/<loc>https:\/\/docustay\.app([^<"]*)/g)) out.add(m[1] || "/"); } catch { /* no sitemap yet */ }
+  for (const f of ["/robots.txt", "/sitemap.xml", "/llms.txt", "/llms-full.txt", "/favicon.svg", "/api/openapi.json", "/openapi.json"]) out.add(f);
   return [...out].sort();
 }
 const free = () => new Promise((res) => { const s = net.createServer(); s.listen(0, "127.0.0.1", () => { const { port } = s.address(); s.close(() => res(port)); }); });
@@ -59,17 +56,21 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   const rows = [];
   const seen = new Set();
   const hit = async (p, ua) => { try { const r = await fetch(`http://127.0.0.1:${port}${p}`, { headers: { "user-agent": UA[ua] }, redirect: "manual" }); const body = r.status < 300 ? await r.text() : ""; return { status: r.status, body, loc: r.headers.get("location") }; } catch (e) { return { status: 0, body: "", err: String(e).slice(0, 80) }; } };
-  const queue = [...paths];
+  const queue = [...paths]; const from = new Map();
   while (queue.length) {
     const p = queue.shift(); if (seen.has(p)) continue; seen.add(p);
     for (const ua of ["desktop", "mobile"]) {
-      const r = await hit(p, ua); rows.push({ path: p, ua, status: r.status, loc: r.loc ?? null, err: r.err ?? null });
-      if (ua === "desktop" && r.status === 200 && /text\/html|<html/i.test(r.body.slice(0, 400))) for (const m of r.body.matchAll(/href="(\/[^"#?]*)"/g)) { const h = m[1]; if (!seen.has(h) && !/\.(png|jpg|jpeg|webp|svg|ico|mp4|webm|pdf|json|xml|txt|md|css|js)$/.test(h) && !h.startsWith("/_app/") && !h.startsWith("/api/")) queue.push(h); }
+      const r = await hit(p, ua); rows.push({ path: p, from: from.get(p) ?? null, ua, status: r.status, loc: r.loc ?? null, err: r.err ?? null });
+      if (ua === "desktop" && r.status === 200 && /text\/html|<html/i.test(r.body.slice(0, 400))) for (const m of r.body.matchAll(/href="(\/[^"#?]*)"/g)) { const h = m[1]; if (!seen.has(h) && !/\.(png|jpg|jpeg|webp|svg|ico|mp4|webm|pdf|json|xml|txt|md|css|js)$/.test(h) && !h.startsWith("/_app/") && !h.startsWith("/api/")) { queue.push(h); from.set(h, p); } }
     }
   }
+  // the website is English only (12 Oct 2026): every address of the removed translated pages answers 301 with its English page, never 404 and never 200
+  const legacyBad = [];
+  for (const l of ["es", "fr", "de", "pt", "it", "nl", "pl", "tr", "ru", "ar", "ja", "zh", "ko"]) for (const [tail, to] of [["", "/"], ["/product", "/features/how-it-works"], ["/trust", "/trust"], ["/pricing", "/"]]) { const r = await hit(`/${l}${tail}`, "desktop"); if (r.status !== 301 || r.loc !== to) legacyBad.push(`/${l}${tail}: ${r.status} ${r.loc ?? ""} (wanted 301 to ${to})`); }
+  for (const m of legacyBad) console.log("✗ legacy-locale " + m);
   stop();
   const ok = (r) => r.status === 200 || ((r.status === 301 || r.status === 302 || r.status === 307 || r.status === 308) && r.loc);
-  const bad = rows.filter((r) => !ok(r));
+  const bad = rows.filter((r) => !ok(r)); bad.push(...legacyBad.map((m) => ({ path: m, ua: "desktop", status: 0 })));
   if (process.argv.includes("--json")) fs.writeFileSync(process.argv[process.argv.indexOf("--json") + 1], JSON.stringify({ at: new Date().toISOString(), routes: seen.size, requests: rows.length, failing: bad.length, rows }, null, 1));
   for (const r of process.argv.includes("--all") ? rows : bad) console.log(`${ok(r) ? "✓" : "✗"} ${String(r.status).padEnd(3)} ${r.ua.padEnd(8)} ${r.path}${r.loc ? "  → " + r.loc : ""}${r.err ? "  " + r.err : ""}`);
   console.log(`\nCRAWL GATE ${bad.length ? "FAIL" : "PASS"}: ${seen.size} routes, ${rows.length} requests, ${bad.length} not 200`);

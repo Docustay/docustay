@@ -2,6 +2,7 @@
 //
 // A draft is a `document_instance` (builder `pdf`, state `draft`). Its working body lives in `template_body_snapshot` (the same column the frozen body uses once it is sent); its people are `document_party`
 // rows on the LEAD instance of the send (a package keeps one set of people); its send choices are `send_options`. Nothing here sends anything — pdfSend.mjs does.
+import { assertNoNewRules, pdfRuleItems, assertNoNewPaymentModes, pdfPaymentModeItems } from "./ruleAuthoring.mjs";
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
 import { invalid, notFound, conflict } from "../http/errors.mjs";
@@ -86,6 +87,24 @@ export function suggestedSeats(body) {
   return Array.from({ length: n }, (_, i) => ({ key: `signer_${i + 1}`, label: `Signer ${i + 1}` }));
 }
 
+/**
+ * R13-D010 — the deadline a send starts with when the sender has not chosen one. A document made from a template (an authored source, or a pdf copied from a template) starts from the
+ * workspace's "Signature request expires after (days)" (0 = never); an uploaded document starts from "Uploaded documents expire after (days)". The Send step shows this value and the
+ * send applies the same one, so what the screen says is what is stored.
+ */
+// R13-D140 (17 Oct): "Uploaded documents expire after" is cut from version 1 (decision 41), so every send, uploaded or not, starts from the one
+// workspace setting the person can see and change. `fromTemplate` is kept so callers need not change.
+export function defaultExpiryDays(settings, { fromTemplate = false } = {}) {   // eslint-disable-line no-unused-vars
+  const v = settings?.signature_validity_days;
+  return Number.isInteger(v) && v >= 0 ? v : 0;
+}
+/** True when this draft came from a template (not a plain upload): an authored source on the row, or an original file copied from a template. */
+export async function isFromTemplate(tx, instanceId) {
+  const { rows } = await tx.query(
+    `SELECT 1 FROM keystone.document_instance i WHERE i.id = $1 AND (i.source IS NOT NULL OR EXISTS (SELECT 1 FROM keystone.document_file f WHERE f.instance_id = i.id AND f.kind = 'original' AND f.meta->>'from_template' IS NOT NULL))`, [instanceId]);
+  return rows.length > 0;
+}
+
 const seatLabel = (roles, key) => roles?.find((r) => r.key === key)?.label ?? key;
 
 /** The whole draft (or sent document) as the screens need it. */
@@ -93,8 +112,9 @@ export async function getPdfDocument(tx, { tenantId, instanceId }) {
   const i = await loadInstance(tx, instanceId);
   const lead = i.package_lead_id ?? i.id;
   const { rows: parties } = await tx.query(
-    `SELECT id, role, action_role, position, name, email, phone, external_ref, expires_at, reminder_days, assists_role, reminders_sent, status, viewed_at, completed_at, decline_reason, email_delivery, consented_at, group_label, witness_required
-       FROM keystone.document_party WHERE instance_id = $1 ORDER BY position, created_at`, [lead]);
+    `SELECT p.id, p.role, p.action_role, p.position, p.name, p.email, p.phone, p.external_ref, p.expires_at, p.reminder_days, p.assists_role, p.reminders_sent, p.status, p.viewed_at, p.completed_at, p.decline_reason, p.email_delivery, p.consented_at, p.group_label, p.witness_required,
+            EXISTS (SELECT 1 FROM keystone.app_user u WHERE u.id = p.external_ref AND u.role = 'staff' AND u.archived_at IS NULL) AS internal
+       FROM keystone.document_party p WHERE p.instance_id = $1 ORDER BY p.position, p.created_at`, [lead]);
   const files = await filesOf(tx, { instanceId });
   const members = await documentsOfSend(tx, { instanceId });
   const body = i.template_body_snapshot ?? null;
@@ -121,9 +141,14 @@ export async function getPdfDocument(tx, { tenantId, instanceId }) {
     }
     // Run 8 R8-64 (J8): at the month's document limit a whole document could be set up and only Send refused it. Say it at Check, in the words the refusal uses.
     const allowance = await (await ports()).entitlements?.sendAllowance?.(tx, { tenantId }).catch(() => null);
-    if (allowance && allowance.used >= allowance.limit) {
-      const tail = allowance.paid ? "The count resets next month." : "Upgrade to Pro to send more.";
-      checklist.items.unshift({ ok: false, severity: "error", code: "plan_document_limit", text: `Your ${allowance.plan} plan allows ${allowance.limit} documents a month and you have sent ${allowance.used}. ${tail}`, key: allowance.paid ? "Your {plan} plan allows {limit} documents a month and you have sent {used}. The count resets next month." : "Your {plan} plan allows {limit} documents a month and you have sent {used}. Upgrade to Pro to send more.", vars: { plan: allowance.plan, limit: allowance.limit, used: allowance.used }, upgrade: !allowance.paid });
+    // R13-D184 (23 Oct): a practice run (test switch on, or a test send) is never counted, so the month's limit is not a problem for it
+    const practice = opts.test === true || (await (await import("./settings.mjs")).getDocumentSetting(tx, "test_mode.on").catch(() => false)) === true;
+    if (!practice && allowance && allowance.used >= allowance.limit) {
+      // R13-D395: the row says the way on in the send refusal's own words (src/product/docustay.mjs), so Check, Send and the plan note agree
+      const { PRICES } = await import("../product/docustayPrices.mjs");
+      const price = (PRICES.payg.docOverMinor / 100).toFixed(2), included = PRICES.payg.docsIncluded;
+      const tail = allowance.paid ? "The count resets next month." : `Switch to Pay as you go to keep sending ($${price} a document after the first ${included}), or choose Pro.`;
+      checklist.items.unshift({ ok: false, severity: "error", code: "plan_document_limit", text: `Your ${allowance.plan} plan allows ${allowance.limit} documents a month and you have sent ${allowance.used}. ${tail}`, key: allowance.paid ? "Your {plan} plan allows {limit} documents a month and you have sent {used}. The count resets next month." : "Your {plan} plan allows {limit} documents a month and you have sent {used}. Switch to Pay as you go to keep sending (${price} a document after the first {included}), or choose Pro.", vars: { plan: allowance.plan, limit: allowance.limit, used: allowance.used, price, included }, upgrade: !allowance.paid });
       checklist.ok = false;
     }
     if (mailState === "not_configured" && parties.some((p) => p.email && !(opts.in_person ?? []).includes(p.role))) checklist.items.unshift({ ok: false, severity: "warning", code: "email_not_set_up", text: "Email isn't set up yet, so nobody can be emailed a link. Open Settings → Email, choose how mail goes out and send yourself a test, then send.", key: "Email isn't set up yet, so nobody can be emailed a link. Open Settings → Email, choose how mail goes out and send yourself a test, then send.", vars: {} });
@@ -143,12 +168,12 @@ export async function getPdfDocument(tx, { tenantId, instanceId }) {
     body, bodySeats: body ? body.roles.map((r) => ({ ...r })) : [], suggestedSeats: body ? suggestedSeats(body) : [],
     parties: parties.map((p) => ({ ...p, seat_label: seatLabel(body?.roles, p.role), in_person: (opts.in_person ?? []).includes(p.role) })),
     sendOptions: opts, files, package: { leadId: lead, isLead: lead === i.id, members },
-    defaults: { expiryDays: settings["upload.expiry_days"], saveAsTemplate: settings["upload.save_as_template"], reminderDays: settings.reminder_days },
+    defaults: { expiryDays: defaultExpiryDays(settings, { fromTemplate: i.source != null || files.some((f) => f.kind === "original" && f.meta?.from_template) }), saveAsTemplate: settings["upload.save_as_template"], reminderDays: settings.reminder_days },
     checklist, aiReview,
   };
 }
 
-function normaliseParties(rawParties, { order }) {
+export function normaliseParties(rawParties, { order }) {
   const parties = rawParties.map((p, idx) => {
     const r = partySchema.safeParse(p);
     if (r.success) { const c = r.data.email ? cleanEmailAddress(r.data.email) : null; return c?.ok ? { ...r.data, email: c.email } : r.data; }   // a good address is stored plain (domain in punycode, lower case); a half-typed draft one is kept as typed and the checklist stops it at Send
@@ -161,7 +186,7 @@ function normaliseParties(rawParties, { order }) {
     // Run 9: a seat holds one person, or a SIGNING GROUP — everyone in it a signer with the same group name
     const first = seats.get(p.role);
     if (first && !(p.group_label && first.group_label && p.group_label.toLowerCase() === first.group_label.toLowerCase() && p.action_role === "signer" && first.action_role === "signer"))
-      throw invalid(first.group_label || p.group_label ? `Everyone sharing the seat ${p.role} must be a signer in the same signing group` : `two people are in the seat ${p.role}`, { field: `parties.${idx}.role` });
+      throw invalid(first.group_label || p.group_label ? `Everyone sharing the signing spot ${p.role} must be a signer in the same signing group` : `two people are in the seat ${p.role}`, { field: `parties.${idx}.role` });
     if (!first) seats.set(p.role, p);
     if (p.group_label && p.action_role !== "signer") throw invalid("Only people who sign can be in a signing group.", { field: `parties.${idx}.group_label` });
     if (p.witness_required && p.action_role !== "signer") throw invalid("Only a person who signs can have a witness.", { field: `parties.${idx}.witness_required` });
@@ -182,7 +207,9 @@ function normaliseParties(rawParties, { order }) {
   if (order !== "sequential") return parties.map((p) => ({ ...p, position: 1 }));
   // a group's members act at the same step as the first of them
   const firstIdx = new Map(); parties.forEach((p, idx) => { if (!firstIdx.has(p.role)) firstIdx.set(p.role, idx); });
-  const raw0 = parties.map((p, idx) => (p.step ?? (parties.every((q) => q.step == null) ? idx + 1 : null)));
+  // R13-D051: a person added after others were given steps (an assistant added to a template's first seat) simply goes after the highest step given; it used to refuse the whole save, so the role was lost on reload
+  const given = parties.map((p) => p.step).filter((x) => x != null), top = given.length ? Math.max(...given) : 0; let extra = 0;
+  const raw0 = parties.map((p, idx) => (p.step ?? (given.length ? top + (++extra) : idx + 1)));
   const raw = parties.map((p, idx) => raw0[firstIdx.get(p.role)] ?? raw0[idx]);
   if (raw.some((s) => s == null)) throw invalid("Give every person a step, or none.", { field: "parties" });
   const rank = new Map([...new Set(raw)].sort((a, b) => a - b).map((s, k) => [s, k + 1]));
@@ -224,6 +251,8 @@ export async function savePdfDocument(tx, { tenantId, instanceId, actorUserId = 
       }
     }
     try { parsed = parsePdfBodyData(body); } catch (e) { throw invalid(e.message, { issues: e.issues ?? [] }); }
+    assertNoNewRules(pdfRuleItems, parsed, i.template_body_snapshot);   // v1 item 6
+    assertNoNewPaymentModes(pdfPaymentModeItems, parsed, i.template_body_snapshot);   // v1 item 10
     const { rows: [f] } = await tx.query(`SELECT id, sha256, kind, meta FROM keystone.document_file WHERE id = $1 AND instance_id = $2`, [parsed.file.file_id, instanceId]);
     if (!f) throw invalid("the body names a file that is not part of this document", { field: "body.file.file_id" });
     if (f.sha256 !== parsed.file.sha256) throw invalid("the body's file fingerprint does not match the stored file", { field: "body.file.sha256" });
@@ -280,12 +309,14 @@ export async function savePdfDocument(tx, { tenantId, instanceId, actorUserId = 
 }
 
 /** The people a person can pick from (contacts), through the people port; typing a new one needs no port. */
-export async function searchRecipients(tx, { q = "", limit = 8 }) {
+export async function searchRecipients(tx, { q = "", limit = 8, selfId = null }) {
   const P = await ports();
+  const { listTeammates } = await import("./teamRecipients.mjs");
+  const mates = await listTeammates(tx, { q, limit: 6, selfId }).catch(() => []);                  // teammates first (21 Oct 2026), linked to the member record by id
   const saved = await searchContacts(tx, { q, limit }).catch(() => []);                  // People first: everyone this workspace has sent to
   const rows = P.people.search ? await P.people.search(tx, { q, limit }) : [];
-  const seen = new Set(saved.map((c) => c.email));
-  return [...saved, ...rows.filter((r) => r.email && !seen.has(String(r.email).toLowerCase())).map((r) => ({ id: r.id, name: r.display_name, email: r.email, role: r.role }))].slice(0, limit);
+  const seen = new Set([...mates, ...saved].map((c) => String(c.email).toLowerCase()));
+  return [...mates, ...saved.filter((c) => !mates.some((m) => String(m.email).toLowerCase() === String(c.email).toLowerCase())), ...rows.filter((r) => r.email && !seen.has(String(r.email).toLowerCase())).map((r) => ({ id: r.id, name: r.display_name, email: r.email, role: r.role }))].slice(0, limit);
 }
 
 /** Delete a draft that was never sent (the shared Delete screen handles the rest). Removes its stored objects too. */

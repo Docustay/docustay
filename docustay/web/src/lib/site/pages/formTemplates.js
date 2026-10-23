@@ -4,7 +4,9 @@ import DATA from "../forms.gen.json" with { type: "json" };
 export const FORM_CATS = Object.fromEntries(DATA.categories.map((c) => [c.id, c.label]));
 export const FORMS = DATA.forms;
 export const formBySlug = (s) => FORMS.find((f) => f.slug === s) ?? null;
-export const formMeta = (f) => `A free ${f.title.toLowerCase()} form template. ${f.summary.replace(/\.$/, "")}. Publish it as one link; every response is its own signed copy.`.slice(0, 300);
+// "Order form" must not become "order form form": the word is added only when the title does not already end in it
+export const formWord = (title) => (/\bform$/i.test(title.trim()) ? title.trim() : `${title.trim()} form`);
+export const formMeta = (f) => `A free ${formWord(f.title).toLowerCase()} template. ${f.summary.replace(/\.$/, "")}. Send it to the people who need to fill it in; each signs their own copy.`.slice(0, 300);
 export const formCard = (f) => ({ slug: f.slug, title: f.title, summary: f.summary, use: f.use, cat: FORM_CATS[f.use], fields: f.fieldCount, counterSign: f.counterSign });
 /** The Publish defaults in words, in the order the Publish step shows them. */
 export const publishWords = (p) => [

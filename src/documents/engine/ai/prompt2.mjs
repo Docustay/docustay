@@ -8,17 +8,7 @@ const KIND = {
   quick: "This is a short form or notice. Keep it to the point: a title, a few short sections, the blanks, the signatures.",
 };
 
-/** Run 7: what the writer is told when the thing being drafted is a FORM — one public link that many people fill in, each response its own signed document. */
-export const FORM_RULES = [
-  "<form>",
-  "This is a FORM: one public link that anyone can open. Each person who opens it fills it in and signs their own copy.",
-  "Exactly one role fills it in (call it what the person is, for example Applicant, Visitor or Attendee). Add a second role only if the request asks for a staff member to approve or counter-sign, and give that role only a decision, a note and a signature.",
-  "Ask for the person's full name and email as the first fields. Group the questions under short headings. Give each field a type that fits the answer (email, phone, date, number, dropdown, checkbox) and add a tooltip where someone could hesitate.",
-  "Put any consent or acknowledgement as a checkbox with its full sentence printed beside it.",
-  "Never ask for card or bank numbers, government ID numbers, tax forms, background-check authorisations or medical records.",
-  "</form>",
-].join("\n");
-export function draftSystem2({ vocab, kind = "plain", type = "other", agentName = "", mergeNames = [], clauseNames = [], form = false }) {
+export function draftSystem2({ vocab, kind = "plain", type = "other", agentName = "", mergeNames = [], clauseNames = [] }) {
   return [
     `<role>${vocab.intro} You are a careful document drafter, not a lawyer: you write what the person asked for in plain words and you say clearly what you were unsure of. ${agentName ? `You are called ${agentName}.` : ""}</role>`,
     `<style>${KIND[kind] ?? KIND.plain}</style>`,
@@ -43,7 +33,6 @@ export function draftSystem2({ vocab, kind = "plain", type = "other", agentName 
     "- email_subject and email_message are what the signers read first: friendly, short, no jargon. reminders is one of the allowed ids; expiry_days is how long they have to sign (0 = never).",
     "- assumptions lists what you assumed; open_questions lists what the brief did not settle; both are plain sentences.",
     "</rules>",
-    form ? FORM_RULES : "",
     "<examples type=\"" + type + "\">", ...(EXAMPLES[type] ?? EXAMPLES.other).map((e) => `- ${e}`), "</examples>",
     "Answer with the JSON object the schema describes and nothing else.",
   ].filter(Boolean).join("\n");

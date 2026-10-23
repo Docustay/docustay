@@ -9,8 +9,8 @@ Docustay sends documents for signature. Everything you can do in the app you can
 | Make a document from words and people, answer a template's questions, collect a payment | [Documents from words and people](/docs/documents-from-words.md) |
 | Turn HTML or a tagged PDF into a template | [Templates and text tags](/docs/templates-and-text-tags.md) |
 | Show the signing form inside your own app | [Embedded signing](/docs/embedding.md) |
-| Collect responses from many people with one link | [Form templates](/form-templates) |
-| Search, read contract dates, list and refund payments, switch automations on | [Search, contracts, payments and automations](/docs/contracts-payments-playbooks.md) |
+| Start from a ready-made template | [The template library](/docs/template-library) |
+| Search the workspace, list and refund payments | [Search and payments](/docs/payments-and-playbooks) |
 | List the built-in templates, draft from one, customize one, switch packs on | [The template library](/docs/template-library.md) |
 | Get told when a document is signed | [Webhooks](/docs/webhooks.md) |
 | Practise without sending anything real | [Test mode](/docs/test-mode.md) |
@@ -27,7 +27,7 @@ A typical integration is small. Your system decides a document is needed, calls 
 
 ```bash
 curl -X POST https://docustay.app/api/v1/documents/send \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" -H "Idempotency-Key: $(uuidgen)" -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY" -H "Idempotency-Key: $(uuidgen)" -H "Content-Type: application/json" \
   -d '{ "templateId": "TEMPLATE_ID", "parties": [{ "seat": "signer_1", "name": "Rosa Alvarez", "email": "rosa@example.com" }] }'
 ```
 
@@ -41,5 +41,14 @@ The API, webhooks and embedding are in every plan, within your monthly allowance
 
 ```js
 import { Docustay } from "@docustay2026/sdk";
-const docustay = new Docustay(process.env.DOCUSTAY_KEY);
+const docustay = new Docustay(process.env.DOCUSTAY_API_KEY);
 ```
+
+## Conventions every page assumes
+
+- **Authentication:** `Authorization: Bearer <key>` on every call. Keys start `dsk_live_` or `dsk_test_`, carry only the scopes you ticked, and are shown once.
+- **Retries:** requests that create a document or template need an `Idempotency-Key` of 8 to 200 characters; repeating the same key and body returns the first answer.
+- **Limits:** each key may make 600 requests a minute; past that the answer is `429` with a `Retry-After` header.
+- **Errors:** always `{ "error": { "kind", "message", "requestId", "retryable" } }`. Quote the `requestId` when you ask for help.
+- **Webhooks:** events use `event.topic` (for example `documents.document.executed`) and `event.subject_id`, with three signature headers you must verify.
+- **Command line:** `npx docustay listen` forwards real signed events to your laptop, and `docustay send --test` sends a practice document from a template.

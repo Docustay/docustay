@@ -2,9 +2,11 @@
   // THE STRIPE GATE: is this workspace's Stripe ready to take a payment? Connected (details submitted, charges on, nothing due), Needs attention, or Not connected. When it is not connected the person is told plainly and can keep the payment terms as text only.
   import { onMount } from "svelte";
   import { api } from "$lib/api.js";
+  import { inDemo } from "$lib/pro/plan.svelte.js";
   import { t } from "$lib/i18n/index.svelte.js";
   let { ontextonly = null, testid = "stripe-gate", compact = false, status = $bindable(null) } = $props();
-  onMount(async () => { const r = await api("/api/product/docustay/payments"); const j = r.ok ? (r.json?.data ?? r.json) : null; status = j ? (j.state === "live" ? "connected" : j.state === "not_connected" ? "not_connected" : "needs_attention") : "unknown"; });
+  onMount(async () => { const r = (await inDemo()) ? { ok: false } : await api("/api/product/docustay/payments");   // R13-D020: no Stripe call in the demo
+    const j = r.ok ? (r.json?.data ?? r.json) : null; status = j ? (j.state === "live" ? "connected" : j.state === "not_connected" ? "not_connected" : "needs_attention") : "unknown"; });
 </script>
 {#if status && status !== "unknown"}
   <div class="rounded-xl border p-3 text-sm {status === 'connected' ? 'border-line' : 'border-warn'}" data-testid={testid} data-status={status}>

@@ -4,7 +4,7 @@ import { TEMPLATES } from "./templates.js";
 export const GROUPS = { contracts: "Contracts", legal: "Legal", waivers: "Waivers and consent", work: "Work and HR", property: "Property", payments: "Payments" };
 const GROUP_OF = { "service-agreement-template": "contracts", "independent-contractor-agreement-template": "contracts", "vendor-agreement-template": "contracts", "statement-of-work-template": "contracts", "referral-agreement-template": "contracts", "change-order-template": "contracts",
   "nda-template": "legal", "non-solicitation-agreement": "legal", "mutual-release-agreement": "legal",
-  "liability-waiver-template": "waivers", "photo-release-form": "waivers", "media-release-form": "waivers", "permission-slip-template": "waivers", "medical-consent-form": "waivers", "patient-intake-form": "waivers", "volunteer-agreement-template": "waivers",
+  "liability-waiver-template": "waivers", "photo-release-form": "waivers", "media-release-form": "waivers", "permission-slip-template": "waivers", "volunteer-agreement-template": "waivers",
   "offer-letter-template": "work", "new-hire-paperwork": "work",
   "rental-application-form": "property", "lease-addendum-template": "property", "deposit-agreement": "property", "equipment-loan-agreement": "property",
   "payment-plan-agreement-template": "payments", "invoice-approval-form": "payments" };

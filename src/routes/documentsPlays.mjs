@@ -1,8 +1,8 @@
-// FINAL PUSH STAGE 4 — PLAYS (skills), PLAYBOOKS (packs) AND AUTOMATIONS OVER HTTP (signed-in; Run 9 Part 4R names). Reading and using plays is for anyone who may author a template; making the workspace's own is Pro (the store asks the plan).
+// FINAL PUSH STAGE 4 — PLAYS (skills) AND PLAYBOOKS (packs) OVER HTTP (signed-in; Run 9 Part 4R names). Reading and using plays is for anyone who may author a template (Members included); making the workspace's own is Pro (the store asks the plan).
+// 21 Oct 2026 (the maintainer): CREATING, publishing, archiving, importing and switching on plays and playbooks is for Admins and Owners only: the rank action `play.manage` (src/permissions/assertMay.mjs RANK_ACTIONS). Members still use the switched-on plays while drafting.
 import { forbidden, invalid } from "../http/errors.mjs";
 import { authoriseSection } from "../nav/authorise.mjs";
 import { assertMay } from "../permissions/assertMay.mjs";
-import { flowTemplates, listFlows, getFlow, saveFlow, setFlowEnabled, archiveFlow, testFlow } from "../documents/frontDoor.mjs";
 import { listPlays, getPlay, savePlay, publishPlay, archivePlay, duplicatePlay, playVersions, testPlaySource, exportPlay, importPlay, listPlaybooks, savePlaybook, archivePlaybook, setPlaybookEnabled, setPlayOn, isPro } from "../documents/plays/store.mjs";
 
 const SECTION = "/documents";
@@ -17,27 +17,17 @@ const bookSave = (tx, a) => savePlaybook(tx, { tenantId: a.tenantId, actorUserId
 const bookEnable = (tx, a) => setPlaybookEnabled(tx, { tenantId: a.tenantId, name: need(a.name, "name"), on: a.on === true });
 const playOn = (tx, a) => setPlayOn(tx, { tenantId: a.tenantId, name: need(a.name, "name"), on: a.on === true });
 const bookArchive = (tx, a) => archivePlaybook(tx, { tenantId: a.tenantId, name: need(a.name, "name") });
-// Run 9 Part 3.6 — an AUTOMATION (Part 4R: the "playbook that runs", renamed) (Pro; the store asks the plan). Made and changed by whoever may author templates; it then runs as the person who made it.
-const flowSave = (tx, a) => saveFlow(tx, { tenantId: a.tenantId, actorUserId: a.actorUserId ?? null, id: a.id ?? null, title: a.title, flow: a.flow });
-const flowEnable = (tx, a) => setFlowEnabled(tx, { tenantId: a.tenantId, id: need(a.id, "id"), on: a.on === true });
-const flowArchive = (tx, a) => archiveFlow(tx, { id: need(a.id, "id") });
-const flowTest = (tx, a) => testFlow(tx, { tenantId: a.tenantId, id: a.id ?? null, flow: a.flow ?? null });
-
 export const PLAYS_WRITES = Object.freeze([
-  { path: "/api/documents/plays/save", section: SECTION, fn: save, object: "document", action: "template.author" },
-  { path: "/api/documents/plays/publish", section: SECTION, fn: publish, object: "document", action: "template.author" },
-  { path: "/api/documents/plays/archive", section: SECTION, fn: archive, object: "document", action: "template.author" },
-  { path: "/api/documents/plays/duplicate", section: SECTION, fn: duplicate, object: "document", action: "template.author" },
-  { path: "/api/documents/plays/test", section: SECTION, fn: test, object: "document", action: "template.author" },
-  { path: "/api/documents/plays/import", section: SECTION, fn: importZip, object: "document", action: "template.author" },
-  { path: "/api/documents/plays/on", section: SECTION, fn: playOn, object: "document", action: "template.author" },
-  { path: "/api/documents/playbooks/save", section: SECTION, fn: bookSave, object: "document", action: "template.author" },
-  { path: "/api/documents/playbooks/archive", section: SECTION, fn: bookArchive, object: "document", action: "template.author" },
-  { path: "/api/documents/playbooks/enable", section: SECTION, fn: bookEnable, object: "document", action: "template.author" },
-  { path: "/api/documents/automations/save", section: SECTION, fn: flowSave, object: "document", action: "template.author" },
-  { path: "/api/documents/automations/enable", section: SECTION, fn: flowEnable, object: "document", action: "template.author" },
-  { path: "/api/documents/automations/archive", section: SECTION, fn: flowArchive, object: "document", action: "template.author" },
-  { path: "/api/documents/automations/test", section: SECTION, fn: flowTest, object: "document", action: "template.author" },
+  { path: "/api/documents/plays/save", section: SECTION, fn: save, object: "document", action: "play.manage" },
+  { path: "/api/documents/plays/publish", section: SECTION, fn: publish, object: "document", action: "play.manage" },
+  { path: "/api/documents/plays/archive", section: SECTION, fn: archive, object: "document", action: "play.manage" },
+  { path: "/api/documents/plays/duplicate", section: SECTION, fn: duplicate, object: "document", action: "play.manage" },
+  { path: "/api/documents/plays/test", section: SECTION, fn: test, object: "document", action: "play.manage" },
+  { path: "/api/documents/plays/import", section: SECTION, fn: importZip, object: "document", action: "play.manage" },
+  { path: "/api/documents/plays/on", section: SECTION, fn: playOn, object: "document", action: "play.manage" },
+  { path: "/api/documents/playbooks/save", section: SECTION, fn: bookSave, object: "document", action: "play.manage" },
+  { path: "/api/documents/playbooks/archive", section: SECTION, fn: bookArchive, object: "document", action: "play.manage" },
+  { path: "/api/documents/playbooks/enable", section: SECTION, fn: bookEnable, object: "document", action: "play.manage" },
 ]);
 
 export function registerPlayReads(app, { runTenantScoped, tenantIsPlatform }) {
@@ -47,10 +37,9 @@ export function registerPlayReads(app, { runTenantScoped, tenantIsPlatform }) {
     await assertMay(db, principal, { object: "document", action: "template.author" });
   };
   const read = (path, fn) => app.get(path, (c) => runTenantScoped(c, async (rc) => { await guard(rc); return { data: await fn({ ...rc, c }) }; }, { bucket: "documents" }).then((r) => c.json(r)));
-  read("/api/documents/plays", async ({ db, tenantId }) => ({ plays: await listPlays(db, { includeArchived: false }), custom: await isPro(db, tenantId, "custom_plays"), playbooks: await listPlaybooks(db) }));
-  read("/api/documents/automations", async ({ db, tenantId }) => ({ ...(await listFlows(db)), pro: await isPro(db, tenantId, "playbooks") }));
-  read("/api/documents/automations/templates", async ({ db }) => flowTemplates(db));
-  read("/api/documents/automations/:id", async ({ db, tenantId, c }) => ({ ...(await getFlow(db, { id: c.req.param("id") })), pro: await isPro(db, tenantId, "playbooks") }));
+  // `canManage` tells the screen whether to show create / change / archive / import / switch on (Admins and Owners) or the read-only view (Members, who still use the plays that are on while drafting)
+  read("/api/documents/plays", async ({ db, tenantId, principal }) => ({ plays: await listPlays(db, { includeArchived: false }), custom: await isPro(db, tenantId, "custom_plays"), playbooks: await listPlaybooks(db),
+    canManage: await assertMay(db, principal, { object: "document", action: "play.manage" }).then(() => true, () => false) }));
   read("/api/documents/plays/:name", async ({ db, c }) => { const g = await getPlay(db, { name: c.req.param("name"), draft: true }); if (!g) throw invalid("That play was not found.", { field: "name" }); return { play: g.play, ref: g.ref, builtin: g.builtin, version: g.version ?? null, published: g.published ?? true, source: g.source ?? null }; });
   read("/api/documents/plays/:name/versions", async ({ db, c }) => ({ versions: await playVersions(db, { name: c.req.param("name") }) }));
   app.get("/api/documents/plays/:name/export.zip", async (c) => {

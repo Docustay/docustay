@@ -8,6 +8,7 @@
   onMount(async () => {
     startLang();
     const token = new URLSearchParams(location.search).get("t");
+    if (!token) { state = "missing"; return; }   // R13-D345: with no token at all nothing was unsubscribed, so say so (a wrong token still gets the same answer as a right one)
     try { const r = await api("/api/lifecycle/unsubscribe", { method: "POST", body: { token } }); state = r.ok ? "done" : "error"; } catch { state = "error"; }
   });
 </script>
@@ -17,6 +18,7 @@
     <div style="display:inline-block;margin-bottom:18px"><Logo /></div>
     {#if state === "working"}<p class="text-sm text-mute" role="status">{t("One moment…")}</p>
     {:else if state === "done"}<h1 class="text-xl font-bold">{t("You are unsubscribed")}</h1><p class="mt-2 text-sm text-mute">{t("We will not send you the welcome emails again. Emails about your documents and your account are not affected.")}</p>
+    {:else if state === "missing"}<h1 class="text-xl font-bold">{t("This link is not complete")}</h1><p class="mt-2 text-sm text-mute">{t("Open the unsubscribe link from the email itself, or turn the emails off in Settings, My account.")}</p>
     {:else}<h1 class="text-xl font-bold">{t("That did not work")}</h1><p class="mt-2 text-sm text-mute">{t("Try the link again in a moment, or turn the emails off in Settings, My account.")}</p>{/if}
   </div>
 </main>

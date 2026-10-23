@@ -441,9 +441,11 @@ export async function systemChecks(db) {
   //    operator. Each check now runs under a SAVEPOINT and a failure rolls back to it, recorded as that
   //    check's problem. Outside a transaction (a pool) SAVEPOINT itself is refused and the checks run
   //    as before.
+  // R13-D256: outside a transaction every check's refused SAVEPOINT was an ERROR line in the database log (dozens a second); ask once, then stop asking
+  let inTx = true;
   for (const [key, fn] of runners) {
     let sp = false;
-    try { await db.query("SAVEPOINT system_check"); sp = true; } catch { sp = false; }
+    if (inTx) { try { await db.query("SAVEPOINT system_check"); sp = true; } catch { sp = false; inTx = false; } }
     try {
       out.push(await fn(db));
       if (sp) await db.query("RELEASE SAVEPOINT system_check");

@@ -22,7 +22,7 @@ In the United States, federal and state law generally treat an electronic signat
 
 - **Attribution**: The invitation goes to the signer's email as a single-use link, optionally with a code. Attribution rests on control of that address and the code.
 - **Association**: The signature is placed on the document and the finished file is sealed with a digital signature over the whole file, including the certificate page. A SHA-256 fingerprint is printed on the certificate.
-- **Retention**: The sealed PDF and the audit trail are stored. A signed document cannot be deleted one by one inside its retention window; only the owner deleting the whole workspace removes it earlier.
+- **Keeping**: The sealed PDF and the audit trail are stored with the workspace. A signed document cannot be deleted one by one; only the owner deleting the whole workspace removes it.
 - **Time**: Local time and UTC are printed, and a trusted RFC 3161 timestamp is added when the time service answers.
 
 ## The ESIGN Act and UETA, in plain words.
@@ -45,6 +45,18 @@ In the United States, federal and state law generally treat an electronic signat
 - **Excluded documents**: Some kinds of document are excluded by law in many places, and Docustay does not decide which
 - **The seal**: The sealing certificate is Docustay's own, so some PDF viewers show validity as unknown until told to trust it
 
+## What the signer does, and what we keep.
+
+The signer opens the document, fills the fields, ticks that they agree to sign electronically, draws or types a signature and presses Finish and sign. The act, its time, address and browser are stored.
+
+**Consent.** A disclosure is shown first; its text and version are frozen into the record.
+
+## A certificate page ends every signed copy.
+
+Each person, the time and address of each act, the document's SHA-256 fingerprint and the audit trail.
+
+**Not legal advice.** This is general information about how signing works. It promises no legal outcome.
+
 ## Questions
 
 **Is it valid everywhere?**
@@ -63,5 +75,5 @@ No. It is general information about how signing works. It does not promise any l
 ## Keep reading
 
 - [Trust centre](/trust)
-- [Proof](/product/proof)
+- [Proof](/features/proof)
 - [How to sign a PDF](/guides/how-to-sign-a-pdf)

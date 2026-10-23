@@ -12,15 +12,16 @@ import { resolvableVariableCatalogue } from "../../variableCatalogue.mjs";
 import { parseSource, sourceHash } from "../source.mjs";
 import { validateSource } from "../validate.mjs";
 import { vocabularyFor } from "./vocabulary.mjs";
+import { unsetFacts, blankUnset, unsetNote } from "./unsetFacts.mjs";
 import { draftSystem, editSystem, draftUser, editUser } from "./prompt.mjs";
 import { callModel, extractJson } from "./providers.mjs";
-import { admit, finish as ledgerFinish, loadPolicy } from "./gateway.mjs";
+import { admit, finish as ledgerFinish, loadPolicy, ownKeyState } from "./gateway.mjs";
 import { modelFor } from "./modelPolicy.mjs";
-import { validateDraft, retryInstruction, formDraftChecks } from "./draftValidator.mjs";
+import { validateDraft, retryInstruction } from "./draftValidator.mjs";
 import { MSG } from "./limits.mjs";
 import { applyPatches, numberBlocks } from "./patches.mjs";
 import { briefToPrompt } from "./brief.mjs";
-import { draftSystem2, reviewSystem, FORM_RULES } from "./prompt2.mjs";
+import { draftSystem2, reviewSystem } from "./prompt2.mjs";
 import { DRAFT_SCHEMA, draftSchema, compactToSource, checkDraft } from "./compact.mjs";
 import { assemblePayment } from "./payment.mjs";
 import { AGENT_DEFAULT_NAME } from "../../flowDefinition.mjs";
@@ -55,8 +56,11 @@ export async function readAiConfig(tx) {
     agentKinds: typeof agentKinds === "string" ? agentKinds.split(",").map((x) => x.trim()).filter(Boolean) : [], chatRetentionDays: Number.isInteger(chatRetentionDays) ? chatRetentionDays : 30, readFiles: readFiles !== false };
 }
 
+export const OWN_KEY_PLAN_MESSAGE = "Using your own AI key is part of Pay as you go, Pro and Lifetime. Choose a plan on the Billing page, or keep using Docustay's AI on the Free plan.";
 // ── the workspace's own key, sealed through the host's secrets port (the island stores only the envelope) ──────────────────────
 export async function storeOwnKey(tx, { tenantId, key, actorUserId = null }) {
+  // 21 Oct 2026 (the maintainer): an own key is part of Pay as you go, Pro and Lifetime. A Free workspace cannot add one; one that already holds a key (kept until the end of October) may still replace it.
+  if (process.env.KEYSTONE_SELF_HOST !== "1") { const st = await ownKeyState(tx, { tenantId }); if (st.freePlan && !st.usable) throw forbidden(OWN_KEY_PLAN_MESSAGE, { code: "own_key_needs_plan" }); }
   const k = String(key ?? "").trim();
   if (k.length < 8 || k.length > 400) throw invalid("That does not look like an API key.", { field: "key" });
   const sealed = await (await ports()).secrets.seal({ tenantId, purpose: SECRET_PURPOSE, plaintext: k });
@@ -69,16 +73,19 @@ export async function storeOwnKey(tx, { tenantId, key, actorUserId = null }) {
 export async function clearOwnKey(tx, { tenantId }) { await tx.query(`DELETE FROM keystone.document_ai_secret WHERE tenant_id = $1 AND name = $2`, [tenantId, SECRET_NAME]); return { cleared: true }; }
 export async function ownKeyStatus(tx, { tenantId }) {
   const { rows: [r] } = await tx.query(`SELECT secret_fingerprint, updated_at FROM keystone.document_ai_secret WHERE tenant_id = $1 AND name = $2`, [tenantId, SECRET_NAME]);
-  return r ? { present: true, fingerprint: r.secret_fingerprint, updatedAt: r.updated_at } : { present: false };
+  if (!r) return { present: false, usable: false, planNeeded: process.env.KEYSTONE_SELF_HOST !== "1" && (await ownKeyState(tx, { tenantId })).freePlan };
+  const st = process.env.KEYSTONE_SELF_HOST === "1" ? { usable: true, freePlan: false, until: null } : await ownKeyState(tx, { tenantId });
+  return { present: true, usable: st.usable, fingerprint: r.secret_fingerprint, updatedAt: r.updated_at, planNeeded: st.freePlan, keptUntil: st.freePlan && st.usable ? st.until?.toISOString() ?? null : null, stopped: st.freePlan && !st.usable };
 }
 async function openOwnKey(tx, { tenantId }) {
+  if (process.env.KEYSTONE_SELF_HOST !== "1" && !(await ownKeyState(tx, { tenantId })).usable) return null;   // a Free workspace's key stops working when its kept-until date passes: the hosted writer is used instead
   const { rows: [r] } = await tx.query(`SELECT secret_envelope, kek_version FROM keystone.document_ai_secret WHERE tenant_id = $1 AND name = $2`, [tenantId, SECRET_NAME]);
   return r ? (await ports()).secrets.open({ envelope: r.secret_envelope, tenantId, purpose: SECRET_PURPOSE, kekVersion: r.kek_version }) : null;
 }
 /** "Test connection" for a workspace's own provider key: one tiny call with the saved key, provider and model. Costs the workspace nothing on the platform (it is their key) and writes no credits. */
 export async function testOwnConnection(tx, { tenantId }, opts = {}) {
   const cfg = await readAiConfig(tx), env = opts.env ?? process.env;
-  const own = (await ownKeyStatus(tx, { tenantId })).present;
+  const own = (await ownKeyStatus(tx, { tenantId })).usable;
   if (!own && cfg.provider !== "fake") throw conflict("Add your own provider key first, then test it.", { code: "ai_no_own_key" });
   if (cfg.provider === "fake" && !(env.KEYSTONE_AI_ALLOW_FAKE === "1" && env.KEYSTONE_ENVIRONMENT !== "production")) throw conflict("The test provider is not available here.", { code: "ai_fake_refused" });
   const key = await resolveKey(tx, { tenantId, provider: cfg.provider, env });
@@ -129,15 +136,12 @@ export async function callModelRetry(a) {
 }
 
 /** Ask for a draft (kind "draft") or for changes to a document (kind "edit"). Returns at once; the worker does the rest. */
-export async function createAiJob(tx, { tenantId, actorUserId = null, prompt, mode = "template", vocabulary = "docustay", kind = "draft", baseSource = null, baseTemplateId = null, brief = null, variables = null, thinkHarder = false }, opts = {}) {
+export async function createAiJob(tx, { tenantId, actorUserId = null, prompt, mode = "template", vocabulary = "docustay", kind = "draft", baseSource = null, baseTemplateId = null, brief = null, variables = null }, opts = {}) {
   let text = String(prompt ?? "").trim(), briefMeta = null;
   if (brief && kind === "draft") { const b = briefToPrompt(brief); if (!b.ok) throw invalid(b.error, { field: "brief" }); text = b.text; briefMeta = { type: b.type, kind: b.kind, ...(b.payment && vocabulary !== "workbench" ? { payment: b.payment } : {}) }; }
   if (!text) throw invalid("Say what kind of document you want, or what to change.", { field: "prompt" });
   if (text.length > (briefMeta ? MAX_BRIEF_CHARS : MAX_PROMPT_CHARS)) throw invalid(`That is too long: ${MAX_PROMPT_CHARS} characters at most (yours is ${text.length}).`, { field: "prompt" });
-  // Run 7: a FORM is written as a template (one link, many people) — the job remembers it so the writer is told it is drafting a form (prompt2 FORM_RULES)
-  const forForm = mode === "form"; if (forForm) mode = "template";
-  if (!["template", "document"].includes(mode)) throw invalid("mode must be template, document or form", { field: "mode" });
-  if (forForm && kind === "draft") briefMeta = { ...(briefMeta ?? {}), form: true };
+  if (!["template", "document"].includes(mode)) throw invalid("mode must be template or document", { field: "mode" });
   if (!["docustay", "workbench"].includes(vocabulary)) throw invalid("vocabulary must be docustay or workbench", { field: "vocabulary" });
   if (!["draft", "edit"].includes(kind)) throw invalid("kind must be draft or edit", { field: "kind" });
   let base = null;
@@ -163,9 +167,8 @@ export async function createAiJob(tx, { tenantId, actorUserId = null, prompt, mo
   const policy = await loadPolicy(tx, { tenantId });
   const planCap = policy ? null : await planAiCap(tx, { tenantId });   // a host with the credit policy is limited by credits instead (gateway.mjs); the old drafts-a-month cap remains for a host without one
   if (planCap != null) { const u = await aiUsage(tx, { tenantId }); if (u.month >= planCap) throw conflict(`This workspace's plan includes ${planCap} AI drafts a month and they are used. The guided builder still works. Pro raises the allowance.`, { code: "ai_limit_plan" }); }
-  // the allowance, the request limits, Think harder and the platform pause, decided in ONE place (a refusal is written to the ledger)
-  if (thinkHarder && !policy?.thinkHarder && policy) throw conflict(MSG.thinkPro, { code: "ai_think_pro" });
-  await admit(tx, { tenantId, userId: actorUserId, feature: kind, cfg, thinkHarder, env: opts.env ?? process.env });
+  // the allowance, the request limits and the platform pause, decided in ONE place (a refusal is written to the ledger)
+  await admit(tx, { tenantId, userId: actorUserId, feature: kind, cfg, env: opts.env ?? process.env });
   const { rows: [qd] } = await tx.query(`SELECT count(*)::int AS n FROM keystone.document_ai_job WHERE tenant_id = $1 AND state = 'queued'`, [tenantId]);
   if (qd.n >= (policy?.maxQueued ?? 3)) throw conflict(`${qd.n} drafts are already waiting for this workspace. Wait for one to finish, then ask again.`, { code: "ai_queue_full" });
   const inputTokens = Math.ceil((text.length + (base ? JSON.stringify(base).length : 0)) / 4), inputCap = policy?.inputTokens ?? 60000;
@@ -176,9 +179,9 @@ export async function createAiJob(tx, { tenantId, actorUserId = null, prompt, mo
     if (cfg.perMonth && u.month >= cfg.perMonth) throw conflict(`This workspace has used its ${cfg.perMonth} AI drafts for this month. The guided builder still works.`, { code: "ai_limit_month" });
   }
   const { rows: [row] } = await tx.query(
-    `INSERT INTO keystone.document_ai_job (tenant_id, mode, kind, vocabulary, prompt, base_template_id, base_source, requested_by, provider, model, brief, think_harder)
-     VALUES ($1,$2,$3,$4,$5,$6,$7::jsonb,$8,$9,$10,$11::jsonb,$12) RETURNING id`,
-    [tenantId, mode, kind, vocabulary, text, baseTemplateId, base ? JSON.stringify(base) : null, actorUserId, cfg.provider, cfg.model || null, briefMeta ? JSON.stringify(briefMeta) : null, thinkHarder === true]);
+    `INSERT INTO keystone.document_ai_job (tenant_id, mode, kind, vocabulary, prompt, base_template_id, base_source, requested_by, provider, model, brief)
+     VALUES ($1,$2,$3,$4,$5,$6,$7::jsonb,$8,$9,$10,$11::jsonb) RETURNING id`,
+    [tenantId, mode, kind, vocabulary, text, baseTemplateId, base ? JSON.stringify(base) : null, actorUserId, cfg.provider, cfg.model || null, briefMeta ? JSON.stringify(briefMeta) : null]);
   await (opts.emit ?? emit)(tx, { tenantId, topic: "documents.ai.job_requested", emittedBy: "documents", subjectType: "document_ai_job", subjectId: row.id, actor: userActor(actorUserId), payload: { job_id: row.id, kind } });
   // Started right here, a moment after the commit, by this process: the web process cannot reach the job queue, so waiting for the event dispatcher put 20 to 60 s of nothing in front of every draft (measured). The queued job the event starts later finds the draft already claimed and leaves it alone.
   if (!opts.emit) (async () => {
@@ -238,17 +241,18 @@ export async function runAiJob(tx, { tenantId, jobId }, opts = {}) {
   if (!job) return getAiJob(tx, { jobId });
   const cfg = await readAiConfig(tx);
   let adm;
-  try { adm = await admit(tx, { tenantId, userId: job.requested_by, feature: job.kind, cfg, thinkHarder: job.think_harder === true, env: opts.env ?? process.env }); }
+  try { adm = await admit(tx, { tenantId, userId: job.requested_by, feature: job.kind, cfg, env: opts.env ?? process.env }); }
   catch (e) { await finish(tx, jobId, { state: "failed", message: e.message ?? "AI is not available right now." }); return getAiJob(tx, { jobId }); }
-  const names = resolvableVariableCatalogue().map((v) => v.name);
-  const vocab = vocabularyFor(job.vocabulary, names);
+  const unset = job.vocabulary === "workbench" ? [] : await unsetFacts(tx);   // facts this workspace has not set (no organisation address): the model is told, and anything it writes about them becomes a blank for the sender
+  const names = resolvableVariableCatalogue().map((v) => v.name).filter((n) => !unset.includes(n));
+  const vocab = vocabularyFor(job.vocabulary, names, { unset });
   const key = await resolveKey(tx, { tenantId, provider: cfg.provider, env: opts.env });
   const clauses = job.kind === "draft" ? (await tx.query(`SELECT name FROM keystone.document_clause WHERE tenant_id = $1 ORDER BY name LIMIT 40`, [tenantId]).catch(() => ({ rows: [] }))).rows.map((c) => c.name) : [];
 
-  if (job.kind === "draft" && job.brief?.type) return runBriefDraft(tx, { tenantId, job, cfg, names, vocab, key, clauses, opts, adm });
+  if (job.kind === "draft" && job.brief?.type) return runBriefDraft(tx, { tenantId, job, cfg, names, vocab, key, clauses, opts, adm, unset });
 
   const askedVars = job.kind === "edit" ? (job.brief?.variables ?? []) : [];
-  const system = withHouseRules(job.kind === "edit" ? editSystem(vocab, { withVariables: askedVars.length > 0 }) : [draftSystem(vocab), job.brief?.form ? FORM_RULES : ""].filter(Boolean).join("\n"), cfg.houseRules);
+  const system = withHouseRules(job.kind === "edit" ? editSystem(vocab, { withVariables: askedVars.length > 0 }) : draftSystem(vocab), cfg.houseRules);
   const user = job.kind === "edit" ? editUser({ request: job.prompt, numbered: numberBlocks(job.base_source), variables: askedVars }) : draftUser({ request: job.prompt, clauses, base: null });
   const r = await callModelRetry({ provider: cfg.provider, model: adm.model, effort: adm.effort, endpoint: cfg.endpoint, apiKey: key, system, user, maxTokens: capTokens(adm, job.kind === "draft" ? DRAFT_MAX_TOKENS : 8000), fetchImpl: opts.fetchImpl, timeoutMs: opts.timeoutMs ?? DRAFT_TIMEOUT_MS, double: opts.double, env: opts.env ?? process.env });
   // the model the PROVIDER says answered (its own response field), not only the one asked for: the log proves the setting took effect
@@ -261,6 +265,7 @@ export async function runAiJob(tx, { tenantId, jobId }, opts = {}) {
 
   if (job.kind === "edit") {
     const out = applyPatches(job.base_source, json.patches);
+    if (out.ok) out.source = blankUnset(out.source, unset).source;
     if (!out.ok) { await failed(`The changes would break the document (${out.errors[0] ?? "invalid"}). Nothing was changed.`); return getAiJob(tx, { jobId }); }
     const check = validateSource(out.source, { names, profile: "typeset" });
     if (!check.ok) { await failed(`The changed document would not work: ${check.errors[0]}`); return getAiJob(tx, { jobId }); }
@@ -271,13 +276,14 @@ export async function runAiJob(tx, { tenantId, jobId }, opts = {}) {
 
   const parsed = parseSource(json.source);
   if (!parsed.ok) { await failed(`The draft was not in a shape the editor can open (${parsed.errors[0]}). Try again.`); return getAiJob(tx, { jobId }); }
+  const blanked = blankUnset(parsed.source, unset); parsed.source = blanked.source;   // an unset organisation fact becomes a box the sender fills in, never an empty merge field or a failed draft
   const check = validateSource(parsed.source, { names, profile: "typeset", requireSignature: /sign/i.test(job.prompt) });
   if (!check.ok) {
     const unknown = check.errors.filter((e) => /merge field/.test(e));
     await failed(unknown.length ? `The draft used fields this workspace does not have, so it was not kept: ${unknown.slice(0, 3).join("; ")}.` : `The draft would not work: ${check.errors[0]}`);
     return getAiJob(tx, { jobId });
   }
-  const notes = Array.isArray(json.notes) ? json.notes.filter((n) => typeof n === "string").slice(0, 12) : [];
+  const notes = [...(Array.isArray(json.notes) ? json.notes.filter((n) => typeof n === "string").slice(0, 12) : []), ...blanked.replaced.map(unsetNote)];
   await logCall(tx, adm, r);
   await finish(tx, jobId, { state: "done", message: notes.length ? notes.join(" ") : "Draft ready to review.", source: parsed.source, patches: { notes, title: typeof json.title === "string" ? json.title.slice(0, 120) : null, hash: sourceHash(parsed.source) }, ...meta });
   return getAiJob(tx, { jobId });
@@ -285,7 +291,7 @@ export async function runAiJob(tx, { tenantId, jobId }, opts = {}) {
 
 
 // ── the second-generation draft: a wizard brief in, a compact structured draft out ───────────────────────────────────────────────
-async function runBriefDraft(tx, { tenantId, job, cfg, names, vocab, key, clauses, opts, adm }) {
+async function runBriefDraft(tx, { tenantId, job, cfg, names, vocab, key, clauses, opts, adm, unset = [] }) {
   const env = opts.env ?? process.env;
   const agentSetting = String((await getDocumentSetting(tx, "ai.agent_name").catch(() => "")) ?? "").trim();
   const agentName = agentSetting || AGENT_DEFAULT_NAME;
@@ -312,7 +318,7 @@ async function runBriefDraft(tx, { tenantId, job, cfg, names, vocab, key, clause
   const readPeople = (j) => (Array.isArray(j.people) ? j.people : []).filter((p) => p && typeof p.role === "string" && p.role.trim()).map((p) => ({ role: p.role.trim().slice(0, 80), action: ["signer", "approver", "viewer", "assistant", "cc"].includes(p.action) ? p.action : "signer", step: Number.isInteger(p.step) ? p.step : 1 }));
   let people = readPeople(json);
   // ★ THE VALIDATOR (plain code; the fix for D-082): the model's word that "both parties sign" is checked against the list of people. On a problem: ONE automatic retry of the same model with the exact problems (no extra credit);
-  //   if it still fails the draft is kept, the problems are shown with it, and the person may Think harder (Pro) or fix it by hand. Never escalated silently, never a second charge.
+  //   if it still fails the draft is kept, the problems are shown with it, and the person may fix it by hand. Never escalated silently, never a second charge.
   let verdict = validateDraft({ document: json.document, people }), retried = false;
   if (verdict.blocking.length) {
     retried = true;
@@ -327,13 +333,14 @@ async function runBriefDraft(tx, { tenantId, job, cfg, names, vocab, key, clause
   const source = paid.source;
   const parsed = parseSource(source);
   if (!parsed.ok) return failed(`The draft was not in a shape the editor can open (${parsed.errors[0]}). Try again.`);
+  const blanked = blankUnset(parsed.source, unset); parsed.source = blanked.source;   // an unset organisation fact becomes a box the sender fills in
   const valid = validateSource(parsed.source, { names, profile: job.vocabulary === "workbench" ? "contract" : "typeset", requireSignature: people.some((p) => p.action === "signer") });
   if (!valid.ok) {
     const unknown = valid.errors.filter((e) => /merge field/.test(e));
     return failed(unknown.length ? `The draft used fields this workspace does not have, so it was not kept: ${unknown.slice(0, 3).join("; ")}.` : `The draft would not work: ${valid.errors[0]}`);
   }
   const str = (a) => (Array.isArray(a) ? a.filter((x) => typeof x === "string" && x.trim()).map((x) => x.trim().slice(0, 400)).slice(0, 12) : []);
-  const checks = [...verdict.blocking, ...(job.brief.form === true ? formDraftChecks({ document: json.document, people }) : []), ...checkDraft({ ...json, people }, { briefText: job.prompt, names }).problems].slice(0, 12);
+  const checks = [...verdict.blocking, ...checkDraft({ ...json, people }, { briefText: job.prompt, names: [...names, ...unset] }).problems].slice(0, 12);
   let reviewed = [];
   await tx.query(`UPDATE keystone.document_ai_job SET message = 'stage:checking' WHERE id = $1 AND state = 'running'`, [job.id]);
   if (review && (cfg.provider === "anthropic" || cfg.provider === "fake") && (key || cfg.provider === "fake")) {
@@ -344,13 +351,13 @@ async function runBriefDraft(tx, { tenantId, job, cfg, names, vocab, key, clause
     await logCall(tx, { ...adm, feature: "review", model: revModel, effort: null, weight: 0 }, rr, { credits: 0 });   // the review is part of the draft's price: its dollars are recorded, its credits are none
     if (rr.ok) { reviewed = str(extractJson(rr.text)?.issues); inTok += rr.inputTokens ?? 0; outTok += rr.outputTokens ?? 0; }
   }
-  const assumptions = str(json.assumptions), open = str(json.open_questions), careful = str(json.careful);
+  const assumptions = str(json.assumptions), open = [...str(json.open_questions), ...blanked.replaced.map(unsetNote)], careful = str(json.careful);
   const notes = [...assumptions, ...open, ...paid.warnings];
   const email = { subject: String(json.email_subject ?? "").slice(0, 200), message: String(json.email_message ?? "").slice(0, 2000) };
   await settleCalls(true);
-  await finish(tx, job.id, { state: "done", message: `${agentName} finished your ${job.brief?.form ? "form" : "document"}. Review it, AI can make mistakes.`, source: parsed.source, patches: {
+  await finish(tx, job.id, { state: "done", message: `${agentName} finished your document. Review it, AI can make mistakes.`, source: parsed.source, patches: {
     notes, title: typeof json.title === "string" ? json.title.slice(0, 120) : null, hash: sourceHash(parsed.source),
-    assumptions, open_questions: open, careful, checks, review: reviewed, people, validator: { retried, problems: verdict.blocking, notes: verdict.notes, offerThink: verdict.blocking.length > 0 && !job.think_harder }, signing_order: json.signing_order === "sequential" ? "sequential" : "all", email,
+    assumptions, open_questions: open, careful, checks, review: reviewed, people, validator: { retried, problems: verdict.blocking, notes: verdict.notes }, signing_order: json.signing_order === "sequential" ? "sequential" : "all", email,
     reminders: typeof json.reminders === "string" ? json.reminders : "3_7", expiry_days: Number.isInteger(json.expiry_days) ? json.expiry_days : 30, agent: { name: agentName, kind: job.brief.kind },
   }, ...meta() });
   return getAiJob(tx, { jobId: job.id });

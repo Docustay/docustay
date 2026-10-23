@@ -1,6 +1,6 @@
 ---
 title: Verify a signed PDF
-description: Check the seal on a signed PDF in your browser. The file is not uploaded.
+description: Verify a signed PDF in your browser. The check reads the digital signature and the file's fingerprint and says whether the file is intact. The file is not uploaded.
 ---
 
 # Verify a signed PDF

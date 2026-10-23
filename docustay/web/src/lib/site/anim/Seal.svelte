@@ -13,11 +13,11 @@
 </Anim>
 <style>
   .paper { fill: var(--card); stroke: var(--line-strong); stroke-width: 1.5; } .sig { fill: none; stroke: var(--ink); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
-  .sealbg { fill: var(--brand); } .sealring { fill: none; stroke: var(--brand-ink); stroke-width: 2; stroke-dasharray: 3 3; } .sealD { fill: #f3f2fa; }
+  .sealbg { fill: var(--brand); } .sealring { fill: none; stroke: var(--brand-ink); stroke-width: 2; stroke-dasharray: 3 3; } .sealD { fill: var(--tx-1); }
   .pulse { fill: none; stroke: var(--brand); stroke-width: 3; opacity: 0; transform-box: fill-box; transform-origin: center; }
   .pillbg { fill: var(--ok-bg); stroke: var(--ok-line); } .pillck { fill: none; stroke: var(--ok); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; } .pillln { fill: var(--ok); opacity: .5; }
   :global(.anim.armed) .seal { transform-box: fill-box; transform-origin: center; animation: press .7s cubic-bezier(.5,0,.8,1) .3s both; }
   :global(.anim.armed) .pulse { animation: ring .8s ease-out 1s both; } :global(.anim.armed) .pill { animation: fadein .5s ease-out 1.6s both; }
   @keyframes press { from { transform: translateY(-40px) scale(1.25); opacity: 0; } 60% { opacity: 1; } } @keyframes ring { 0% { opacity: .6; transform: scale(1); } 100% { opacity: 0; transform: scale(1.7); } } @keyframes fadein { from { opacity: 0; transform: translateY(6px); } }
-.real { filter: drop-shadow(0 1px 3px rgb(0 0 0 / .25)); }
+.real { filter: drop-shadow(0 1px 3px rgb(60 40 140 / 0.113)); }
 </style>

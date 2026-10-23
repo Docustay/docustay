@@ -20,9 +20,11 @@
 // an obstacle. A route that opens its own pg.Client is the defect the tenant-predicate lint
 // exists to catch (P12.14).
 
+import { reportError } from "../product/posthog.mjs";
 import { googleSignInConfig } from "./googleConfig.mjs";
 import { botCheckPublicConfig } from "./turnstile.mjs";
 import { isMailConfigProblem, alertMailConfig, MAIL_DOWN_MESSAGE } from "../health/configAlert.mjs";
+import { indexingGuard } from "./indexing.mjs";
 import { securityHeaders } from "./securityHeaders.mjs";
 import { bodiless, methodIndex, specMethodIndex, allowHeader } from "./methodGuard.mjs";
 import { Hono } from "hono";
@@ -102,7 +104,7 @@ import { registerTeamBookingAdminRoutes } from "../routes/teamBookingAdmin.mjs";
 import { registerPracticeLinksRoutes } from "../routes/practiceLinks.mjs";
 import { registerLocationAssignmentRoutes } from "../routes/locationAssignments.mjs";
 import { registerSecurityPolicyRoutes } from "../routes/securityPolicy.mjs";
-import { registerDocumentTeamRoutes, registerDocumentReportRoutes } from "../routes/documentTeams.mjs";
+import { registerDocumentTeamRoutes } from "../routes/documentTeams.mjs";
 // ★ Task 20.28 — check-in and complete routes for booking session lifecycle.
 import { registerBookingLifecycleRoutes } from "../routes/bookingLifecycle.mjs";
 // ★★★ Task 3b.7 — WIRING FIX FOR A PRE-EXISTING GAP, NOT THIS TASK'S OWN ROUTE FILE. [MEASURED]
@@ -250,6 +252,9 @@ export function createApp({
   // Part 30 item 0 — HSTS, nosniff, referrer, permissions and framing headers on every response (src/http/securityHeaders.mjs).
   app.use("*", securityHeaders());
 
+  // Search engines: only docustay.app, www and app may be indexed; every other host sends noindex and a disallow-all robots.txt (src/http/indexing.mjs).
+  app.use("*", indexingGuard());
+
   // §25.4 — a hostname a workspace attached serves only the public pages; an unknown host is a 404 (src/http/customHost.mjs)
   app.use("*", customHostGuard());
 
@@ -300,6 +305,12 @@ export function createApp({
   //   (node_modules/hono/dist/middleware/body-limit/index.js:47, `new Request(...)`) — a
   //   known Hono/Node-undici Request-identity mismatch for a request with no body. A preflight
   //   carries no body to limit, so it is refused here rather than reaching bodyLimit at all.
+  // R13-D348: the API takes a whole PDF as base64 in one JSON body (templates/file, detect-fields) and an HTML body of up to 2 MB, so those routes get
+  //   room for the biggest file the system accepts (100 MB, base64 is 4/3 of it) or the HTML; the plan's own cap is then checked in words by the upload code.
+  //   Everything else keeps 1 MB. The web app's own uploads arrive in parts under 1 MB.
+  const limitOf = (maxSize) => bodyLimit({ maxSize, onError: (c) => { const { body } = invalid("request body too large").toResponse(); return c.json({ ...body, error: { ...body.error, requestId: c.get("requestId") } }, 413); } });
+  const fileBodyLimit = limitOf(Math.ceil((100 * 1024 * 1024 * 4) / 3) + 256 * 1024), htmlBodyLimit = limitOf(3 * 1024 * 1024);
+  const FILE_BODY_ROUTES = /^\/api\/v1\/(templates\/file|documents\/detect-fields)\/?$/, HTML_BODY_ROUTES = /^\/api\/v1\/(templates\/(html|source)|documents|documents\/check|documents\/[^/]+\/revise)\/?$/;
   const bodyLimitMiddleware = bodyLimit({
     maxSize: 1024 * 1024,
     // ★ CT-003 — built from CT-001's own shape (so `retryable` is present), not by hand. `onError` cannot
@@ -310,7 +321,7 @@ export function createApp({
     },
   });
   // a bodiless DELETE hits the same Hono/undici mismatch as OPTIONS (found 7 Oct 2026: every /api/v1 DELETE 500ed) — no content-length and no transfer-encoding means no body to limit
-  app.use("*", (c, next) => (bodiless(c) ? next() : bodyLimitMiddleware(c, next)));
+  app.use("*", (c, next) => (bodiless(c) ? next() : (FILE_BODY_ROUTES.test(c.req.path) ? fileBodyLimit : HTML_BODY_ROUTES.test(c.req.path) ? htmlBodyLimit : bodyLimitMiddleware)(c, next)));
 
   // ───────────────────────────────────────────────────────────────────────────
   // HEALTH — mounted BEFORE auth, and deliberately outside the tenant machinery.
@@ -558,7 +569,6 @@ export function createApp({
   registerLocationAssignmentRoutes(app, { runTenantScoped });
   registerSecurityPolicyRoutes(app, { runTenantScoped });
   registerDocumentTeamRoutes(app, { runTenantScoped });
-  registerDocumentReportRoutes(app, { runTenantScoped });
   // ★ Task 20.28 — check-in and complete for booking lifecycle. Staff routes (coach/admin only).
   registerBookingLifecycleRoutes(app, { runTenantScoped });
   // ★★★ Task 3b.7 — see the import comment above: this call did not exist before this task. §2.2's
@@ -779,11 +789,15 @@ export function createApp({
       // ★ Task 9.5 / CT-095 — 06 §2 names this as a place provider text reaches a log unfiltered.
       //   Scrubbed before it is written; the request line itself never carries a credential.
       const logged = appErr.cause ?? appErr;
-      const text = (logged && typeof logged === "object" && (logged.stack || logged.message)) || String(logged);
+      // a provider's parsed error body is a plain object: log the error's own message and the body's text, never "[object Object]" (R13-D182)
+      const text = (logged && typeof logged === "object" && (logged.stack || logged.message)) || (logged && typeof logged === "object" ? `${appErr.message} ${JSON.stringify(logged).slice(0, 600)}` : String(logged));
       console.error(
         `[${c.get("requestId")}] ${c.req.method} ${c.req.path} -> ${status}`,
         scrubSecrets(text)
       );
+      // ★ PH1 — error tracking: the route PATTERN (never the path with its ids or query), the status, and the scrubbed error. No body, no headers.
+      //   Docustay requests only (the app also serves the platform); no workspace id on an error.
+      if (/docustay/i.test(c.req.header("x-forwarded-host") ?? c.req.header("host") ?? "")) reportError(logged, { route: c.req.routePath, status });
     }
     // ★ CT-004 — the ONLY place `Retry-After` is written. 5.2 puts the integer on the error.
     if (appErr.retryAfterSeconds != null) c.header("Retry-After", String(appErr.retryAfterSeconds));

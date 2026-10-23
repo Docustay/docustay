@@ -58,7 +58,7 @@ docker compose stop app worker web storage
 5. Empty the database of what the first start created, then load the dump. The first start made the tables of the version you have checked out, and an older backup does not contain every one of them, so loading over them with `--clean` is refused ("cannot drop … because other objects depend on it"). Dropping the five application schemas first works for a backup from any older version, and the install brings the restored database up to date the next time it starts:
 
 ```bash
-docker compose exec -T db psql -U docustay -d docustay -v ON_ERROR_STOP=1 -c "DROP SCHEMA IF EXISTS keystone, keystone_auth, keystone_meta, graphile_worker, stripe CASCADE; DROP FUNCTION IF EXISTS public.set_updated_at() CASCADE;"
+docker compose exec -T db psql -U docustay -d docustay -v ON_ERROR_STOP=1 -c "DROP SCHEMA IF EXISTS keystone, keystone_auth, keystone_meta, graphile_worker, stripe, metrics CASCADE; DROP FUNCTION IF EXISTS public.set_updated_at() CASCADE;"
 docker compose exec -T db pg_restore -U docustay -d docustay < backup-…/db.dump
 ```
 
@@ -81,10 +81,11 @@ Docustay encrypts every file it stores (uploads, signed copies, certificates, pr
 
 - A copy of the file store without the database cannot be opened. A database without the file store has no files. A restored database and file store with a **different** `KEYSTONE_MASTER_KEY` cannot be opened either, so keep the `.env` backup, apart from the others, as carefully as the key itself.
 - Take the database dump and the file-store archive at the same time (the backup script above does). A workspace key is never deleted while the workspace exists, so a dump taken after a file was stored always holds the key that opens it; a dump older than a key rotation does not hold the newer key, and files moved onto it afterwards will not open from that older dump.
-- After a restore, check that the files open. This reads up to 20 stored files for one workspace and prints whether each opens; it changes nothing:
+- After a restore, check that the files open. This reads up to 20 stored files for one workspace and prints whether each opens; it changes nothing. The workspace id is the first column of `docker compose exec app node docustay/entrypoint.mjs run scripts/file-keys.mjs status`:
 
 ```bash
-docker compose exec app node docustay/entrypoint.mjs run scripts/file-keys.mjs verify <workspace id>
+WORKSPACE_ID="paste-a-workspace-id"   # the first column of the status command above
+docker compose exec app node docustay/entrypoint.mjs run scripts/file-keys.mjs verify "$WORKSPACE_ID"
 ```
 
 `status` lists every workspace's keys. `rotate <workspace id>` makes a new key active and moves that workspace's files onto it; `seal` runs the same pass the worker runs at every start (it seals any file stored before encryption was switched on, and does nothing when there is nothing to do). Once every workspace shows "all files sealed", you can set `DOCUSTAY_REFUSE_PLAINTEXT_FILES=on` in `.env` so a file in the store that is not sealed is refused instead of served.

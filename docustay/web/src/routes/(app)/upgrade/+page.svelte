@@ -12,15 +12,16 @@
   onMount(async () => {
     const want = takePro(), q = new URLSearchParams(location.search);
     const interval = (q.get("interval") ?? want?.interval) === "year" ? "year" : "month";
+    const plan = ["payg", "lifetime"].includes(q.get("plan") ?? want?.plan) ? (q.get("plan") ?? want?.plan) : "pro";
     const st = await loadPlan({ force: true });
     if (!st?.billing?.canUpgrade) { goto("/billing", { replaceState: true }); return; }
     try { if (!sessionStorage.getItem("docustay:upgrade-from")) sessionStorage.setItem("docustay:upgrade-from", "/create?mode=document&upload=1"); } catch { /* the documents list */ }
-    const [r] = await Promise.all([api("/api/product/docustay/checkout", { method: "POST", body: { interval } }), new Promise((ok) => setTimeout(ok, 700))]);
+    const [r] = await Promise.all([api("/api/product/docustay/checkout", { method: "POST", body: { interval, plan } }), new Promise((ok) => setTimeout(ok, 700))]);
     const url = r.json?.url ?? r.json?.data?.url;
     if (r.ok && url) window.location.assign(url); else problem = r.error ?? t("That did not work. Try again.");
   });
 </script>
-<svelte:head><title>{t("Upgrade to Pro")} · Docustay</title></svelte:head>
+<svelte:head><title>{t("Upgrade")} · Docustay</title></svelte:head>
 <div class="grid min-h-[60vh] place-items-center" data-testid="upgrade-page">
   {#if problem}<div class="max-w-md text-center"><p class="text-bad" role="alert" data-testid="upgrade-problem">{problem}</p><a class="btn mt-4" href="/billing">{t("Go to Billing")}</a></div>
   {:else}<RingDive label={t("Taking you to secure checkout")} />{/if}

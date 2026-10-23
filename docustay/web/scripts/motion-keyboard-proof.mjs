@@ -3,7 +3,7 @@
 //   node docustay/web/scripts/motion-keyboard-proof.mjs [base]     default http://127.0.0.1:5190   (needs `npm run preview`)
 import { chromium } from "playwright";
 const BASE = process.argv[2] ?? "http://127.0.0.1:5190";
-const PAGES = ["/", "/pricing", "/product", "/use-cases", "/use-cases/contracts", "/trust", "/trust/security", "/developers", "/docs/api-reference", "/document-templates", "/templates/nda-template", "/verify", "/tools/signature-generator", "/contact", "/about", "/login", "/es"];
+const PAGES = ["/", "/pricing", "/product", "/use-cases", "/use-cases/contracts", "/trust", "/trust/security", "/developers", "/docs/api-reference", "/document-templates", "/templates/nda-template", "/verify", "/tools/signature-generator", "/contact", "/about", "/login"];
 const b = await chromium.launch({ channel: "chrome" }); let bad = 0;
 for (const u of PAGES) {
   // --- reduced motion

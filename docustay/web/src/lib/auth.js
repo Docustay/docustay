@@ -9,7 +9,7 @@ const codeOf = (p) => String(p?.error?.message ?? "").split(/[\s:]/)[0];
 export function plainError(p, fallback) {
   const c = codeOf(p);
   if (c === "EMAIL_EXISTS") return new AuthError(t("An account with this email already exists. Sign in instead, or reset your password if you have forgotten it."), "exists");
-  if (c === "WEAK_PASSWORD") return new AuthError(t("That password is too short or too easy to guess. Use at least 6 characters; a longer phrase is better."), "weak");
+  if (c === "WEAK_PASSWORD") return new AuthError(t("That password is too short or too easy to guess. Use at least 8 characters; a longer phrase is better."), "weak");
   if (c === "INVALID_EMAIL" || c === "MISSING_EMAIL") return new AuthError(t("That email address does not look right. Check it for typing mistakes and try again."), "email");
   if (c === "TOO_MANY_ATTEMPTS_TRY_LATER" || c.includes("BLOCKED")) return new AuthError(t("Too many attempts. Wait a few minutes and try again, or reset your password."), "limit");
   if (c === "USER_DISABLED") return new AuthError(t("This account has been turned off. Contact us and we will look into it."), "disabled");
@@ -51,6 +51,8 @@ export async function login(idToken, tenantSlug = null) {
     if (r.status === 401 || r.status === 403) throw new AuthError(t("You are signed in, but this account has no workspace yet. Finish creating your account to continue."), "noworkspace");
     throw new AuthError(cleanServer(r.error, t("Sign-in failed. Try again.")), "other");
   }
+  // 21 Oct 2026: a fourth device on a Free workspace signs the oldest out; the app shell tells this person once, in plain words
+  if (r.json?.deviceNotice) { try { sessionStorage.setItem("docustay.deviceNotice", "1"); } catch { /* storage blocked: the Security page still lists the devices */ } }
   return r.json;
 }
 export const requestCode = async (email) => { const r = await api("/api/auth/code/request", { method: "POST", body: { email, product: "docustay", lang: i18n.lang } }); if (!r.ok) throw new Error(r.json?.error?.kind === "rate_limited" ? t("Too many attempts for that address. Try again in a few minutes.") : (r.error ?? t("Sign-in by code is not available right now."))); };
@@ -70,18 +72,30 @@ export async function customTokenIdToken(token) {
   return (await res.json()).idToken;
 }
 export const requestReset = async (email) => { const r = await api("/api/auth/password-reset/request", { method: "POST", body: { email, product: "docustay", lang: i18n.lang } }); if (!r.ok) throw new Error(r.error ?? t("Could not send the email. Try again.")); };
+/** The code we emailed, checked. Resolves a single-use grant (ten minutes) for choosing the new password; rejects with words the screen shows ("expired" decides whether the boxes stay open). */
+export async function checkResetCode(email, code) {
+  const r = await api("/api/auth/password-reset/code", { method: "POST", body: { email, code } });
+  if (!r.ok) { const e = new AuthError(r.error ?? t("That code was not accepted."), /expired|new one/i.test(r.error ?? "") || r.status === 429 ? "expired" : "wrong"); throw e; }
+  return r.json.grant;
+}
+/** The grant and the new password. Signs nobody in; the person signs in again (and meets two-step if it is on). */
+export async function setPasswordWithGrant(email, grant, password) {
+  const r = await api("/api/auth/password-reset/set", { method: "POST", body: { email, grant, password, product: "docustay" } });
+  if (!r.ok) throw new AuthError(r.error ?? t("Could not set the new password. Ask for a new code and try again."), /expired|new one|new code/i.test(r.error ?? "") ? "expired" : "other");
+}
+/** The fallback link in the same email: the server finishes it too (so every other device is signed out and the person is emailed). */
 export async function finishReset(oobCode, newPassword) {
-  const c = await authConfig();
-  if (c.local) { const r = await api("/api/auth/local/reset", { method: "POST", body: { token: oobCode, password: newPassword } }); if (!r.ok) throw new Error(r.error ?? t("That link has expired or was already used. Ask for a new one.")); return; }
-  const res = await idt("resetPassword", c.apiKey, { oobCode, newPassword }); const p = await res.json().catch(() => null);
-  if (!res.ok) { const m = p?.error?.message ?? ""; throw new AuthError(/EXPIRED|INVALID_OOB/.test(m) ? t("That link has expired or was already used. Ask for a new one.") : /WEAK_PASSWORD/.test(m) ? plainError(p).message : t("Could not set the new password. Ask for a new link and try again."), /EXPIRED|INVALID_OOB/.test(m) ? "expired" : "other"); }
+  const r = await api("/api/auth/password-reset/link", { method: "POST", body: { oobCode, password: newPassword } });
+  if (!r.ok) throw new AuthError(r.error ?? t("That link has expired or was already used. Ask for a new one."), "other");
 }
 const ZONE = (() => { try { return Intl.DateTimeFormat().resolvedOptions().timeZone || "America/Los_Angeles"; } catch { return "America/Los_Angeles"; } })();
 const slugOf = (n) => n.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 50) || "docs";
 const claimsOf = (idToken) => { try { return JSON.parse(atob(String(idToken).split(".")[1].replace(/-/g, "+").replace(/_/g, "/"))); } catch { return {}; } };
 let pending = null;   // { name, email, idToken, policy } between "make the account" and "enter the code we emailed"
 /** Step 1 of sign-up: make the identity with its password, then email a 6-digit code to prove the address. Resolves { needsCode: true } — or goes straight through when the address is already proven (a returning person). */
-export const minPassword = async () => ((await authConfig()).local ? 8 : 6);
+/** One rule everywhere (at least 8 characters, the server's MIN_PASSWORD in src/auth/password.mjs). Kept async because callers already await it. */
+export const MIN_PASSWORD = 8;
+export const minPassword = async () => MIN_PASSWORD;
 export async function beginSignUp({ name, email, password, policy }) {
   const c = await authConfig(); let created;
   if (c.local) {
@@ -123,7 +137,7 @@ export async function finishSignUp(code = null) {
     else { const res = await idt("signInWithCustomToken", c.apiKey, { token: v.json.customToken, returnSecureToken: true }); if (!res.ok) throw new AuthError(t("That code worked, but we could not finish signing you in. Try again."), "other"); idToken = (await res.json()).idToken; }
     pending = { ...pending, idToken };
   }
-  const su = await api("/api/signup", { method: "POST", body: { ...(c.signupCode ? {} : botTokenOnce()), idToken, tenant: { slug: `${slugOf(name)}-${Math.random().toString(36).slice(2, 6)}`, name: name.trim(), timezone: ZONE }, admin: { displayName: name.trim() }, policyAccepted: policy } });
+  const su = await api("/api/signup", { method: "POST", body: { product: "docustay", ...(c.signupCode ? {} : botTokenOnce()), idToken, tenant: { slug: `${slugOf(name)}-${Math.random().toString(36).slice(2, 6)}`, name: name.trim(), timezone: ZONE }, admin: { displayName: name.trim() }, policyAccepted: policy } });
   if (!su.ok) {
     if (/not been confirmed|confirmed yet/i.test(String(su.error))) throw new AuthError(t("Confirm your email address first. We emailed you a six-digit code."), "unconfirmed");
     throw new AuthError(cleanServer(su.error, t("Could not create the workspace. Try again in a moment.")), "other");
@@ -167,7 +181,7 @@ async function finishWithIdToken(idToken, { email, policy = false, onStep = () =
   if (!policy) throw new AuthError(t("Please agree to the Terms, Privacy Policy and Data Processing Addendum."), "policy");
   onStep("creating");
   const name = workspaceNameFromEmail(email);
-  const su = await api("/api/signup", { method: "POST", body: { idToken, tenant: { slug: `${slugOf(name)}-${Math.random().toString(36).slice(2, 6)}`, name, timezone: ZONE }, admin: { displayName: name }, policyAccepted: true } });
+  const su = await api("/api/signup", { method: "POST", body: { product: "docustay", idToken, tenant: { slug: `${slugOf(name)}-${Math.random().toString(36).slice(2, 6)}`, name, timezone: ZONE }, admin: { displayName: name }, policyAccepted: true } });
   if (su.status === 0) throw networkError();
   if (!su.ok) throw new AuthError(cleanServer(su.error, t("Could not create the workspace. Try again in a moment.")), "other");
   await login(idToken);
@@ -201,7 +215,8 @@ export async function previewInviteToken(token) {
 export async function acceptInviteWithPassword({ token, email, password }) {
   const c = await authConfig(); let idToken;
   if (c.local) {
-    let lr = await fetch("/api/auth/local/signup", { method: "POST", credentials: "same-origin", headers: { "content-type": "application/json" }, body: JSON.stringify({ email, password }) });
+    // the invitation goes with the sign-up: a self-hosted install takes a new password only from someone it invited (R13-D280)
+    let lr = await fetch("/api/auth/local/signup", { method: "POST", credentials: "same-origin", headers: { "content-type": "application/json" }, body: JSON.stringify({ email, password, inviteToken: token }) });
     if (!lr.ok) { lr = await fetch("/api/auth/local/signin", { method: "POST", credentials: "same-origin", headers: { "content-type": "application/json" }, body: JSON.stringify({ email, password }) }); if (!lr.ok) throw new Error(t("That email already has an account, and the password did not match it.")); }
     idToken = (await lr.json()).idToken;
   } else {

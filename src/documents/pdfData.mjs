@@ -61,8 +61,11 @@ async function partiesFor(tx, email) {
 /** Everything held about this address on uploaded documents, as plain facts. The sealed files themselves are the sender's to give (the signed copy was emailed to the person when it was done). */
 export async function personReport(tx, { email }) {
   const { address, rows } = await partiesFor(tx, email);
+  // R13-D008: a person saved in People (added by hand, or from a form) holds their name and address even when no document names them yet
+  const { rows: [contact = null] } = await tx.query(`SELECT id, first_name, last_name, email, source, last_activity_at FROM keystone.document_contact WHERE lower(email) = $1`, [address]);
   return {
     email: address, generatedAt: new Date().toISOString(),
+    contact: contact ? { id: contact.id, firstName: contact.first_name, lastName: contact.last_name, email: contact.email, source: contact.source, lastActivityAt: iso(contact.last_activity_at) || null } : null,
     documents: rows.map((r) => ({ id: r.lead_id, title: r.title, state: r.state, role: r.action_role, name: r.name, status: r.status, signed: r.has_signed, sentAt: iso(r.sent_at) || null, viewedAt: iso(r.viewed_at) || null, completedAt: iso(r.completed_at) || null, executedAt: iso(r.executed_at) || null })),
   };
 }
@@ -76,7 +79,10 @@ export async function documentsCreatedBy(tx, { userId }) {
 /** A person's "remove my details". Returns what was removed, what was voided and what had to be kept (with the date its retention ends). Safe to repeat: nothing left to remove removes nothing. */
 export async function erasePerson(tx, { tenantId, email, actorUserId = null }) {
   const { address, rows } = await partiesFor(tx, email);
-  if (rows.length === 0) return { email: address, removed: [], voided: [], kept: [] };
+  // R13-D008: the saved person in People is one of the details held; removing it removes only that row (a signed document keeps its own snapshot)
+  const { rowCount: contactRows } = await tx.query(`DELETE FROM keystone.document_contact WHERE lower(email) = $1`, [address]);
+  const contactRemoved = contactRows > 0;
+  if (rows.length === 0) return { email: address, removed: [], voided: [], kept: [], contactRemoved };
   const years = await getDocumentSetting(tx, "retention_years");
   const removed = [], voided = [], kept = [];
   for (const r of rows) {
@@ -105,5 +111,5 @@ export async function erasePerson(tx, { tenantId, email, actorUserId = null }) {
   if (removed.length) await tx.query(
     `UPDATE keystone.document_email_log SET to_email = 'removed@removed.invalid', subject = '', error = NULL, updated_at = now()
       WHERE lower(to_email) = $1 AND instance_id IN (SELECT id FROM keystone.document_instance WHERE id = ANY($2::uuid[]) OR package_lead_id = ANY($2::uuid[]))`, [address, removed.map((x) => x.id)]);
-  return { email: address, removed, voided, kept };
+  return { email: address, removed, voided, kept, contactRemoved };
 }

@@ -45,15 +45,18 @@
     if (!tool || e.target !== e.currentTarget && !e.target.classList?.contains("cv")) return;
     const [px, py] = stagePoint(e); add(tool, px, py); if (tool !== "text" || !sign) { /* keep the tool armed for repeated marks */ }
   }
+  let kbd = false;
   function add(type, px, py) {
     let [w, h] = defaultSize(type); const it = { id: newId(), type, page: cur, x: 0, y: 0, w, h, source: "user", size: 12 };
     if (type === "signature") { if (!sigImg) return; it.image = sigImg.dataUrl; h = Math.round(w * sigImg.h / sigImg.w); it.h = h; }
     if (type === "initials") { if (!iniImg) return; it.image = iniImg.dataUrl; it.h = Math.round(w * iniImg.h / iniImg.w); }
     if (type === "date") it.value = todayText(); if (type === "text") it.value = "";
     it.x = clamp(px - it.w / 2, 0, geom.w - it.w); it.y = clamp(py - it.h / 2, 0, geom.h - it.h);
-    items = [...items, it]; sel = it.id; if (type === "text" || type === "date") tick().then(() => document.getElementById(`ed-${it.id}`)?.focus());
+    items = [...items, it]; sel = it.id; if (type === "text" || type === "date") tick().then(() => document.getElementById(`ed-${it.id}`)?.focus()); else if (kbd) tick().then(() => document.getElementById(`it-${it.id}`)?.focus());
   }
   function addCentre(type) { tool = type; add(type, geom.w / 2, geom.h / 2.4); }
+  // keyboard and switch users: a button places the armed mark near the bottom right of the page, then focus moves to it and the arrow keys move it (Shift for bigger steps)
+  function placeHere() { if (!tool) return; kbd = true; try { add(tool, geom.w * 0.68, geom.h * 0.86); } finally { kbd = false; } }
   function remove(id) { items = items.filter((i) => i.id !== id); if (sel === id) sel = null; }
   function accept(id) { items = items.map((i) => (i.id === id ? { ...i, source: "user" } : i)); }
   // --- drag and resize (pointer events; arrow keys do the same) ---
@@ -109,7 +112,7 @@
         <button type="button" class="tb ghost" onclick={reset}>Other file</button>
       </div>
     </div>
-    {#if tool}<p class="armed" role="status">{tool === "signature" ? "Click the page where the signature goes." : tool === "initials" ? "Click the page where the initials go." : tool === "date" ? "Click the page where the date goes." : tool === "check" ? "Click the page to add a check mark." : "Click the page to add text."} Press the tool again to stop.</p>{/if}
+    {#if tool}<p class="armed" role="status">{tool === "signature" ? "Click the page where the signature goes." : tool === "initials" ? "Click the page where the initials go." : tool === "date" ? "Click the page where the date goes." : tool === "check" ? "Click the page to add a check mark." : "Click the page to add text."} Press the tool again to stop. <button type="button" class="tb" onclick={placeHere} data-testid="place-here">Place it here</button> <span class="kh">Then move it with the arrow keys; hold Shift for bigger steps.</span></p>{/if}
     {#if sigOpen}
       <div class="sigp" role="region" aria-label="Make your signature">
         <SignatureCapture bind:ink onchange={(r) => (draftSig = r)} id="pdf-sig" />
@@ -126,7 +129,7 @@
     <div class="layout">
       <ol class="thumbs" aria-label="Pages">{#each geoms as g, i}<li><button type="button" class:on={cur === i + 1} onclick={() => (cur = i + 1)} aria-label={`Page ${i + 1}`} aria-current={cur === i + 1 ? "page" : undefined}><span class="tpg" style={`aspect-ratio:${g.w}/${g.h}`}>{i + 1}</span>{#if items.some((x) => x.page === i + 1 && x.source !== "detected")}<i class="dot" aria-hidden="true"></i>{/if}</button></li>{/each}</ol>
       <div class="stage" bind:clientWidth={stageW}>
-        <div class="sheet" bind:this={pageEl} style={`width:${width}px;height:${geom.h * k}px`} class:armed={!!tool} onclick={place} role="presentation" data-testid="page">
+        <div class="sheet" bind:this={pageEl} style={`width:${width}px;height:${geom.h * k}px`} class:placing={!!tool} onclick={place} role="presentation" data-testid="page">
           <canvas class="cv" bind:this={canvas}></canvas>
           {#each here as it (it.id)}
             {@const st = `left:${it.x * k}px;top:${it.y * k}px;width:${it.w * k}px;height:${it.h * k}px`}
@@ -138,7 +141,7 @@
                 {:else}<select id={`ed-${it.id}`} aria-label={it.field.name} bind:value={it.value}><option value=""></option>{#each it.field.options ?? [] as o}<option value={o}>{o}</option>{/each}</select>{/if}
               </div>
             {:else}
-              <div class="it" class:sel={sel === it.id} class:det={it.source === "detected"} style={st} tabindex="0" role="group" aria-label={`${it.type} on page ${it.page}`}
+              <div class="it" id={`it-${it.id}`} class:sel={sel === it.id} class:det={it.source === "detected"} style={st} tabindex="0" role="group" aria-label={`${it.type} on page ${it.page}`}
                 onpointerdown={(e) => startDrag(e, it, "move")} onpointermove={moveDrag} onpointerup={endDrag} onkeydown={(e) => keys(e, it)} onfocus={() => (sel = it.id)}>
                 {#if it.type === "signature" || it.type === "initials"}{#if it.image}<img alt="" src={it.image} draggable="false" />{:else}<span class="ph">{it.label || it.type}</span>{/if}
                 {:else if it.type === "check"}<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 11l5 5 9-12" fill="none" stroke="#1b1b1b" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" /></svg>
@@ -167,26 +170,27 @@
   {/if}
 </div>
 <style>
-  .pt { margin-top: 32px; display: grid; gap: 16px; color: #f4f2ec; } .hint { color: #a9a59b; font-size: 14px; line-height: 1.55; margin: 6px 0 0; max-width: 64ch; }
-  .drop { border: 1.5px dashed #3a3a3c; border-radius: 8px; padding: 56px 24px; text-align: center; background: #101012; display: grid; gap: 10px; justify-items: center; } .drop.over { border-color: #5a3ac1; background: #17120f; } .drop h2 { margin: 0; font: 600 28px/1.15 var(--font-sans); letter-spacing: -.02em; }
+  .pt { margin-top: 32px; display: grid; gap: 16px; color: var(--tx-1); } .hint { color: var(--tx-3); font-size: 14px; line-height: 1.55; margin: 6px 0 0; max-width: 64ch; }
+  .drop { border: 1.5px dashed var(--hairline); border-radius: 8px; padding: 56px 24px; text-align: center; background: #ffffff; display: grid; gap: 10px; justify-items: center; } .drop.over { border-color: #5a3ac1; background: #ffffff; } .drop h2 { margin: 0; font: 600 28px/1.15 var(--font-sans); letter-spacing: -.02em; }
   .pick { position: relative; cursor: pointer; } .pick input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; }
-  .err { color: #ff9b8f; margin: 4px 0 0; font-size: 14px; } .okmsg { color: #9ad6a5; margin: 0; font-size: 14px; } .note { color: #c9c5bb; font-size: 14px; margin: 0; }
-  .bar { display: flex; flex-wrap: wrap; gap: 12px 18px; align-items: center; justify-content: space-between; } .file { display: grid; min-width: 0; } .file b { font: 600 15px/1.3 var(--font-sans); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 36ch; } .file span { color: #a9a59b; font: 12px/1.4 var(--font-mono); }
+  .err { color: #b4233c; margin: 4px 0 0; font-size: 14px; } .okmsg { color: #1c7448; margin: 0; font-size: 14px; } .note { color: var(--tx-2); font-size: 14px; margin: 0; }
+  .bar { display: flex; flex-wrap: wrap; gap: 12px 18px; align-items: center; justify-content: space-between; } .file { display: grid; min-width: 0; } .file b { font: 600 15px/1.3 var(--font-sans); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 36ch; } .file span { color: var(--tx-3); font: 12px/1.4 var(--font-mono); }
   .tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; } .sp { width: 8px; }
-  .tb { background: #1a1a1c; color: #f4f2ec; border: 1px solid #333; border-radius: 6px; padding: 9px 14px; font: 500 14px/1 var(--font-sans); cursor: pointer; min-height: 40px; min-width: 40px; } .tb:hover:not(:disabled) { border-color: #777; } .tb.on { background: #f4f2ec; color: #111; border-color: #f4f2ec; } .tb:disabled { opacity: .4; cursor: default; } .tb.ghost { background: transparent; } .tb:focus-visible, .lnk:focus-visible, .it:focus-visible { outline: 2px solid #f4f2ec; outline-offset: 2px; }
-  .armed { margin: 0; padding: 10px 14px; border-left: 3px solid #5a3ac1; background: #17120f; font-size: 14px; color: #f4f2ec; }
-  .sigp { background: #131315; border: 1px solid #2a2a2c; border-radius: 8px; padding: 18px; display: grid; gap: 14px; } .row { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; } .nm { display: grid; gap: 4px; font-size: 13px; color: #a9a59b; } .nm input { background: #0b0b0c; color: #f4f2ec; border: 1px solid #333; border-radius: 6px; padding: 10px; font: 15px var(--font-sans); min-height: 40px; }
-  .mini { margin: 0; display: flex; gap: 12px; align-items: center; } .lnk { background: none; border: 0; color: #f4f2ec; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; font: inherit; padding: 4px 0; } .thumb { height: 30px; background: #faf8f3; border-radius: 3px; padding: 2px 6px; }
+  .tb { background: #ece9f6; color: var(--tx-1); border: 1px solid var(--hairline); border-radius: 6px; padding: 9px 14px; font: 500 14px/1 var(--font-sans); cursor: pointer; min-height: 40px; min-width: 40px; } .tb:hover:not(:disabled) { border-color: #777; } .tb.on { background: #f4f2ec; color: #111; border-color: #f4f2ec; } .tb:disabled { opacity: .4; cursor: default; } .tb.ghost { background: transparent; } .tb:focus-visible, .lnk:focus-visible, .it:focus-visible { outline: 2px solid var(--v-700); outline-offset: 2px; }
+  .kh { color: var(--tx-3); font-size: 13px; margin-left: 6px; } .armed .tb { margin-left: 8px; min-height: 36px; padding: 7px 12px; }
+  .armed { margin: 0; padding: 10px 14px; border-left: 3px solid #5a3ac1; background: #ffffff; font-size: 14px; color: var(--tx-1); }
+  .sigp { background: #ffffff; border: 1px solid var(--hairline); border-radius: 8px; padding: 18px; display: grid; gap: 14px; } .row { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; } .nm { display: grid; gap: 4px; font-size: 13px; color: var(--tx-3); } .nm input { background: #ffffff; color: var(--tx-1); border: 1px solid var(--hairline); border-radius: 6px; padding: 10px; font: 15px var(--font-sans); min-height: 40px; }
+  .mini { margin: 0; display: flex; gap: 12px; align-items: center; } .lnk { background: none; border: 0; color: var(--tx-1); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; font: inherit; padding: 4px 0; } .thumb { height: 30px; background: #faf8f3; border-radius: 3px; padding: 2px 6px; }
   .layout { display: grid; grid-template-columns: 76px minmax(0, 1fr); gap: 16px; align-items: start; }
-  .thumbs { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; max-height: 80vh; overflow: auto; } .thumbs button { position: relative; width: 100%; padding: 4px; background: #1a1a1c; border: 1px solid #333; border-radius: 4px; cursor: pointer; } .thumbs button.on { border-color: #f4f2ec; } .tpg { display: grid; place-items: center; background: #faf8f3; color: #555; font: 600 14px var(--font-mono); } .dot { position: absolute; right: 6px; top: 6px; width: 8px; height: 8px; border-radius: 50%; background: #5a3ac1; }
+  .thumbs { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; max-height: 80vh; overflow: auto; } .thumbs button { position: relative; width: 100%; padding: 4px; background: #ece9f6; border: 1px solid var(--hairline); border-radius: 4px; cursor: pointer; } .thumbs button.on { border-color: #f4f2ec; } .tpg { display: grid; place-items: center; background: #faf8f3; color: #555; font: 600 14px var(--font-mono); } .dot { position: absolute; right: 6px; top: 6px; width: 8px; height: 8px; border-radius: 50%; background: #5a3ac1; }
   .stage { min-width: 0; display: grid; gap: 12px; justify-items: center; overflow-x: auto; }
-  .sheet { position: relative; background: #faf8f3; box-shadow: 0 30px 60px rgb(0 0 0 / .55); touch-action: pan-y; } .sheet.armed { cursor: crosshair; } .cv { display: block; }
+  .sheet { position: relative; background: #faf8f3; box-shadow: 0 30px 60px rgb(60 40 140 / 0.248); touch-action: pan-y; } .sheet.placing { cursor: crosshair; } .cv { display: block; }
   .it { position: absolute; cursor: move; touch-action: none; outline: 1px dashed transparent; } .it:hover, .it.sel { outline-color: #5a3ac1; } .it.det { outline: 1.5px dashed #5a3ac1; background: rgb(198 58 45 / .08); } .it img { width: 100%; height: 100%; object-fit: contain; pointer-events: none; display: block; } .it svg { width: 100%; height: 100%; pointer-events: none; }
   .tx { width: 100%; height: 100%; border: 0; background: rgb(255 255 255 / .55); color: #1b1b1b; font-family: Helvetica, Arial, sans-serif; padding: 0 2px; } .ph { font: 11px var(--font-mono); color: #5a3ac1; padding: 2px; }
   .x { position: absolute; right: -12px; top: -12px; width: 24px; height: 24px; border-radius: 50%; border: 0; background: #5a3ac1; color: #fff; font: 700 15px/1 var(--font-sans); cursor: pointer; } .ok { position: absolute; left: 0; bottom: -28px; background: #f4f2ec; color: #111; border: 0; border-radius: 4px; padding: 4px 10px; font: 600 12px var(--font-sans); cursor: pointer; } .rz { position: absolute; right: -7px; bottom: -7px; width: 14px; height: 14px; background: #5a3ac1; border-radius: 3px; cursor: nwse-resize; touch-action: none; }
   .fld { position: absolute; } .fld input[type="text"], .fld select { width: 100%; height: 100%; box-sizing: border-box; border: 1px solid #5a3ac166; background: rgb(255 238 200 / .55); color: #1b1b1b; padding: 0 3px; font-family: Helvetica, Arial, sans-serif; } .fld input:focus, .fld select:focus { outline: 2px solid #5a3ac1; background: #fff7de; } .fld input[type="checkbox"], .fld input[type="radio"] { width: 100%; height: 100%; margin: 0; accent-color: #5a3ac1; }
-  .pager { display: flex; align-items: center; gap: 14px; color: #a9a59b; font: 13px var(--font-mono); }
-  .out { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: space-between; border-top: 1px solid #2a2a2c; padding-top: 18px; } .chk { display: flex; gap: 8px; align-items: center; font-size: 14px; margin-top: 8px; } .d-btn:disabled { opacity: .45; cursor: not-allowed; }
-  @media (max-width: 700px) { .layout { grid-template-columns: 1fr; } .thumbs { grid-auto-flow: column; grid-auto-columns: 56px; overflow-x: auto; max-height: none; } .drop { padding: 40px 16px; } }
+  .pager { display: flex; align-items: center; gap: 14px; color: var(--tx-3); font: 13px var(--font-mono); }
+  .out { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: space-between; border-top: 1px solid var(--hairline); padding-top: 18px; } .chk { display: flex; gap: 8px; align-items: center; font-size: 14px; margin-top: 8px; } .d-btn:disabled { opacity: .45; cursor: not-allowed; }
+  @media (max-width: 700px) { .layout { grid-template-columns: minmax(0, 1fr); } .thumbs { grid-auto-flow: column; grid-auto-columns: 56px; overflow-x: auto; max-height: none; } .drop { padding: 40px 16px; } }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 </style>

@@ -381,20 +381,6 @@ export const WORKBENCH_TEMPLATES = Object.freeze([
   },
 
   {
-    key: "settings.usage_reconciled",
-    family: "settings",
-    subject: (v, t) => `${v.practiceName}: monthly usage summary`,
-    html_body: "",
-    text_body: (v, t) =>
-      `Hello ${v.recipientName},\n\n` +
-      `Monthly usage for ${v.practiceName}:\n\n` +
-      `${v.usageSummary}\n\n` +
-      (v.warningAt80 ? `Note: you're at 80% of your limit.\n\n` : "") +
-      `— Workbench`,
-    variables: ["practiceName", "recipientName", "usageSummary"],
-  },
-
-  {
     key: "developer.api_key_created",
     family: "developer",
     subject: (v, t) => `${v.practiceName}: API key created`,

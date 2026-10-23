@@ -1,6 +1,7 @@
 <script>
   import { onMount } from "svelte";
   import { api } from "$lib/api.js";
+  import { inDemo } from "$lib/pro/plan.svelte.js";
   import { loadPdf } from "$lib/pdf.js";
   import PdfPage from "$lib/PdfPage.svelte";
   import { seatColour } from "./fields.js";
@@ -9,11 +10,18 @@
   import { previewHtml } from "$lib/flow/flowPreview.js";
   import { signedCopyEmail } from "$lib/flow/afterSigning.js";
   import { checkText } from "./checkStrings.js";
-  let { doc, fileUrl, attempted = false, onRefresh = null, onfix = null } = $props();
+  import SenderFields from "./SenderFields.svelte";
+  let { doc, fileUrl, attempted = false, onRefresh = null, onfix = null, onChange = null } = $props();
   // Run 9 — THE CHECK BEFORE SENDING (board "ScribeAct"): four rows from the server (src/documents/sendCheck.mjs), each green or the problems with "Fix" (the step, and the box) and "Show me" (the place on the page)
   let pre = $state(null), spot = $state(null);
   async function loadPre() { const r = await api(`/api/documents/pdf/${doc.id}/send-check`); pre = r.ok ? (r.json?.data ?? r.json) : null; }
   $effect(() => { void doc.updatedAt; void doc.sendOptions; loadPre(); });
+  // R13-D042: a blocker about a box that is the sender's to fill goes straight to that box's input in "Your parts to fill in" (on a phone too, where Prepare cannot place or select boxes); any other Fix opens its step
+  const senderIds = $derived(new Set((doc.body?.fields ?? []).filter((f) => f.sender === true).map((f) => f.id)));
+  function fixIt(fx) {
+    if (onChange && fx?.field && senderIds.has(fx.field)) { const el = document.querySelector(`[data-sender-field="${CSS.escape(fx.field)}"] [data-testid="sender-field-input"]`); if (el) { el.scrollIntoView({ block: "center" }); el.focus(); return; } }
+    onfix?.(fx);
+  }
   function showMe(sh) { view = "signing"; spot = sh; setTimeout(() => document.querySelector(`[data-testid="check-page"][data-page="${sh.page}"]`)?.scrollIntoView({ block: "center", behavior: "smooth" }), 60); }
   const SAMPLE = { signature: "Jane Sample", initials: "JS", date_signed: "October 3, 2026", text: "Sample text", checkbox: "✕", dropdown: "Option", image: "▣" };
   let viewer = $state(doc.senderView ? "sender" : (doc.parties?.find((p) => p.action_role === "signer")?.role ?? "sender"));
@@ -30,11 +38,11 @@
   onMount(async () => { try { const r = await fetch(fileUrl, { credentials: "same-origin" }); if (r.ok) pdf = await loadPdf(await r.arrayBuffer()); } catch { /* shown below */ } });
   // What Send will refuse for the workspace rather than the document: Stripe not connected for a payment box, and a repeating payment on the Free plan. The server collects them at Send; these are shown before it.
   let pay = $state(null), plan = $state(null);
-  onMount(async () => { const [a, b] = await Promise.all([api("/api/product/docustay/payments"), api("/api/product/docustay/status")]); pay = a.ok ? a.json : null; plan = b.ok ? (b.json?.data ?? b.json) : null; });
+  onMount(async () => { const demo = await inDemo();   // R13-D020: no Stripe call in the demo (it would only answer 403)
+    const [a, b] = await Promise.all([demo ? { ok: false } : api("/api/product/docustay/payments"), api("/api/product/docustay/status")]); pay = a.ok ? a.json : null; plan = b.ok ? (b.json?.data ?? b.json) : null; });
   const payFields = $derived((doc.body?.fields ?? []).filter((f) => f.type === "payment"));
   const wsProblems = $derived([
     ...(payFields.length && pay?.stripeAvailable && pay.state !== "connected" ? [pay.state === "needs_attention" ? t("This document has a payment box, and Stripe is connected but needs information from you. Finish it in Settings, Payments, or keep the payment terms as text.") : t("This document has a payment box, but Stripe is not connected for this workspace. Connect Stripe in Settings, Payments, or keep the payment terms as text.")] : []),
-    ...(payFields.some((f) => f.plan) && plan?.billing?.canUpgrade === true ? [t("Installments and subscriptions are part of Docustay Pro. Upgrade in Billing, or use a one-time payment, a deposit or an amount the signer chooses.")] : []),
   ]);
   let reviewBusy = $state(false);
   async function markRead() { reviewBusy = true; const r = await api("/api/documents/chat/review", { method: "POST", body: { documentId: doc.id } }); reviewBusy = false; if (r.ok) onRefresh?.(); else msg = r.error ?? t("That did not work."); }
@@ -48,19 +56,20 @@
         <ul class="grid gap-2">{#each pre.rows as r, i (i)}
           <li class="flex items-start gap-2 text-sm {r.ok ? '' : 'text-warn'}" data-testid="send-check-row" data-kind={r.kind} data-ok={r.ok ? "true" : "false"}>
             <span class="dot {r.ok ? 'ok' : 'bad'}" aria-hidden="true">{r.ok ? "✓" : "!"}</span>
-            <span class="min-w-0">{r.documentTitle ? `${r.documentTitle}: ` : ""}{checkText(r, t)}{#if !r.ok && r.fix && onfix}{" "}<button type="button" class="link" data-testid="send-check-fix" onclick={() => onfix(r.fix)}>{t("Fix")}</button>{/if}{#if !r.ok && r.show}{" "}<button type="button" class="link" data-testid="send-check-show" onclick={() => showMe(r.show)}>{t("Show me")}</button>{/if}</span>
+            <span class="min-w-0">{r.documentTitle ? `${r.documentTitle}: ` : ""}{checkText(r, t)}{#if !r.ok && r.fix && onfix}{" "}<button type="button" class="link" data-testid="send-check-fix" onclick={() => fixIt(r.fix)}>{t("Fix")}</button>{/if}{#if !r.ok && r.show}{" "}<button type="button" class="link" data-testid="send-check-show" onclick={() => showMe(r.show)}>{t("Show me")}</button>{/if}</span>
           </li>{/each}</ul>
       </div>
     {/if}
+    {#if onChange}<SenderFields body={doc.body} {onChange} />{/if}
     {#if wsProblems.length}<ul class="space-y-1.5" data-testid="check-workspace-problems">{#each wsProblems as w}<li class="flex gap-2 text-sm text-bad" data-ok="false"><span aria-hidden="true">✗</span><span>{w}</span></li>{/each}</ul>{/if}
-    <ul class="space-y-1.5" data-testid="check-list">{#if senderOnly}<li class="flex gap-2 text-sm" data-ok="true" data-testid="check-sender-only"><span aria-hidden="true">✓</span><span>{t("{n} Sender only blocks are not in what signers see, sign or receive.", { n: senderOnly })}</span></li>{/if}{#each items as it}<li class="flex gap-2 text-sm {it.ok ? '' : it.severity === 'warning' || !attempted ? 'text-warn' : 'text-bad'}" data-ok={it.ok} data-testid="check-item"><span aria-hidden="true">{it.ok ? "✓" : it.severity === "warning" || !attempted ? "!" : "✕"}</span><span>{checkText(it, t)}{#if !it.ok && it.fix && onfix}{" "}<button type="button" class="link" data-testid="check-item-fix" onclick={() => onfix(it.fix)}>{t("Fix")}</button>{/if}{#if it.upgrade}{" "}<a class="font-medium underline" href="/billing" data-testid="check-upgrade">{t("Upgrade in Billing")}</a>{/if}{#if it.code === "ai_review"} <button type="button" class="btn !py-1 !text-sm ml-1" disabled={reviewBusy} onclick={markRead} data-testid="check-ai-read">{t("I have read it")}</button>{/if}</span></li>{/each}</ul>
+    <ul class="space-y-1.5" data-testid="check-list">{#if senderOnly}<li class="flex gap-2 text-sm" data-ok="true" data-testid="check-sender-only"><span aria-hidden="true">✓</span><span>{t("{n} Sender only blocks are not in what signers see, sign or receive.", { n: senderOnly })}</span></li>{/if}{#each items as it}<li class="flex gap-2 text-sm {it.ok ? '' : it.severity === 'warning' || !attempted ? 'text-warn' : 'text-bad'}" data-ok={it.ok} data-testid="check-item"><span aria-hidden="true">{it.ok ? "✓" : it.severity === "warning" || !attempted ? "!" : "✕"}</span><span>{checkText(it, t)}{#if !it.ok && it.fix && onfix}{" "}<button type="button" class="link" data-testid="check-item-fix" onclick={() => fixIt(it.fix)}>{t("Fix")}</button>{/if}{#if it.upgrade}{" "}<a class="font-medium underline" href="/billing" data-testid="check-upgrade">{t("Upgrade in Billing")}</a>{/if}{#if it.code === "ai_review"} <button type="button" class="btn !py-1 !text-sm ml-1" disabled={reviewBusy} onclick={markRead} data-testid="check-ai-read">{t("I have read it")}</button>{/if}</span></li>{/each}</ul>
     <div class="space-y-2">
       <div class="flex gap-2"><button class="btn !py-1.5 !text-sm {view === 'signing' ? 'primary' : ''}" onclick={() => (view = "signing")}>{t("As they will see it")}</button><button class="btn !py-1.5 !text-sm {view === 'signed' ? 'primary' : ''}" onclick={() => (view = "signed")}>{t("As signed")}</button><button class="btn !py-1.5 !text-sm {view === 'after' ? 'primary' : ''}" onclick={() => (view = "after")} data-testid="check-view-after">{t("After signing")}</button></div>
       <Pick options={viewerOpts} value={viewer} onchange={(v) => { viewer = v; if (v !== "sender") seat = v; }} label={t("View as")} testid="check-viewas" />
       
       <button class="btn !text-sm" disabled={busy} onclick={sendTest} data-testid="check-test">{t("Send me a test email")}</button>{#if msg}<p class="text-xs text-mute" role="status">{msg}</p>{/if}</div>
   </section>
-  <section class="max-h-[560px] space-y-3 overflow-auto rounded-xl border border-line bg-tint p-3" data-testid="preview-{view}">
+  <section class="paper-ground max-h-[560px] space-y-3 overflow-auto rounded-xl border border-line p-3" data-testid="preview-{view}">
     {#if view === "after"}
       <div class="rounded bg-white p-3 text-sm text-black" data-testid="check-after-email">
         <p class="text-xs text-neutral-500">{t("When the last person signs, everyone gets the sealed PDF by email:")}</p>

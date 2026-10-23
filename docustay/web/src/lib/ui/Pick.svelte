@@ -6,12 +6,12 @@
   import FlowIcon from "$lib/flow/FlowIcon.svelte";
   import ChevronDown from "@lucide/svelte/icons/chevron-down";
   import Check from "@lucide/svelte/icons/check";
-  let { id = "", options = [], value = "", onchange = () => {}, label = "", placeholder = "", testid = "", disabled = false, class: cls = "" } = $props();
+  let { id = "", options = [], value = "", onchange = () => {}, label = "", placeholder = "", testid = "", disabled = false, hideLabel = false, class: cls = "" } = $props();   // hideLabel: the label is the control's accessible name but is not drawn (R13-D035)
   const collection = $derived(createListCollection({ items: options, itemToValue: (o) => String(o.value), itemToString: (o) => o.label }));
   const current = $derived(options.find((o) => String(o.value) === String(value)));
 </script>
 <Select.Root {collection} ids={id ? { trigger: id } : undefined} value={value === "" || value == null ? [] : [String(value)]} onValueChange={(d) => { const v = d.value[0]; if (v !== undefined) onchange(options.find((o) => String(o.value) === v)?.value ?? v); }} {disabled} positioning={{ sameWidth: true }} lazyMount unmountOnExit class="pick {cls}">
-  {#if label}<Select.Label class="pick-label">{label}</Select.Label>{/if}
+  {#if label}<Select.Label class="pick-label {hideLabel ? 'sr-only' : ''}">{label}</Select.Label>{/if}
   <Select.Control>
     <Select.Trigger class="pick-trigger" data-testid={testid || undefined}>
       {#if current?.dot}<span class="dot" style="background:{current.dot}"></span>{/if}

@@ -1,6 +1,6 @@
 ---
 title: SDKs
-description: Official clients for JavaScript/TypeScript and Python.
+description: Official clients for JavaScript/TypeScript and Python, and generated clients for Go, PHP and C#.
 order: 8
 ---
 
@@ -15,14 +15,14 @@ Both clients cover every operation in the [API reference](/docs/api-reference.md
 
 ```js
 import { Docustay } from "@docustay2026/sdk";
-const docustay = new Docustay(process.env.DOCUSTAY_KEY);
+const docustay = new Docustay(process.env.DOCUSTAY_API_KEY);
 for await (const d of docustay.eachDocument({ state: "executed" })) console.log(d.id, d.title);
 ```
 
 ```python
 import os
 from docustay import Docustay
-d = Docustay(os.environ["DOCUSTAY_KEY"])
+d = Docustay(os.environ["DOCUSTAY_API_KEY"])
 for doc in d.each_document(state="executed"): print(doc["id"], doc["title"])
 ```
 
@@ -34,24 +34,30 @@ Frameworks: [`@docustay2026/react`, `@docustay2026/vue`, `@docustay2026/angular`
 Both clients talk to `https://app.docustay.app` unless you say otherwise. A self-hosted install, or any other Docustay address, goes in the constructor:
 
 ```js
-const docustay = new Docustay(process.env.DOCUSTAY_KEY, { baseUrl: "https://sign.example.com" });
+import { Docustay } from "@docustay2026/sdk";
+const docustay = new Docustay(process.env.DOCUSTAY_API_KEY, { baseUrl: process.env.DOCUSTAY_URL });   // your install, for example https://sign.example.com
+const { templates } = await docustay.listTemplates();
+console.log(templates.length, "templates on that install");
 ```
 
 ```python
-d = Docustay(os.environ["DOCUSTAY_KEY"], base_url="https://sign.example.com")
+import os
+from docustay import Docustay
+d = Docustay(os.environ["DOCUSTAY_API_KEY"], base_url=os.environ["DOCUSTAY_URL"])   # your install, for example https://sign.example.com
+print(len(d.list_templates()["templates"]), "templates on that install")
 ```
 
 If the address is wrong and answers with a web page instead of the API, the client throws a `DocustayError` of kind `bad_response` that names the address and this option; it does not show a JSON parse error.
 
 ## Installing
 
-The packages are built and tested but not yet published to the public registries. Until they are, install them from the `sdk/` folder of the repository. The changelog will say when that changes.
+Install from the registries: `npm install @docustay2026/sdk` (JavaScript and TypeScript), `pip install docustay` (Python), `go get github.com/docustay/docustay-go/docustay`, `composer require docustay/docustay-php`, `dotnet add package Docustay.Api`. In a new TypeScript project for Node, also run `npm install --save-dev typescript @types/node` so `process.env` compiles. The source is at https://github.com/Docustay/docustay.
 
 ## Sending a document
 
 ```js
 import { Docustay } from "@docustay2026/sdk";
-const docustay = new Docustay(process.env.DOCUSTAY_KEY);
+const docustay = new Docustay(process.env.DOCUSTAY_API_KEY);
 const doc = await docustay.sendDocument({ templateId: "TEMPLATE_ID", parties: [{ seat: "signer_1", name: "Rosa Alvarez", email: "rosa@example.com" }] });
 console.log(doc.id, doc.state);
 ```
@@ -61,10 +67,18 @@ doc = d.send_document(template_id="TEMPLATE_ID", parties=[{"seat": "signer_1", "
 print(doc["id"], doc["state"])
 ```
 
+## Which client to use
+
+Use the JavaScript and TypeScript client for anything that runs in Node, a serverless function, Deno or Bun, and keep the key on the server. Use the Python client for scripts, back-office jobs and notebooks. Neither needs extra packages, so adding one does not pull a tree of dependencies into your project. If you work in another language, call the REST API directly or use a client generated from the OpenAPI file; every client sends the same requests, so the API reference applies to all of them.
+
+## Keys, test mode and retries
+
+Create a key under Developers and pass it to the constructor. A key that starts with `dsk_test_` works in test mode: it sees only test documents and emails only you (stamped TEST), never the people on the document, so use one while you are building. Because every POST carries an `Idempotency-Key`, a request that times out can be sent again without creating a second document. Let the client do the retrying; add your own loop only for failures it reports as final.
+
 ## Handling errors
 
-Both clients throw a typed error with `status`, `kind`, `message` and `requestId`. Catch it, look at `kind`, and decide: `invalid` means fix the request, `rate_limited` and `dependency` are retried for you up to a limit, and `conflict` means the document is not in a state that allows what you asked.
+Both clients throw a typed error with `status`, `kind`, `message` and `requestId`. Catch it, look at `kind`, and decide: `validation` means fix the request, `rate_limited` and `dependency` are retried for you up to a limit, and `conflict` means the document is not in a state that allows what you asked.
 
 ## Other languages
 
-Any language can call the REST API directly. The OpenAPI 3.1 file describes every operation. Clients generated from it for Go, PHP and C# (all 77 operations) are in `sdk/generated` in the repository; they are not on a package registry yet, so copy one in or generate your own. The Postman collection lets you try each call by hand.
+Any language can call the REST API directly. The OpenAPI 3.1 file describes every operation. Clients generated from it for Go, PHP and C# (every operation) are published: `go get github.com/docustay/docustay-go/docustay`, `composer require docustay/docustay-php` and `dotnet add package Docustay.Api`. A generated client sends an idempotency key as an argument of each call that creates something, and its answers may carry new fields as the API grows. The Postman collection lets you try each call by hand.

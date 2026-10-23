@@ -40,12 +40,15 @@ test("no setting's label or help text contains a snake_case internal word", () =
   assert.ok(/\b[a-z]+_[a-z_]+\b/.test("For openai_compatible, the base address"));
 });
 
-test("D-075 / D-091: the documents list reads a stored 'void' document as Cancelled, in the chip and in the board's closed lane", async () => {
+test("D-075 / D-091: the documents list reads a stored 'void' document as Cancelled (the ribbon's label and tone)", async () => {
   const { readFileSync } = await import("node:fs");
+  // the redesigned list draws one ribbon per row from the document's true facts; a stored "void" (the state the server writes) must read as Cancelled, never as a stage it never reached
+  const { ribbonOf } = await import("../docustay/web/src/lib/ui/ribbon.js");
+  for (const state of ["void", "voided", "cancelled"]) { const r = ribbonOf({ state, sentAt: "2026-10-01" }); assert.equal(r.label, "Cancelled", state); assert.equal(r.tone, "bad", state); assert.equal(r.ended, "cancelled", state); }
   const page = readFileSync(new URL("../docustay/web/src/routes/(app)/documents/+page.svelte", import.meta.url), "utf8");
-  assert.match(page, /void: t\("Cancelled"\)/);
-  assert.match(page, /states: \["executed", "declined", "expired", "voided", "void"\]/);
-  // the state the server actually stores is "void" (not "voided"): the label map must know it
+  assert.match(page, /<Ribbon facts=\{facts\(r\)\}/);
+  assert.match(page, /state: r\.state/);
+  // the state the server actually stores is "void" (not "voided"): the ribbon must know it
   const send = readFileSync(new URL("../src/documents/pdfSend.mjs", import.meta.url), "utf8");
   assert.match(send, /SET state = 'void'/);
 });

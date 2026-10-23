@@ -2,7 +2,7 @@
 
 `<docustay-sign>` shows a Docustay signing form inside your own page. No dependencies, no build step. MIT.
 
-1. In Settings → Documents → Embedding, list the website that will show the form (for example `https://app.example.com`).
+1. In Settings → Developers → Embedding, list the website that will show the form (for example `https://app.example.com`).
 2. On YOUR server, send the document with the seat marked embedded, then ask for a session. The API key never goes to a browser:
 
 ```js

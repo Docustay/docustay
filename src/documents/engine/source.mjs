@@ -230,3 +230,19 @@ export function stripSenderOnly(source) {
   }
   return { source: { ...source, content: out }, removed };
 }
+
+/** R13-D295: what a signer would have to fill or sign that sits inside a Sender only section (so would never reach them): [{ section, part }], in order. */
+export function senderOnlySignerParts(source) {
+  const found = []; let skipLevel = null, section = "";
+  const heading = (b) => [...inlineNodes(b)].filter((n) => n.type === "text").map((n) => n.text).join("").trim();
+  for (const b of source?.content ?? []) {
+    if (b.type === "heading") {
+      const level = b.attrs?.level ?? 2;
+      if (skipLevel === null || level <= skipLevel) { skipLevel = b.attrs?.audience === "sender" ? level : null; if (skipLevel !== null) section = heading(b) || "Sender only"; continue; }
+    }
+    if (skipLevel === null) continue;
+    if (b.type === "signatureBlock") found.push({ section, part: "signature block" });
+    for (const n of inlineNodes(b)) if (n.type === "fieldTag") found.push({ section, part: `field “${n.attrs?.name ?? ""}”` });
+  }
+  return found;
+}

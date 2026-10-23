@@ -15,9 +15,9 @@ test("the docs' scope table names exactly the scopes the key dialog offers", () 
   const table = doc.slice(doc.indexOf("## Scopes"), doc.indexOf("A key can only carry scopes"));
   const documented = [...table.matchAll(/^\| `([a-z]+:[a-z]+)` \|/gm)].map((x) => x[1]).sort();
   assert.deepEqual(documented, offered);
-  assert.ok(offered.length >= 13, "positive control: the dialog offers the thirteen scopes the test session counted");
+  assert.ok(offered.length >= 12, "positive control: the dialog offers the twelve scopes the test session counted");
 });
 test("the description says how many scopes there are, and not two", () => {
   assert.doesNotMatch(doc, /the two scopes/i);
-  assert.match(doc, /thirteen scopes/);
+  assert.match(doc, /12 scopes/);
 });

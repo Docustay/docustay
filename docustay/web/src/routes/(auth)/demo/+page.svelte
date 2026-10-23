@@ -2,6 +2,7 @@
   // LAUNCH step 8: the public demo. One button makes a throw-away Maple Street workspace and opens it; nothing to type, no account. States: ready, starting, done, and every refusal in plain words (busy, too many, bot check, off).
   import { goto } from "$app/navigation";
   import { onMount, onDestroy } from "svelte";
+  import { appEvent } from "$lib/appEvents.js";
   import { t } from "$lib/i18n/index.svelte.js";
   import { api } from "$lib/api.js";
   import { botCheckSiteKey, authConfig } from "$lib/auth.js";
@@ -18,10 +19,12 @@
   async function start() {
     problem = null; kind = null; step = "starting";
     const r = await api("/api/demo/start", { method: "POST", body: { turnstileToken: token } });
-    if (r.ok) { step = "done"; await new Promise((x) => setTimeout(x, 700)); await goto("/documents?tour=1", { invalidateAll: true }); return; }
-    step = "ready"; bot?.reset();
+    if (r.ok) { void appEvent("demo_ready"); step = "done"; await new Promise((x) => setTimeout(x, 700)); await goto("/documents?tour=1", { invalidateAll: true }); return; }
+    // R13-D024: say what happened first (the server's own sentence for a 429, even when the body is not the usual shape), then reset the bot check; a failure in the reset must never swallow the message
     kind = r.json?.error?.detail?.code ?? null;
-    problem = r.status === 0 ? r.error : r.status === 429 ? (r.json?.error?.message ?? t("The demo is busy right now. Please try again in a few minutes.")) : r.status === 403 && kind === "demo_off" ? t("The demo is not available right now.") : (r.json?.error?.message ?? t("Could not open the demo. Try again in a moment."));
+    problem = r.status === 0 ? r.error : r.status === 429 ? (r.json?.error?.message ?? r.error ?? t("The demo is busy right now. Please try again in a few minutes.")) : r.status === 502 || r.status === 503 ? t("The demo cannot be reached right now: the service behind this page did not answer. Please try again in a minute, or create a free account.") : r.status === 403 && kind === "demo_off" ? t("The demo is not available right now.") : (r.json?.error?.message ?? t("Could not open the demo. Try again in a moment."));
+    step = "ready";
+    try { bot?.reset(); } catch { /* the widget was already gone */ }
   }
 </script>
 <svelte:head><title>{t("Try the demo")} · Docustay</title></svelte:head>

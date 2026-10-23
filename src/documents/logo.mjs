@@ -22,3 +22,12 @@ export async function fetchLogoBytes(address, { env = process.env, fetchImpl = g
     return Buffer.from(body);
   } catch { return null; }
 }
+
+/** R13-D057: the logo as an address a SIGNING PAGE can load. A stored `ks-object:` pointer is not a URL (and the signer's host is not the practice's host), so an uploaded image travels in the page itself as a small data: address; an https address passes through; anything unusable is null. */
+export async function logoForPage(address, opts = {}) {
+  if (typeof address !== "string" || address === "") return null;
+  if (!address.startsWith("ks-object:")) return /^https:\/\//.test(address) ? address : null;
+  const b = await fetchLogoBytes(address, opts);
+  if (!b) return null;
+  return `data:${b[0] === 0x89 ? "image/png" : "image/jpeg"};base64,${b.toString("base64")}`;
+}

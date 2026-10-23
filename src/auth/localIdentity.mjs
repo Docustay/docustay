@@ -31,8 +31,8 @@ const DUMMY = hashPassword("not-a-real-password");
 
 const b64 = (b) => Buffer.from(b).toString("base64url");
 const sign = (payload, env) => createHmac("sha256", secret(env)).update(payload).digest("base64url");
-export function issueToken({ uid, email, verified = true }, { env = process.env, now = Date.now() } = {}) {
-  const payload = b64(JSON.stringify({ uid, email, email_verified: verified === true, iat: Math.floor(now / 1000), exp: Math.floor(now / 1000) + TTL_S }));
+export function issueToken({ uid, email, verified = true, claims = {} }, { env = process.env, now = Date.now() } = {}) {
+  const payload = b64(JSON.stringify({ uid, email, email_verified: verified === true, ...(claims.passkey === true ? { pk: 1 } : {}), iat: Math.floor(now / 1000), exp: Math.floor(now / 1000) + TTL_S }));
   return `ks-local.${payload}.${sign(payload, env)}`;
 }
 /** → {uid, sub, email, email_verified} or throws unauthenticated. Same shape the Firebase verifier returns for the fields the platform reads. */
@@ -43,7 +43,7 @@ export function verifyLocalToken(token, { env = process.env, now = Date.now() } 
   if (want.length !== got.length || !timingSafeEqual(want, got)) throw unauthenticated("invalid credential");
   let d; try { d = JSON.parse(Buffer.from(payload, "base64url").toString("utf8")); } catch { throw unauthenticated("invalid credential"); }
   if (!d?.uid || !String(d.uid).startsWith("local:") || !(d.exp > Math.floor(now / 1000))) throw unauthenticated("invalid credential");
-  return { uid: d.uid, sub: d.uid, email: d.email, email_verified: d.email_verified === true };
+  return { uid: d.uid, sub: d.uid, email: d.email, email_verified: d.email_verified === true, ...(d.pk === 1 ? { docustay_passkey: true } : {}) };
 }
 
 const looksLikeEmail = (e) => typeof e === "string" && e.length <= 254 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);

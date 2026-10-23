@@ -12,7 +12,7 @@ export class DocustayError extends Error {
     this.retryable = e.retryable === true;
     this.retryAfterSeconds = Number(headers?.get?.("retry-after")) || null;
     this.detail = e.detail ?? null;
-    // a plan limit (403 forbidden): "plan_document_limit" or "plan_template_limit", with detail.used, detail.limit and detail.resetsAt (the first of next month, UTC)
+    // a plan limit (403 forbidden): "plan_document_limit", "plan_signer_limit" or "plan_template_limit", with detail.used, detail.limit and detail.resetsAt (the first of next month, UTC)
     this.code = typeof e.detail?.code === "string" ? e.detail.code : null;
   }
 }
@@ -47,7 +47,7 @@ export class Docustay {
       try {
         res = await this._fetch(`${this.baseUrl}${path}${qs(query)}`, {
           method, signal: ctl.signal,
-          headers: { authorization: `Bearer ${this.apiKey}`, accept: raw ? "*/*" : "application/json", "user-agent": "docustay-js/0.1.0", ...(body !== undefined ? { "content-type": "application/json" } : {}), ...(key ? { "idempotency-key": key } : {}) },
+          headers: { authorization: `Bearer ${this.apiKey}`, accept: raw ? "*/*" : "application/json", "user-agent": "docustay-js/0.2.0", ...(body !== undefined ? { "content-type": "application/json" } : {}), ...(key ? { "idempotency-key": key } : {}) },
           body: body === undefined ? undefined : JSON.stringify(body),
         });
       } catch (e) {
@@ -92,11 +92,7 @@ export class Docustay {
   builderSession({ origin, name }, { idempotencyKey } = {}) { return this._request("POST", "/api/v1/embedded/builder-session", { body: { origin, ...(name ? { name } : {}) }, idempotencyKey }); }
   remind(id, { seat, idempotencyKey } = {}) { return this._request("POST", `/api/v1/documents/${encodeURIComponent(id)}/remind`, { body: seat ? { seat } : {}, idempotencyKey }); }
   /** TEST MODE ONLY: sign one seat of a test document with sample answers (FP-D2). A live key is refused by the server. */
-  testSign(id, seat, { idempotencyKey } = {}) { return this._request("POST", `/api/v1/documents/${encodeURIComponent(id)}/test-sign`, { body: { seat }, idempotencyKey }); }
-  listEmailTemplates(params = {}) { return this._request("GET", "/api/v1/email-templates", { query: params }); }
-  saveEmailTemplate(kind, wording, { idempotencyKey } = {}) { return this._request("PUT", `/api/v1/email-templates/${encodeURIComponent(kind)}`, { body: wording, idempotencyKey }); }
-  resetEmailTemplate(kind, params = {}) { return this._request("DELETE", `/api/v1/email-templates/${encodeURIComponent(kind)}`, { query: params }); }
-  previewEmailTemplate(kind, wording = {}, { idempotencyKey } = {}) { return this._request("POST", `/api/v1/email-templates/${encodeURIComponent(kind)}/preview`, { body: wording, idempotencyKey }); }
+  testSign(id, seat, { decline, reason, idempotencyKey } = {}) { return this._request("POST", `/api/v1/documents/${encodeURIComponent(id)}/test-sign`, { body: { seat, ...(decline ? { decline: true } : {}), ...(reason ? { reason } : {}) }, idempotencyKey }); }
   listEmails(params = {}) { return this._request("GET", "/api/v1/emails", { query: params }); }
   // ── webhooks ──
   listWebhookTopics() { return this._request("GET", "/api/v1/webhooks/topics"); }
@@ -109,6 +105,7 @@ export class Docustay {
   listWebhookDeliveries(id) { return this._request("GET", `/api/v1/webhooks/${encodeURIComponent(id)}/deliveries`); }
   /** For `docustay listen`: deliveries a relay webhook has stored since `after`, waiting up to `wait` seconds for one. */
   fetchRelayEvents(id, params = {}) { return this._request("GET", `/api/v1/webhooks/${encodeURIComponent(id)}/relay`, { query: params }); }
+  deleteDraft(id) { return this._request("DELETE", `/api/v1/documents/${encodeURIComponent(id)}`); }   // a draft that was never sent; a sent one is voided
   voidDocument(id, reason, { idempotencyKey } = {}) { return this._request("POST", `/api/v1/documents/${encodeURIComponent(id)}/void`, { body: reason ? { reason } : {}, idempotencyKey }); }
 
   // ── templates ──
@@ -142,22 +139,8 @@ export class Docustay {
   aiUsage() { return this._request("GET", "/api/v1/ai/usage"); }
   paymentsStatus() { return this._request("GET", "/api/v1/payments/status"); }
 
-  // ── forms (one link many people fill in; each response is a document) ──
-  /** Every form: { forms: [{ id, name, slug, open, responses, closed }] }. */
-  listForms() { return this._request("GET", "/api/v1/forms"); }
-  /** The workspace's form templates (its own and the thirty built-in ones), with their default Publish settings. */
-  listFormTemplates() { return this._request("GET", "/api/v1/forms/templates"); }
-  getForm(id) { return this._request("GET", `/api/v1/forms/${encodeURIComponent(id)}`); }
-  /** Newest first; each response's id opens it with getDocument(). */
-  listFormResponses(id, { limit, offset } = {}) { const q = new URLSearchParams(); if (limit) q.set("limit", String(limit)); if (offset) q.set("offset", String(offset)); return this._request("GET", `/api/v1/forms/${encodeURIComponent(id)}/responses${q.size ? `?${q}` : ""}`); }
-  /** Give a form template its public link and settings: { templateId, slug, settings?, enabled? }. It SETS the form's state, so repeating it is safe (no idempotency key needed). */
-  publishForm(request) { return this._request("POST", "/api/v1/forms/publish", { body: request }); }
-  setFormOpen(id, open) { return this._request("POST", `/api/v1/forms/${encodeURIComponent(id)}/open`, { body: { open: open === true } }); }
-  /** The link stops working; the form template and every response are kept. */
-  unpublishForm(id) { return this._request("POST", `/api/v1/forms/${encodeURIComponent(id)}/unpublish`, { body: {} }); }
-
-  // ── the template library: the 54 built-in Document and Form templates (every plan) ──
-  /** The built-in templates: { templates: [{ slug, kind, title, summary, seats, fieldCount, guidance, templateId }], shown }. `kind` is "document" or "form". */
+  // ── the template library: the 54 built-in templates (every plan) ──
+  /** The built-in templates: { templates: [{ slug, kind, title, summary, seats, fieldCount, guidance, templateId }], shown }. */
   listLibraryTemplates({ kind } = {}) { return this._request("GET", `/api/v1/templates/library${kind ? `?kind=${encodeURIComponent(kind)}` : ""}`); }
   /** One built-in in full: its fields (who fills each one) and its guidance (questions, facts, checklist, when not to use it). */
   getLibraryTemplate(slug) { return this._request("GET", `/api/v1/templates/library/${encodeURIComponent(slug)}`); }
@@ -184,24 +167,16 @@ export class Docustay {
   /** Switch a pack on or off for the workspace. */
   setPlaybookOn(name, on) { return this._request("POST", `/api/v1/playbooks/${encodeURIComponent(name)}/enable`, { body: { enabled: on === true } }); }
   /** Start a draft from a built-in Document template, guided by its own questions. Returns { status: "needs_input", draftRef, questions } until the must-ask ones are answered, then { status: "draft", documentId }. Nothing is ever sent. */
-  startDraft({ template, people, title, answers, useDefaults }) { return this._request("POST", "/api/v1/drafts", { body: { template, people, ...(title ? { title } : {}), ...(answers ? { answers } : {}), ...(useDefaults ? { useDefaults } : {}) } }); }
-  answerDraft(draftRef, answers, { useDefaults } = {}) { return this._request("POST", `/api/v1/drafts/${encodeURIComponent(draftRef)}/answers`, { body: { answers, ...(useDefaults ? { useDefaults } : {}) } }); }
+  startDraft({ template, people, title, answers, values, useDefaults }) { return this._request("POST", "/api/v1/drafts", { body: { template, people, ...(title ? { title } : {}), ...(answers ? { answers } : {}), ...(values ? { values } : {}), ...(useDefaults ? { useDefaults } : {}) } }); }
+  answerDraft(draftRef, answers, { useDefaults, values } = {}) { return this._request("POST", `/api/v1/drafts/${encodeURIComponent(draftRef)}/answers`, { body: { answers, ...(values ? { values } : {}), ...(useDefaults ? { useDefaults } : {}) } }); }
 
-  // ── Run 9: search, contracts and key dates, payments, automations ──
-  /** The app's ⌘K search: documents, templates, forms and people, best first. `per` is how many of each kind (1 to 20). */
+  // ── Run 9: search, payments ──
+  /** The app's ⌘K search: documents, templates and people, best first. `per` is how many of each kind (1 to 20). */
   search(q, { per } = {}) { const s = new URLSearchParams({ q: String(q ?? "") }); if (per) s.set("per", String(per)); return this._request("GET", `/api/v1/search?${s}`); }
-  /** Signed contracts with their key dates (start, end, notice, renewal) and value, each with where it came from. */
-  listContracts({ q, limit } = {}) { const s = new URLSearchParams(); if (q) s.set("q", q); if (limit) s.set("limit", String(limit)); return this._request("GET", `/api/v1/contracts${s.size ? `?${s}` : ""}`); }
-  /** Correct one key date by hand: { kind: "start" | "end" | "notice" | "renewal" | "value", date: "YYYY-MM-DD" | null, amountMinor?, currency? }. The signed PDF never changes. */
-  setContractDate(id, { kind, date = null, amountMinor, currency }) { return this._request("POST", `/api/v1/contracts/${encodeURIComponent(id)}/dates`, { body: { kind, date, ...(amountMinor != null ? { amountMinor } : {}), ...(currency ? { currency } : {}) } }); }
-  /** Payments taken through documents and forms, newest first, with this month's figures. Page with `before` (the previous page's `next`). */
+  /** Payments taken through documents, newest first, with this month's figures. Page with `before` (the previous page's `next`). */
   listPayments({ before, limit } = {}) { const s = new URLSearchParams(); if (before) s.set("before", before); if (limit) s.set("limit", String(limit)); return this._request("GET", `/api/v1/payments${s.size ? `?${s}` : ""}`); }
   /** Refund a payment through Stripe: leave out `amountMinor` for the rest of it. `reason` is required (it goes on the payer's receipt and in the audit trail). */
   refundPayment(id, { amountMinor, reason }, { idempotencyKey } = {}) { return this._request("POST", `/api/v1/payments/${encodeURIComponent(id)}/refund`, { body: { ...(amountMinor != null ? { amountMinor } : {}), reason }, idempotencyKey }); }
-  /** The automations built on the canvas: their start, steps, on/off, run count and recent runs. */
-  listAutomations() { return this._request("GET", "/api/v1/automations"); }
-  /** Switch an automation on (Pro) or off. */
-  setAutomationOn(id, on) { return this._request("POST", `/api/v1/automations/${encodeURIComponent(id)}/enable`, { body: { on: on === true } }); }
 
   /** Ask for an AI-written draft. Returns { jobId, state }. The draft is a suggestion for a person to read; nothing is saved or sent. Refused when AI drafting is off. */
   draftWithAi({ prompt, brief, mode }) { return this._request("POST", "/api/v1/documents/ai/draft", { body: { ...(prompt ? { prompt } : {}), ...(brief ? { brief } : {}), ...(mode ? { mode } : {}) } }); }
@@ -223,11 +198,13 @@ export class Docustay {
   /** Find the fields on a PDF or a page photo (nothing is stored): signature, initials, date, text and tick boxes with their boxes, confidence and signer. */
   detectFields({ file, fileName, minConfidence, ocr } = {}) { return this._request("POST", "/api/v1/documents/detect-fields", { body: { file: toBase64(file), ...(fileName ? { fileName } : {}), ...(minConfidence != null ? { minConfidence } : {}), ...(ocr === false ? { ocr: false } : {}) } }); }
 
-  /** Documents sent this month and emails sent today, against the plan's limits. */
+  /** Documents sent this allowance period (the billing period on a paid plan, the calendar month on Free; `periodStart` and `periodEnd`) and emails sent today, against the plan's limits. */
   usage() { return this._request("GET", "/api/v1/usage"); }
 
-  // ── reports and teams ──
-  report(params = {}) { return this._request("GET", "/api/v1/reports", { query: params }); }
+  /** Ask BEFORE acting: may I, what does it cost, what are my options. `action` is one of send_document, bulk_send (documents), invite_person or remove_person (people), ai_draft, ai_edit, ai_read_file, create_template, upload (bytes), use_feature (item) or connect_payments. Reads only: nothing is sent, charged or stored. Answers `allowed`, `cost.minor` (whole cents), `severity` (none, info, warn, limit, blocked), `reason` (the refusal code the action would carry), `options` (cheapest first) and `message`. */
+  preflight({ action, documents, people, bytes, item, recipients } = {}) { return this._request("POST", "/api/v1/preflight", { body: { action, ...(documents != null ? { documents } : {}), ...(people != null ? { people } : {}), ...(bytes != null ? { bytes } : {}), ...(item ? { item } : {}), ...(Array.isArray(recipients) ? { recipients } : {}) } }); }
+
+  // ── teams ──
   listTeams() { return this._request("GET", "/api/v1/teams"); }
 }
 
@@ -250,6 +227,7 @@ export async function verifyWebhook(secret, headers, body, { toleranceSeconds = 
   if (!id || !ts || !sig) throw new Error("missing webhook headers");
   if (Math.abs(now / 1000 - Number(ts)) > toleranceSeconds) throw new Error("webhook timestamp outside the tolerance");
   const raw = String(secret).replace(/^whsec_/, "").replace(/-/g, "+").replace(/_/g, "/");
+  if (!raw || !/^[A-Za-z0-9+/]+=*$/.test(raw)) throw new Error("that webhook secret is not in the whsec_… form; copy it again from the endpoint's page");
   const keyBytes = Uint8Array.from(atob(raw), (c) => c.charCodeAt(0));
   const key = await globalThis.crypto.subtle.importKey("raw", keyBytes, { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
   const mac = new Uint8Array(await globalThis.crypto.subtle.sign("HMAC", key, new TextEncoder().encode(`${id}.${ts}.${body}`)));

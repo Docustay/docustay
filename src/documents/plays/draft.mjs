@@ -25,24 +25,39 @@ const cleanAnswers = (play, raw) => {
   return out;
 };
 
-/** → { status:"needs_input", draftRef, questions } | { status:"draft", documentId, title, guidanceRef, notes } */
-export async function startDraftFromTemplate(tx, { tenantId, ownerId, template: slug, title = null, people = [], answers = {}, useDefaults = false, test = false, draftRef = null }) {
+// R13-D225: the send-time amounts in a template's words ({{custom.deposit}}, v1 item 10) — the sender's to give, never the signer's, never a formula. Per-person merge text (custom.p_*) is filled
+// from the people and is never asked for. → [{ key, label }]
+function sendTimeValues(source) {
+  const out = new Map();
+  const visit = (n) => { if (Array.isArray(n)) return n.forEach(visit); if (!n || typeof n !== "object") return;
+    const name = n.type === "variableChip" ? String(n.attrs?.name ?? "") : "";
+    if (/^custom\.[a-z][a-z0-9_]{0,40}$/.test(name) && !name.startsWith("custom.p_") && !n.attrs?.default) { const key = name.slice(7); const own = n.attrs?.label && n.attrs.label !== name ? n.attrs.label : null; out.set(key, own ?? key.replace(/_/g, " ").replace(/^./, (c) => c.toUpperCase())); }
+    for (const v of Object.values(n)) if (v && typeof v === "object") visit(v); };
+  visit(source); return [...out].map(([key, label]) => ({ key, label }));
+}
+const cleanSendValues = (v) => Object.fromEntries(Object.entries(v && typeof v === "object" && !Array.isArray(v) ? v : {}).filter(([k, x]) => /^[a-z][a-z0-9_]{0,40}$/.test(k) && typeof x === "string" && x.trim() && x.length <= 300).map(([k, x]) => [k, x.trim()]));
+
+/** → { status:"needs_input", draftRef, questions, values? } | { status:"draft", documentId, title, guidanceRef, notes } */
+export async function startDraftFromTemplate(tx, { tenantId, ownerId, template: slug, title = null, people = [], answers = {}, values = {}, useDefaults = false, test = false, draftRef = null }) {
   await assertPlaysApi(tx, tenantId);
   const prior = draftRef ? dec(draftRef) : null; if (draftRef && !prior) throw invalid("That draftRef is not valid.", { field: "draftRef" });
   const name = String(slug ?? prior?.template ?? ""); const e = libraryEntry(name);
   if (!e) throw notFound("There is no built-in template with that name.");
-  if (e.kind !== "document") throw invalid("A Form template is published as a form, not drafted for named people. Use a Document template.", { field: "template" });
-  const g = guidanceFor(name, "document"); const p = g?.guidance ?? { title: e.title, questions: [], defaults: {}, checklist: [], flags: [] };
+  const g = guidanceFor(name, "document") ?? guidanceFor(name, "form"); const p = g?.guidance ?? { title: e.title, questions: [], defaults: {}, checklist: [], flags: [] };
   const merged = cleanAnswers(p, { ...(prior?.answers ?? {}), ...answers });
   const asked = p.questions.filter((q) => merged[q.key] === undefined && (q.mustAsk || !useDefaults));
   const peopleIn = people?.length ? people : (prior?.people ?? []); const titleIn = title ?? prior?.title ?? null;
-  if (asked.length) return { status: "needs_input", draftRef: enc({ template: name, title: titleIn, people: peopleIn, answers: merged }), questions: asked.slice(0, 4).map(shapeQ), remaining: asked.length };
+  const given = { ...cleanSendValues(prior?.values), ...cleanSendValues(values) };
+  if (asked.length) return { status: "needs_input", draftRef: enc({ template: name, title: titleIn, people: peopleIn, answers: merged, values: given }), questions: asked.slice(0, 4).map(shapeQ), remaining: asked.length };
   const { people: ppl, errors } = readPeople(peopleIn, { test }); if (errors.length || !ppl.length) throw invalid(errors[0] ?? "Add at least one person who signs.", { field: "people" });
-  const r = readyMadeSource({ slug: name }); const check = apiCheckSource({ source: r.source, people: ppl, requireSignature: true });
+  const r = readyMadeSource({ slug: name });
+  const missing = sendTimeValues(r.source).filter((v) => given[v.key] === undefined);
+  if (missing.length) return { status: "needs_input", draftRef: enc({ template: name, title: titleIn, people: peopleIn, answers: merged, values: given }), questions: [], values: missing, remaining: missing.length };
+  const check = apiCheckSource({ source: r.source, people: ppl, requireSignature: true, variableValues: given });
   if (!check.ok) throw invalid(`The document would not pass its checks: ${check.errors.slice(0, 3).join("; ")}`, { field: "people" });
   const choice = { ...playChoice(p.defaults), internalNote: `Made from the “${e.title}” template. ${p.questions.filter((q) => merged[q.key] !== undefined).map((q) => `${q.question} ${[].concat(merged[q.key]).join(", ")}.`).join(" ")}`.slice(0, 2000) };
   const docTitle = String(titleIn ?? e.title).trim().slice(0, 120) || e.title;
-  const made = await apiCreateDocument(tx, { tenantId, ownerId, title: docTitle, source: r.source, people: ppl, sendChoice: choice, send: false, test });
+  const made = await apiCreateDocument(tx, { tenantId, ownerId, title: docTitle, source: r.source, people: ppl, variableValues: given, sendChoice: choice, send: false, test });
   if (g) await tx.query(`UPDATE keystone.document_instance SET play_ref = $2 WHERE id = $1`, [made.id, g.ref]);
   return { status: "draft", documentId: made.id, title: docTitle, template: name, guidanceRef: g?.ref ?? null, answers: merged, notes: flagNotes(p).map((n) => ({ topic: n.topic, note: n.note })), checklist: p.checklist };
 }

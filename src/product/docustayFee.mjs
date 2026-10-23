@@ -8,7 +8,7 @@ import { APPLICATION_FEE_BPS } from "../money/stripeConnected.mjs";
 import { getConnectAccountState } from "../money/connect.mjs";
 
 export const FREE_FEE_BPS = 200;
-export const FEE_SENTENCE = "Docustay fee: 2% on Free, 0% on Pro, plus Stripe's fees.";
+export const FEE_SENTENCE = "Docustay fee: 2% on Free and Pay as you go, 0% on Pro and Lifetime, plus Stripe's fees.";
 
 /** The fee in cents: bps of the amount, to the nearest cent (half up). Integers only. */
 export function feeMinorOf(amountMinor, bps) {
@@ -23,7 +23,7 @@ export function feeDecision({ product, isDirectAccount, sub, env = process.env }
   if (product !== "docustay") return { bps: APPLICATION_FEE_BPS, planKey: null, product: product ?? null };
   const plan = effectivePlan(sub ?? null, env);
   if (!plan) return { bps: 0, planKey: null, product: "docustay" };
-  return { bps: plan.paid ? 0 : FREE_FEE_BPS, planKey: plan.key, product: "docustay" };
+  return { bps: plan.feeBps ?? (plan.paid ? 0 : FREE_FEE_BPS), planKey: plan.key, product: "docustay" };
 }
 
 /** → { bps, planKey, product } for this workspace right now. */

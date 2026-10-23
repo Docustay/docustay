@@ -12,7 +12,7 @@ Everything the screens do, a key can do. A document is **words** (a source) plus
 
 ```bash
 curl -X POST https://app.docustay.app/api/v1/documents \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" -H "Idempotency-Key: $(uuidgen)" -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY" -H "Idempotency-Key: $(uuidgen)" -H "Content-Type: application/json" \
   -d '{
     "title": "Retainer agreement",
     "source": { "type": "doc", "content": [
@@ -36,11 +36,12 @@ The answer is `{ "id", "state": "draft", "roles": [...] }`. The document stays a
 
 ## Templates with questions
 
-A `custom.<key>` merge chip in a template is a **question** the sender answers when using it (`kind` is `text`, `number`, `money` or `date`; `default` and `help` are optional). The template's questions are shown where you build and send it in the app; through the API you pass an answer for each question's key in `variableValues`. Use the template:
+A `custom.<key>` merge chip in a template is a **question** the sender answers when using it (`kind` is `text`, `number`, `money` or `date`; `default` and `help` are optional). The template's questions are shown where you build and send it in the app; through the API you pass an answer for each question's key in `variableValues`. Use the template (its id is in `GET /api/v1/documents/templates`; put it in `$TEMPLATE` first):
 
 ```bash
+TEMPLATE=$(curl -s https://app.docustay.app/api/v1/documents/templates -H "Authorization: Bearer $DOCUSTAY_API_KEY" | jq -r '.templates[0].id')
 curl -X POST https://app.docustay.app/api/v1/templates/$TEMPLATE/documents \
-  -H "Authorization: Bearer $DOCUSTAY_KEY" -H "Idempotency-Key: $(uuidgen)" -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY" -H "Idempotency-Key: $(uuidgen)" -H "Content-Type: application/json" \
   -d '{ "people": [{ "name": "Dana Whitfield", "email": "dana@example.com" }], "variableValues": { "fee": "750", "client_company": "Harbor Traders" } }'
 ```
 

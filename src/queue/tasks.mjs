@@ -43,9 +43,9 @@
 //     any real tenant. Closing that needs `add_job` revoked from `app_rw` and an enqueue helper running
 //     as `app_worker` — which is PHASE 19's territory (§P19.8's grant-not-an-if rule) and is recorded.
 
+import { handlePosthogEvent, wantsPosthog } from "../product/posthogListener.mjs";
 import { withTenant } from "../db/index.mjs";
 import { logSeatsToday } from "../product/docustaySeats.mjs";
-import { noteUsageAfterResponse } from "../product/docustay.mjs";
 import { resolveTerms } from "../terminology/resolve.mjs";
 import { asViewer } from "../db/viewer.mjs";
 import {
@@ -74,7 +74,7 @@ import { composeReferralEmail } from "../network/writes.mjs";
 import * as deletion from "../product/deletion.mjs";
 import { storageIsConfigured } from "../storage/s3.mjs";
 import { reencryptFiles, rotateFileKey, tenantsNeedingSealPass } from "../storage/fileCrypto.mjs";
-import { seedLibrary, LIBRARY_VERSION, archiveExecutedPdf, sendReceiptsForSend, playbooksToStart, playbookRunActor, startPlaybookRun, resumePlaybookRun, sendFormResponseNotice, documentEmailAlreadySent, instanceNotificationFacts, declineFacts, sentenceCase, peopleWithRecentDocuments, sendDocumentMail, sendPdfDocument, dueScheduledDocuments, staleUnarchivedDocuments, untimestampedSealedDocuments, erasePerson, mintDownloadLink, runAiJob, runAiJobDetached, runDetectPage, stalePagesOf, pruneChatsForTenant, rescueStaleAiJobs } from "../documents/frontDoor.mjs";
+import { seedLibrary, LIBRARY_VERSION, archiveExecutedPdf, sendReceiptsForSend, documentEmailAlreadySent, instanceNotificationFacts, declineFacts, sentenceCase, peopleWithRecentDocuments, sendDocumentMail, sendPdfDocument, dueScheduledDocuments, staleUnarchivedDocuments, untimestampedSealedDocuments, erasePerson, mintDownloadLink, runAiJob, runAiJobDetached, runDetectPage, stalePagesOf, pruneChatsForTenant, rescueStaleAiJobs } from "../documents/frontDoor.mjs";
 import { watchCeiling as watchAiCeiling } from "../product/docustayAiUsage.mjs";
 import { instanceSentFacts, instanceTitleAndCreator, instanceCreatorById } from "../documents/api.mjs";
 // ★ FIX, 30 Sep 2026 ("email the signed copy" brief) — the signed-instrument attachment email, sent
@@ -2118,7 +2118,8 @@ export function emailFor(target) {
       practiceName, recipientName,
       invoiceNumber: p.invoice_number ?? target.invoice_number_full ?? null,
       amount: (amountMinor ?? target.invoice_amount_minor) == null ? null : formatMoneyMinor(amountMinor ?? target.invoice_amount_minor, currency),
-      dueLocal: (p.due_at ?? target.invoice_due_at) ? formatDateOnly(p.due_at ?? target.invoice_due_at, target.practice_timezone) : null,
+      // A due date is a calendar day, not an instant: the due-date buttons store midnight UTC on the intended day, so formatting it in a timezone west of UTC showed the day before (found in a real delivered email, 2 Oct 2026). Always UTC.
+      dueLocal: (p.due_at ?? target.invoice_due_at) ? formatDateOnly(p.due_at ?? target.invoice_due_at, "UTC") : null,
       link: templateKey === "money.invoice_raised" && target.event_subject_id && process.env[APP_DOMAIN_VAR] && target.practice_slug
         ? `https://${target.practice_slug}.${process.env[APP_DOMAIN_VAR]}/record/invoice/${target.event_subject_id}` : (target.deep_link || "/app/money"),
       standing: (p.due_at ?? target.invoice_due_at) ? dueStanding(p.due_at ?? target.invoice_due_at, new Date(), target.practice_timezone ?? "UTC").phrase : "",
@@ -2902,19 +2903,6 @@ export const deliverReferralEmail = guardedTask("deliver_referral_email", async 
 });
 
 /** ★ Render + upload + record, in its own transaction and its own retry budget. See archive.mjs. */
-// ═══════════════════════════════════════════════════════════════════════════
-// ★ Run 9 Part 3.6 — A PLAYBOOK THAT RUNS. One job for both ways a run moves: a signed document may START the
-//   workspace's switched-on playbooks ({ instanceId }), and a run whose wait is over RESUMES ({ runId }).
-//   ★★ EACH RUNS AS A PERSON, CHECKED. A document is only visible to someone (document_is_visible fails closed on
-//      a null viewer, the archive's own lesson above), so a playbook reads and sends as its OWNER — the staff
-//      member who made it — and that person is re-read here as staff of this tenant, never trusted from a payload
-//      (add_job is callable by anything holding app_rw). A run that started keeps its starter's name.
-// ═══════════════════════════════════════════════════════════════════════════
-const staffInTenant = async (tenantId, userId) => {
-  let ok = false;
-  await withTenant(tenantId, async (tx) => { ok = (await tx.query("SELECT role FROM keystone.app_user WHERE id = $1", [userId])).rows[0]?.role === "staff"; });
-  return ok;
-};
 // ★ Run 9 Part 4R — THE BUILT-IN TEMPLATE LIBRARY'S SEED. Queued once per library version when the worker starts (runner.mjs, jobKey seed_template_library:<version>), or for one workspace.
 //   A self-hosted install prints every built-in master on install and brings them all up to date on upgrade; the hosted service makes a master the first time a workspace uses it
 //   (library.mjs ensureBuiltin) and here only brings the masters that exist up to date. Idempotent: a master already current is untouched. Each workspace in its own transaction, as
@@ -2953,27 +2941,6 @@ export const reencryptDocumentFiles = workspaceOrPlatformTask("reencrypt_documen
   helpers.logger.info(`reencrypt_document_files: ${ids.length} workspace(s), ${sealed} plaintext file(s) sealed, ${moved} moved to the active key, ${failedTenants} workspace(s) with a failure`);
   if (failedTenants) throw new Error(`reencrypt_document_files: ${failedTenants} workspace(s) had a failure; the retry runs them again`);
 });
-export const runDocumentPlaybooks = guardedTask("run_document_playbooks", async (payload, helpers) => {
-  const { tenantId, instanceId = null, runId = null } = payload;
-  if (!tenantId || (!instanceId && !runId)) throw new Error("run_document_playbooks needs a tenantId and an instanceId or a runId");
-  if (runId) {
-    let actor = null;
-    await withTenant(tenantId, async (tx) => { actor = await playbookRunActor(tx, { runId }); });
-    if (!actor) { helpers.logger.info(`playbook run ${runId}: nothing due (already resumed or stopped)`); return; }
-    if (!(await staffInTenant(tenantId, actor))) throw new Error(`run_document_playbooks: run ${runId}'s actor is not staff of this tenant — refusing to act as them`);
-    await withTenant(tenantId, (tx) => resumePlaybookRun(tx, { tenantId, runId }), { userId: actor });
-    return;
-  }
-  let books = [];
-  await withTenant(tenantId, async (tx) => { books = await playbooksToStart(tx); });
-  for (const b of books) {
-    if (!(await staffInTenant(tenantId, b.actorUserId))) { helpers.logger.warn(`playbook ${b.playbookId}: its owner is no longer staff here, so it does not run`); continue; }
-    // each playbook in its own transaction: one that fails does not stop the others (its own run row records why)
-    const r = await withTenant(tenantId, (tx) => startPlaybookRun(tx, { tenantId, playbookId: b.playbookId, instanceId, actorUserId: b.actorUserId }), { userId: b.actorUserId });
-    if (r?.started || r?.stopped) helpers.logger.info(`playbook ${b.playbookId} on ${instanceId}: ${r.started ? "started" : `not run (${r.stopped})`}`);
-  }
-});
-
 export const archiveDocumentPdf = guardedTask("archive_document_pdf", async (payload, helpers) => {
   const { tenantId, instanceId, actorUserId } = payload;
   if (!instanceId) throw new Error("archive_document_pdf needs an instanceId");
@@ -3104,8 +3071,10 @@ export const archiveDocumentPdf = guardedTask("archive_document_pdf", async (pay
             const downloadUrl = result.downloadDays > 0 && linkParty
               ? (await mintDownloadLink(tx, { tenantId, leadId: result.leadId, partyId: linkParty, days: result.downloadDays })).url : null;
             if (result.downloadDays > 0 && !downloadUrl) { helpers.logger.warn(`signed-copy email to ${person.email} for ${instanceId} skipped: links are on and there is no link to give`); return; }
+            // R13-D221: a test document's completion email is marked [TEST] like its invitation
+            const { rows: [tst] } = await tx.query(`SELECT is_test FROM keystone.document_instance WHERE id = $1`, [result.leadId ?? instanceId]);
             const outcome = await sendSignedCopyEmail({
-              to: person.email, practiceName, logoUrl, documentTitle: result.title, recipientName: (person.name && person.name !== practiceName) ? person.name : "there", executedLocalDate: null, pdfBytes: result.bytes, certificateBytes: result.certificateBytes ?? null, downloadUrl, tx, tenantId, language: person.language ?? result.language ?? "en",
+              to: person.email, practiceName, logoUrl, documentTitle: tst?.is_test === true ? `[TEST] ${result.title}` : result.title, recipientName: (person.name && person.name !== practiceName) ? person.name : "there", executedLocalDate: null, pdfBytes: result.bytes, certificateBytes: result.certificateBytes ?? null, downloadUrl, tx, tenantId, language: person.language ?? result.language ?? "en",
               deliver: (m) => sendDocumentMail(tx, { tenantId, ...m, log: { kind: "completed", instanceId } }),
             });
             if (outcome.status === "failed") { helpers.logger.warn(`signed-copy email to ${person.email} for ${instanceId} failed: ${outcome.error}`); failed.push(person.email); }
@@ -3115,10 +3084,6 @@ export const archiveDocumentPdf = guardedTask("archive_document_pdf", async (pay
       // Run 9 Part 3.7 (Pay2): the payment receipt travels with the sealed copy — sent in this step, once per payment (the payment row is the memory), never on its own before it
       if (!failed.length) await withTenant(tenantId, (tx) => sendReceiptsForSend(tx, { tenantId, leadId: result.leadId }), { userId: actorUserId })
         .catch((e) => helpers.logger.warn(`payment receipts for ${instanceId}: ${e.message}`));
-      // Run 7: a form response's owner notice (only when the form says so), once — the email log is the memory
-      if (result.formNotice) await withTenant(tenantId, (tx) => sendFormResponseNotice(tx, { tenantId, leadId: result.leadId }), { userId: actorUserId })
-        .catch((e) => helpers.logger.warn(`form response notice for ${instanceId}: ${e.message}`));
-      if (result.formNotice) await withTenant(tenantId, (tx) => noteUsageAfterResponse(tx, { tenantId }), { userId: actorUserId });   // a response counts once signed: the 80% / 100% notices are checked here too
       if (failed.length) throw new Error(`the signed copy could not be emailed to ${failed.length} ${failed.length === 1 ? "person" : "people"} (${failed.length === pdfPlan.sendTo.length ? "all" : "some"} will be tried again)`);
     }
   }
@@ -3412,6 +3377,9 @@ export const docustaySeatLog = guardedTask("docustay_seat_log", async (payload, 
   const { tenantId } = payload;
   const r = await withTenant(tenantId, (tx) => logSeatsToday(tx, { tenantId }));
   if (r) helpers.logger.info(`docustay_seat_log tenant=${tenantId} day=${r.day} seats=${r.seatCount}`);
+  if (r) { try { const { syncPaygSeats } = await import("../product/docustayUsage.mjs"); const c = await withTenant(tenantId, (tx) => syncPaygSeats(tx, { tenantId, staffCount: r.seatCount })); if (c.changed) helpers.logger.info(`docustay_seat_log tenant=${tenantId} Pay as you go seats ${c.from} → ${c.to}`); } catch (e) { helpers.logger.warn(`docustay_seat_log tenant=${tenantId} seat sync failed: ${e?.message ?? e}`); } }
+  // 21 Oct 2026 (pricing integrity): the once-a-day checks (the own-key notice; fair-use review flags, review only)
+  if (r) { try { const { dailyChecks } = await import("../product/docustayDaily.mjs"); await withTenant(tenantId, (tx) => dailyChecks(tx, { tenantId, log: (m) => helpers.logger.warn(m) })); } catch (e) { helpers.logger.warn(`docustay_seat_log tenant=${tenantId} daily checks failed: ${e?.message ?? e}`); } }
   return r ?? { tenantId, skipped: "not a Docustay workspace" };
 });
 
@@ -3480,8 +3448,8 @@ export const LISTENER = Object.freeze({
   // ★ B-3b — a held booking's document was executed → confirm it (documents.document.executed,
   //   pushed alongside ARCHIVE_DOCUMENT_PDF, which stays this topic's HANDLER_LISTENER entry).
   CONFIRM_HELD_BOOKINGS: "confirm_held_bookings",
-  // ★ Run 9 Part 3.6 — a signed document may start a playbook, and a playbook's wait ended: both queue run_document_playbooks.
-  DOCUMENT_PLAYBOOKS: "document_playbooks",
+  // ★ PH1 (Dashboard, 16 Oct 2026) — committed Docustay events to PostHog (src/product/posthogListener.mjs). Pushed, never mapped.
+  POSTHOG: "posthog",
   // ★ B-5b — a subscription failed to start when its document/estimate triggered it
   //   (money.subscription.start_failed) → retry it. Declared, reached, pushed and run the same shape
   //   as GRANT_CREDITS/CONFIRM_HELD_BOOKINGS just above.
@@ -3580,8 +3548,8 @@ export const LISTENER_REACH = Object.freeze({
   // ★ B-3b — internal: bookkeeping onto this practice's own booking row only; nothing leaves this
   //   database.
   [LISTENER.CONFIRM_HELD_BOOKINGS]: "internal",
-  // ★ Run 9 — internal: it only queues run_document_playbooks (whose sends go out through the one send path).
-  [LISTENER.DOCUMENT_PLAYBOOKS]: "internal",
+  // ★ PH1 — outbound: its effect is a POST to PostHog Cloud.
+  [LISTENER.POSTHOG]: "outbound",
   // ★ B-5b — outbound: its effect is a POST to Stripe (startClientSubscription →
   //   pushSubscriptionToStripe), a system outside this database — same classification as
   //   ENSURE_STRIPE_CUSTOMER above, which is also inline and outbound.
@@ -3754,7 +3722,6 @@ export const HANDLER_LISTENER = Object.freeze({
   "settings.import.completed": LISTENER.GENERIC_NOTICE,
   "settings.import.undone": LISTENER.GENERIC_NOTICE,
   "settings.subscription.updated": LISTENER.GENERIC_NOTICE,
-  "settings.usage.reconciled": LISTENER.GENERIC_NOTICE,
   "accounts.account.created": LISTENER.GENERIC_NOTICE,
   "accounts.pipeline.advanced": LISTENER.GENERIC_NOTICE,
   "network.party.created": LISTENER.GENERIC_NOTICE,
@@ -3772,12 +3739,10 @@ export const HANDLER_LISTENER = Object.freeze({
   "documents.document.signed": LISTENER.GENERIC_NOTICE,
   // "documents.document.executed" NOT mapped here — see the FIX note above; pushed in planListeners.
   "documents.document.reminder_due": LISTENER.GENERIC_NOTICE,
-  "documents.key_date.due": LISTENER.GENERIC_NOTICE,          // Run 9 (R9-i): the renewal reminder's in-app notice and owner email
   "documents.payment.hold_lapsed": LISTENER.GENERIC_NOTICE,   // Run 9 Part 3.7: a held signature's payment never came — the sender is told
-  "documents.playbook.ran": LISTENER.GENERIC_NOTICE,          // Run 9: a playbook's "tell me" step
-  "documents.playbook.step_due": LISTENER.DOCUMENT_PLAYBOOKS,  // Run 9: a playbook's wait is over
   "documents.document.bounced": LISTENER.GENERIC_NOTICE,
   "documents.document.changes_requested": LISTENER.GENERIC_NOTICE,
+  "documents.document.delegated": LISTENER.GENERIC_NOTICE,   // R13-D265
   "documents.disclosure.accepted": LISTENER.GENERIC_NOTICE,
   "documents.disclosure.withdrawn": LISTENER.GENERIC_NOTICE,
   // "booking.hold.expired" NOT mapped here — see the FIX note above; pushed in planListeners.
@@ -3828,10 +3793,8 @@ const LISTENER_RUN = Object.freeze({
   //   is the executed document instance, the same id ARCHIVE_DOCUMENT_PDF's own handler reads above.
   [LISTENER.CONFIRM_HELD_BOOKINGS]: (ev, { tx, tenantId }) =>
     confirmHeldBookings(tx, { tenantId, instanceId: ev.subject_id }),
-  // ★ Run 9 Part 3.6 — `ev.subject_id` is the executed document (start) or the run whose wait ended (resume).
-  [LISTENER.DOCUMENT_PLAYBOOKS]: (ev, { tenantId, helpers }) => ev.topic === "documents.playbook.step_due"
-    ? helpers.addJob("run_document_playbooks", { tenantId, runId: ev.subject_id }, { jobKey: `playbook_run:${ev.subject_id}`, jobKeyMode: "replace", priority: JOB_PRIORITY.run_document_playbooks })
-    : helpers.addJob("run_document_playbooks", { tenantId, instanceId: ev.subject_id }, { jobKey: `playbooks:${ev.subject_id}`, jobKeyMode: "replace", priority: JOB_PRIORITY.run_document_playbooks }),
+  // ★ PH1 — ids, states and timings only; the person is the workspace account, never a signer.
+  [LISTENER.POSTHOG]: (ev, { tx, tenantId }) => handlePosthogEvent(ev, { tx, tenantId }),
   [LISTENER.SCHEDULE_BOOKING_REMINDER]: (ev, ctx) => TOPIC_HANDLERS["booking.booking.created"](ev, ctx),
   [LISTENER.NOTIFY_BOOKING_REMINDER]: (ev, ctx) => TOPIC_HANDLERS["booking.booking.reminder"](ev, ctx),
   [LISTENER.RESCHEDULE_BOOKING_REMINDER]: (ev, ctx) => TOPIC_HANDLERS["booking.booking.rescheduled"](ev, ctx),
@@ -4281,13 +4244,13 @@ export async function planListeners(tx, ev, tenantId) {
   if (ev.topic === "people.person.archived") listeners.push(LISTENER.GENERIC_NOTICE);
   if (ev.topic === "people.referral.sent") listeners.push(LISTENER.GENERIC_NOTICE);
   if (ev.topic === "documents.document.executed") listeners.push(LISTENER.GENERIC_NOTICE);
-  // ★ Run 9 Part 3.6 — a FIFTH listener on the executed document (same one-topic-many-listeners shape): it may start a playbook.
-  if (ev.topic === "documents.document.executed") listeners.push(LISTENER.DOCUMENT_PLAYBOOKS);
   if (ev.topic === "booking.hold.expired") listeners.push(LISTENER.GENERIC_NOTICE);
   // ★ Stage 16 task 16.32 — automations on topics that trigger automation rules.
   if (AUTOMATION_TOPICS.includes(ev.topic)) listeners.push(LISTENER.AUTOMATIONS);
   // ★ Stage 16 task 16.32 — campaign batch enqueue on campaign events.
   if (ev.topic === "growth.campaign.queued" || ev.topic === "growth.campaign.scheduled") listeners.push(LISTENER.CAMPAIGN_BATCH);
+  // ★ PH1 — Docustay workspaces only, and only where POSTHOG_PROJECT_TOKEN is set (never on a self-hosted install).
+  if (await wantsPosthog(tx, ev, tenantId)) listeners.push(LISTENER.POSTHOG);
   // ★ `=== true`, not truthiness: the column is NOT NULL boolean, and anything else is a bug upstream
   //   that must not quietly turn deliveries off.
   if (ev.sample === true) {
@@ -4548,7 +4511,9 @@ export const dispatchOutboxForTenant = guardedTask("dispatch_outbox", async (pay
 
   if (owed.length) await reportGaveUps(tenantId, helpers, owed, summary);
 
-  helpers.logger.info(
+  // an empty poll writes nothing at info (G1): only a pass that claimed, failed or reported something is a line
+  const quiet = summary.claimed === 0 && summary.failed === 0 && summary.unhandled === 0 && summary.released === 0 && summary.listenerFailures === 0 && summary.listenersDead === 0 && summary.gaveUpReported === 0 && summary.tasksOpened === 0 && summary.tasksClosed === 0;
+  helpers.logger[quiet ? "debug" : "info"](
     `dispatch_outbox tenant=${tenantId} claimed=${summary.claimed} processed=${summary.processed} ` +
     `failed=${summary.failed} unhandled=${summary.unhandled} released=${summary.released} ` +
     `listeners_delivered=${summary.listenersDelivered} listener_failures=${summary.listenerFailures} ` +
@@ -4709,7 +4674,7 @@ async function finishAcknowledgedGiveUps(helpers) {
   });
 }
 
-let lastPlanReconcileAt = 0;
+let lastPlanReconcileAt = 0, lastUsageFlushAt = 0, lastUsageSummaryAt = 0, lastConnectNoticeAt = 0;
 const reapOrphanJobs = async function reapOrphanJobs(_payload, helpers) {
   // 14 Oct 2026: a job for a task this worker does NOT register can never run — graphile skips an unknown task — so it sits "due" forever and reads as a stuck queue
   //   (invoice_draft_sweep was removed in 1e7122f38; nine of its jobs waited 12 days). Complete (not fail) such a job only once it is a DAY past due, so a job for a task a
@@ -4729,6 +4694,16 @@ const reapOrphanJobs = async function reapOrphanJobs(_payload, helpers) {
   // Billing audit (13 Oct 2026): every six hours each Docustay workspace's plan is compared with Stripe's own record and fixed if it drifted (a lost or late webhook). Idempotent; a failure is logged and the rest still runs.
   try { if (Date.now() - lastPlanReconcileAt > 6 * 3600_000) { lastPlanReconcileAt = Date.now(); const { reconcileDocustaySubscriptions } = await import("../product/reconcilePlans.mjs"); const r = await reconcileDocustaySubscriptions({ log: (m) => helpers.logger.warn(m) }); if (r.checked || r.failed.length) helpers.logger.info(`reap_orphan_jobs: docustay plan reconcile checked ${r.checked}, corrected ${r.corrected.length}, failed ${r.failed.length}.`); } }
   catch (e) { helpers.logger.error(`reap_orphan_jobs: ★ docustay plan reconcile failed (${e.message}).`); }
+  // Usage billing (v1 item 21): unsent billable units are reported to Stripe as meter events (identifier = the document or AI request, so a retry never bills twice). At most once a minute; a failure is logged and the rest still runs.
+  // R13-D334: a self-hosted install is never billed by Docustay, so it has no meter to report to (its worker's role was also refused the pending list every minute)
+  try { if (process.env.KEYSTONE_SELF_HOST !== "1" && Date.now() - lastUsageFlushAt > 60_000) { lastUsageFlushAt = Date.now(); const { flushAllPendingUsage } = await import("../product/docustayUsage.mjs"); const r = await flushAllPendingUsage({ log: (m) => helpers.logger.warn(m) }); if (r.sent || r.failed) helpers.logger.info(`reap_orphan_jobs: docustay usage flush sent ${r.sent}, failed ${r.failed}.`); } }
+  catch (e) { helpers.logger.error(`reap_orphan_jobs: ★ docustay usage flush failed (${e.message}).`); }
+  // Usage billing (v1 item 24): the owner's summary of the period that just ended (a paid plan's billing period, Free's calendar month). Once per workspace per period (a once-marker keyed by the period start); checked every six hours.
+  try { if (Date.now() - lastUsageSummaryAt > 6 * 3600_000 ) { lastUsageSummaryAt = Date.now(); const { sendPeriodSummaries } = await import("../product/docustayUsage.mjs"); const r = await sendPeriodSummaries({ log: (m) => helpers.logger.warn(m) }); if (r.sent) helpers.logger.info(`reap_orphan_jobs: docustay usage summaries sent ${r.sent}.`); } }
+  catch (e) { helpers.logger.error(`reap_orphan_jobs: ★ docustay usage summary failed (${e.message}).`); }
+  // Stripe payments screen (21 Oct 2026): a Stripe deadline 7, 3 or 1 day away emails the workspace Owners, once per threshold. Checked once a day.
+  try { if (Date.now() - lastConnectNoticeAt > 24 * 3600_000) { lastConnectNoticeAt = Date.now(); const { sendDeadlineNotices } = await import("../product/docustayStripeNotices.mjs"); const r = await sendDeadlineNotices({ log: (m) => helpers.logger.warn(m) }); if (r.sent) helpers.logger.info(`reap_orphan_jobs: stripe deadline notices sent ${r.sent}.`); } }
+  catch (e) { helpers.logger.error(`reap_orphan_jobs: ★ stripe deadline notices failed (${e.message}).`); }
   // ★★★ C-1 — FIRST, FINISH THE JOBS PEOPLE HAVE ALREADY ACKNOWLEDGED (see finishAcknowledgedGiveUps above).
   //     It runs on EVERY tick, before the orphan scan's own early return, because its subject is not an orphan:
   //     the practice is alive and well and a person has said "I have dealt with this". If it throws, it is logged
@@ -6655,7 +6630,6 @@ export const TASK_LIST = policeTaskList({
   deliver_n8n: deliverN8n,
   retry_n8n: retryN8n,
   archive_document_pdf: archiveDocumentPdf,
-  run_document_playbooks: runDocumentPlaybooks,   // Run 9 Part 3.6
   seed_template_library: seedTemplateLibrary,   // Run 9 Part 4R
   reencrypt_document_files: reencryptDocumentFiles,   // Run 9 Part 4.4
   // ★ P20.4. In the SAME list the worker is given — a gate that exercised a different list would be

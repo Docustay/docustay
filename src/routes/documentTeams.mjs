@@ -17,15 +17,3 @@ export function registerDocumentTeamRoutes(app, { runTenantScoped }) {
   // putting work in a team: whoever can edit it (the island refuses what they cannot see)
   app.post("/api/documents/teams/assign", (c) => runTenantScoped(c, async (ctx) => { staff(ctx); return assignTeam(ctx.db, { tenantId: ctx.tenantId, kind: ctx.body?.kind, id: need(ctx.body?.id, "id"), teamId: ctx.body?.teamId ?? null, actorUserId: ctx.principal.appUserId }); }, { bucket: "api" }).then((r) => c.json(r, 200)));
 }
-
-// Reports (Part 30 item 8): any staff member may read them; the island applies the same team rule as the lists, so a report never shows a document the list would hide.
-import { documentReport, documentReportCsv } from "../documents/frontDoor.mjs";
-export function registerDocumentReportRoutes(app, { runTenantScoped }) {
-  const q = (c, k) => c.req.query(k) || null;
-  const staff = (ctx) => { if (ctx.principal.user?.role !== "staff") throw forbidden("This is for the team that runs the workspace."); };
-  app.get("/api/documents/reports", (c) => runTenantScoped(c, (ctx) => { staff(ctx); return documentReport(ctx.db, { tenantId: ctx.tenantId, from: q(c, "from"), to: q(c, "to"), teamId: q(c, "team") }); }, { bucket: "api" }).then((r) => c.json(r, 200)));
-  app.get("/api/documents/reports.csv", async (c) => {
-    const out = await runTenantScoped(c, (ctx) => { staff(ctx); return documentReportCsv(ctx.db, { tenantId: ctx.tenantId, from: q(c, "from"), to: q(c, "to"), teamId: q(c, "team") }); }, { bucket: "api" });
-    return c.body(out.csv, 200, { "content-type": "text/csv; charset=utf-8", "content-disposition": `attachment; filename="documents-${out.window.from}-to-${out.window.to}.csv"`, "cache-control": "private, no-store" });
-  });
-}

@@ -17,5 +17,5 @@
 <style>
   :global(.sheet-x) { padding: 22px; } .frow { display: flex; gap: 10px; margin-top: 20px; } .frow .fld { flex: 1; }
   .lst { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 7px; } .lst li { display: flex; justify-content: space-between; gap: 10px; font: 500 12.5px/1.2 var(--font-sans); color: #1b1b1b; border-bottom: 1px solid #e6e2d8; padding-bottom: 7px; } .lst em { font: 500 10px/1.3 var(--font-mono); color: #6f6b63; font-style: normal; letter-spacing: .06em; text-transform: uppercase; align-self: center; }
-  .sbtn { margin-top: 14px; display: inline-block; background: #1b1b1b; color: #faf8f3; font: 600 12px/1 var(--font-sans); padding: 10px 14px; border-radius: 6px; } .sst { position: absolute; right: 16px; bottom: 18px; }
+  .sbtn { margin-top: 14px; display: inline-block; background: #1b1b1b; color: #f4f2ec; font: 600 12px/1 var(--font-sans); padding: 10px 14px; border-radius: 6px; } .sst { position: absolute; right: 16px; bottom: 18px; }
 </style>

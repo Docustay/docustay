@@ -161,12 +161,12 @@ export function registerChatRoutes(app, { runTenantScoped, tenantIsPlatform } = 
       const p = await preflight(ctx.db, ctx.principal, ctx.tenantId, tenantIsPlatform);
       const conv = await ownConversation(ctx.db, { conversationId: id, ownerUserId: ctx.principal.appUserId });
       if (!conv) throw notFound("That conversation was not found.");
-      // the allowance, the request limits, Think harder and the platform pause, decided in one place; a refusal is a plain sentence and is written to the ledger
+      // the allowance, the request limits and the platform pause, decided in one place; a refusal is a plain sentence and is written to the ledger
       let adm = null, scripted = false;
       if (p.demo) {
         const dp = (await ports()).demo; scripted = (await dp.aiMode(ctx.db, { hasKey: Boolean(p.apiKey) })) !== "real";
-        if (!scripted) { try { adm = await admit(ctx.db, { tenantId: ctx.tenantId, userId: p.userId, feature: "chat", cfg: p.cfg, thinkHarder: false }); } catch { await dp.refundAiPrompt(ctx.db); scripted = true; } }
-      } else adm = await admit(ctx.db, { tenantId: ctx.tenantId, userId: p.userId, feature: "chat", cfg: p.cfg, thinkHarder: body.thinkHarder === true });
+        if (!scripted) { try { adm = await admit(ctx.db, { tenantId: ctx.tenantId, userId: p.userId, feature: "chat", cfg: p.cfg }); } catch { await dp.refundAiPrompt(ctx.db); scripted = true; } }
+      } else adm = await admit(ctx.db, { tenantId: ctx.tenantId, userId: p.userId, feature: "chat", cfg: p.cfg });
       return { ...p, tenantId: ctx.tenantId, principal: ctx.principal, conv, adm, scripted };
     }, { bucket: "documents" });
     const { cfg, apiKey, userId, tenantId, principal, conv, adm, scripted } = pre;

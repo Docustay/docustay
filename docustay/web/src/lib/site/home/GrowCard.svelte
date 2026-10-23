@@ -1,7 +1,7 @@
 <script>
   // The closing card: a rounded card that grows to fill the width as it scrolls into view (a CSS view() timeline, transform and clip-path only), with the final call to action on it.
   import Doodle from "$lib/doodle/Doodle.svelte";
-  let { title = "Send your first document", text = "Create a workspace, upload a document and send it. No card needed. The person signing needs no account.", cta = "Start free", href = "/signup", second = ["See how it works", "/product"] } = $props();
+  let { title = "Send your first document", text = "Create a workspace, upload a document and send it. No card needed. The person signing needs no account.", cta = "Start free", href = "/signup", second = ["See how it works", "/features/how-it-works"] } = $props();
 </script>
 <section class="grow-wrap" aria-label="Get started">
   <div class="grow on-black">

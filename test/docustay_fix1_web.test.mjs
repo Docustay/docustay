@@ -9,7 +9,7 @@ const src = (p) => readFileSync(new URL(`../src/${p}`, import.meta.url), "utf8")
 
 test("D-002: the signature pad only offers Type when typed signatures are allowed", () => {
   const s = web("lib/SignaturePad.svelte");
-  assert.match(s, /\{#if allowTyped\}[^\n]*onclick=\{\(\) => \(tab = "type"\)\}/);
+  assert.match(s, /\{#if allowTyped\}[^\n]*\["type", P\.type\][^\n]*onclick=\{\(\) => \(tab = k\)\}/);   // the Type tab is drawn only inside the allowTyped block
   assert.match(s, /if \(!allowTyped && tab !== "draw"\) tab = "draw"/);
 });
 test("D-014: the sidebar workspace name is the organisation, never the email From name", () => {
@@ -65,12 +65,12 @@ test("D-096 / D-097: a rejected template shows Rejected with its reason and no U
   assert.match(host, /data-testid="confirm-input"/);
 });
 import { builtinBriefs } from "../src/documents/plays/builtin.mjs";
-test("D-063 (Run 9 Part 4R: form plays became built-in Form templates): every built-in form starter is a named, openable form template, and the form flow takes the starter by its slug", async () => {
+test("D-063 (Docustay v1: the former form templates are ordinary templates): every built-in starter is named, and the template flow takes the starter by its slug", async () => {
   const { FORM_STARTERS } = await import("../src/documents/starters/index.mjs");
   assert.ok(FORM_STARTERS.length >= 3, "positive control: there are built-in form templates");
   for (const f of FORM_STARTERS) assert.ok(f.slug && f.title, `a form starter has no slug or title: ${JSON.stringify(Object.keys(f))}`);
   assert.equal(builtinBriefs().filter((p) => p.kind === "form").length, 0, "the plays list no longer carries form plays (they are templates now)");
-  assert.match(web("routes/(app)/create/flow/+page.svelte"), /q\.get\("mode"\) === "form"/);
+  assert.match(web("routes/(app)/create/flow/+page.svelte"), /q\.get\("mode"\) === "template"/);
 });
 test("D-023 / D-025 / D-027: hosted Developers → Usage report shows the keys' own usage, Platform → Data holds the export, the self-host report appears only on self-host, and Platform has no duplicate Billing tab", () => {
   const dev = web("routes/(app)/settings/+page.svelte"), plat = dev;   // Launch step 7: Developers and Workspace are areas of Settings
@@ -116,11 +116,8 @@ test("D-077 / D-078: the decline notice names who declined and why, an owner is 
   const tasks = src("queue/tasks.mjs");
   assert.match(tasks, /declined “\$\{shownTitle\}”/);   // names the document in quotes (11 Oct 2026: the Health data switch is gone, so it always names it)
   assert.match(tasks, /target\.display_name !== target\.practice_name \? target\.display_name : "there"/);
-  assert.match(src("documents/emailPreview.mjs"), /kind === "expired"\) vars\.summary = "Services agreement \(sent to Alex Sample\)"/);
 });
-import { CSV_STATUS } from "../src/documents/reports.mjs";
-test("D-034 / D-075 / D-091: the CSV and the timeline use the screens' words (Completed, In progress, Cancelled), and a cancelled document's people are Cancelled", () => {
-  assert.equal(CSV_STATUS.executed, "Completed"); assert.equal(CSV_STATUS.partially_signed, "In progress"); assert.equal(CSV_STATUS.void, "Cancelled");
+test("D-034 / D-075 / D-091: the timeline uses the screens' words (Completed, In progress, Cancelled), and a cancelled document's people are Cancelled", () => {
   const send = src("documents/pdfSend.mjs");
   assert.match(send, /voided: "Cancelled"/); assert.match(send, /embed_session: "Opened signing inside another website"/);
   assert.match(send, /status === "voided" && !isFinished\(p\) \? "cancelled" : p\.status/);

@@ -71,6 +71,8 @@ test("verifyWebhook accepts a good signature and refuses a bad body, a bad secre
   assert.deepEqual(await verifyWebhook(secret, headers, body), { topic: "documents.document.executed" });
   await assert.rejects(() => verifyWebhook(secret, headers, body + " "), /does not match/);
   await assert.rejects(() => verifyWebhook("whsec_" + Buffer.from("x".repeat(32)).toString("base64"), headers, body), /does not match/);
+  await assert.rejects(() => verifyWebhook("whsec_not a secret!", headers, body), /not in the whsec_… form/);
+  await assert.rejects(() => verifyWebhook("whsec_", headers, body), /not in the whsec_… form/);
   const old = String(Number(ts) - 3600);
   await assert.rejects(() => verifyWebhook(secret, { ...headers, "webhook-timestamp": old, "webhook-signature": sign("e1", old, body) }, body), /tolerance/);
 });

@@ -71,7 +71,8 @@ export const pdfFieldSchema = z.object({
   if (f.sender && !SENDER_TYPES.includes(f.type)) ctx.addIssue({ code: "custom", path: ["sender"], message: `a ${f.type} is filled in by the person signing, not the sender` });
   if (f.sender && f.calc !== undefined) ctx.addIssue({ code: "custom", path: ["sender"], message: "a box that works itself out is not filled in by the sender" });
   if (f.locked && f.default === undefined) ctx.addIssue({ code: "custom", path: ["default"], message: "a locked field needs the answer in default" });
-  if (f.locked && f.options && f.default !== undefined && f.type === "dropdown" && !f.options.includes(f.default)) ctx.addIssue({ code: "custom", path: ["default"], message: "the locked answer must be one of the choices" });
+  // R13-D305: an optional sender box left empty is locked with no answer (resolveBoxValues) — "" there is "nothing chosen", not a choice; a required one still needs a real choice
+  if (f.locked && f.options && f.default !== undefined && f.type === "dropdown" && !(f.default === "" && f.required === false) && !f.options.includes(f.default)) ctx.addIssue({ code: "custom", path: ["default"], message: "the locked answer must be one of the choices" });
   const choosing = f.type === "dropdown" || f.type === "multiselect";
   if (choosing && (!f.options || f.options.length === 0)) ctx.addIssue({ code: "custom", path: ["options"], message: `a ${f.type === "multiselect" ? "multi-select" : "dropdown"} needs its choices` });
   if (!choosing && f.options) ctx.addIssue({ code: "custom", path: ["options"], message: "only a dropdown or multi-select carries choices" });
@@ -226,7 +227,7 @@ const VALIDATORS = {
   email: (v) => (/^[^\s@<>"]+@[^\s@<>"]+\.[^\s@<>"]+$/.test(v) ? null : "must be an email address"),
   phone: (v) => (/^[+()\-.\s0-9]{7,25}$/.test(v) && v.replace(/\D/g, "").length >= 7 ? null : "must be a phone number"),
   number: (v) => (v.trim() !== "" && Number.isFinite(Number(v)) ? null : "must be a number"),
-  date: (v) => (/^\d{4}-\d{2}-\d{2}$/.test(v) && !Number.isNaN(Date.parse(v)) ? null : "must be a date"),
+  date: (v) => { const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(v); const d = m && new Date(Date.UTC(+m[1], +m[2] - 1, +m[3])); return d && d.getUTCMonth() === +m[2] - 1 && d.getUTCDate() === +m[3] ? null : "must be a date (YYYY-MM-DD)"; },   // R13-D232: a calendar check — Date.parse rolls 2026-02-31 over to 3 March
   zip: (v) => (/^\d{5}(-\d{4})?$/.test(v) ? null : "must be a ZIP code"),
 };
 const PNG = /^data:image\/png;base64,[A-Za-z0-9+/=]+$/;

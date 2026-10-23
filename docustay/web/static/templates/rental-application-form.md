@@ -1,6 +1,6 @@
 ---
 title: Rental application form
-description: A free rental application form. Send a link, the applicant fills in their details and signs from a phone, and each application is saved on its own.
+description: A free rental application form. Send it to the applicant, who fills in their details and signs from a phone, and each application is saved on its own.
 ---
 
 # Rental application form

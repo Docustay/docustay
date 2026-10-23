@@ -1,5 +1,6 @@
 // QUEUE §23.2.2 — the Documents island's OWN settings, over HTTP. GET returns the typed schema + current values grouped for the screen; POST changes ONE key.
 // Same shape as documentsClauses.mjs: a write ROW spread into writes.mjs's ROUTES (via itemsAndDocuments.mjs) and a read register function.
+import { notOnHostedDocustay } from "../documents/notInDocustay.mjs";
 import { forbidden, invalid } from "../http/errors.mjs";
 import { authoriseSection } from "../nav/authorise.mjs";
 import { assertMay } from "../permissions/assertMay.mjs";
@@ -10,7 +11,7 @@ import { isHostedModel } from "../documents/engine/ai/prices.mjs";
 import { sampleSignedCopy } from "../documents/signedCopySample.mjs";
 import { buildDocumentView } from "../documents/documentView.mjs";
 import { renderPreviewPdf } from "../documents/pdf.mjs";
-import { emailIdentityStatus, startEmailDomain, verifyEmailDomain, saveSmtpPassword, sendTestEmail, startEmailMailbox, removeEmailMailbox } from "../documents/frontDoor.mjs";
+import { emailIdentityStatus, startEmailDomain, verifyEmailDomain, removeEmailDomain, saveSmtpPassword, sendTestEmail, startEmailMailbox, removeEmailMailbox } from "../documents/frontDoor.mjs";
 
 const SECTION = "/documents/settings";
 
@@ -19,7 +20,7 @@ async function saveDocumentSetting(tx, { tenantId, key, value, actorUserId = nul
   // AI-COST-AND-USAGE-SPEC §3 and §8: the test provider only where the environment allows it, and a hosted workspace without a key of its own only the approved models
   if (key === "ai.provider" && (value === "fake" || value === "test_double") && !fakeAllowed()) throw invalid("The test provider is not available here.", { field: "value" });
   if (key === "ai.model" && typeof value === "string" && value && process.env.KEYSTONE_SELF_HOST !== "1" && !isHostedModel(value)) {
-    const ownKey = (await tx.query(`SELECT 1 FROM keystone.document_ai_secret WHERE tenant_id = $1 LIMIT 1`, [tenantId])).rowCount > 0;
+    const ownKey = (await (await import("../documents/engine/ai/gateway.mjs")).ownKeyState(tx, { tenantId })).usable;
     if (!ownKey) throw invalid("That model is not available on the hosted service. Pick Claude Sonnet 5.5 or Claude Haiku 5.5, or add your own provider key to use another.", { field: "value" });
   }
   const r = await setDocumentSetting(tx, { tenantId, key, value: value === undefined ? null : value, updatedBy: actorUserId });
@@ -28,18 +29,20 @@ async function saveDocumentSetting(tx, { tenantId, key, value, actorUserId = nul
 
 // ── QUEUE §23.3.4 — email sending: the sending domain, the SMTP password, a test email. Same permission as changing any other document setting. ──
 const need = (v, name) => { if (typeof v !== "string" || !v.trim()) throw invalid(`${name} is required`, { field: name }); return v; };
-const addEmailDomain = (tx, { tenantId, domain }) => startEmailDomain(tx, { tenantId, domain: need(domain, "domain") });
-const verifyEmailDomainNow = (tx, { tenantId }) => verifyEmailDomain(tx, { tenantId });
-const setSmtpPassword = (tx, { tenantId, password, actorUserId = null }) => saveSmtpPassword(tx, { tenantId, password: password ?? null, updatedBy: actorUserId });
+const addEmailDomain = async (tx, { tenantId, domain }) => { await notOnHostedDocustay(tx); return startEmailDomain(tx, { tenantId, domain: need(domain, "domain") }); };
+const removeEmailDomainNow = async (tx, { tenantId }) => { await notOnHostedDocustay(tx); return removeEmailDomain(tx, { tenantId }); };
+const verifyEmailDomainNow = async (tx, { tenantId }) => { await notOnHostedDocustay(tx); return verifyEmailDomain(tx, { tenantId }); };
+const setSmtpPassword = async (tx, { tenantId, password, actorUserId = null }) => { await notOnHostedDocustay(tx); return saveSmtpPassword(tx, { tenantId, password: password ?? null, updatedBy: actorUserId }); };
 const testEmail = (tx, { tenantId, to }) => sendTestEmail(tx, { tenantId, to: need(to, "to") });
-const connectMailbox = (tx, { tenantId, provider, actorUserId = null }) => startEmailMailbox(tx, { tenantId, userId: actorUserId, provider: need(provider, "provider") });
-const disconnectMailbox = (tx, { tenantId, actorUserId = null }) => removeEmailMailbox(tx, { tenantId, updatedBy: actorUserId });
+const connectMailbox = async (tx, { tenantId, provider, actorUserId = null }) => { await notOnHostedDocustay(tx); return startEmailMailbox(tx, { tenantId, userId: actorUserId, provider: need(provider, "provider") }); };
+const disconnectMailbox = async (tx, { tenantId, actorUserId = null }) => { await notOnHostedDocustay(tx); return removeEmailMailbox(tx, { tenantId, updatedBy: actorUserId }); };
 
 /** `setting` is an ownerless permission object (ownership.mjs), so `subject: null` is the real answer. */
 export const DOCUMENT_SETTINGS_WRITES = Object.freeze([
   { path: "/api/documents/settings", section: SECTION, fn: saveDocumentSetting, object: "setting", action: "edit", subject: null },
   { path: "/api/documents/email/domain", section: SECTION, fn: addEmailDomain, object: "setting", action: "edit", subject: null },
   { path: "/api/documents/email/domain/verify", section: SECTION, fn: verifyEmailDomainNow, object: "setting", action: "edit", subject: null },
+  { path: "/api/documents/email/domain/remove", section: SECTION, fn: removeEmailDomainNow, object: "setting", action: "edit", subject: null },
   { path: "/api/documents/email/smtp-password", section: SECTION, fn: setSmtpPassword, object: "setting", action: "edit", subject: null },
   { path: "/api/documents/email/test", section: SECTION, fn: testEmail, object: "setting", action: "edit", subject: null },
   { path: "/api/documents/email/mailbox/connect", section: SECTION, fn: connectMailbox, object: "setting", action: "edit", subject: null },

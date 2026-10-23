@@ -3,10 +3,10 @@
 // ★ It is a separate file from login.mjs so the GATE can drive login with a stub verifier while
 //   the SERVER installs the real one, without either knowing about the other.
 
-import { requestPasswordReset } from "./passwordReset.mjs";
-import { localAuthEnabled, redeemLocalReset } from "./localIdentity.mjs";
+import { requestPasswordRecovery, verifyRecoveryCode, resetWithGrant, resetWithLink } from "./password.mjs";
+import { localAuthEnabled } from "./localIdentity.mjs";
 import { oidcEnabled, oidcLabel, beginOidc, finishOidc, readStateCookie, stateCookie, clearStateCookie } from "./oidc.mjs";
-import { passkeysEnabled, requestOrigin, beginRegistration, finishRegistration, listPasskeys, removePasskey, renamePasskey, beginLogin, finishLogin } from "./passkeys.mjs";
+import { passkeysEnabled, requestOrigin, beginLogin, finishLogin } from "./passkeys.mjs";
 import { AUTH_EMAIL } from "../email/authEmailLanguages.mjs";
 /** The language a person asked for on the sign-in screen, only if we have words for it. */
 // the browser keeps the cookie for the longest a session can live (a Docustay workspace: 30 days). The SERVER decides how long a session is valid (keystone_auth.session.expires_at, 12 hours for the platform, up to 30 days for Docustay: migration 0738), so a cookie that outlives its session is simply refused.
@@ -32,7 +32,6 @@ import {
 import { login } from "./login.mjs";
 import { subdomainFromRequest, APP_DOMAIN_VAR } from "./tenantFromHost.mjs";
 import { unauthenticated, invalid, notFound } from "../http/errors.mjs";
-import { takeAttempt, attemptKeyFor } from "./attemptLimit.mjs";
 // ★★★ TASK 8.12 — the invite and code routes' own dependencies (8.6, 8.7), plus the raw Firebase
 //     verifier the accept route needs BEFORE `acceptInvite`/`login` ever run (see that route's own
 //     comment for why the token is verified twice). None of the three is edited here — imports only.
@@ -44,13 +43,13 @@ import { verifyIdToken } from "./firebase.mjs";
 //     non-test caller (operatorSession.mjs) and gains a second, direct one here for two-step/verify.
 // ★★★ F637 — `getTwoStepStatus` ADDED. A third, additional export of totp.mjs; the four already
 //     imported here are unchanged.
-import { beginEnrolment, confirmEnrolment, disableTotp, verifyTotp, getTwoStepStatus, hasConfirmedFactor } from "./totp.mjs";
 // ★★★ TASK 8.14 — 8.9's own wrappers, whose only prior caller was that module's own test file.
 import { openPlatformSession, closePlatformSession } from "./operatorSession.mjs";
 // ★★★ TASK 8.14 — the `auth.two_step_changed` sender (8.10), the SAME sender 8.12's code/request
 //     route already calls, following requestEmailCode's own established pattern (no try/catch:
 //     sendAuthEmail never throws on a delivery-level failure, only on a genuine config mistake).
-import { sendAuthEmail } from "../email/authEmail.mjs";
+import { registerTwoStepRoutes } from "./twoStepRoutes.mjs";
+import { summary as twoStepSummary, trustTokenFrom } from "./twoStep.mjs";
 
 /** Install the database-backed session store. Called once, at boot. */
 export function installAuth() {
@@ -224,7 +223,7 @@ async function loadSelf(c) {
   if (!resolved?.tenantId || !resolved?.userId) throw unauthenticated("sign in required");
   const person = await withTenant(resolved.tenantId, async (db) => {
     const { rows } = await db.query(
-      `SELECT firebase_uid, email FROM keystone.app_user WHERE id = $1`,
+      `SELECT u.firebase_uid, u.email, t.product FROM keystone.app_user u JOIN keystone.tenant t ON t.id = u.tenant_id WHERE u.id = $1`,
       [resolved.userId]
     );
     return rows[0] ?? null;
@@ -236,6 +235,8 @@ async function loadSelf(c) {
     tokenId: principal.tokenId,
     firebaseUid: person.firebase_uid,
     email: person.email,
+    product: person.product,
+    productName: person.product === "docustay" ? "Docustay" : "Workbench",
   };
 }
 
@@ -305,6 +306,7 @@ export function registerAuthRoutes(app, { loginImpl = login } = {}) {
       userAgent: c.req.header("user-agent") ?? null,
       ip: c.get("clientIp") ?? null,
       handoff,
+      trustedDeviceToken: trustTokenFrom(c.req.header("cookie")),
     });
 
     // ★★★ the maintainer, 28 Sep 2026 — THE PRACTICE PICKER BRANCH. No session anything yet — `login()`
@@ -374,7 +376,7 @@ export function registerAuthRoutes(app, { loginImpl = login } = {}) {
     // ★ Re-derives the two-step decision from the SAME source login() itself reads
     //   (hasConfirmedFactor(uid)) — the handoff mint deliberately did not carry this decision
     //   across the origin boundary (login.mjs's own header on the `handoff` option says why).
-    const requiresTwoStep = await hasConfirmedFactor(redeemed.firebaseUid);
+    const requiresTwoStep = (await twoStepSummary(redeemed.firebaseUid)).on;
     let presentedForCookie = presented;
     if (!requiresTwoStep) {
       // ★ redeemHandoffSession already landed the row at kind='partial' (1 hour) — upgradeSession
@@ -525,22 +527,37 @@ export function registerAuthRoutes(app, { loginImpl = login } = {}) {
     const body = await c.req.json().catch(() => null);
     const result = await requestEmailCode({
       email: body?.email, purpose: "sign_in", ip: c.get("clientIp") ?? null,
-      product: body?.product === "docustay" ? "docustay" : null, lang: mailLang(body?.lang),   // Docustay's own sign-in screen: the mail says Docustay
+      product: body?.product === "docustay" ? "docustay" : null, lang: body?.product === "docustay" ? null : mailLang(body?.lang),   // Docustay's own sign-in screen: the mail says Docustay, in English (Docustay v1 is English only)
     });
     return c.json(result);
   });
 
-  /** Docustay's own "forgot password" — always the same answer. */
+  /** Docustay's own "forgot password" — always the same answer. A six-digit code is emailed (with the old link beside it for another device). */
   app.post("/api/auth/password-reset/request", async (c) => {
     const body = await c.req.json().catch(() => null);
-    return c.json(await requestPasswordReset({ email: body?.email, ip: c.get("clientIp") ?? null, product: body?.product === "docustay" ? "docustay" : null, lang: mailLang(body?.lang) }));
+    return c.json(await requestPasswordRecovery({ email: body?.email, ip: c.get("clientIp") ?? null, product: body?.product === "docustay" ? "docustay" : null, lang: body?.product === "docustay" ? null : mailLang(body?.lang) }));
+  });
+  /** The typed code → a ten-minute, single-use grant for choosing the new password. The code itself never leaves the body of this request. */
+  app.post("/api/auth/password-reset/code", async (c) => {
+    const body = await c.req.json().catch(() => null);
+    return c.json(await verifyRecoveryCode({ email: body?.email, code: body?.code }));
+  });
+  /** The grant + the new password. Signs nobody in; every session ends, remembered devices are forgotten, the person is emailed; two-step is asked at the next sign-in. */
+  app.post("/api/auth/password-reset/set", async (c) => {
+    const body = await c.req.json().catch(() => null);
+    return c.json(await resetWithGrant({ email: body?.email, grant: body?.grant, password: body?.password, product: body?.product === "docustay" ? "docustay" : "docustay" }));
+  });
+  /** The fallback link from the same email (another device): the one-time link code and the new password, finished here so it does the same follow-up. */
+  app.post("/api/auth/password-reset/link", async (c) => {
+    const body = await c.req.json().catch(() => null);
+    return c.json(await resetWithLink({ oobCode: body?.oobCode, password: body?.password }));
   });
 
   /** The built-in identity's own reset (D-006): spend the emailed one-time token, set the new password. Only where local sign-in is on. */
   app.post("/api/auth/local/reset", async (c) => {
     if (!localAuthEnabled()) throw notFound("Password reset by this route is not available on this server.");
     const body = await c.req.json().catch(() => null);
-    return c.json(await redeemLocalReset({ token: body?.token, password: body?.password }));
+    return c.json(await resetWithLink({ oobCode: body?.token, password: body?.password }));
   });
 
   /** Redeem a code, mint a Firebase custom token. No session, no cookie — the browser exchanges
@@ -604,57 +621,7 @@ export function registerAuthRoutes(app, { loginImpl = login } = {}) {
   // two-step for all staff" is Q8-7, DEFERRED).
   // ═════════════════════════════════════════════════════════════════════════════════════════════
 
-  /** Begin (or restart) enrolment. `beginEnrolment` returns `{factorId, provisioningUri}`; `secret`
-   *  is the base32 shared secret already embedded in that same URI's own query string (built by
-   *  `buildProvisioningUri`, totp.mjs, not returned separately) — parsed back out here rather than
-   *  re-derived, so the manual-entry field and the QR code always agree by construction. */
-  app.post("/api/auth/two-step/start", async (c) => {
-    const self = await loadSelf(c);
-    const { provisioningUri } = await beginEnrolment({ firebaseUid: self.firebaseUid, email: self.email });
-    let secret = null;
-    try { secret = new URL(provisioningUri).searchParams.get("secret"); } catch { secret = null; }
-    return c.json({ secret, otpauthUrl: provisioningUri });
-  });
-
-  /** Confirm enrolment with a code from the authenticator app. Returns the ten backup codes ONCE
-   *  (8.3 stores only their hashes) and sends `auth.two_step_changed` — best-effort, same
-   *  no-try/catch idiom `POST /api/auth/code/request` already uses for `sendAuthEmail`. */
-  app.post("/api/auth/two-step/confirm", async (c) => {
-    const self = await loadSelf(c);
-    const body = await c.req.json().catch(() => null);
-    const { backupCodes } = await confirmEnrolment({ firebaseUid: self.firebaseUid, code: body?.code });
-    await sendAuthEmail({
-      to: self.email, templateKey: "auth.two_step_changed",
-      vars: { what: "turned on", when: new Date().toUTCString() },
-    });
-    return c.json({ confirmed: true, backupCodes });
-  });
-
-  /** Turn two-step OFF. Requires a CURRENT VALID code — `disableTotp` (8.8) re-verifies before
-   *  writing, and refuses outright for an identity holding an active operator grant; this route
-   *  adds nothing of its own beyond passing the code through. */
-  app.post("/api/auth/two-step/disable", async (c) => {
-    const self = await loadSelf(c);
-    const body = await c.req.json().catch(() => null);
-    await disableTotp({ firebaseUid: self.firebaseUid, code: body?.code });
-    await sendAuthEmail({
-      to: self.email, templateKey: "auth.two_step_changed",
-      vars: { what: "turned off", when: new Date().toUTCString() },
-    });
-    return c.json({ disabled: true });
-  });
-
-  /** "Is two-step on, and since when." Read-only — the account screen's "On" panel state after a
-   *  full page reload with no client memory (F637; spec 04's own S4 acceptance scenario). Same
-   *  `loadSelf` gate as start/confirm/disable, above. */
-  app.get("/api/auth/two-step/status", async (c) => {
-    const self = await loadSelf(c);
-    const status = await getTwoStepStatus(self.firebaseUid);
-    return c.json(status);
-  });
-
   // ── FP-E3 · PASSKEYS (OFF unless KEYSTONE_PASSKEYS=1). Registering needs a signed-in person; signing in needs nothing but the device, and ends at the same /api/auth/login as a code. ──
-  app.get("/api/auth/passkeys", async (c) => { const self = await loadSelf(c); return c.json({ enabled: passkeysEnabled(), ...(passkeysEnabled() ? await listPasskeys({ firebaseUid: self.firebaseUid }) : { passkeys: [] }) }); });
   // FP-E7/H5 — sign in with the organisation's own OpenID Connect provider (self-host; off unless configured)
   app.get("/api/auth/oidc/config", (c) => c.json({ enabled: oidcEnabled(), ...(oidcEnabled() ? { label: oidcLabel() } : {}) }));
   const publicBase = (c) => (process.env.KEYSTONE_PUBLIC_URL || new URL(c.req.url).origin).replace(/\/+$/, "");
@@ -674,57 +641,14 @@ export function registerAuthRoutes(app, { loginImpl = login } = {}) {
       return c.redirect(`${publicBase(c)}/login#t=${encodeURIComponent(idToken)}`, 302);
     } catch { return c.redirect(`${publicBase(c)}/login?sso=failed`, 302); }
   });
-  app.get("/api/auth/passkeys/status", (c) => c.json({ enabled: passkeysEnabled() }));
-  app.post("/api/auth/passkeys/register/begin", async (c) => { const self = await loadSelf(c); return c.json(await beginRegistration({ firebaseUid: self.firebaseUid, email: self.email, origin: requestOrigin(c) })); });
-  app.post("/api/auth/passkeys/register/finish", async (c) => {
-    const self = await loadSelf(c); const body = await c.req.json().catch(() => null);
-    return c.json(await finishRegistration({ firebaseUid: self.firebaseUid, email: self.email, origin: requestOrigin(c), ticket: body?.ticket, response: body?.response, name: body?.name }));
-  });
-  app.post("/api/auth/passkeys/rename", async (c) => { const self = await loadSelf(c); const body = await c.req.json().catch(() => null); return c.json(await renamePasskey({ firebaseUid: self.firebaseUid, id: body?.id, name: body?.name })); });
-  app.post("/api/auth/passkeys/remove", async (c) => { const self = await loadSelf(c); const body = await c.req.json().catch(() => null); return c.json(await removePasskey({ firebaseUid: self.firebaseUid, id: body?.id })); });
   app.post("/api/auth/passkeys/login/begin", async (c) => c.json(await beginLogin({ origin: requestOrigin(c) })));
   app.post("/api/auth/passkeys/login/finish", async (c) => {
     const body = await c.req.json().catch(() => null);
     return c.json(await finishLogin({ origin: requestOrigin(c), ticket: body?.ticket, response: body?.response }));
   });
 
-  // ★★★ F634 — THE PARTIAL-SESSION UPGRADE. Does NOT go through `loadSelf`/`resolvePrincipal(c)` +
-  //     the ordinary tenant-scoped shape the six routes above and below use — a partial session
-  //     cannot resolve through `keystone.resolve_session` by design (0228). Self-contained, the
-  //     same way `POST /api/auth/login` itself sits outside the generic dispatcher. Exact shape per
-  //     STAGE-8-PLAN.md task 8.14 field 4 §"F634 — two-step/verify's exact body".
-  app.post("/api/auth/two-step/verify", async (c) => {
-    const principal = await resolvePrincipal(c);           // parses the cookie/header locally only
-    if (!principal?.sessionId) throw unauthenticated("no partial session to verify");
-    const body = await c.req.json().catch(() => null);
-
-    const partial = await resolvePartialSession(principal.sessionId);
-    if (!partial) throw unauthenticated("no partial session to verify");
-
-    const uid = await withTenant(partial.tenantId, async (db) => {
-      const { rows } = await db.query(
-        `SELECT firebase_uid FROM keystone.app_user WHERE id = $1`, [partial.appUserId]
-      );
-      return rows[0]?.firebase_uid ?? null;
-    });
-    if (!uid) throw unauthenticated("no partial session to verify");
-
-    // ★★★ S-3 (security audit run 5): THIS PARTIAL SESSION GETS A FEW TRIES, THEN IT IS KILLED. The per-account counter (every session, every address)
-    //     is inside `verifyTotp`; this one is per partial session, so a first-factor-compromised account cannot be ground against from one session
-    //     for its whole hour. Counted BEFORE the code is checked (one SQL statement), so parallel guesses cannot buy free ones.
-    const sessionLocked = await takeAttempt("two_step_session", attemptKeyFor(principal.sessionId));
-    if (sessionLocked > 0) {
-      await revokeSession(principal.sessionId, "logout").catch(() => {});
-      throw unauthenticated("no partial session to verify");
-    }
-
-    await verifyTotp({ firebaseUid: uid, code: body?.code });   // throws forbidden() on a bad code, rate_limited when the account is locked
-
-    const upgraded = await upgradeSession(principal.sessionId);
-    if (!upgraded) throw unauthenticated("no partial session to verify");
-
-    return c.json({ verified: true });
-  });
+  // 0766: the two-step routes (overview, start, confirm, disable, recovery codes, passkeys and security keys, remembered devices, and the second step of signing in) live in twoStepRoutes.mjs
+  registerTwoStepRoutes(app, { loadSelf, resolvePrincipal, resolvePartialSession, upgradeSession, revokeSession });
 
   /** "Where am I signed in." No IP, no full user-agent — see `userAgentSummary` above.
    *  `current` is the `tokenId` (the session row's own id — the same identifier

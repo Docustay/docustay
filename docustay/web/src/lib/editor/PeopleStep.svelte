@@ -1,4 +1,5 @@
 <script>
+  import Page from "$lib/ui/Page.svelte";
   // WHO SIGNS (step 2 of every flow, before anything is written or placed). The first row is YOU, locked: you fill in the parts marked "Sender first" before sending. Then one row per person:
   // colour dot, name, email, a role PICKER, "on this device", and (when people go one after another) a step PICKER. No dummy people: a fresh document starts with You and one empty row.
   // Works on a stored document (`doc.parties`, saved by the host) and, with `mode="flow"`, on the in-browser draft of the written flow. `mode="template"` is the roles version (a role name, and who plays it).
@@ -22,6 +23,7 @@
   const isTpl = $derived(mode === "template");
   const people = $derived(doc.parties ?? []), order = $derived(doc.sendOptions?.order ?? "parallel"), inPerson = $derived(new Set(doc.sendOptions?.in_person ?? []));
   const plays = $derived(doc.sendOptions?.plays ?? {});   // template roles: who plays each by default: you | at_send | fixed
+  let orderNote = $state(null);   // R13-D035: said when adding an assistant switches the order to one after another (an assistant only works in order)
   let q = $state(""), found = $state([]), pastOpen = $state(false), timer, draft = $state({ name: "", email: "" });
   const strip = (p) => ({ role: p.role, name: p.name ?? "", email: p.email ?? null, phone: p.phone ?? null, action_role: p.action_role ?? "signer", external_ref: p.external_ref ?? null, expires_at: p.expires_at ?? null, reminder_days: p.reminder_days ?? null, assists_role: (p.action_role ?? "signer") === "assistant" ? p.assists_role ?? null : null, step: p.step ?? null,
     ...((p.action_role ?? "signer") === "signer" && p.group_label ? { group_label: p.group_label } : {}), ...((p.action_role ?? "signer") === "signer" && p.witness_required ? { witness_required: true } : {}) });
@@ -37,6 +39,13 @@
     if (to?.email && Date.now() - (to.ts ?? 0) < 1800000 && !people.some((p) => (p.email ?? "").toLowerCase() === to.email.toLowerCase())) pickPast({ name: to.name ?? "", email: to.email, id: to.id ?? null }); });
   const remove = (i) => send(people.filter((_, k) => k !== i));
   // Run 9 — a SIGNING GROUP (Pro): more people in the same seat; the first of them to sign fills it. A WITNESS (Free): someone signs straight after this person, on their device.
+  // 21 Oct 2026: sending to teammates. The team (read from the workspace) lets a row say "Team" and lets "Add myself" fill in who you are; a teammate is linked by the member's id in external_ref
+  let mates = $state([]);
+  onMount(async () => { if (isTpl) return; const r = await api("/api/documents/teammates"); mates = r.ok ? ((r.json?.data ?? r.json)?.teammates ?? []) : []; });
+  const me = $derived(mates.find((m) => m.you) ?? null);
+  const isMate = (p) => p.internal === true || (Boolean(p.external_ref) && mates.some((m) => m.id === p.external_ref));
+  const iAmIn = $derived(Boolean(me) && people.some((p) => p.external_ref === me.id || (p.email ?? "").toLowerCase() === me.email.toLowerCase()));
+  const addMyself = () => { if (me) pickPast({ id: me.id, name: me.name, email: me.email }); };
   onMount(() => { if (!isTpl) loadPlan(); });
   let moreFor = $state(null);
   const inSeat = (role) => people.filter((p) => p.role === role);
@@ -70,9 +79,9 @@
   async function loadPast() { pastOpen = true; const r = await api(`/api/documents/pdf/recipients?q=${encodeURIComponent(q)}`); found = r.ok ? (r.json ?? []).slice(0, 12) : []; }
   $effect(() => { if (!pastOpen) return; clearTimeout(timer); timer = setTimeout(loadPast, 250); void q; });
 </script>
-<div class="grid gap-6 md:grid-cols-[minmax(0,1fr)_320px]" data-testid="people-step">
+<Page type="split" asideWidth="22rem" testid="people-step">
   <section aria-label={isTpl ? t("Roles in this template") : t("People on this document")} class="space-y-2">
-    <div class="flex flex-wrap items-center gap-3 rounded-xl border border-line bg-tint p-3" data-testid="sender-row">
+    <div class="flex flex-wrap items-center gap-3 border-b border-line py-3" data-testid="sender-row">
       <span class="inline-grid size-7 place-items-center rounded-full bg-ink text-xs text-white" aria-hidden="true"><FlowIcon name="lock" size={13} /></span>
       <span class="font-medium">{tl(SENDER_ROW.label)}</span>
       <span class="chip">{tl(SENDER_ROW.role)}</span>
@@ -80,15 +89,15 @@
     </div>
     <ol class="space-y-2" data-testid="people-list">
       {#each people as p, i (`${p.role}#${i}`)}
-        <li class="flex flex-wrap items-center gap-2 rounded-xl border border-line p-3" data-testid="person-row">
+        <li class="flex flex-wrap items-center gap-2 border-b border-line py-3" data-testid="person-row">
           <span class="inline-block size-3.5 flex-none rounded-full" style="background:{colour(i)}" aria-hidden="true"></span>
           <input class="field min-w-32 flex-1 basis-36 !py-1.5" value={p.name} placeholder={isTpl ? t("Role, such as Client") : (p.roleWord || t("Name"))} oninput={(e) => patch(i, { name: e.currentTarget.value })} aria-label={isTpl ? t("Role {n}", { n: i + 1 }) : t("Name of person {n}", { n: i + 1 })} data-testid="person-name" />
           {#if roleLabel(p)}<span class="chip" data-testid="person-rolelabel">{roleLabel(p)}</span>{/if}
           {#if !isTpl || plays[p.role] === "fixed"}<input class="field min-w-40 flex-[1.4] basis-44 !py-1.5" value={p.email ?? ""} placeholder={inPerson.has(p.role) ? t("Not needed") : t("Email")} oninput={(e) => typeEmail(i, e.currentTarget.value)} onblur={(e) => leaveEmail(i, p.role, e.currentTarget.value)} aria-invalid={emailBad(p)} aria-label={t("Email of person {n}", { n: i + 1 })} data-testid="person-email" />{/if}
           {#if isTpl}<div class="w-52"><Pick options={[{ value: "you", label: t("You") }, { value: "at_send", label: t("Chosen when you send it") }, { value: "fixed", label: t("A fixed person") }]} value={plays[p.role] ?? "at_send"} onchange={(v) => setPlays(p.role, v)} testid="person-plays" /></div>{/if}
-          <div class="w-44"><Pick options={roleOptions} value={p.action_role ?? "signer"} onchange={(v) => { const c = { action_role: v, assists_role: v === "assistant" ? (signers.find((s) => s.role !== p.role)?.role ?? null) : null }; if (v === "assistant" && order !== "sequential") send(people.map((q, k) => (k === i ? { ...q, ...c } : q)), { ...doc.sendOptions, order: "sequential" }); else patch(i, c); }} testid="person-role" /></div>
+          <div class="w-44"><Pick options={roleOptions} value={p.action_role ?? "signer"} label={t("Role for {name}", { name: p.name || t("this person") })} hideLabel onchange={(v) => { const c = { action_role: v, assists_role: v === "assistant" ? (signers.find((s) => s.role !== p.role)?.role ?? null) : null }; if (v === "assistant" && order !== "sequential") { orderNote = t("Signing order is now one after another, because an assistant helps someone before they sign. Choose Everyone at once again once nobody is an assistant."); send(people.map((q, k) => (k === i ? { ...q, ...c } : q)), { ...doc.sendOptions, order: "sequential" }); } else patch(i, c); }} testid="person-role" /></div>
           {#if p.action_role === "assistant"}<div class="w-44"><Pick options={signers.filter((s) => s.role !== p.role).map((s) => ({ value: s.role, label: t("Helps {name}", { name: s.name || t("them") }) }))} value={p.assists_role ?? ""} onchange={(v) => patch(i, { assists_role: v })} placeholder={t("Choose a signer")} testid="person-helps" /></div>{/if}
-          {#if order === "sequential"}<div class="w-20"><Pick options={stepOptions} value={String(p.step ?? i + 1)} onchange={(v) => patch(i, { step: Number(v) })} testid="person-step" /></div>{/if}
+          {#if order === "sequential"}<div class="w-20"><Pick options={stepOptions} value={String(p.step ?? i + 1)} label={t("Signing step for {name}", { name: p.name || t("this person") })} hideLabel onchange={(v) => patch(i, { step: Number(v) })} testid="person-step" /></div>{/if}
           {#if !isTpl}<label class="flex items-center gap-1 text-xs text-mute"><input type="checkbox" checked={inPerson.has(p.role)} onchange={() => toggleInPerson(p.role)} /> {t("on this device")}</label>{/if}
           {#if p.group_label}<span class="chip" data-testid="person-group">{p.group_label}</span>{/if}
           {#if p.witness_required}<span class="chip" data-testid="person-witness-chip">{t("Has a witness")}</span>{/if}
@@ -96,19 +105,20 @@
           {#if moreFor === p.role && firstOfSeat(i)}
             <div class="order-last w-full space-y-2 rounded-lg bg-tint p-2 text-sm" data-testid="person-more-panel">
               <label class="flex items-center gap-2"><input type="checkbox" checked={p.witness_required === true} onchange={(e) => send(people.map((q) => (q.role === p.role ? { ...q, witness_required: e.currentTarget.checked || undefined } : q)))} data-testid="person-witness" /> {t("A witness signs straight after them, on the same device")}</label>
-              <ProLock item="signing_groups" tip={t("A signing group lets several people share one seat: whoever signs first signs for everyone.")} testid="prolock-signing-groups">{#snippet children(locked)}
+              <ProLock item="signing_groups" tip={t("A signing group lets several people share one signing spot: whoever signs first signs for everyone.")} testid="prolock-signing-groups">{#snippet children(locked)}
                 {#if !p.group_label}<button class="btn !min-h-9 !py-1 text-xs" disabled={locked} onclick={() => startGroup(i)} data-testid="person-group-start">{t("Let anyone in a group sign this")}</button>
                 {:else}<div class="flex flex-wrap items-center gap-2"><input class="field !w-48 !py-1 text-xs" value={p.group_label} maxlength="80" onchange={(e) => renameGroup(p.role, e.currentTarget.value)} aria-label={t("Group name")} data-testid="person-group-name" /><button class="btn !min-h-9 !py-1 text-xs" disabled={locked} onclick={() => addMember(i + inSeat(p.role).length - 1)} data-testid="person-group-add">{t("Add someone to the group")}</button><button class="btn quiet !min-h-9 !py-1 text-xs" onclick={() => endGroup(p.role)} data-testid="person-group-end">{t("Stop using a group")}</button></div>
-                  <p class="text-xs text-mute">{t("Each person in the group gets their own link. The first to sign fills the seat and the others' links stop working.")}</p>{/if}
+                  <p class="text-xs text-mute">{t("Each person in the group gets their own link. The first to sign fills the signing spot and the others' links stop working.")}</p>{/if}
               {/snippet}</ProLock>
             </div>
           {/if}
           {#if emailBad(p)}<p class="order-last w-full text-sm text-bad" data-testid="person-email-error">{t("This email looks incomplete")}</p>{/if}
+          {#if !isTpl && isMate(p)}<span class="chip" data-testid="person-team-tag" title={t("A teammate. They get the same signing email, and a notice in the app.")}>{t("Team")}</span>{/if}
           <button class="btn !min-h-10 ml-auto" onclick={() => remove(i)} aria-label={t("Remove {name}", { name: p.name || t("this person") })} data-testid="person-remove"><FlowIcon name="x" size={16} /></button>
         </li>
       {/each}
       {#if people.length === 0}
-        <li class="flex flex-wrap items-center gap-2 rounded-xl border border-dashed border-line p-3" data-testid="person-draft">
+        <li class="flex flex-wrap items-center gap-2 border-b border-dashed border-line py-3" data-testid="person-draft">
           <span class="inline-block size-3.5 flex-none rounded-full" style="background:{colour(0)}" aria-hidden="true"></span>
           <input class="field !w-40 !py-1.5" bind:value={draft.name} placeholder={isTpl ? t("Role, such as Client") : t("Name")} oninput={startDraft} aria-label={t("Name of the first person")} data-testid="draft-name" />
         </li>
@@ -116,22 +126,23 @@
     </ol>
     <div class="flex flex-wrap gap-2 pt-1">
       <button class="btn !min-h-10" onclick={addBlank} data-testid="person-add-button"><FlowIcon name="user-plus" size={16} /> {isTpl ? t("Add a role") : t("Add person")}</button>
-      {#if !isTpl}<button class="btn !min-h-10" onclick={loadPast} data-testid="past-signers">{t("Add from past signers")}</button>{/if}
+      {#if !isTpl}<button class="btn !min-h-10" onclick={loadPast} data-testid="past-signers">{t("Add from Contacts and your team")}</button>{#if me}<button class="btn !min-h-10" onclick={addMyself} disabled={iAmIn} data-testid="add-myself">{t("Add myself")}</button>{/if}{/if}
     </div>
     {#if pastOpen && !isTpl}
-      <div class="rounded-xl border border-line p-3" data-testid="past-panel">
-        <input class="field !py-1.5" bind:value={q} placeholder={t("Search by name or email")} aria-label={t("Search past signers")} data-testid="past-search" />
-        <ul class="mt-2 space-y-1">{#each found as c}<li><button type="button" class="w-full rounded px-2 py-1.5 text-left text-sm hover:bg-tint" onclick={() => { pickPast(c); pastOpen = false; q = ""; }} data-testid="past-pick">{c.name} <span class="text-xs text-mute">{c.email}</span></button></li>{/each}
+      <div class="border-y border-line py-3" data-testid="past-panel">
+        <input class="field !py-1.5" bind:value={q} placeholder={t("Search by name or email")} aria-label={t("Search Contacts and your team")} data-testid="past-search" />
+        <ul class="mt-2 space-y-1">{#each found as c}<li><button type="button" class="w-full rounded px-2 py-1.5 text-left text-sm hover:bg-tint" onclick={() => { pickPast(c); pastOpen = false; q = ""; }} data-testid="past-pick">{c.name} <span class="text-xs text-mute">{c.email}</span>{#if c.team} <span class="chip" data-testid="past-team-tag">{t("Team")}</span>{/if}</button></li>{/each}
           {#if !found.length}<li class="text-sm text-mute">{t("Nobody to show yet.")}</li>{/if}</ul>
       </div>
     {/if}
   </section>
-  <aside class="space-y-4">
+  {#snippet aside()}<div class="space-y-4">
     <div>
       <p class="mb-1 text-sm font-medium">{t("Signing order")}</p>
       <div class="flex gap-1" role="group" aria-label={t("Signing order")}>
-        {#each orderOptions as o}<button class="btn !min-h-10 !px-3 {order === o.value ? 'primary' : ''}" aria-pressed={order === o.value} onclick={() => onChange({ sendOptions: { ...doc.sendOptions, order: o.value }, parties: people.map(strip) })} data-testid={`order-${o.value}`}>{o.label}</button>{/each}
+        {#each orderOptions as o}<button class="btn !min-h-10 !px-3 {order === o.value ? 'primary' : ''}" aria-pressed={order === o.value} onclick={() => { orderNote = null; onChange({ sendOptions: { ...doc.sendOptions, order: o.value }, parties: people.map(strip) }); }} data-testid={`order-${o.value}`}>{o.label}</button>{/each}
       </div>
+      {#if orderNote && order === "sequential" && people.some((p) => p.action_role === "assistant")}<p class="mt-2 text-xs text-warn" role="status" data-testid="order-note">{orderNote}</p>{/if}
       <div class="mt-3 flex items-center gap-1.5" data-testid="order-diagram" aria-hidden="true">
         {#each turns as turn, ti}
           {#if ti > 0}<span class="text-mute">→</span>{/if}
@@ -141,5 +152,5 @@
       </div>
       {#if !people.length || people.some((p) => !inPerson.has(p.role))}<p class="mt-2 text-xs text-mute" data-testid="people-order-line">{order === "sequential" ? t("The next person is emailed when the one before them has signed.") : t("Everyone is emailed straight away.")}</p>{/if}
     </div>
-  </aside>
-</div>
+  </div>{/snippet}
+</Page>

@@ -121,7 +121,7 @@ export async function startDemo({ ip, userAgent = null, env = process.env, seed 
   if (seed) { try { await seed({ tenantId, ownerId: adminUserId }); seeded = true; } catch (e) { console.error(`demo seed failed (the demo still opens, empty): ${e?.message ?? e}`); } }
   await withTenant(tenantId, (tx) => tx.query(`UPDATE keystone.docustay_demo SET seeded_at = now() WHERE tenant_id = $1`, [tenantId]), { userId: adminUserId });
   const session = await createSession({ tenantId, appUserId: adminUserId, firebaseUid: uid, ttlHours: lim.hours, userAgent, ip, kind: "app" });
-  void trackEvent("demo_started");
+  void trackEvent("demo_started", null, { accountId: adminUserId, workspaceId: tenantId, set: { account_id: adminUserId, workspace_id: tenantId, plan: "free", kind: "demo", is_internal: false, is_test: false } });
   return { token: session.token, tenantId, expiresInHours: lim.hours, seeded };
 }
 

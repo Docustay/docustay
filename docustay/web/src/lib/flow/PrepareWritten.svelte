@@ -8,7 +8,7 @@
   import { tl } from "./flowLabels.js";
   import { AUDIENCES, FILLED_BY, fieldType } from "./flowDefinition.js";
   import { specOf, isMark } from "./palette.js";
-  import { slugWord } from "./roles.js";
+  import { slugWord, seatsOnce } from "./roles.js";
   import Palette from "./Palette.svelte";
   import { SEAT_COLOURS } from "../editor/fields.js";
   const senderProblem = (a) => { const v = a?.default; if (!v || typeof v !== "string" || v.startsWith("{{")) return null; return validateFieldValue({ type: "text", validation: a.type, max_length: a.max_length }, v); };
@@ -20,8 +20,6 @@
   import { chatBridge } from "../chat/bridge.js";
   import StripeGate from "../ai/StripeGate.svelte";
   import { variablesOf } from "./roles.js";
-  import RuleEditor from "../rules/RuleEditor.svelte";
-  import { ruleToText, parseReadableRule } from "../rules/rules.js";
   let { initial, initialCustom = {}, people = [], mode = "document", onchange = () => {}, api = $bindable({}) } = $props();
   const WITH_OPTIONS = ["dropdown", "multiselect", "select"];
   let el, editor = null, ready = $state(false), unregisterChat = null;
@@ -100,16 +98,6 @@
     let hidden = 0, cut = null; doc.forEach((node) => { if (node.type.name === "heading") { const lv = node.attrs.level ?? 1; if (cut != null && lv <= cut) cut = null; if (cut == null && node.attrs.audience === "sender") cut = lv; } else if (cut != null) node.descendants((n) => { if (n.type.name === "fieldTag") hidden += 1; }); });
     fieldsHidden = hidden;
   }
-  // Run 9 — RULES. A section reads only what YOU fill in before sending (the "Filled in by you" values); a field reads the answers of people who sign before its person.
-  const senderChoices = () => { const out = new Map(); editor?.state.doc.descendants((n) => { if (n.type.name === "variableChip" && String(n.attrs.name).startsWith("custom.") && !String(n.attrs.name).startsWith("custom.p_")) out.set(n.attrs.name, { id: n.attrs.name, label: n.attrs.label || n.attrs.name, type: "text" }); }); return [...out.values()]; };
-  const fieldChoices = (except) => { const out = []; editor?.state.doc.descendants((n, pos) => { if (n.type.name === "fieldTag" && pos !== except && ["text", "number", "checkbox", "dropdown", "email", "date", "phone", "zip"].includes(n.attrs.type) && (n.attrs.role ?? "") !== (sel?.attrs.role ?? "")) out.push({ id: n.attrs.name, label: n.attrs.label || n.attrs.name, type: n.attrs.type === "checkbox" ? "checkbox" : "text" }); }); return out; };
-  function setSectionRule(rule) {
-    if (!sec) return; const pos = sec.pos, attrs = { ...sec.attrs, showWhen: rule };
-    editor.chain().command(({ tr }) => { tr.setNodeMarkup(pos, null, attrs); return true; }).run(); sec = { ...sec, attrs }; onchange(sourceJSON(editor));
-  }
-  const fieldRule = (a) => { if (!a?.show) return null; try { return parseReadableRule(a.show, (n) => n); } catch { return null; } };
-  let calcText = $state("");
-  $effect(() => { calcText = sel?.kind === "field" ? (sel.attrs.calc ?? "") : ""; });
   function patchSel(patch) { if (!sel) return; const pos = sel.pos; editor.chain().command(({ tr }) => { tr.setNodeMarkup(pos, null, { ...sel.attrs, ...patch }); tr.setSelection(NodeSelection.create(tr.doc, pos)); return true; }).run(); readSelection(); }
   function setAudience(v) {
     if (!sec) return; const pos = sec.pos;
@@ -129,7 +117,9 @@
   const fmt = (fn) => fn(editor.chain().focus()).run();
 
   // merge text: one entry per person (their name, their email) and the sender's name. A person's own values are given when the document is made; a reusable template can only use the sender's.
-  const merges = $derived([...(mode === "template" ? [] : people.flatMap((p) => [{ name: `custom.p_${slugWord(p.roleWord ?? p.name)}_name`, label: t("Name of {name}", { name: p.name || p.roleWord }) }, { name: `custom.p_${slugWord(p.roleWord ?? p.name)}_email`, label: t("Email of {name}", { name: p.name || p.roleWord }) }])), { name: "sender.name", label: t("Sender name") }, ...(mode === "template" ? [{ name: "__new_var", label: t("A question for the sender") }] : [])]);
+  // R13-D361 (R10-55 again): a signing group is several people in ONE seat, so their merge fields are one pair (named by the seat), not one pair each: two pairs with the same name broke the keyed palette list and Prepare never rendered
+  const seatPeople = $derived(seatsOnce(people));
+  const merges = $derived([...(mode === "template" ? [] : seatPeople.flatMap((p) => [{ name: `custom.p_${slugWord(p.roleWord ?? p.name)}_name`, label: t("Name of {name}", { name: p.label }) }, { name: `custom.p_${slugWord(p.roleWord ?? p.name)}_email`, label: t("Email of {name}", { name: p.label }) }])), { name: "sender.name", label: t("Sender name") }, ...(mode === "template" ? [{ name: "__new_var", label: t("A question for the sender") }] : [])]);
   const slashItems = () => [
     { id: "heading", label: t("Heading"), hint: t("A section title") }, { id: "table", label: t("Table"), hint: t("Rows and columns") }, { id: "pagebreak", label: t("Page break"), hint: t("Start a new page") },
     ...merges.map((m) => ({ id: `m:${m.name}`, label: m.label, hint: t("Filled in when the document is made") })),
@@ -156,15 +146,16 @@
 <svelte:head>{@html `<style>${SOURCE_EDITOR_CSS}${SENDER_CSS}${SLASH_CSS}</style>`}</svelte:head>
 {@html `<style>${colourStyle}${viewStyle}.rich-body{--ds-sender-note:"${t("Sender only: not in what signers see")}"}</style>`}
 <svelte:window onkeydown={(e) => { if (e.key === "Escape" && full) full = false; }} />
-<div class="grid gap-4 lg:grid-cols-[12.5rem_minmax(0,1fr)_16rem] {full ? 'fixed inset-0 z-40 overflow-auto bg-paper p-4' : ''}" data-testid="prepare" data-full={full ? "1" : "0"}>
-  <aside><Palette onadd={clickAdd} ondragstart={dragStart} onmerge={insertMerge} {merges} hint={t("Drag onto the document, or click to add at the cursor")} /></aside>
+<!-- R13-D304: one column that may not grow past the screen below lg; the implicit column grew to the palette's full row (22 tools) and pushed the page ~530 px off a phone -->
+<div class="grid grid-cols-[minmax(0,1fr)] gap-4 lg:grid-cols-[12.5rem_minmax(0,1fr)_16rem] {full ? 'fixed inset-0 z-40 overflow-auto bg-paper p-4' : ''}" data-testid="prepare" data-full={full ? "1" : "0"}>
+  <aside class="min-w-0"><Palette onadd={clickAdd} ondragstart={dragStart} onmerge={insertMerge} {merges} hint={t("Drag onto the document, or click to add at the cursor")} /></aside>
   <section class="min-w-0">
     <div class="flex flex-wrap items-end gap-x-6 gap-y-2">
       <div class="w-56"><Pick options={personOpts} value={forRole} onchange={(v) => (forRole = v)} label={t("Fields are for")} placeholder={t("Choose a person")} testid="pp-for" /></div>
       <Seg options={viewOpts} value={viewAs} onchange={(v) => (viewAs = v)} label={t("View as")} testid="pp-view" inline />
       <button class="btn !min-h-9 !py-1 ml-auto text-sm" onclick={() => (full = !full)} aria-pressed={full} data-testid="pp-full">{full ? t("Exit full screen") : t("Full screen")}</button>
     </div>
-    <div class="mx-auto mt-3 w-full max-w-[816px]">
+    <div class="paper-ground mt-3 rounded-md p-3 sm:p-6"><div class="mx-auto w-full max-w-[816px]">
       {#if hasPayment}<div class="mb-2"><StripeGate ontextonly={keepTermsAsText} testid="pp-pay-gate" /></div>{/if}
       {#if fieldsHidden}<p class="notice warn mb-2" role="status" data-testid="pp-hidden-fields">{t("Fields inside a Sender only section: {n}. No signer will see them.", { n: fieldsHidden })}</p>{/if}
       <div class="mb-2 flex flex-wrap gap-1.5" role="toolbar" aria-label={t("Formatting")} onmousedown={(e) => e.preventDefault()}>
@@ -180,7 +171,7 @@
         {#if empty}<p class="sheet-hint" data-testid="pp-hint">{t("Type here, or drag a field in.")}</p>{/if}
         <div bind:this={el} data-testid="pp-editor"></div>
       </div>
-    </div>
+    </div></div>
   </section>
   <aside class="space-y-3" aria-label={t("Settings of the selected item")}>
     {#if sel?.kind === "field"}
@@ -190,7 +181,7 @@
           <Pick options={personOpts} value={sel.attrs.role} onchange={(v) => patchSel({ role: v })} label={t("Belongs to")} testid="pp-belongs" />
           <Seg options={FILLED_BY.map((o) => ({ value: o.id, label: tl(o.label) }))} value={sel.attrs.filled === "sender" ? "sender" : "signer"} onchange={(v) => (sel.attrs.filled === "sender" ? (v === "signer" && patchSel({ filled: null, from: null })) : setFilledBy(v))} label={t("Filled in by")} testid="pp-filledby" disabled={mode === "template" && sel.attrs.filled !== "sender"} />
           <!-- Run 9 (R8-57): a ready-made box the sender fills in (filled=sender) keeps its place in the text; the sender's answer is typed here and signers cannot change it -->
-          {#if sel.attrs.filled === "sender"}<label class="grid gap-1 text-sm"><span>{t("Your answer")}</span><input class="field !py-1.5" value={sel.attrs.default ?? (sel.attrs.from ? `{{${sel.attrs.from}}}` : "")} oninput={(e) => patchSel({ default: e.currentTarget.value || null, from: null })} data-testid="pp-sender-value" aria-invalid={senderProblem(sel.attrs) ? true : undefined} /></label>{#if senderProblem(sel.attrs)}<p class="text-xs text-danger" role="alert" data-testid="pp-sender-problem">{t("Your answer")} {senderProblem(sel.attrs)}{sel.attrs.type === "date" ? " (YYYY-MM-DD)" : ""}. {t("The signer cannot change it, so fix it here.")}</p>{/if}{#if sel.attrs.from && !sel.attrs.default}<p class="text-xs text-mute">{t("Filled in from your organisation's details when you send. Type over it to use your own words.")}</p>{/if}{/if}
+          {#if sel.attrs.filled === "sender"}<label class="grid gap-1 text-sm"><span>{t("Your answer")}</span><input class="field !py-1.5" value={sel.attrs.default ?? (sel.attrs.from ? `{{${sel.attrs.from}}}` : "")} oninput={(e) => patchSel({ default: e.currentTarget.value || null, from: null })} data-testid="pp-sender-value" aria-invalid={senderProblem(sel.attrs) ? true : undefined} /></label>{#if senderProblem(sel.attrs)}<p class="text-xs text-danger" role="alert" data-testid="pp-sender-problem">{t("Your answer")} {senderProblem(sel.attrs)}. {t("The signer cannot change it, so fix it here.")}</p>{/if}{#if sel.attrs.from && !sel.attrs.default}<p class="text-xs text-mute">{t("Filled in from your organisation's details when you send. Type over it to use your own words.")}</p>{/if}{/if}
           <label class="flex items-center gap-2 text-sm"><input type="checkbox" checked={sel.attrs.required !== false && sel.attrs.required !== "false"} onchange={(e) => patchSel({ required: e.currentTarget.checked })} data-testid="pp-required" /> {t("Required")}</label>
           {#if sel.attrs.autofill}<label class="flex items-center gap-2 text-sm"><input type="checkbox" checked={sel.attrs.editable === true || sel.attrs.editable === "true"} onchange={(e) => patchSel({ editable: e.currentTarget.checked ? true : null })} data-testid="pp-editable" /> {t("Signer can change it")}</label>{/if}
           <label class="grid gap-1 text-sm"><span>{t("Label")}</span><input class="field !py-1.5" value={sel.attrs.label ?? ""} oninput={(e) => patchSel({ label: e.currentTarget.value })} data-testid="pp-label" /></label>
@@ -198,16 +189,6 @@
             <label class="grid gap-1 text-sm"><span>{t("Placeholder")}</span><input class="field !py-1.5" value={sel.attrs.placeholder ?? ""} oninput={(e) => patchSel({ placeholder: e.currentTarget.value || null })} data-testid="pp-placeholder" /></label>{/if}
           {#if !isMark(sel.attrs.type) && sel.attrs.type !== "payment"}<label class="grid gap-1 text-sm"><span>{t("Tooltip")}</span><input class="field !py-1.5" value={sel.attrs.tooltip ?? ""} oninput={(e) => patchSel({ tooltip: e.currentTarget.value || null })} data-testid="pp-tooltip" /></label>{/if}
           {#if WITH_OPTIONS.includes(sel.attrs.type)}<OptionEditor options={String(sel.attrs.options ?? "").split(",").map((x) => x.trim()).filter(Boolean)} value={sel.attrs.default ?? ""} locked={sel.attrs.locked === true || sel.attrs.locked === "true"} multi={sel.attrs.type === "multiselect"} onchange={(v) => patchSel({ options: v.options.join(", "), default: v.default || null, locked: v.locked ? true : null })} testid="pp-opt" />{/if}
-          {#if !isMark(sel.attrs.type) && sel.attrs.type !== "payment" && sel.attrs.type !== "file"}
-            <details class="rounded-lg border border-line p-2" open={Boolean(sel.attrs.show || sel.attrs.calc)} data-testid="pp-field-rules"><summary class="cursor-pointer text-sm">{t("Rules")}</summary>
-              <div class="mt-2 space-y-3">
-                <div><p class="mb-1 text-xs text-mute">{t("Show this box only when")}</p>
-                  <RuleEditor rule={fieldRule(sel.attrs)} choices={fieldChoices(sel.pos)} onchange={(r) => patchSel({ show: r ? ruleToText(r, (id) => id) : null })} testid="pp-field-rule" note={t("Use answers from people who sign before this person. Check says so if someone signs at the same time or later.")} /></div>
-                {#if ["text", "number"].includes(sel.attrs.type) && !sel.attrs.autofill}<div><p class="mb-1 text-xs text-mute">{t("Works itself out (a formula)")}</p>
-                  <input class="field !py-1.5 font-mono text-xs" bind:value={calcText} placeholder="[Monthly rent] * [Months]" onchange={() => patchSel(calcText.trim() ? { calc: calcText.trim(), required: false } : { calc: null })} aria-label={t("Formula")} data-testid="pp-field-calc" />
-                  <p class="mt-1 text-xs text-mute">{t("Use [field names], numbers, + − × ÷, brackets, round(), min() and max(). The signer cannot type in it.")}</p></div>{/if}
-              </div></details>
-          {/if}
           {#if sel.attrs.type === "text" && !sel.attrs.autofill}<label class="grid gap-1 text-sm"><span>{t("Longest answer (characters)")}</span><input class="field !py-1.5" type="number" min="1" max="5000" value={sel.attrs.max_length ?? ""} oninput={(e) => patchSel({ max_length: e.currentTarget.value || null })} /></label>{/if}
         </div>
         <button type="button" class="btn quiet mt-3 !text-bad" onclick={() => editor?.chain().focus().deleteSelection().run()} data-testid="pp-field-remove">{t("Remove")}</button>   <!-- R10-45: a field could only be deleted with the keyboard -->
@@ -237,8 +218,7 @@
         <p class="mt-1 truncate text-sm text-mute">{sec.text}</p>
         <div class="mt-2"><Seg options={AUDIENCES.map((o) => ({ value: o.id, label: tl(o.label) }))} value={sec.attrs.audience === "sender" ? "sender" : "everyone"} onchange={setAudience} label={t("Who sees it")} testid="pp-audience" /></div>
         {#if sec.attrs.audience === "sender"}<p class="mt-2 text-xs text-mute">{tl("Only you see this. It is not in what signers see, sign or receive.")}</p>
-        {:else}<div class="mt-3"><p class="mb-1 text-xs text-mute">{t("Show this section only when")}</p>
-          <RuleEditor rule={sec.attrs.showWhen ?? null} choices={senderChoices()} onchange={setSectionRule} testid="pp-section-rule" note={t("A section can depend only on what you fill in before sending. When the rule does not hold, the section is left out and the text closes up; signers never see it.")} /></div>{/if}
+        {/if}
       </section>
     {/if}
     {#if !sel && !sec}

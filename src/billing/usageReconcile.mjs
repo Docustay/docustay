@@ -3,7 +3,6 @@
 // and every divergence is logged as an event.
 
 import { assertTenantTx } from "../db/index.mjs";
-import { emit } from "../events/outbox.mjs";
 import { PROVIDERS } from "./usageProviders.mjs";
 import { periodWindow } from "./usage.mjs";
 
@@ -135,21 +134,8 @@ export async function reconcileTenant(
         [reconciledCount, counter.id]
       );
 
-      // ★ Emit event when there's a divergence or unavailability.
-      if (reason) {
-        await emit(tx, {
-          tenantId,
-          topic: "settings.usage.reconciled",
-          emittedBy: "settings",
-          payload: {
-            metric,
-            period_start: period,
-            live: liveCount,
-            reconciled: reconciledCount,
-            reason,
-          },
-        });
-      }
+      // A divergence or an unavailable count is LOGGED, never emailed and never a bell notice: the "Usage was reconciled for this billing period" owner notice was removed for good (the maintainer, 15 Oct 2026, G1). The nightly reconcile itself still runs and still writes reconciled_count above.
+      if (reason) console.warn(`[usage-reconcile] ${metric} ${period}: live ${liveCount}, reconciled ${reconciledCount}, ${reason}`);
     }
   }
 }

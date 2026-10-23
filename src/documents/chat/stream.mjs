@@ -1,6 +1,7 @@
 // The Anthropic messages API, streamed. An async generator of plain events so the orchestrator (and its tests) never touch the wire format.
 //   {type:"text", text} · {type:"tool_use", id, name, input} · {type:"done", stopReason, content, usage:{input, output, cacheRead, cacheCreation}} · {type:"error", status, kind, message}
 // A provider failure never throws: it ends the stream with an "error" event whose message is plain words.
+import { anthropicHeaders } from "../anthropicHeaders.mjs";
 const URL_DEFAULT = "https://api.anthropic.com/v1/messages";
 const plain = (status) => status === 401 || status === 403 ? "The AI provider refused the key." : status === 429 ? "The AI provider is busy; try again in a minute." : status === 529 || (status >= 500 && status < 600) ? "The AI provider did not answer; try again." : "The AI provider could not take that request.";
 
@@ -15,7 +16,7 @@ const wireMessages = (ms) => Array.isArray(ms) ? ms.map((m) => Array.isArray(m.c
 export async function* streamAnthropic({ apiKey, model, effort = null, system, tools, messages, maxTokens = 2048, signal, fetchImpl = fetch, url = URL_DEFAULT }) {
   let res;
   try {
-    res = await fetchImpl(url, { method: "POST", signal, headers: { "x-api-key": apiKey, "anthropic-version": "2023-06-01", "content-type": "application/json" }, body: JSON.stringify({ model, max_tokens: maxTokens, ...(effort && process.env.KEYSTONE_AI_EFFORT !== "off" ? { output_config: { effort } } : {}), system: wireSystem(system), tools: wireTools(tools), messages: wireMessages(messages), stream: true }) });
+    res = await fetchImpl(url, { method: "POST", signal, headers: anthropicHeaders(apiKey), body: JSON.stringify({ model, max_tokens: maxTokens, ...(effort && process.env.KEYSTONE_AI_EFFORT !== "off" ? { output_config: { effort } } : {}), system: wireSystem(system), tools: wireTools(tools), messages: wireMessages(messages), stream: true }) });
   } catch (e) { yield { type: "error", status: 0, kind: e?.name === "AbortError" ? "aborted" : "network", message: e?.name === "AbortError" ? "Stopped." : "The AI provider could not be reached; try again." }; return; }
   if (!res.ok) { if (res.status < 500 && res.status !== 429) console.error(`chat provider ${res.status}: ${(await Promise.resolve(res.text?.()).catch(() => "") ?? "").slice(0, 300)}`); yield { type: "error", status: res.status, kind: res.status === 429 ? "rate_limited" : "provider", message: plain(res.status) }; return; }
   const usage = { input: 0, output: 0, cacheRead: 0, cacheCreation: 0 }; const content = []; let cur = null, stopReason = null, buf = "";

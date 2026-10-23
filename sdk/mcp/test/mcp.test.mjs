@@ -12,11 +12,13 @@ const api = http.createServer(async (req, res) => {
   let body = ""; for await (const c of req) body += c; calls.push({ method: req.method, url: req.url, body: body ? JSON.parse(body) : undefined, auth: req.headers.authorization });
   const j = (s, o) => { res.writeHead(s, { "content-type": "application/json" }); res.end(JSON.stringify(o)); };
   if (req.url.includes("00000000-0000-4000-8000-00000000dead")) return j(404, { error: { kind: "not_found", message: "no such document", requestId: "req-1", retryable: false } });
+  if (req.url === "/api/v1/documents/ai/draft") return j(403, { error: { kind: "forbidden", message: "AI drafting is switched off for this workspace", detail: { code: "ai_off" }, requestId: "req-2", retryable: false } });
   if (req.url.endsWith("/signed.pdf")) { res.writeHead(200, { "content-type": "application/pdf" }); return res.end(Buffer.from("%PDF-1.7 hi")); }
   if (req.url === "/api/v1/documents/send") return j(201, { id: "11111111-1111-4111-8111-111111111111", state: "sent" });
   if (req.method === "GET" && req.url.startsWith("/api/v1/documents/1111")) return j(200, { id: "11111111-1111-4111-8111-111111111111", title: "Lease", state: "sent", test: true });
   if (req.url.endsWith("/void")) return j(200, { id: "x", state: "void" });
   if (req.url.endsWith("/remind")) return j(200, { id: "x", reminded: 1 });
+  if (req.method === "GET" && req.url.startsWith("/api/v1/templates/")) return j(200, { id: "t1", name: "Lease" });
   if (req.url.startsWith("/api/v1/documents/templates")) return j(200, { templates: [{ id: "t1", name: "Lease" }] });
   j(200, {});
 });
@@ -83,3 +85,20 @@ test("without a key the server refuses to start and says what to set", async () 
   assert.notEqual(r.status, 0); assert.match(r.stderr, /DOCUSTAY_API_KEY/);
 });
 test.after(() => api.close());
+
+test("a refusal with a code but no meter never says undefined (R13-D207)", async () => {
+  const c = await connect();
+  const e = await call(c, "draft_document_with_ai", { prompt: "an NDA" });
+  assert.ok(e.isError && /switched off/.test(e.text) && /req-2/.test(e.text), e.text);
+  assert.ok(!/undefined/.test(e.text), e.text);
+  await c.close();
+});
+
+test("the send preview names the template and refuses one that does not exist (R13-D207)", async () => {
+  const c = await connect();
+  const ok = await call(c, "send_document", { templateId: ID, parties: [{ seat: "s", name: "n", email: "a@b.co" }] });
+  assert.ok(!ok.isError && /Lease/.test(ok.text), ok.text);
+  const gone = await call(c, "send_document", { templateId: "00000000-0000-4000-8000-00000000dead", parties: [{ seat: "s", name: "n", email: "a@b.co" }] });
+  assert.ok(gone.isError && /not_found/.test(gone.text), gone.text);
+  await c.close();
+});

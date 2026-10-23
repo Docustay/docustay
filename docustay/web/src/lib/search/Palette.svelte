@@ -1,5 +1,5 @@
 <script>
-  // ⌘K — SEARCH EVERYTHING (Run 9 board "Search everything"). One box over documents, templates and forms, and people, with "Ask Scribe" as the last row. Opens with ⌘K / Ctrl+K
+  // ⌘K — SEARCH EVERYTHING (Run 9 board "Search everything"). One box over documents, templates and people, with "Ask Scribe" as the last row. Opens with ⌘K / Ctrl+K
   // anywhere in the app, or the sidebar's Search button. ARIA combobox + listbox: ↑↓ move, ↵ opens, ⌘↵ / Ctrl+↵ asks Scribe, Esc closes (Ark Dialog keeps focus inside and gives it back).
   // The server answers in groups (src/documents/search.mjs, RLS); words under each title are worded here, in the reader's language.
   import { Dialog } from "@ark-ui/svelte/dialog";
@@ -38,13 +38,13 @@
     const out = [];
     if (res) {
       for (const d of res.groups.documents) out.push({ group: "documents", id: `d-${d.id}`, title: d.title, line: docLine(d), href: d.href });
-      for (const tp of res.groups.templates) out.push({ group: "templates", id: `t-${tp.id}`, title: tp.title, tag: tp.kind === "form" ? (tp.responses ? t("form · {n, plural, one {# response} other {# responses}}", { n: tp.responses }) : t("form")) : t("template"), href: tp.href });
+      for (const tp of res.groups.templates) out.push({ group: "templates", id: `t-${tp.id}`, title: tp.title, tag: t("template"), href: tp.href });
       for (const p of res.groups.people) out.push({ group: "people", id: `p-${p.id}`, title: p.name, line: personLine(p), href: p.href, person: true });
     }
     if (q.trim().length >= 2 && chat.status?.enabled !== false) out.push({ group: "actions", id: "ask", title: t("Ask Scribe: “{q}”", { q: q.trim() }), ask: true });
     return out;
   });
-  const GROUP = () => ({ documents: t("Documents"), templates: t("Templates and forms"), people: t("People"), actions: t("Actions") });
+  const GROUP = () => ({ documents: t("Documents"), templates: t("Templates"), people: t("Contacts"), actions: t("Actions") });
   async function search() {
     const term = q.trim(); const my = ++seq;
     if (term.length < 2) { res = null; busy = false; problem = null; return; }
@@ -79,7 +79,7 @@
     <Dialog.Positioner class="pal-pos">
       <Dialog.Content class="pal" data-testid="palette" aria-label={t("Search everything")}>
         <div class="pal-head"><Icon name="search" size={17} class="text-mute" />
-          <input id="pal-input" class="pal-input" bind:value={q} oninput={typed} onkeydown={key} placeholder={t("Search documents, templates, forms and people")} autocomplete="off" spellcheck="false"
+          <input id="pal-input" class="pal-input" bind:value={q} oninput={typed} onkeydown={key} placeholder={t("Search documents, templates and contacts")} autocomplete="off" spellcheck="false"
             role="combobox" aria-expanded={rows.length > 0} aria-controls="pal-list" aria-activedescendant={rows[active] ? `pal-${rows[active].id}` : undefined} aria-autocomplete="list" data-testid="palette-input" />
           <Dialog.CloseTrigger class="pal-esc" aria-label={t("Close")}>esc</Dialog.CloseTrigger></div>
         <div class="pal-body">

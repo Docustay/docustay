@@ -18,5 +18,5 @@
   :global(.anim.armed) .region { animation: draw 1s ease-in-out .5s both; } :global(.anim.armed) .form { animation: fadein .6s ease-out 1.6s both; }
   :global(.anim.armed) .code { animation: fadein .5s ease-out 3.2s both; } :global(.anim.armed) .cl { transform-box: fill-box; transform-origin: left; animation: type .7s ease-out 3.6s both; } :global(.anim.armed) .okdot { animation: fadein .3s ease-out 4.4s both; }
   @keyframes draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } } @keyframes fadein { from { opacity: 0; transform: translateY(6px); } } @keyframes type { from { transform: scaleX(0); } }
-.real { filter: drop-shadow(0 1px 2px rgb(0 0 0 / .22)); }
+.real { filter: drop-shadow(0 1px 2px rgb(60 40 140 / 0.099)); }
 </style>

@@ -330,6 +330,28 @@ export function registerPlatformRoutes(app, { runTenantScoped, tenantIsPlatform 
   //     transaction as the override, so a reader can never observe one without the other
   //     (flags.mjs's own rule). POST refuses a flag whose availability is `blocked` or
   //     `being_built` with 409 and a readable reason.
+  // ═════════════════════════════════════════════════════════════════
+  // 21 Oct 2026 (the maintainer, pricing integrity) — THE DOCUSTAY REVIEW LIST. Repeat free workspaces, fair-use lines passed, a lost dispute. Review only: nothing here blocks anyone by itself. Both routes are POSTs by the route table's own rule
+  // (a list with a limit; a resolve). Resolving a lost-dispute flag lifts that workspace's pause (a dispute_cleared line in its billing record).
+  // ═════════════════════════════════════════════════════════════════
+  app.post("/api/platform/docustay/review", operatorRead(async ({ db, body }) => {
+    const limit = Number.isInteger(body?.limit) ? Math.max(1, Math.min(body.limit, 500)) : 200;
+    const { rows } = await db.query(`SELECT id, kind, subject, workspace_id, detail, created_at, resolved_at FROM keystone.docustay_review_flags($1)`, [limit]);
+    return { flags: rows.map((r) => ({ id: r.id, kind: r.kind, subject: r.subject, workspaceId: r.workspace_id, detail: r.detail, createdAt: r.created_at, resolvedAt: r.resolved_at })) };
+  }));
+  app.post("/api/platform/docustay/review/resolve", operatorRead(async ({ db, body }) => {
+    const id = body?.id;
+    if (typeof id !== "string" || !UUID_RE.test(id)) throw invalid("id must be a uuid");
+    const { rows } = await db.query(`SELECT kind, workspace_id FROM keystone.docustay_review_flags(1000) WHERE id = $1`, [id]);
+    const flag = rows[0];
+    if (!flag) throw invalid("There is no such review item.");
+    const { rows: [done] } = await db.query(`SELECT keystone.docustay_review_flag_resolve($1) AS yes`, [id]);
+    if (done?.yes && flag.kind === "dispute_lost" && flag.workspace_id) {
+      await withTenant(flag.workspace_id, (tx) => tx.query(`INSERT INTO keystone.docustay_billing_record (tenant_id, kind, detail) VALUES ($1, 'dispute_cleared', $2::jsonb)`, [flag.workspace_id, JSON.stringify({ flag: id })]));
+    }
+    return { resolved: Boolean(done?.yes) };
+  }));
+
   app.post("/api/platform/flags", operatorRead(async ({ db, c, body }) => {
     const key = body?.key;
     const practiceTenantId = body?.tenantId;

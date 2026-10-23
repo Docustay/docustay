@@ -309,12 +309,12 @@
   "who": "A business and a customer agreeing to settle a balance in installments, with the first payment taken securely before signing.",
   "summary": "A customer agrees to pay an outstanding balance in installments: the amount, the schedule, what happens if one is missed, and the first payment.",
   "pages": 3,
-  "fields": 30,
+  "fields": 29,
   "seats": [
    "Business",
    "Customer"
   ],
-  "minutes": 12
+  "minutes": 11
  },
  {
   "slug": "deposit-agreement",
@@ -323,11 +323,11 @@
   "who": "A business or landlord taking a deposit to hold something for a customer, and saying when it is refunded or kept.",
   "summary": "A customer pays a deposit to hold a booking, item or place: what it holds, when it is refunded, when it is kept, and the card payment.",
   "pages": 3,
-  "fields": 19,
+  "fields": 18,
   "seats": [
    "Business",
    "Customer"
   ],
-  "minutes": 8
+  "minutes": 7
  }
 ]

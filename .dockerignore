@@ -26,6 +26,7 @@
 **/*.pem
 !docustay/license-public.pem
 **/backup-*/
+!infra/backup/backup-offsite.sh
 
 # ── Not needed, and large. node_modules is reinstalled by `npm ci` in the image ──
 # ★ Copying it would also ship the host's platform-specific binaries into a linux image.
@@ -35,7 +36,9 @@ node_modules/
 # Final Push: the host's nested installs, SvelteKit output and working folders are never part of an image (the Dockerfiles run npm ci and build inside)
 docustay/web/build/
 docustay/web/.svelte-kit/
-specs/
+specs/*
+# F145 — the one spec file the app reads at runtime (src/whats-new/parser.mjs:14)
+!specs/whats-new.md
 .claude/
 .stryker-tmp/
 

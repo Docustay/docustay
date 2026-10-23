@@ -74,6 +74,17 @@ function formatAmount(minor) {
   return `$${(minor / 100).toFixed(2)}`;
 }
 
+// ★ FOUND LIVE in the browser, 2 Oct 2026 — `view.dueDate`/`view.issueDate` are midnight UTC on
+//   the intended calendar day (InvoiceEditor's own `addDaysLocal` + `new Date(dueAt).toISOString()`
+//   round trip). `toLocaleDateString` with no `timeZone` renders in the VIEWER's own zone, which
+//   steps the shown day back by one for anyone west of UTC — exactly the class of bug F816 already
+//   fixed for the form's own due-date label (`formatDateStringLong`, below), just not yet for these
+//   preview tabs. Same fix, same reasoning: a due/issue date is a calendar day, not an instant.
+function formatPreviewDate(isoString, opts = { month: "short", day: "numeric", year: "numeric" }) {
+  if (!isoString) return "";
+  return new Date(isoString).toLocaleDateString("en-US", { ...opts, timeZone: "UTC" });
+}
+
 const DUE_DATE_PRESETS = [1, 3, 7, 14, 30, 60, 90];
 const PAYMENT_METHOD_TYPE_LABELS = { card: "Card", us_bank_account: "US bank transfer (ACH)", link: "Link" };
 const SAVE_DEBOUNCE_MS = 500;
@@ -650,10 +661,10 @@ function EmailPreview({ view, payerEmail }) {
       <p className="m-0 mb-4 text-xs text-mute">To: {payerEmail || "client@example.com"}</p>
       <p className="m-0 mb-1 text-sm font-semibold text-ink-2">{view.practice.name}</p>
       <p className="m-0 mb-1 text-3xl font-semibold text-ink">{formatAmount(view.amountDue)} due</p>
-      {view.dueDate && <p className="m-0 mb-4 text-xs text-mute">Due {new Date(view.dueDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</p>}
+      {view.dueDate && <p className="m-0 mb-4 text-xs text-mute">Due {formatPreviewDate(view.dueDate)}</p>}
       <p className="m-0 mb-4 text-lg font-medium text-ink">{view.practice.name}: invoice {view.invoiceNumber} for {formatAmount(view.amountDue)}</p>
       <p className="m-0 mb-4 whitespace-pre-wrap text-sm text-ink-2">
-        {`Invoice ${view.invoiceNumber} for ${formatAmount(view.amountDue)} is now available${view.dueDate ? `, due ${new Date(view.dueDate).toLocaleDateString()}` : ""}.\n\n`}
+        {`Invoice ${view.invoiceNumber} for ${formatAmount(view.amountDue)} is now available${view.dueDate ? `, due ${formatPreviewDate(view.dueDate)}` : ""}.\n\n`}
         {view.lines.map((l) => `${l.description} x${l.quantity}: ${formatAmount(l.amount)}`).join("\n")}
       </p>
       <div className="mb-3 inline-block rounded-md bg-accent px-5 py-2.5 text-sm font-semibold text-white">Pay invoice</div>
@@ -679,7 +690,7 @@ function PaymentPagePreview({ view, isSent }) {
       <p className="m-0 mb-4 text-xs text-mute">Preview — what the client will see on Stripe's secure payment page</p>
       <p className="m-0 mb-1 text-sm text-ink-2">{view.practice.name}</p>
       <p className="m-0 mb-4 text-2xl font-semibold text-ink">{formatAmount(view.amountDue)}</p>
-      {view.dueDate && <p className="m-0 mb-4 text-sm text-mute">Due {new Date(view.dueDate).toLocaleDateString()}</p>}
+      {view.dueDate && <p className="m-0 mb-4 text-sm text-mute">Due {formatPreviewDate(view.dueDate)}</p>}
       <div className="mb-4 rounded-md border border-line p-3">
         {view.lines.map((l, i) => (
           <div key={i} className="flex justify-between py-1 text-sm text-ink-2">
@@ -708,7 +719,7 @@ function ReviewStep({ view, payerLabel, payerEmail, payerCard, collectionMethod,
         <div className="w-1/2 flex flex-col gap-4 text-sm">
           <div><span className="text-mute">Recipient</span><p className="m-0 font-medium text-ink">{payerLabel || "—"} {payerEmail ? `(${payerEmail})` : ""}</p></div>
           <div><span className="text-mute">Amount due</span><p className="m-0 text-xl font-semibold text-ink">{formatAmount(view.amountDue)}</p></div>
-          {view.dueDate && <div><span className="text-mute">Due date</span><p className="m-0 text-ink">{new Date(view.dueDate).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</p></div>}
+          {view.dueDate && <div><span className="text-mute">Due date</span><p className="m-0 text-ink">{formatPreviewDate(view.dueDate, { month: "long", day: "numeric", year: "numeric" })}</p></div>}
           <div><span className="text-mute">Collection method</span><p className="m-0 text-ink">{collectionMethod === "charge_automatically" ? "Autocharge card on file" : "Email, pay when ready"}</p></div>
           {collectionMethod === "charge_automatically" && (
             <div><span className="text-mute">Card</span><p className="m-0 text-ink">{payerCard ? `${payerCard.brand} •••• ${payerCard.lastFour}` : "No card on file"}</p></div>

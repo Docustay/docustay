@@ -58,7 +58,7 @@ function requireApiKey(product = "workbench") {
  *   account rather than creating a second one on every retry, which would orphan Stripe accounts
  *   nobody finishes onboarding.
  */
-export async function createConnectAccount({ fetchImpl = fetch, type = "express", email = null, product = "workbench" } = {}) {
+export async function createConnectAccount({ fetchImpl = fetch, type = "express", email = null, product = "workbench", prefill = null } = {}) {
   const apiKey = requireApiKey(product);
   if (!["express", "standard", "full_dashboard"].includes(type)) throw new Error(`createConnectAccount: type must be express, standard or full_dashboard, got "${type}"`);
   // ★ Part 30 item 11 — a Docustay workspace connects a STANDARD account: the customer's own full Stripe account (their dashboard, their payouts, their fees), not one the platform manages. A Standard account's payout
@@ -73,6 +73,7 @@ export async function createConnectAccount({ fetchImpl = fetch, type = "express"
     "settings[payouts][schedule][interval]": "weekly",
     "settings[payouts][schedule][weekly_anchor]": "friday",
   });
+  if (prefill) for (const [k, v] of Object.entries(prefillParams(prefill))) params.set(k, v);   // the wizard's non-sensitive details, so Stripe's page does not ask for them again
   const out = await callOutside("stripe_connect_accounts", STRIPE_ACCOUNTS_URL, {
     method: "POST",
     headers: {
@@ -91,12 +92,63 @@ export async function createConnectAccount({ fetchImpl = fetch, type = "express"
 }
 
 /**
+ * The wizard's NON-SENSITIVE details as Stripe account parameters (PRE-FILL: Stripe's own page then skips these questions). Docustay never collects or stores an SSN, EIN, ID, date of birth, address or bank number.
+ * { businessType: "company"|"individual", name, firstName, lastName, website, productDescription, email, country }
+ */
+export function prefillParams(p = {}) {
+  const out = {};
+  if (p.businessType === "company") { out.business_type = "company"; if (p.name) out["company[name]"] = String(p.name).slice(0, 100); }
+  else if (p.businessType === "individual") { out.business_type = "individual"; if (p.firstName) out["individual[first_name]"] = String(p.firstName).slice(0, 60); if (p.lastName) out["individual[last_name]"] = String(p.lastName).slice(0, 60); }
+  if (p.website) out["business_profile[url]"] = String(p.website).slice(0, 200);
+  if (p.productDescription) out["business_profile[product_description]"] = String(p.productDescription).slice(0, 300);
+  if (p.email) out.email = String(p.email).slice(0, 254);
+  return out;
+}
+
+/** Change the pre-fill on an account that has not submitted its details yet. Stripe refuses once details are submitted: the caller treats a refusal as "Stripe will ask for it itself". */
+export async function updateConnectAccountPrefill({ stripeAccountId, prefill, fetchImpl = fetch, product = "workbench" }) {
+  const apiKey = requireApiKey(product);
+  const out = await callOutside("stripe_connect_accounts_update", `${STRIPE_ACCOUNTS_URL}/${encodeURIComponent(stripeAccountId)}`, {
+    method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded", Authorization: `Bearer ${apiKey}` }, body: new URLSearchParams(prefillParams(prefill)).toString(),
+  }, { fetchImpl });
+  return { ok: out.ok === true, message: out.ok ? null : (out.body?.error?.message ?? "Stripe did not accept the details") };
+}
+
+/** Everything the "Your Stripe account" screen shows about the account, from the Account object. Names and numbers Stripe already holds; nothing sensitive (a bank is its name and last 4). */
+export async function fetchConnectAccountDetail({ stripeAccountId, fetchImpl = fetch, product = "workbench" }) {
+  const apiKey = requireApiKey(product);
+  const out = await callOutside("stripe_connect_accounts_get", `${STRIPE_ACCOUNTS_URL}/${encodeURIComponent(stripeAccountId)}`, { method: "GET", headers: { Authorization: `Bearer ${apiKey}` } }, { fetchImpl });
+  if (!out.ok) throw dependency(`Stripe did not return the account (${out.body?.error?.message ?? out.status ?? "unreachable"}).`, out.body);
+  const a = out.body ?? {}, bank = a.external_accounts?.data?.[0] ?? null, r = a.requirements ?? {};
+  return {
+    chargesEnabled: a.charges_enabled === true, payoutsEnabled: a.payouts_enabled === true, detailsSubmitted: a.details_submitted === true,
+    businessType: a.business_type ?? null, businessName: a.business_profile?.name ?? a.company?.name ?? ([a.individual?.first_name, a.individual?.last_name].filter(Boolean).join(" ") || null), website: a.business_profile?.url ?? null,
+    supportEmail: a.business_profile?.support_email ?? a.email ?? null, country: a.country ?? null, currency: a.default_currency ?? null, createdAt: a.created ? new Date(a.created * 1000).toISOString() : null,
+    bank: bank ? { name: bank.bank_name ?? null, last4: bank.last4 ?? null } : null, schedule: a.settings?.payouts?.schedule ? { interval: a.settings.payouts.schedule.interval ?? null, weeklyAnchor: a.settings.payouts.schedule.weekly_anchor ?? null, delayDays: a.settings.payouts.schedule.delay_days ?? null } : null,
+    requirements: { currentlyDue: Array.isArray(r.currently_due) ? r.currently_due.slice(0, 40) : [], pastDue: Array.isArray(r.past_due) ? r.past_due.slice(0, 40) : [], eventuallyDue: Array.isArray(r.eventually_due) ? r.eventually_due.slice(0, 40) : [], pendingVerification: Array.isArray(r.pending_verification) ? r.pending_verification.slice(0, 40) : [], deadline: r.current_deadline ? new Date(r.current_deadline * 1000).toISOString() : null, disabledReason: r.disabled_reason ?? null },
+  };
+}
+
+/** The account's balance and its most recent payouts, through the Stripe-Account header. READ-ONLY. */
+export async function fetchConnectMoney({ stripeAccountId, fetchImpl = fetch, product = "workbench" }) {
+  const apiKey = requireApiKey(product), h = { Authorization: `Bearer ${apiKey}`, "Stripe-Account": stripeAccountId };
+  const [bal, po] = await Promise.all([
+    callOutside("stripe_connect_balance", "https://api.stripe.com/v1/balance", { method: "GET", headers: h }, { fetchImpl }),
+    callOutside("stripe_connect_payouts", "https://api.stripe.com/v1/payouts?limit=5", { method: "GET", headers: h }, { fetchImpl }),
+  ]);
+  const sum = (l) => (Array.isArray(l) ? l.filter((x) => x.currency === (l[0]?.currency)).reduce((n, x) => n + (x.amount ?? 0), 0) : 0);
+  const cur = bal.body?.available?.[0]?.currency ?? bal.body?.pending?.[0]?.currency ?? "usd";
+  const payouts = (po.body?.data ?? []).map((x) => ({ id: x.id, amountMinor: x.amount, currency: x.currency, status: x.status, arrivalAt: x.arrival_date ? new Date(x.arrival_date * 1000).toISOString() : null, createdAt: x.created ? new Date(x.created * 1000).toISOString() : null, failure: x.failure_message ?? null }));
+  return { ok: bal.ok === true, currency: cur, availableMinor: bal.ok ? sum(bal.body?.available) : null, pendingMinor: bal.ok ? sum(bal.body?.pending) : null, payouts: po.ok ? payouts : [] };
+}
+
+/**
  * Create an Account Link for onboarding — the URL the practice owner's browser is redirected to.
  * ★ `refresh_url` is hit if the link expires or onboarding is abandoned mid-way (Stripe's own
  *   retry convention); it points back at `/connect/start`, which reuses the same account id
  *   instead of creating a new one. `return_url` is the platform's callback.
  */
-export async function createAccountLink({ stripeAccountId, refreshUrl, returnUrl, fetchImpl = fetch, product = "workbench" }) {
+export async function createAccountLink({ stripeAccountId, refreshUrl, returnUrl, fetchImpl = fetch, product = "workbench", type = "account_onboarding" }) {
   const apiKey = requireApiKey(product);
   const out = await callOutside("stripe_connect_account_links", STRIPE_ACCOUNT_LINKS_URL, {
     method: "POST",
@@ -108,7 +160,7 @@ export async function createAccountLink({ stripeAccountId, refreshUrl, returnUrl
       account: stripeAccountId,
       refresh_url: refreshUrl,
       return_url: returnUrl,
-      type: "account_onboarding",
+      type,
     }).toString(),
   }, { fetchImpl });
 
@@ -142,6 +194,7 @@ export async function fetchConnectAccountStatus({ stripeAccountId, fetchImpl = f
     requirementsDue: Array.isArray(out.body?.requirements?.currently_due) ? out.body.requirements.currently_due.slice(0, 30) : [],
     pastDue: Array.isArray(out.body?.requirements?.past_due) ? out.body.requirements.past_due.length : 0,
     disabledReason: out.body?.requirements?.disabled_reason ?? null,
+    deadline: out.body?.requirements?.current_deadline ? new Date(out.body.requirements.current_deadline * 1000).toISOString() : null,
     isController: out.body?.controller?.is_controller === true,
   };
 }
@@ -193,15 +246,19 @@ export async function connectAccount(tx, { tenantId, stripeAccountId, state, act
   await run(tx, kdb
     .selectNoFrom(sql`keystone.ensure_stripe_account_source(${sql.val(stripeAccountId)})`.as("id")));
 
-  await writeAudit(tx, {
-    tenantId,
-    action: "settings.changed",
-    object: "money.connect",
-    subjectId: rows[0].id,
-    before: beforeState,
-    after: { state: rows[0].state },
-    actorUserId: actorUserId ?? null,
-  });
+  // ★ R13-D381: only a real change is audited. The onboarding return re-reads the account and calls this with the same state,
+  //   which put a second "Stripe account created" in the Payments activity list.
+  if (beforeState?.state !== rows[0].state) {
+    await writeAudit(tx, {
+      tenantId,
+      action: "settings.changed",
+      object: "money.connect",
+      subjectId: rows[0].id,
+      before: beforeState,
+      after: { state: rows[0].state },
+      actorUserId: actorUserId ?? null,
+    });
+  }
 
   return { accountId: rows[0].id, state: rows[0].state };
 }
