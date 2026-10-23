@@ -106,7 +106,7 @@ t("(b) counts are 25 / 146 / 66 / 7 and every collection's members are distinct"
   // [FINAL PUSH Stage 6, 7 Oct 2026] 168 -> 174: test-sign, email templates, emails.
   // [FINAL PUSH Stage 6, 7 Oct 2026] 174 -> 182: the webhook routes; 182 -> 183: the embedded builder session; 183 -> 184: the embedded Scribe session; 184 -> 185: GET /api/v1/ai/usage; 185 -> 186: POST /api/v1/documents/detect-fields.
   // [Run 7–9] 186 -> 205 as the forms, search, contracts, payments, library and automation routes were added (the pin here had not followed); [Run 9 Part 4.3] 205 -> 204: POST /api/money/subscriptions/cancel was a route that no longer exists.
-  same(Object.keys(ROUTE_SCOPES).length, 189, "Object.keys(ROUTE_SCOPES).length");   // Part 2: + POST /api/v1/preflight
+  same(Object.keys(ROUTE_SCOPES).length, 190, "Object.keys(ROUTE_SCOPES).length");   // Part 2: + POST /api/v1/preflight; R13-D385: + DELETE /api/v1/documents/:id
   // ★ [TY, 2 Oct 2026] 67 -> 66: "POST /api/reports/accountant/send" removed along with the whole
   //   accountant pack feature.
   same(NEVER_DELEGABLE.size, 66, "NEVER_DELEGABLE.size");   // [FINAL PUSH Stage 6] 66 -> 67: api-keys/:id/allowlist; [Run 9 Part 4.3] 67 -> 66: POST /api/app/booking/waitlist was a route that no longer exists

@@ -1,5 +1,5 @@
 {
- "source_commit": "d765d70191be96f412ef61f0a6a1923952e16462",
+ "source_commit": "0032c968dfa63bc20e9495138fd3db3789346c35",
  "files": [
   {
    "path": ".dockerignore",
@@ -22679,8 +22679,8 @@
   {
    "path": "test/s7_capability_vocabulary.test.mjs",
    "from": "test/s7_capability_vocabulary.test.mjs",
-   "sha256": "f9146a730dd4551e7cfbc01f45189a8ea59fe34c1bf6b15d542dc581104addf1",
-   "source_sha256": "f9146a730dd4551e7cfbc01f45189a8ea59fe34c1bf6b15d542dc581104addf1",
+   "sha256": "0fdca6814077ee9d239ffce5bf7a464d0d59be6c65150a38a7abe7c18876b653",
+   "source_sha256": "0fdca6814077ee9d239ffce5bf7a464d0d59be6c65150a38a7abe7c18876b653",
    "substitutions": 0
   },
   {
