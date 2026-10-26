@@ -1,0 +1,23 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "release-type": "node",
+  "include-component-in-tag": false,
+  "packages": {
+    ".": {
+      "package-name": "docustay",
+      "changelog-path": "docustay/CHANGELOG.md",
+      "extra-files": [
+        { "type": "json", "path": "src/product/docustay.facts.json", "jsonpath": "$.version" },
+        { "type": "json", "path": "sdk/js/package.json", "jsonpath": "$.version" },
+        { "type": "json", "path": "sdk/cli/package.json", "jsonpath": "$.version" },
+        { "type": "json", "path": "sdk/mcp/package.json", "jsonpath": "$.version" },
+        { "type": "json", "path": "sdk/embed/package.json", "jsonpath": "$.version" },
+        { "type": "json", "path": "sdk/react/package.json", "jsonpath": "$.version" },
+        { "type": "json", "path": "sdk/vue/package.json", "jsonpath": "$.version" },
+        { "type": "json", "path": "sdk/angular/package.json", "jsonpath": "$.version" },
+        { "type": "toml", "path": "sdk/python/pyproject.toml", "jsonpath": "$.project.version" },
+        { "type": "json", "path": "sdk/claude-plugin/.claude-plugin/plugin.json", "jsonpath": "$.version" }
+      ]
+    }
+  }
+}

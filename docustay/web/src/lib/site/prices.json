@@ -1,0 +1,218 @@
+{
+  "generatedFrom": "src/product/docustayPrices.mjs",
+  "planOrder": [
+    "docustay_free",
+    "docustay_payg",
+    "docustay_pro",
+    "docustay_lifetime"
+  ],
+  "limits": {
+    "freeEmailsPerDay": 25,
+    "paidEmailsPerDay": 500,
+    "apiRequestsPerMinute": 600,
+    "idempotencyKeyMin": 8,
+    "idempotencyKeyMax": 200,
+    "metadataPairsMax": 20,
+    "backupDays": 30,
+    "demoKeptHours": 24,
+    "apiBodyMb": 1,
+    "htmlTemplateMb": 2
+  },
+  "currency": "usd",
+  "free": {
+    "key": "docustay_free",
+    "name": "Free",
+    "personMonthlyMinor": 0,
+    "docsIncluded": 15,
+    "docOverMinor": null,
+    "draftsIncluded": 10,
+    "draftOverMinor": null,
+    "feeBps": 200,
+    "people": 1,
+    "signersPerMonth": 15,
+    "templatesPerMonth": 5,
+    "uploadMb": 25,
+    "bulkCap": 15
+  },
+  "payg": {
+    "key": "docustay_payg",
+    "name": "Pay as you go",
+    "personMonthlyMinor": 500,
+    "docsIncluded": 15,
+    "docOverMinor": 50,
+    "draftsIncluded": 10,
+    "draftOverMinor": 30,
+    "feeBps": 200,
+    "people": null,
+    "templatesPerMonth": 25,
+    "uploadMb": 25,
+    "bulkCap": null
+  },
+  "pro": {
+    "key": "docustay_pro",
+    "name": "Pro",
+    "monthlyMinor": 3500,
+    "stripeVersion": "v4",
+    "docsIncluded": null,
+    "docOverMinor": null,
+    "draftsIncluded": 100,
+    "draftOverMinor": 30,
+    "feeBps": 0,
+    "people": null,
+    "templatesPerMonth": null,
+    "uploadMb": 100,
+    "bulkCap": null
+  },
+  "lifetime": {
+    "key": "docustay_lifetime",
+    "name": "Lifetime",
+    "oneTimeMinor": 29900,
+    "docsIncluded": null,
+    "docOverMinor": null,
+    "draftsIncluded": 50,
+    "draftOverMinor": 30,
+    "feeBps": 0,
+    "people": null,
+    "templatesPerMonth": null,
+    "uploadMb": 100,
+    "bulkCap": null
+  },
+  "newLimitsFrom": "2026-11-01T00:00:00Z",
+  "selfhost": {
+    "proYearlyMinor": 39000,
+    "commercialFromMinor": 300000
+  },
+  "budget": {
+    "defaultMinor": 5000,
+    "alertPercents": [
+      50,
+      80,
+      100
+    ],
+    "confirmOverMinor": 500,
+    "earlyInvoiceMinor": 5000,
+    "failedPaymentPauseDays": 7
+  },
+  "stripe": {
+    "selfhostLookup": "docustay_pro_selfhost_yearly_v2",
+    "retiredLookups": [
+      "docustay_pro_monthly_v2",
+      "docustay_pro_monthly_v3",
+      "docustay_pro_yearly_v2",
+      "docustay_pro_yearly_v3",
+      "docustay_pro_selfhost_yearly_v1"
+    ],
+    "dashboardName": "Docustay"
+  },
+  "words": {
+    "glossary": {
+      "teamMember": "A team member has a Docustay login (Owner, Admin or Member). Team members are the only people who ever cost money, and only on Pay as you go.",
+      "signer": "A signer is anyone you send a document to. They never need an account, and they are free on every plan.",
+      "contacts": "Contacts is the saved list of everyone you have sent to.",
+      "signingSpot": "A signing group lets several people share one signing spot: whoever signs first signs for everyone.",
+      "documentCounts": "A document counts when it is sent. Reminders and resends are free."
+    },
+    "footnote": "A document counts when it is sent. Reminders and resends are free. Fair use applies to Unlimited.",
+    "perTeamMember": "per team member a month",
+    "grandfather": "New this month: Free now covers 15 different signers a month and Pay as you go 25 new templates a month. Both start on 1 November 2026, so nothing changes for your current month.",
+    "compare": [
+      {
+        "key": "price",
+        "label": "Price",
+        "hint": null,
+        "cells": {
+          "free": "$0 always",
+          "payg": "$5 per team member a month",
+          "pro": "$35 a month",
+          "lifetime": "$299 once, for any workspace"
+        }
+      },
+      {
+        "key": "team",
+        "label": "Team members",
+        "hint": "People who sign in to send or manage",
+        "cells": {
+          "free": "1",
+          "payg": "$5 each a month, no limit",
+          "pro": "Unlimited, included",
+          "lifetime": "Unlimited, included"
+        }
+      },
+      {
+        "key": "signers",
+        "label": "Signers",
+        "hint": "People you send to",
+        "cells": {
+          "free": "15 a month",
+          "payg": "Unlimited, free",
+          "pro": "Unlimited, free",
+          "lifetime": "Unlimited, free"
+        }
+      },
+      {
+        "key": "documents",
+        "label": "Documents sent each month",
+        "hint": null,
+        "cells": {
+          "free": "15",
+          "payg": "15 included, then $0.50 each",
+          "pro": "Unlimited",
+          "lifetime": "Unlimited"
+        }
+      },
+      {
+        "key": "ai",
+        "label": "AI drafts each month",
+        "hint": null,
+        "cells": {
+          "free": "10",
+          "payg": "10 included, then $0.30 each",
+          "pro": "100 included, then $0.30 each",
+          "lifetime": "50 included, then $0.30 each"
+        }
+      },
+      {
+        "key": "templates",
+        "label": "New templates each month",
+        "hint": null,
+        "cells": {
+          "free": "5",
+          "payg": "25",
+          "pro": "Unlimited",
+          "lifetime": "Unlimited"
+        }
+      },
+      {
+        "key": "fee",
+        "label": "Docustay fee on payments you collect (Stripe's own fees apply)",
+        "hint": null,
+        "cells": {
+          "free": "2%",
+          "payg": "2%",
+          "pro": "0%",
+          "lifetime": "0%"
+        }
+      },
+      {
+        "key": "plays",
+        "label": "Your own plays and playbooks",
+        "hint": null,
+        "cells": {
+          "free": "No",
+          "payg": "No",
+          "pro": "Yes",
+          "lifetime": "Yes"
+        }
+      }
+    ],
+    "costExample": {
+      "members": 3,
+      "docs": 40,
+      "paygMinor": 2750,
+      "proMinor": 3500,
+      "fromMembers": 7,
+      "fromDocs": 75,
+      "text": "A team of 3 sending 40 documents a month: Pay as you go $27.50, Pro $35. Pro costs no more than Pay as you go from 7 team members, or for one team member sending 75 or more documents."
+    }
+  }
+}

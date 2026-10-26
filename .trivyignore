@@ -1,0 +1,2 @@
+# sdk/mcp pins zod 3.x (peer of the MCP SDK). The only fix for this denial of service is zod 4.6.6, a major bump of the published MCP package; it affects a local stdio tool, not the server.
+CVE-2023-54404

@@ -1,0 +1,22 @@
+-- 0542 — WORKER-FAILURES BRIEF, 30 Sep 2026 — A NOTIFICATION CAN NAME ITS OWN EMAIL TEMPLATE.
+--
+-- ═══════════════════════════════════════════════════════════════════════════════════════════════
+-- ★★★ [MEASURED, live, this brief] `sendAutomationMessage` (src/automations/engine.mjs) has always
+--     accepted a `templateKey` parameter and never used it — every automation-sent notification
+--     gets `topic = 'tasks.automation.ran'` (the SAME topic for invoice_chase, win_back and
+--     package_low alike), and `deliver_notification_email`'s `emailFor()` (src/queue/tasks.mjs)
+--     resolves its email template from a FIXED topic→template map (`TOPIC_TEMPLATE`) that has
+--     exactly one entry per topic. Three different automations sharing one topic cannot each get
+--     their own template through that map — reproduced locally: `sweep_automations` now runs
+--     clean through `sendAutomationMessage` (this brief's earlier fixes), and the very next job,
+--     `deliver_notification_email`, throws "no email template is mapped for topic
+--     'tasks.automation.ran'" for every one of them, `automation.package_low`'s existing,
+--     previously-shipped call included — this was never exercised before, not something this
+--     brief broke.
+--
+-- ★ ONE NULLABLE COLUMN. `template_key` is read by `emailFor()` FIRST, before it falls back to
+--   `TOPIC_TEMPLATE[topic]` — so every existing notification (which has none) behaves exactly as
+--   today; only a notification that names its own template bypasses the topic map.
+-- ═══════════════════════════════════════════════════════════════════════════════════════════════
+
+ALTER TABLE keystone.notification ADD COLUMN IF NOT EXISTS template_key text;

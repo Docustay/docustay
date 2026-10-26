@@ -1,0 +1,45 @@
+{{- range $role := list "app" "worker" }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $.Release.Name }}-{{ $role }}
+  labels: {{- include "docustay.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: {{ $role }}
+spec:
+  replicas: {{ (index $.Values $role).replicas }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ $.Release.Name }}
+      app.kubernetes.io/component: {{ $role }}
+  template:
+    metadata:
+      labels: {{- include "docustay.labels" $ | nindent 8 }}
+        app.kubernetes.io/component: {{ $role }}
+    spec:
+      containers:
+        - name: {{ $role }}
+          image: "{{ $.Values.image.app }}:{{ $.Values.image.tag }}"
+          imagePullPolicy: {{ $.Values.image.pullPolicy }}
+          command: ["node", "docustay/entrypoint.mjs", {{ $role | quote }}]
+          env:
+            - { name: PORT, value: "8080" }
+            {{- include "docustay.appEnv" $ | nindent 12 }}
+          {{- if eq $role "app" }}
+          ports: [{ name: http, containerPort: 8080 }]
+          livenessProbe: { httpGet: { path: /healthz, port: http }, initialDelaySeconds: 20, periodSeconds: 30 }
+          readinessProbe: { httpGet: { path: /readyz, port: http }, initialDelaySeconds: 10, periodSeconds: 10 }
+          {{- end }}
+          resources: {{- toYaml (index $.Values $role).resources | nindent 12 }}
+{{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-app
+  labels: {{- include "docustay.labels" . | nindent 4 }}
+spec:
+  selector:
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/component: app
+  ports: [{ name: http, port: 8080, targetPort: http }]

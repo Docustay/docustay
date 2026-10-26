@@ -1,0 +1,71 @@
+{
+ "tagline": {
+  "headline": "The e-signature API you own. One flat price for every user.",
+  "short": "Open-source e-signature. One flat price for every user.",
+  "veryShort": "Open-source e-signature API. One price, no seats.",
+  "siteTitle": "The e-signature API you own, at one flat price",
+  "hnTitle": "Show HN: Docustay, an open-source e-signature API with one flat price and no seats",
+  "about": "The open-source e-signature API. One flat price for every user, payments built in, self-hostable.",
+  "support": "Open source and self-hostable. Pro is $35 a month for your whole team: no per-seat fees, unlimited people and documents. Signers can pay while they sign, straight into your own Stripe account, and Pro adds no fee.",
+  "payAsYouGoLine": "Pay as you go is $5 per person if you would rather pay per person."
+ },
+ "goVersion": "1.23",
+ "subProcessors": [
+  {
+   "name": "Railway",
+   "does": "Application and database hosting",
+   "data": "All data you store"
+  },
+  {
+   "name": "Google Cloud and Firebase",
+   "does": "Sign-in and supporting infrastructure",
+   "data": "Account email and sign-in identifiers"
+  },
+  {
+   "name": "Stripe",
+   "does": "Payments and billing",
+   "data": "Billing details and payment references; card numbers go to Stripe directly"
+  },
+  {
+   "name": "Resend",
+   "does": "Sending email",
+   "data": "Recipient email address and the message"
+  },
+  {
+   "name": "Anthropic",
+   "does": "The AI model behind Scribe and Find fields with AI",
+   "data": "The text or page pictures of a document, only when a person uses an AI feature, and only for that request"
+  },
+  {
+   "name": "Cloudflare",
+   "does": "Delivery of the website and the signing pages, and the bot check on the sign-up page",
+   "data": "The visitor's address and browser. Page traffic passes through it in transit"
+  },
+  {
+   "name": "PostHog",
+   "does": "Product analytics",
+   "data": "Events about how the website and the service are used, tied to an account id, never document content"
+  },
+  {
+   "name": "Google Analytics",
+   "does": "Website visit statistics, only after you press Accept in the cookie choice",
+   "data": "Page visits and a browser identifier, never document content or signer details"
+  },
+  {
+   "name": "A public time-stamp authority (DigiCert by default)",
+   "does": "Trusted timestamp on a signed file",
+   "data": "A hash of the document only, never its contents"
+  }
+ ],
+ "version": "0.2.2",
+ "scopes": 12,
+ "sdkLanguages": 5,
+ "templates": 54,
+ "operations": 64,
+ "languages": 1,
+ "mcpTools": 39,
+ "formTemplates": 30,
+ "docTemplatePages": 24,
+ "openapiVersion": "3.1.0",
+ "apiVersion": "2026-10-07"
+}

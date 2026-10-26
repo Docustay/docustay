@@ -1,0 +1,479 @@
+{
+ "about": "Every numeric or factual claim the public site makes about what the product does, with where the site says it and the code that makes it true. scripts/claims-gate.mjs reads this file, finds the claim in the site text, reads the value out of the code, and fails when they differ. A claim not in this file is not covered: add it here when you write it.",
+ "claims": [
+  {
+   "id": "free-docs-per-month",
+   "says": "Free plan: 15 documents a month",
+   "site": {
+    "file": "src/lib/site/prices.json",
+    "re": "\"free\": \\{[^}]*?\"docsIncluded\": (\\d+)"
+   },
+   "code": {
+    "file": "../../src/product/docustay.facts.json",
+    "re": "\"free\": \\{[^}]*?\"docsIncluded\": (\\d+)"
+   }
+  },
+  {
+   "id": "free-upload-mb",
+   "says": "Uploads are limited to 25 MB on Free",
+   "site": {
+    "file": "static/llms-full.txt",
+    "re": "limited to (\\d+) MB on Free"
+   },
+   "code": {
+    "file": "../../src/product/docustay.facts.json",
+    "re": "\"free\": \\{[^}]*?\"uploadMb\": (\\d+)"
+   }
+  },
+  {
+   "id": "pro-upload-mb",
+   "says": "Uploads are limited to 100 MB on Pro",
+   "site": {
+    "file": "static/llms-full.txt",
+    "re": "and (\\d+) MB on Pro"
+   },
+   "code": {
+    "file": "../../src/product/docustay.facts.json",
+    "re": "\"pro\": \\{[^}]*?\"uploadMb\": (\\d+)"
+   }
+  },
+  {
+   "id": "free-fee-percent",
+   "says": "Docustay's fee is 2% of each payment on the Free plan",
+   "site": {
+    "file": "static/llms-full.txt",
+    "re": "fee is (\\d+)% of each payment on the Free plan",
+    "scale": 100
+   },
+   "code": {
+    "file": "../../src/product/docustayFee.mjs",
+    "re": "FREE_FEE_BPS = (\\d+)"
+   }
+  },
+  {
+   "id": "pro-fee-percent",
+   "says": "0% on Pro",
+   "site": {
+    "file": "static/llms-full.txt",
+    "re": "and (\\d+)% on Pro",
+    "scale": 100
+   },
+   "code": {
+    "file": "../../src/product/docustayFee.mjs",
+    "re": "plan\\.paid \\? (\\d+) : FREE_FEE_BPS"
+   }
+  },
+  {
+   "id": "payment-min-minor",
+   "says": "A payment field accepts 0.50 to 999,999.99",
+   "site": {
+    "file": "static/llms-full.txt",
+    "re": "(0\\.50) to 999,999\\.99",
+    "scale": 100,
+    "money": true
+   },
+   "code": {
+    "file": "../../src/documents/pdfPayments.mjs",
+    "re": "MIN_MINOR = (\\d+),"
+   }
+  },
+  {
+   "id": "payment-max-minor",
+   "says": "A payment field accepts 0.50 to 999,999.99",
+   "site": {
+    "file": "static/llms-full.txt",
+    "re": "0\\.50 to (999,999\\.99)",
+    "scale": 100,
+    "money": true
+   },
+   "code": {
+    "file": "../../src/documents/pdfPayments.mjs",
+    "re": "MAX_MINOR = (\\d+);"
+   }
+  },
+  {
+   "id": "html-document-max-mb",
+   "says": "HTML documents are up to 2 MB",
+   "site": {
+    "file": "static/llms-full.txt",
+    "re": "pictures included, may be up to (\\d+) MB"
+   },
+   "code": {
+    "file": "../../src/documents/htmlDocument.mjs",
+    "re": "MAX_HTML_BYTES = (\\d+) \\* 1024"
+   }
+  },
+  {
+   "id": "logo-max-mb",
+   "says": "Logos are up to 2 MB",
+   "site": {
+    "file": "static/llms-full.txt",
+    "re": "Up to (\\d+) MB\\."
+   },
+   "code": {
+    "file": "../../src/documents/logo.mjs",
+    "re": "MAX_BYTES = (\\d+) \\* 1024"
+   }
+  },
+  {
+   "id": "idempotency-min",
+   "says": "Idempotency-Key header of 8 to 200 characters (minimum)",
+   "site": {
+    "file": "static/llms-full.txt",
+    "re": "header of (\\d+) to 200 characters"
+   },
+   "code": {
+    "file": "../../src/product/docustay.facts.json",
+    "re": "\"limits\": \\{[^}]*?\"idempotencyKeyMin\": (\\d+)"
+   }
+  },
+  {
+   "id": "idempotency-max",
+   "says": "Idempotency-Key header of 8 to 200 characters (maximum)",
+   "site": {
+    "file": "static/llms-full.txt",
+    "re": "header of 8 to (\\d+) characters"
+   },
+   "code": {
+    "file": "../../src/product/docustay.facts.json",
+    "re": "\"limits\": \\{[^}]*?\"idempotencyKeyMax\": (\\d+)"
+   }
+  },
+  {
+   "id": "upload-ui-max-mb",
+   "says": "The home drop box takes files up to the Free limit",
+   "site": {
+    "file": "src/lib/site/handoff.js",
+    "re": "LIMIT_MB = (\\d+)"
+   },
+   "code": {
+    "file": "../../src/product/docustay.facts.json",
+    "re": "\"free\": \\{[^}]*?\"uploadMb\": (\\d+)"
+   }
+  },
+  {
+   "id": "cloud-pro-monthly",
+   "says": "Pro is one flat monthly price per workspace (the number is monthlyMinor in prices.json)",
+   "site": {
+    "file": "src/lib/site/prices.json",
+    "re": "\"monthlyMinor\": (\\d+)"
+   },
+   "code": {
+    "file": "../../src/product/docustay.facts.json",
+    "re": "\"monthlyMinor\": (\\d+)"
+   }
+  },
+  {
+   "id": "selfhost-pro-yearly",
+   "says": "Self-host Pro is $390 a year per install (39000 minor units)",
+   "site": {
+    "file": "src/lib/site/prices.json",
+    "re": "\"proYearlyMinor\": (\\d+)"
+   },
+   "code": {
+    "file": "../../src/product/docustay.facts.json",
+    "re": "\"proYearlyMinor\": (\\d+)"
+   }
+  },
+  {
+   "id": "commercial-from",
+   "says": "A commercial licence is quoted from about $3,000 a year (300000 minor units; a policy value, no billing code)",
+   "site": {
+    "file": "src/lib/site/prices.json",
+    "re": "\"commercialFromMinor\": (\\d+)"
+   },
+   "code": {
+    "file": "../../src/product/docustay.facts.json",
+    "re": "\"commercialFromMinor\": (\\d+)"
+   }
+  },
+  {
+   "id": "free-emails-per-day",
+   "says": "Free sends up to 25 emails a day",
+   "site": {
+    "file": "src/routes/(site)/pricing/+page.svelte",
+    "re": "Free sends up to (\\d+) emails a day"
+   },
+   "code": {
+    "file": "../../src/product/docustay.facts.json",
+    "re": "\"limits\": \\{[^}]*?\"freeEmailsPerDay\": (\\d+)"
+   }
+  },
+  {
+   "id": "pro-emails-per-day",
+   "says": "Pro sends up to 500 emails a day",
+   "site": {
+    "file": "src/routes/(site)/pricing/+page.svelte",
+    "re": "and Pro up to (\\d+) emails a day"
+   },
+   "code": {
+    "file": "../../src/product/docustay.facts.json",
+    "re": "\"limits\": \\{[^}]*?\"paidEmailsPerDay\": (\\d+)"
+   }
+  },
+  {
+   "id": "api-rate-per-minute",
+   "says": "The API allows 600 requests a minute for each key",
+   "site": {
+    "file": "src/routes/(site)/pricing/+page.svelte",
+    "re": "allows (\\d+) requests a minute for each key"
+   },
+   "code": {
+    "file": "../../src/product/docustay.facts.json",
+    "re": "\"limits\": \\{[^}]*?\"apiRequestsPerMinute\": (\\d+)"
+   }
+  },
+  {
+   "id": "price-change-notice-months",
+   "says": "At least 12 months' notice before a price change applies (policy value written in the Terms; no billing code)",
+   "site": {
+    "file": "src/routes/(site)/pricing/+page.svelte",
+    "re": "at least (\\d+) months' notice before a price change"
+   },
+   "code": {
+    "file": "src/lib/legal.json",
+    "re": "at least (\\d+) months' notice before a price change"
+   }
+  },
+  {
+   "id": "ai-credits-free",
+   "says": "Free includes 10 AI drafts a month",
+   "site": {
+    "file": "src/lib/site/prices.json",
+    "re": "\"free\": \\{[^}]*?\"draftsIncluded\": (\\d+)"
+   },
+   "code": {
+    "file": "../../src/product/docustay.facts.json",
+    "re": "\"free\": \\{[^}]*?\"draftsIncluded\": (\\d+)"
+   }
+  },
+  {
+   "id": "ai-credits-pro",
+   "says": "Pro includes 100 AI drafts a month",
+   "site": {
+    "file": "src/lib/site/prices.json",
+    "re": "\"pro\": \\{[^}]*?\"draftsIncluded\": (\\d+)"
+   },
+   "code": {
+    "file": "../../src/product/docustay.facts.json",
+    "re": "\"pro\": \\{[^}]*?\"draftsIncluded\": (\\d+)"
+   }
+  },
+  {
+   "id": "free-signers-per-month",
+   "says": "Free plan: 15 different signers a month",
+   "site": {
+    "file": "src/lib/site/prices.json",
+    "re": "\"free\": \\{[^}]*?\"signersPerMonth\": (\\d+)"
+   },
+   "code": {
+    "file": "../../src/product/docustay.facts.json",
+    "re": "\"free\": \\{[^}]*?\"signersPerMonth\": (\\d+)"
+   }
+  },
+  {
+   "id": "payg-templates-per-month",
+   "says": "Pay as you go: 25 new templates a month",
+   "site": {
+    "file": "src/lib/site/prices.json",
+    "re": "\"payg\": \\{[^}]*?\"templatesPerMonth\": (\\d+)"
+   },
+   "code": {
+    "file": "../../src/product/docustay.facts.json",
+    "re": "\"payg\": \\{[^}]*?\"templatesPerMonth\": (\\d+)"
+   }
+  },
+  {
+   "id": "free-templates-per-month",
+   "says": "Free plan: 5 new templates a month (documents and forms together)",
+   "site": {
+    "file": "src/lib/site/prices.json",
+    "re": "\"free\": \\{[^}]*?\"templatesPerMonth\": (\\d+)"
+   },
+   "code": {
+    "file": "../../src/product/docustay.facts.json",
+    "re": "\"free\": \\{[^}]*?\"templatesPerMonth\": (\\d+)"
+   }
+  },
+  {
+   "id": "pay-hold-days",
+   "says": "The signer's signature is kept for 7 days while they pay",
+   "site": {
+    "file": "src/lib/site/pages/product.js",
+    "re": "Their signature is kept for (\\d+) days while they pay"
+   },
+   "code": {
+    "file": "../../src/documents/pdfSigning.mjs",
+    "re": "const HOLD_DAYS = (\\d+);"
+   }
+  },
+  {
+   "id": "pay-hold-days-docs",
+   "says": "The API docs repeat the 7-day hold",
+   "site": {
+    "file": "../docs/payments-and-playbooks.md",
+    "re": "for up to (\\d+) days\\)"
+   },
+   "code": {
+    "file": "../../src/documents/pdfSigning.mjs",
+    "re": "const HOLD_DAYS = (\\d+);"
+   }
+  },
+  {
+   "id": "facts-free-upload-mb",
+   "says": "The facts page states 25 MB uploads on Free",
+   "site": {
+    "file": "src/lib/site/plans.js",
+    "re": "freeUploadMb: (\\d+),"
+   },
+   "code": {
+    "file": "../../src/product/docustay.facts.json",
+    "re": "\"free\": \\{[^}]*?\"uploadMb\": (\\d+)"
+   }
+  },
+  {
+   "id": "facts-pro-upload-mb",
+   "says": "The facts page states 100 MB uploads on Pro",
+   "site": {
+    "file": "src/lib/site/plans.js",
+    "re": "proUploadMb: (\\d+),"
+   },
+   "code": {
+    "file": "../../src/product/docustay.facts.json",
+    "re": "\"pro\": \\{[^}]*?\"uploadMb\": (\\d+)"
+   }
+  },
+  {
+   "id": "facts-free-emails-per-day",
+   "says": "The facts page states 25 emails a day on Free",
+   "site": {
+    "file": "src/lib/site/plans.js",
+    "re": "freeEmailsPerDay: (\\d+),"
+   },
+   "code": {
+    "file": "../../src/product/docustay.facts.json",
+    "re": "\"limits\": \\{[^}]*?\"freeEmailsPerDay\": (\\d+)"
+   }
+  },
+  {
+   "id": "facts-pro-emails-per-day",
+   "says": "The facts page states 500 emails a day on Pro",
+   "site": {
+    "file": "src/lib/site/plans.js",
+    "re": "proEmailsPerDay: (\\d+),"
+   },
+   "code": {
+    "file": "../../src/product/docustay.facts.json",
+    "re": "\"limits\": \\{[^}]*?\"paidEmailsPerDay\": (\\d+)"
+   }
+  },
+  {
+   "id": "facts-api-rate",
+   "says": "The facts page states 600 API requests a minute per key",
+   "site": {
+    "file": "src/lib/site/plans.js",
+    "re": "apiRequestsPerMinute: (\\d+) "
+   },
+   "code": {
+    "file": "../../src/product/docustay.facts.json",
+    "re": "\"limits\": \\{[^}]*?\"apiRequestsPerMinute\": (\\d+)"
+   }
+  },
+  {
+   "id": "api-scope-count",
+   "says": "A Docustay workspace is offered 12 API key scopes",
+   "site": {
+    "file": "static/docs/api-reference.md",
+    "re": "there are (\\d+) in all"
+   },
+   "code": {
+    "file": "../../src/developer/scopes.mjs",
+    "re": "offered exactly (\\d+) scopes"
+   }
+  },
+  {
+   "id": "payg-person-monthly",
+   "says": "Pay as you go is $5 per team member a month",
+   "site": {
+    "file": "src/lib/site/prices.json",
+    "re": "\"payg\": \\{[^}]*?\"personMonthlyMinor\": (\\d+)"
+   },
+   "code": {
+    "file": "../../src/product/docustay.facts.json",
+    "re": "\"payg\": \\{[^}]*?\"personMonthlyMinor\": (\\d+)"
+   }
+  },
+  {
+   "id": "payg-document-over",
+   "says": "Pay as you go: $0.50 for each document past 15",
+   "site": {
+    "file": "src/lib/site/prices.json",
+    "re": "\"payg\": \\{[^}]*?\"docOverMinor\": (\\d+)"
+   },
+   "code": {
+    "file": "../../src/product/docustay.facts.json",
+    "re": "\"payg\": \\{[^}]*?\"docOverMinor\": (\\d+)"
+   }
+  },
+  {
+   "id": "payg-draft-over",
+   "says": "Drafts past the allowance are $0.30 each",
+   "site": {
+    "file": "src/lib/site/prices.json",
+    "re": "\"payg\": \\{[^}]*?\"draftOverMinor\": (\\d+)"
+   },
+   "code": {
+    "file": "../../src/product/docustay.facts.json",
+    "re": "\"payg\": \\{[^}]*?\"draftOverMinor\": (\\d+)"
+   }
+  },
+  {
+   "id": "lifetime-price",
+   "says": "Lifetime is $299 once",
+   "site": {
+    "file": "src/lib/site/prices.json",
+    "re": "\"oneTimeMinor\": (\\d+)"
+   },
+   "code": {
+    "file": "../../src/product/docustay.facts.json",
+    "re": "\"oneTimeMinor\": (\\d+)"
+   }
+  },
+  {
+   "id": "lifetime-drafts",
+   "says": "Lifetime includes 50 AI drafts a month",
+   "site": {
+    "file": "src/lib/site/prices.json",
+    "re": "\"lifetime\": \\{[^}]*?\"draftsIncluded\": (\\d+)"
+   },
+   "code": {
+    "file": "../../src/product/docustay.facts.json",
+    "re": "\"lifetime\": \\{[^}]*?\"draftsIncluded\": (\\d+)"
+   }
+  },
+  {
+   "id": "budget-default",
+   "says": "The default monthly budget is $50",
+   "site": {
+    "file": "src/lib/site/prices.json",
+    "re": "\"defaultMinor\": (\\d+)"
+   },
+   "code": {
+    "file": "../../src/product/docustay.facts.json",
+    "re": "\"defaultMinor\": (\\d+)"
+   }
+  },
+  {
+   "id": "payg-fee",
+   "says": "Pay as you go fee is 2%",
+   "site": {
+    "file": "src/lib/site/prices.json",
+    "re": "\"payg\": \\{[^}]*?\"feeBps\": (\\d+)"
+   },
+   "code": {
+    "file": "../../src/product/docustay.facts.json",
+    "re": "\"payg\": \\{[^}]*?\"feeBps\": (\\d+)"
+   }
+  }
+ ]
+}

@@ -1,0 +1,8 @@
+apiVersion: v2
+name: docustay
+description: Docustay, self-hosted e-signature. Runs the web app, the API, the worker, a PDF converter and (optionally) the database and file store.
+type: application
+version: 0.1.0
+appVersion: "0.2.2"
+home: https://docustay.app/self-host
+sources: ["https://github.com/docustay/docustay"]

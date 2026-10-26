@@ -1,0 +1,547 @@
+{
+ "about": "The one list of capabilities the public site may mention (SITE-PAGES-8OCT section 4). A capability sentence in page data ends with {{F-ID}}. scripts/features-gate.mjs fails on an unknown id, on a PENDING PROOF id on a page that is not marked claimUntilProven, and on an id no page uses.",
+ "features": [
+  {
+   "id": "F-FREEPLAN",
+   "statement": "The Free plan: 15 documents and 5 new templates a month, 10 AI drafts a month, 15 different signers a month, one team member (the owner), 25 MB uploads and a list send of up to 15. Everything you need to send, sign and seal is included; nothing is billed for going over, sending simply stops at the limit.",
+   "plan": "Free",
+   "status": "PROVEN",
+   "module": "src/product/docustayPlans.mjs, src/product/docustayPrices.mjs",
+   "test": "claims free-docs-per-month, free-templates-per-month, ai-drafts-free (scripts/claims-gate.mjs); test/v1_usage_billing.test.mjs; test/r8_template_cap.test.mjs",
+   "pages": [],
+   "note": ""
+  },
+  {
+   "id": "F-PRO",
+   "statement": "Pro: one flat monthly price for the workspace; unlimited documents, templates, signers and team members; 100 AI drafts each billing month included, then $0.30 each; 0% fee on payments; 100 MB uploads; your own plays and playbooks.",
+   "plan": "Pro",
+   "status": "PROVEN",
+   "module": "src/product/docustayPlans.mjs, src/product/docustayPrices.mjs",
+   "test": "claims cloud-pro-monthly, ai-drafts-pro (scripts/claims-gate.mjs); test/v1_usage_billing.test.mjs",
+   "pages": [],
+   "note": ""
+  },
+  {
+   "id": "F-FEE",
+   "statement": "Docustay's fee on payments taken in a document: 2% on Free and Pay as you go, 0% on Pro and Lifetime, on top of Stripe's fees.",
+   "plan": "both",
+   "status": "PROVEN",
+   "module": "src/product/docustayFee.mjs",
+   "test": "claims free-fee-percent, pro-fee-percent; test/docustay_money_units.test.mjs",
+   "pages": [],
+   "note": ""
+  },
+  {
+   "id": "F-SEND",
+   "statement": "Send a document to one or more people for signature, from a template or an uploaded file.",
+   "plan": "both",
+   "status": "PROVEN",
+   "module": "src/documents/sendDocument.mjs",
+   "test": "journey J1 two signers",
+   "pages": [],
+   "note": ""
+  },
+  {
+   "id": "F-SIGN",
+   "statement": "Signing on a phone or a computer, with no account, by email link or with an access code.",
+   "plan": "both",
+   "status": "PROVEN",
+   "module": "src/documents/pdfSigning.mjs",
+   "test": "journey J1; signer pages",
+   "pages": [],
+   "note": ""
+  },
+  {
+   "id": "F-SEAL",
+   "statement": "The finished PDF is sealed with a digital signature over the whole file.",
+   "plan": "both",
+   "status": "PROVEN",
+   "module": "src/documents/signingCert.mjs",
+   "test": "claims D14",
+   "pages": [],
+   "note": ""
+  },
+  {
+   "id": "F-CERT",
+   "statement": "A certificate of completion as the last page: who signed, when, and a hash of the file.",
+   "plan": "both",
+   "status": "PROVEN",
+   "module": "src/documents/certificateFacts.mjs",
+   "test": "claim D14",
+   "pages": [],
+   "note": ""
+  },
+  {
+   "id": "F-VERIFY",
+   "statement": "A verify page that checks a signed PDF in the browser, with no account.",
+   "plan": "both",
+   "status": "PROVEN",
+   "module": "src/documents/verifyPdf.mjs",
+   "test": "docustay/web/scripts/verify-proof.mjs",
+   "pages": [],
+   "note": ""
+  },
+  {
+   "id": "F-ORDER",
+   "statement": "Signing order: one at a time, or everyone at once.",
+   "plan": "both",
+   "status": "BUILT",
+   "module": "src/documents/flowDefinition.mjs",
+   "test": "journey Two signers, Roles",
+   "pages": [],
+   "note": ""
+  },
+  {
+   "id": "F-REMIND",
+   "statement": "Automatic reminders until everyone has signed, on every plan.",
+   "plan": "Pro",
+   "status": "BUILT",
+   "module": "src/documents/dueFacts.mjs",
+   "test": "not driven in a journey yet",
+   "pages": [],
+   "note": ""
+  },
+  {
+   "id": "F-BULK",
+   "statement": "Send one template to a list from a CSV, on every plan; Free up to 15 people at a time.",
+   "plan": "Pro",
+   "status": "BUILT",
+   "module": "src/documents/pdfBulk.mjs",
+   "test": "not driven in a journey yet",
+   "pages": [],
+   "note": ""
+  },
+  {
+   "id": "F-TEMPLATES",
+   "statement": "54 built-in templates, all ordinary templates, each with its roles and fields placed.",
+   "plan": "both",
+   "status": "PROVEN",
+   "module": "src/documents/starterTemplates.mjs",
+   "test": "docustay/web/scripts/build-starters.mjs",
+   "pages": [],
+   "note": ""
+  },
+  {
+   "id": "F-UPLOAD",
+   "statement": "Upload a PDF file. Docustay only accepts PDF files.",
+   "plan": "both",
+   "status": "PROVEN",
+   "module": "src/documents/uploads.mjs",
+   "test": "claim upload PDF only",
+   "pages": [],
+   "note": ""
+  },
+  {
+   "id": "F-PEOPLE",
+   "statement": "Saved signers (a People list).",
+   "plan": "both",
+   "status": "BUILT",
+   "module": "src/documents/contacts.mjs",
+   "test": "",
+   "pages": [],
+   "note": ""
+  },
+  {
+   "id": "F-TEAMS",
+   "statement": "People in a workspace, with owner, admin and member roles, on every paid plan.",
+   "plan": "Pro",
+   "status": "BUILT",
+   "module": "src/documents/teams.mjs",
+   "test": "",
+   "pages": [],
+   "note": ""
+  },
+  {
+   "id": "F-PAYMENTS",
+   "statement": "A payment field in a document, charged through the customer's own Stripe account.",
+   "plan": "both",
+   "status": "BUILT",
+   "module": "src/documents/pdfPayments.mjs",
+   "test": "claims payment min and max",
+   "pages": [],
+   "note": ""
+  },
+  {
+   "id": "F-SCRIBE",
+   "statement": "Describe a document; Scribe writes it, places the fields and sets payment terms; you review it before it is sent. Payment terms need Stripe connected.",
+   "plan": "both",
+   "status": "PENDING PROOF",
+   "module": "src/documents/ai.mjs",
+   "test": "Stage T customer test",
+   "pages": [],
+   "note": "claim until proven (the maintainer, 8 Oct) Run 8: four panel layouts (docked column, floating sheet, live build, command bar); a Pro request is answered up front, before any question, with Explore Pro and what can be done instead."
+  },
+  {
+   "id": "F-PLAYS",
+   "statement": "Built-in Plays are free; your own Plays and Playbooks are on Pro and Lifetime.",
+   "plan": "both",
+   "status": "PENDING PROOF",
+   "module": "src/documents/plays",
+   "test": "Stage T customer test",
+   "pages": [],
+   "note": "claim until proven"
+  },
+  {
+   "id": "F-PLAYSAPI",
+   "statement": "The Plays and Playbooks API.",
+   "plan": "Pro",
+   "status": "PENDING PROOF",
+   "module": "src/documents/plays",
+   "test": "Stage T customer test",
+   "pages": [],
+   "note": "claim until proven"
+  },
+  {
+   "id": "F-EMAILCTRL",
+   "statement": "Hosted: email comes from Docustay with your sender name and reply-to address. Self-hosted installs can also send from their own domain, mailbox or SMTP server.",
+   "plan": "both",
+   "status": "PROVEN",
+   "module": "src/documents/emailTemplates.mjs",
+   "test": "claim C12",
+   "pages": [],
+   "note": ""
+  },
+  {
+   "id": "F-API",
+   "statement": "A REST API with idempotency keys, key scopes, key expiry, an address allowlist and an API log.",
+   "plan": "both",
+   "status": "PROVEN",
+   "module": "src/documents/apiKeyPolicy.mjs",
+   "test": "claims C09 C10 idempotency",
+   "pages": [],
+   "note": ""
+  },
+  {
+   "id": "F-WEBHOOKS",
+   "statement": "Seven signed document events, replay from the log and secret rotation.",
+   "plan": "both",
+   "status": "PROVEN",
+   "module": "src/events/topics.mjs",
+   "test": "claim webhook event names",
+   "pages": [],
+   "note": ""
+  },
+  {
+   "id": "F-TESTMODE",
+   "statement": "Test keys and test mode: nothing is emailed except to the sender, with a TEST watermark.",
+   "plan": "both",
+   "status": "PROVEN",
+   "module": "src/documents/pdfSend.mjs",
+   "test": "docs test-mode run",
+   "pages": [],
+   "note": ""
+  },
+  {
+   "id": "F-EMBED",
+   "statement": "An embedded signer, builder and Scribe widget.",
+   "plan": "both",
+   "status": "BUILT",
+   "module": "docustay/web/src/lib/embed/index.js",
+   "test": "journey embed",
+   "pages": [],
+   "note": ""
+  },
+  {
+   "id": "F-SDK",
+   "statement": "SDKs for JavaScript, TypeScript and Python; clients for Go, PHP and C# generated from the API description.",
+   "plan": "both",
+   "status": "BUILT",
+   "module": "sdk/js, sdk/python, sdk/generated",
+   "test": "scripts/signpdf-proof.mjs for the five SDK languages",
+   "pages": [],
+   "note": ""
+  },
+  {
+   "id": "F-CLI",
+   "statement": "A command line: login, send --test, listen, verify, logs.",
+   "plan": "both",
+   "status": "BUILT",
+   "module": "sdk/cli",
+   "test": "sdk/cli/test",
+   "pages": [],
+   "note": ""
+  },
+  {
+   "id": "F-MCP",
+   "statement": "An MCP server and a hosted connector so an assistant can work on drafts.",
+   "plan": "both",
+   "status": "PENDING PROOF",
+   "module": "sdk/mcp",
+   "test": "Stage T customer test",
+   "pages": [],
+   "note": "claim until proven"
+  },
+  {
+   "id": "F-DRAFTKEYS",
+   "statement": "Draft-only keys with daily limits and a human approval before anything is sent.",
+   "plan": "both",
+   "status": "PENDING PROOF",
+   "module": "src/documents/apiKeyPolicy.mjs",
+   "test": "Stage T customer test",
+   "pages": [],
+   "note": "claim until proven"
+  },
+  {
+   "id": "F-SELFHOST",
+   "statement": "Run Docustay on your own server: compose and Helm files, Render, Fly and Coolify configs; the Community edition is free.",
+   "plan": "self-host",
+   "status": "BUILT",
+   "module": "docustay/deploy",
+   "test": "docustay/quickstart.sh",
+   "pages": [],
+   "note": ""
+  },
+  {
+   "id": "F-SELFHOSTPRO",
+   "statement": "Self-host Pro is $390 a year per install, for your own business.",
+   "plan": "self-host",
+   "status": "PROVEN",
+   "module": "src/product/docustayLicense.mjs",
+   "test": "claim selfhost-pro-yearly",
+   "pages": [],
+   "note": ""
+  },
+  {
+   "id": "F-LICENCE",
+   "statement": "AGPL-3.0; a commercial licence from about $3,000 a year to ship it in your own product, white-label, resell or keep a private fork.",
+   "plan": "self-host",
+   "status": "PROVEN",
+   "module": "docustay/LICENSE",
+   "test": "claims C17 commercial-from",
+   "pages": [],
+   "note": ""
+  },
+  {
+   "id": "F-PASSKEYS",
+   "statement": "Passkey sign-in (behind a flag).",
+   "plan": "both",
+   "status": "PENDING PROOF",
+   "module": "docustay/web/src/lib/passkeys.js",
+   "test": "Stage T",
+   "pages": [],
+   "note": "not used on any page until proven"
+  },
+  {
+   "id": "F-OIDC",
+   "statement": "Single sign-on through OpenID Connect for a self-hosted install.",
+   "plan": "self-host",
+   "status": "BUILT",
+   "module": "docustay/docs/self-host-sso.md",
+   "test": "",
+   "pages": [],
+   "note": ""
+  },
+  {
+   "id": "F-AUDIT",
+   "statement": "An audit log of every step on a document, with a CSV export of the log.",
+   "plan": "both",
+   "status": "PROVEN",
+   "module": "src/documents/auditTrail.mjs",
+   "test": "claim report window; journey",
+   "pages": [],
+   "note": ""
+  },
+  {
+   "id": "F-VERIFYDOC",
+   "statement": "What a Docustay signature is: a simple electronic signature with a strong record and a digital seal. No qualified signatures, no identity checks, no legal advice.",
+   "plan": "both",
+   "status": "PROVEN",
+   "module": "specs/DOCUSTAY-LEGAL-EVIDENCE.md",
+   "test": "claims register",
+   "pages": [],
+   "note": ""
+  },
+  {
+   "id": "F-ONEUSER",
+   "statement": "Free is for one team member (the owner). Pay as you go charges $5 per team member a month; Pro and Lifetime have unlimited team members. Signers are free on every plan.",
+   "plan": "all",
+   "status": "BUILT",
+   "module": "src/product/docustay.mjs plan item team_roles",
+   "test": "D-038 (fix pass 1)",
+   "pages": [],
+   "note": ""
+  },
+  {
+   "id": "F-SCOPES",
+   "statement": "API keys carry the scopes you tick: twelve of them, from the broad documents:read and documents:write down to one-job scopes such as templates:read.",
+   "plan": "both",
+   "status": "BUILT",
+   "module": "static/docs/authentication.md",
+   "test": "test/docustay_docs_scopes.test.mjs",
+   "pages": [],
+   "note": "D-039"
+  },
+  {
+   "id": "F-AICREDITS",
+   "statement": "AI drafts included in each plan: 10 a calendar month on Free, 10 on Pay as you go, 100 on Pro and 50 on Lifetime each billing month. A paid plan can go past it at $0.30 a draft; Free stops. A failed or empty draft is never charged.",
+   "plan": "all",
+   "status": "PROVEN",
+   "module": "src/documents/engine/ai/limits.mjs, src/product/docustayUsage.mjs",
+   "test": "test/docustay_fix2_aillimits.test.mjs; test/v1_usage_billing.test.mjs; claims ai-drafts-free, ai-drafts-pro",
+   "pages": [],
+   "note": ""
+  },
+  {
+   "id": "F-AIOWNKEY",
+   "statement": "A workspace can bring its own AI provider key; platform credits are then not used.",
+   "plan": "both",
+   "status": "PENDING PROOF",
+   "module": "fix pass 2 (AI-COST-AND-USAGE-SPEC.md)",
+   "test": "fix pass 2 section 10.6",
+   "pages": [],
+   "note": "claim until proven"
+  },
+  {
+   "id": "F-SIGNTOOL",
+   "statement": "A free browser-only tool that puts a picture of a signature on a PDF; the file never leaves the visitor's browser.",
+   "plan": "free tool",
+   "status": "PENDING PROOF",
+   "module": "routes/(site)/tools/sign-pdf",
+   "test": "scripts/tools-proof.mjs",
+   "pages": [],
+   "note": "flips to PROVEN after the privacy proof"
+  },
+  {
+   "id": "F-FILLTOOL",
+   "statement": "A free browser-only tool that fills a PDF form or adds text, check marks and dates; the file never leaves the visitor's browser.",
+   "plan": "free tool",
+   "status": "PENDING PROOF",
+   "module": "routes/(site)/tools/fill-pdf",
+   "test": "scripts/tools-proof.mjs",
+   "pages": [],
+   "note": "flips to PROVEN after the privacy proof"
+  },
+  {
+   "id": "F-TWOSTEP",
+   "statement": "Two-step sign-in (an authenticator app or a passkey) is offered to everyone; an owner can require it for the whole team; sessions can be listed and ended, and a workspace can sign people out after a period without activity.",
+   "plan": "Free",
+   "status": "PROVEN",
+   "module": "src/auth/requireTwoStep.mjs, src/auth/idleSignOut.mjs",
+   "test": "test/r7_security.test.mjs, test/p30_require_two_step.test.mjs",
+   "pages": [],
+   "note": "Run 7 part 6"
+  },
+  {
+   "id": "F-ACCESSLOG",
+   "statement": "Every view, download and export by the team is written to an access log in every workspace; owners and admins can list it and download it as CSV.",
+   "plan": "Free",
+   "status": "PROVEN",
+   "module": "src/documents/accessLog.mjs",
+   "test": "test/r7_security.test.mjs",
+   "pages": [],
+   "note": "Run 7 part 6; always on since 11 Oct 2026 (the Health data switch was removed)."
+  },
+  {
+   "id": "F-TEMPLATECAP",
+   "statement": "Free makes up to 5 new templates a month, however they are made; a new version of an existing template and sending straight from a built-in never count. Pay as you go, Pro and Lifetime have no limit.",
+   "plan": "Free",
+   "status": "BUILT",
+   "module": "src/documents/templateCap.mjs, src/product/docustay.mjs (assertMayCreateTemplate)",
+   "test": "test/r8_template_cap.test.mjs; claims free-templates-per-month, free-templates-cap-pricing-page",
+   "pages": [],
+   "note": "Run 8 (the maintainer, 11 Oct 2026). API refusal: 403 with detail.code plan_template_limit, used, limit, resetsAt."
+  },
+  {
+   "id": "F-PROLOCK",
+   "statement": "Every Pro control wears one lock: a lock icon and a Pro tag; pressing it shakes the lock and shows a tip with Explore Pro, which opens what Pro adds and the pricing page.",
+   "plan": "Pro",
+   "status": "BUILT",
+   "module": "docustay/web/src/lib/pro/ProLock.svelte, ExploreProSheet.svelte, plan.svelte.js",
+   "test": "specs/proofs/stage-t/run8 click proofs",
+   "pages": [],
+   "note": "Run 8."
+  },
+  {
+   "id": "F-PAYLAST",
+   "statement": "Paying is the last step of signing: the signer signs, then pays on the same page through embedded Stripe Checkout. Their signature is kept for 7 days while they pay; the document seals when the payment lands, and the receipt comes with the signed copy.",
+   "plan": "both",
+   "status": "BUILT",
+   "module": "src/documents/pdfPayments.mjs, src/documents/pdfSigning.mjs (completeHeldSignature, HOLD_DAYS), docustay/web/src/routes/sign/pdf/+page.svelte",
+   "test": "test/r9_pays_last.test.mjs; specs/proofs/stage-t/run9/click/j9-probe-37.mjs (Stripe TEST)",
+   "pages": [],
+   "note": "Run 9 Part 3.7 (Pay1–3)."
+  },
+  {
+   "id": "F-PAYPAGE",
+   "statement": "The Payments page lists every payment taken while signing (who paid, for which document, its status) with this month's money in, Stripe's own fees and refunds. A refund, in full or in part, goes through Stripe with a reason the payer sees on their receipt and that goes in the audit trail; disputes open in Stripe. The same list and refunds are in the API.",
+   "plan": "both",
+   "status": "BUILT",
+   "module": "src/documents/pdfPayments.mjs (listWorkspacePayments, refundPayment), docustay/web/src/routes/(app)/payments, src/routes/developerRun9.mjs",
+   "test": "test/r9_pays_last.test.mjs; specs/proofs/stage-t/run9/click/j9-probe-api.mjs",
+   "pages": [],
+   "note": "Run 9 Part 3.7 (Pay4) and the integration pass."
+  },
+  {
+   "id": "F-SEARCH",
+   "statement": "One search box (⌘K) finds documents by title or signer, templates, forms and people, best match first; the same search is in the API.",
+   "plan": "both",
+   "status": "BUILT",
+   "module": "src/documents/search.mjs",
+   "test": "specs/proofs/stage-t/run9/click/j9-probe-api.mjs (search rows, with another workspace's key as the control); clicked locally in Part 3.2 (LOG)",
+   "pages": [],
+   "note": "Run 9."
+  },
+  {
+   "id": "F-DEMO",
+   "statement": "A try-it-now demo at app.docustay.app/demo: a private, short-lived workspace on the real product with sample property-manager data, no sign-up, nothing sent or charged, a built-in signer view, a few real Scribe prompts then a scripted Demo AI, one 2 MB PDF upload, a guided tour, an hourly limit, deletion after 24 hours, and a Keep my work button that turns it into a real account.",
+   "plan": "Free",
+   "status": "PENDING PROOF",
+   "module": "main session (app demo), shipped in the one combined release",
+   "test": "re-verify every sentence on /demo against the shipped demo before release (RELEASE-STEPS.md)",
+   "pages": [
+    "/demo"
+   ],
+   "note": "Written from the maintainer's decisions of 12 Oct 2026; the site session cannot prove it. Claim-until-proven page."
+  },
+  {
+   "id": "F-PAYG",
+   "statement": "Pay as you go: $5 per team member a month, 25 new templates a month, 15 documents each billing month included then $0.50 each, 10 AI drafts each billing month included then $0.30 each, 2% fee on payments. Billed monthly in arrears, and early if about $50 builds up.",
+   "plan": "Pay as you go",
+   "status": "PROVEN",
+   "module": "src/product/docustayUsage.mjs, src/product/docustayPrices.mjs",
+   "test": "test/v1_usage_billing.test.mjs; claims payg-person-monthly, payg-document-over, payg-draft-over",
+   "pages": [],
+   "note": ""
+  },
+  {
+   "id": "F-LIFETIME",
+   "statement": "Lifetime: $299 once for any workspace. Pro for as long as Docustay runs the hosted service; 50 AI drafts each month from your purchase date included, then $0.30 each.",
+   "plan": "Lifetime",
+   "status": "PROVEN",
+   "module": "src/product/docustay.mjs, src/billing/webhook.mjs",
+   "test": "claims lifetime-price, lifetime-first-workspaces; test/v1_usage_billing.test.mjs",
+   "pages": [],
+   "note": ""
+  },
+  {
+   "id": "F-BUDGET",
+   "statement": "A monthly spending budget (default $50) with alerts at 50%, 80% and 100%. At 100% sending and AI drafting pause with a clear message; raising the budget resumes them. Nothing is deleted.",
+   "plan": "Pay as you go / Pro / Lifetime",
+   "status": "PROVEN",
+   "module": "src/product/docustayUsage.mjs",
+   "test": "test/v1_usage_billing.test.mjs; claim budget-default",
+   "pages": [],
+   "note": ""
+  },
+  {
+   "id": "F-USAGEAPI",
+   "statement": "GET /api/v1/usage returns the running bill: documents, AI drafts, what is billable this month, the budget and whether sending is paused.",
+   "plan": "all",
+   "status": "PROVEN",
+   "module": "src/product/docustay.mjs apiUsage",
+   "test": "test/v1_usage_billing.test.mjs",
+   "pages": [],
+   "note": ""
+  },
+  {
+   "id": "F-BRANDING",
+   "statement": "Your logo, brand colour, welcome note, sender name and reply-to address, on every hosted plan. The Docustay footer stays on hosted signed copies; a self-hosted install can remove it.",
+   "plan": "all",
+   "status": "BUILT",
+   "module": "src/documents/branding",
+   "test": "claim brand",
+   "pages": [],
+   "note": ""
+  }
+ ]
+}

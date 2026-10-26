@@ -1,0 +1,73 @@
+name: release
+# On a version tag (v1.2.3): build the app and web images for x86 and ARM, scan them, sign them, attach a software parts list (SBOM),
+# and publish to GitHub's registry (and Docker Hub when its secrets exist).
+on:
+  push:
+    tags: ["v*"]
+permissions:
+  contents: write      # attach the SBOMs to the release
+  packages: write      # push to ghcr.io
+  id-token: write      # keyless signing with cosign
+jobs:
+  images:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - { name: docustay-app, dockerfile: Dockerfile }
+          - { name: docustay-web, dockerfile: docustay/web/Dockerfile }
+          - { name: docustay-storage, dockerfile: infra/seaweedfs/Dockerfile, context: infra/seaweedfs }   # R13-D435: the file store had no published image, so a prebuilt install and the Helm chart could not start it
+    env:
+      IMAGE: ghcr.io/${{ github.repository_owner }}/${{ matrix.name }}
+      DH_USER: ${{ secrets.DOCKERHUB_USERNAME }}      # set both Docker Hub secrets to also publish there
+    steps:
+      - name: Lower-case the image name (registry references must be lower case; the organisation is Docustay)
+        run: echo "IMAGE=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/${{ matrix.name }}" >> "$GITHUB_ENV"
+      - uses: actions/checkout@v4
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with: { registry: ghcr.io, username: "${{ github.actor }}", password: "${{ secrets.GITHUB_TOKEN }}" }
+      - id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ${{ env.IMAGE }}
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=raw,value=latest
+      # Build one image first, for the scan, before anything is published.
+      - name: Build for the scan (x86 only, not pushed)
+        uses: docker/build-push-action@v6
+        with: { context: "${{ matrix.context || '.' }}", file: "${{ matrix.dockerfile }}", load: true, tags: "scan:${{ matrix.name }}", cache-from: type=gha, cache-to: "type=gha,mode=max" }
+      - name: Scan with Trivy (fails the release on a fixable HIGH or CRITICAL finding)
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25  # v0.36.0, pinned by commit
+        with: { image-ref: "scan:${{ matrix.name }}", severity: "HIGH,CRITICAL", ignore-unfixed: true, exit-code: "1", format: table }
+      - id: push
+        name: Build for x86 and ARM and push
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.context || '.' }}
+          file: ${{ matrix.dockerfile }}
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          provenance: true
+          cache-from: type=gha
+      - uses: sigstore/cosign-installer@v3
+      - name: Sign the image (keyless; the signature names this workflow)
+        run: cosign sign --yes "${IMAGE}@${{ steps.push.outputs.digest }}"
+      - name: Software parts list (SBOM)
+        uses: anchore/sbom-action@v0
+        with: { image: "${{ env.IMAGE }}@${{ steps.push.outputs.digest }}", format: spdx-json, output-file: "${{ matrix.name }}.spdx.json", upload-release-assets: true }
+      - name: Attach the SBOM to the image
+        run: cosign attest --yes --type spdxjson --predicate "${{ matrix.name }}.spdx.json" "${IMAGE}@${{ steps.push.outputs.digest }}"
+      - name: Also publish to Docker Hub (only when its secrets are set)
+        if: ${{ env.DH_USER != '' }}
+        env: { DH_TOKEN: "${{ secrets.DOCKERHUB_TOKEN }}" }
+        run: |
+          echo "$DH_TOKEN" | docker login -u "$DH_USER" --password-stdin
+          docker buildx imagetools create -t "docker.io/${DH_USER}/${{ matrix.name }}:${{ github.ref_name }}" -t "docker.io/${DH_USER}/${{ matrix.name }}:latest" "${IMAGE}@${{ steps.push.outputs.digest }}"

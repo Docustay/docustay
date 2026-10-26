@@ -1,0 +1,17 @@
+-- ★★★ TASK C4.6 — STAFF TREE FEATURE FLAG AND GATING CONFIGURATION
+--
+-- Adds support for staff-only screens (/staff/dashboard, /staff/tasks, /staff/profile).
+-- Controlled by a feature flag per practice, configurable via tenant_setting.
+--
+-- ★ Feature flag: 'feature.staff-ui-enabled' — boolean, defaults to false (staff UI disabled).
+--   Set to true to enable the staff screens for a practice.
+--
+-- ★★ Role gating: staff-only, enforced server-side (role = 'staff' required).
+--   Client-side gating follows the role, never used as a security boundary.
+--
+-- ★ No new table, uses existing tenant_setting mechanism. See also:
+--   db/gates/p6_build_state_map.mjs for how to measure that this flag is read.
+
+-- Note: tenant_setting values are stored as JSONB, this one is boolean
+-- The key 'feature.staff-ui-enabled' follows the existing naming convention for feature flags
+-- (no existing flags present in baseline, but this pattern matches 'practice.*' / 'branding.*')

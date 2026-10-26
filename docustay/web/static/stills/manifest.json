@@ -1,0 +1,242 @@
+{
+ "key": {
+  "width": 1040,
+  "height": 800,
+  "source": "src/lib/site/3d/objects.js",
+  "bytes": {
+   "avif": 55591,
+   "webp": 118324,
+   "png": 613901
+  }
+ },
+ "package": {
+  "width": 1040,
+  "height": 800,
+  "source": "src/lib/site/3d/objects.js",
+  "bytes": {
+   "avif": 42251,
+   "webp": 85798,
+   "png": 386748
+  }
+ },
+ "envelope": {
+  "width": 1040,
+  "height": 800,
+  "source": "src/lib/site/3d/objects.js",
+  "bytes": {
+   "avif": 47485,
+   "webp": 100444,
+   "png": 404651
+  }
+ },
+ "envelope-neutral": {
+  "width": 1040,
+  "height": 800,
+  "source": "src/lib/site/3d/objects.js",
+  "bytes": {
+   "avif": 25208,
+   "webp": 43888,
+   "png": 199391
+  }
+ },
+ "padlock": {
+  "width": 1040,
+  "height": 800,
+  "source": "src/lib/site/3d/objects.js",
+  "bytes": {
+   "avif": 35176,
+   "webp": 69216,
+   "png": 400057
+  }
+ },
+ "pen-page": {
+  "width": 1040,
+  "height": 800,
+  "source": "src/lib/site/3d/objects.js",
+  "bytes": {
+   "avif": 48009,
+   "webp": 91804,
+   "png": 463085
+  }
+ },
+ "key-lease": {
+  "width": 1040,
+  "height": 800,
+  "source": "src/lib/site/3d/objects.js",
+  "bytes": {
+   "avif": 43997,
+   "webp": 92252,
+   "png": 462444
+  }
+ },
+ "doc-stack": {
+  "width": 1040,
+  "height": 800,
+  "source": "src/lib/site/3d/objects.js",
+  "bytes": {
+   "avif": 37406,
+   "webp": 75856,
+   "png": 388858
+  }
+ },
+ "form-card": {
+  "width": 1040,
+  "height": 800,
+  "source": "src/lib/site/3d/objects.js",
+  "bytes": {
+   "avif": 26576,
+   "webp": 57146,
+   "png": 276677
+  }
+ },
+ "backup-folder": {
+  "width": 1040,
+  "height": 800,
+  "source": "src/lib/site/3d/objects.js",
+  "bytes": {
+   "avif": 34369,
+   "webp": 70964,
+   "png": 391585
+  }
+ },
+ "lock-card": {
+  "width": 1040,
+  "height": 800,
+  "source": "src/lib/site/3d/objects.js",
+  "bytes": {
+   "avif": 39863,
+   "webp": 81624,
+   "png": 450535
+  }
+ },
+ "licence-agpl": {
+  "width": 1040,
+  "height": 800,
+  "source": "src/lib/site/3d/objects.js",
+  "bytes": {
+   "avif": 35152,
+   "webp": 67052,
+   "png": 323277
+  }
+ },
+ "licence-pro": {
+  "width": 1040,
+  "height": 800,
+  "source": "src/lib/site/3d/objects.js",
+  "bytes": {
+   "avif": 35368,
+   "webp": 66366,
+   "png": 326705
+  }
+ },
+ "licence-commercial": {
+  "width": 1040,
+  "height": 800,
+  "source": "src/lib/site/3d/objects.js",
+  "bytes": {
+   "avif": 36333,
+   "webp": 71202,
+   "png": 333116
+  }
+ },
+ "price-cards": {
+  "width": 1040,
+  "height": 800,
+  "source": "src/lib/site/3d/objects.js",
+  "bytes": {
+   "avif": 43995,
+   "webp": 86672,
+   "png": 389628
+  }
+ },
+ "seal": {
+  "width": 1040,
+  "height": 800,
+  "source": "src/lib/site/3d/objects.js",
+  "bytes": {
+   "avif": 44784,
+   "webp": 96224,
+   "png": 608301
+  }
+ },
+ "test-paper": {
+  "width": 1040,
+  "height": 800,
+  "source": "src/lib/site/3d/objects.js",
+  "bytes": {
+   "avif": 34353,
+   "webp": 69528,
+   "png": 330907
+  }
+ },
+ "clipboard": {
+  "width": 1040,
+  "height": 800,
+  "source": "src/lib/site/3d/objects.js",
+  "bytes": {
+   "avif": 24063,
+   "webp": 52382,
+   "png": 254487
+  }
+ },
+ "badge": {
+  "width": 1040,
+  "height": 800,
+  "source": "src/lib/site/3d/objects.js",
+  "bytes": {
+   "avif": 40520,
+   "webp": 81708,
+   "png": 381964
+  }
+ },
+ "notebook": {
+  "width": 1040,
+  "height": 800,
+  "source": "src/lib/site/3d/objects.js",
+  "bytes": {
+   "avif": 28816,
+   "webp": 58748,
+   "png": 256491
+  }
+ },
+ "briefcase": {
+  "width": 1040,
+  "height": 800,
+  "source": "src/lib/site/3d/objects.js",
+  "bytes": {
+   "avif": 27846,
+   "webp": 58922,
+   "png": 389381
+  }
+ },
+ "containers": {
+  "width": 1040,
+  "height": 800,
+  "source": "src/lib/site/3d/objects.js",
+  "bytes": {
+   "avif": 45320,
+   "webp": 81848,
+   "png": 441754
+  }
+ },
+ "magnifier": {
+  "width": 1040,
+  "height": 800,
+  "source": "src/lib/site/3d/objects.js",
+  "bytes": {
+   "avif": 47008,
+   "webp": 90674,
+   "png": 578106
+  }
+ },
+ "D": {
+  "width": 1040,
+  "height": 800,
+  "source": "src/lib/site/3d/objects.js",
+  "bytes": {
+   "avif": 36182,
+   "webp": 75024,
+   "png": 486931
+  }
+ }
+}

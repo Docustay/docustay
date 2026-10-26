@@ -1,0 +1,3074 @@
+{
+ "AccountsList": {
+  "kind": "screen",
+  "file": "specs/mockups/AccountsList.frame.html",
+  "targets": [
+   "lib/screens/accounts/AccountRecord.jsx",
+   "lib/screens/accounts/AccountsList.jsx"
+  ],
+  "liveRoute": "/accounts/all",
+  "mapState": "full"
+ },
+ "AfterCreate": {
+  "kind": "state",
+  "file": "specs/mockups/AfterCreate.frame.html",
+  "targets": [
+   "lib/forms/PersonForm.svelte + lib/components/editor/AfterSavePanel.jsx"
+  ],
+  "liveRoute": "/people/clients",
+  "mapState": "other"
+ },
+ "AfterQueued": {
+  "kind": "state",
+  "file": "specs/mockups/AfterQueued.frame.html",
+  "targets": [
+   "lib/money/StripeNeedsBanner.jsx",
+   "lib/screens/money/MoneyInvoices.jsx"
+  ],
+  "liveRoute": "/money/invoices",
+  "mapState": "other"
+ },
+ "AppClientAccount": {
+  "kind": "screen-or-state",
+  "file": "specs/mockups/AppClientAccount.frame.html",
+  "targets": [
+   "lib/portal/*"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "AppClientBook": {
+  "kind": "screen-or-state",
+  "file": "specs/mockups/AppClientBook.frame.html",
+  "targets": [
+   "lib/portal/*"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "AppClientBookConfirm": {
+  "kind": "screen-or-state",
+  "file": "specs/mockups/AppClientBookConfirm.frame.html",
+  "targets": [
+   "lib/portal/*"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "AppClientBookTime": {
+  "kind": "screen-or-state",
+  "file": "specs/mockups/AppClientBookTime.frame.html",
+  "targets": [
+   "lib/portal/*"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "AppClientDocuments": {
+  "kind": "screen-or-state",
+  "file": "specs/mockups/AppClientDocuments.frame.html",
+  "targets": [
+   "lib/portal/*"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "AppClientFirst": {
+  "kind": "screen-or-state",
+  "file": "specs/mockups/AppClientFirst.frame.html",
+  "targets": [
+   "lib/portal/*"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "AppClientHome": {
+  "kind": "screen-or-state",
+  "file": "specs/mockups/AppClientHome.frame.html",
+  "targets": [
+   "lib/portal/*"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "AppClientMessages": {
+  "kind": "screen-or-state",
+  "file": "specs/mockups/AppClientMessages.frame.html",
+  "targets": [
+   "lib/portal/*"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "AppClientParent": {
+  "kind": "screen-or-state",
+  "file": "specs/mockups/AppClientParent.frame.html",
+  "targets": [
+   "lib/portal/*"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "AppClientPast": {
+  "kind": "screen-or-state",
+  "file": "specs/mockups/AppClientPast.frame.html",
+  "targets": [
+   "lib/portal/*"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "AppClientPay": {
+  "kind": "screen-or-state",
+  "file": "specs/mockups/AppClientPay.frame.html",
+  "targets": [
+   "lib/portal/*"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "AppClientPayInvoice": {
+  "kind": "screen-or-state",
+  "file": "specs/mockups/AppClientPayInvoice.frame.html",
+  "targets": [
+   "lib/portal/*"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "AppClientSchedule": {
+  "kind": "screen-or-state",
+  "file": "specs/mockups/AppClientSchedule.frame.html",
+  "targets": [
+   "lib/portal/*"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "AppClientSign": {
+  "kind": "screen-or-state",
+  "file": "specs/mockups/AppClientSign.frame.html",
+  "targets": [
+   "lib/portal/*"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "AppClientTeen": {
+  "kind": "screen-or-state",
+  "file": "specs/mockups/AppClientTeen.frame.html",
+  "targets": [
+   "lib/portal/*"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "AppStaffCalendar": {
+  "kind": "screen",
+  "file": "specs/mockups/AppStaffCalendar.frame.html",
+  "targets": [
+   "lib/staff/*"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "AppStaffGetPaid": {
+  "kind": "screen",
+  "file": "specs/mockups/AppStaffGetPaid.frame.html",
+  "targets": [
+   "lib/staff/*"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "AppStaffPeople": {
+  "kind": "screen",
+  "file": "specs/mockups/AppStaffPeople.frame.html",
+  "targets": [
+   "lib/staff/*"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "AppStaffPush": {
+  "kind": "screen",
+  "file": "specs/mockups/AppStaffPush.frame.html",
+  "targets": [
+   "lib/staff/*"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "AppStaffRecord": {
+  "kind": "screen",
+  "file": "specs/mockups/AppStaffRecord.frame.html",
+  "targets": [
+   "lib/staff/StaffRecord.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "AppStaffSession": {
+  "kind": "screen",
+  "file": "specs/mockups/AppStaffSession.frame.html",
+  "targets": [
+   "lib/staff/*"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "AppStaffTapToPay": {
+  "kind": "screen",
+  "file": "specs/mockups/AppStaffTapToPay.frame.html",
+  "targets": [
+   "lib/staff/*"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "AppStaffToday": {
+  "kind": "screen",
+  "file": "specs/mockups/AppStaffToday.frame.html",
+  "targets": [
+   "lib/staff/StaffToday.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "AutomationEdit": {
+  "kind": "screen",
+  "file": "specs/mockups/AutomationEdit.frame.html",
+  "targets": [
+   "lib/screens/tasks/AutomationEdit.jsx"
+  ],
+  "liveRoute": "/tasks/automations",
+  "mapState": "other"
+ },
+ "Automations": {
+  "kind": "screen",
+  "file": "specs/mockups/Automations.frame.html",
+  "targets": [
+   "lib/screens/AutomationsPage.jsx"
+  ],
+  "liveRoute": "/tasks/automations",
+  "mapState": "full"
+ },
+ "Board": {
+  "kind": "screen",
+  "file": "specs/mockups/Board.frame.html",
+  "targets": [
+   "lib/screens/people/LeadBoard.jsx"
+  ],
+  "liveRoute": "/people/leads",
+  "mapState": "full"
+ },
+ "BookingChannels": {
+  "kind": "screen",
+  "file": "specs/mockups/BookingChannels.frame.html",
+  "targets": [
+   "lib/screens/engagements/BookingChannelsScreen.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "BookingSettingsCalendar": {
+  "kind": "screen",
+  "file": "specs/mockups/BookingSettingsCalendar.frame.html",
+  "targets": [
+   "lib/screens/engagements/BookingSettingsCalendarLeaf.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "BookingSettingsHistory": {
+  "kind": "screen",
+  "file": "specs/mockups/BookingSettingsHistory.frame.html",
+  "targets": [
+   "lib/screens/engagements/BookingHistoryLeaf.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "BookingSettingsPaying": {
+  "kind": "screen",
+  "file": "specs/mockups/BookingSettingsPaying.frame.html",
+  "targets": [
+   "lib/screens/engagements/BookingSettingsPayingLeaf.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "BookingSettingsSending": {
+  "kind": "screen",
+  "file": "specs/mockups/BookingSettingsSending.frame.html",
+  "targets": [
+   "lib/screens/engagements/BookingSettingsSendingLeaf.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "CalendarBusy": {
+  "kind": "state",
+  "file": "specs/mockups/CalendarBusy.frame.html",
+  "targets": [
+   "lib/screens/WeekView.jsx"
+  ],
+  "liveRoute": "/engagements/calendar",
+  "mapState": "full"
+ },
+ "CalendarDragConfirm": {
+  "kind": "state",
+  "file": "specs/mockups/CalendarDragConfirm.frame.html",
+  "targets": [
+   "lib/screens/WeekView.jsx",
+   "lib/screens/engagements/CalendarMoveModal.jsx"
+  ],
+  "liveRoute": "/engagements/calendar",
+  "mapState": "other"
+ },
+ "CalendarFlag": {
+  "kind": "state",
+  "file": "specs/mockups/CalendarFlag.frame.html",
+  "targets": [
+   "lib/screens/engagements/CalendarFlagModal.jsx"
+  ],
+  "liveRoute": "/engagements/calendar",
+  "mapState": "other"
+ },
+ "CalendarMonth": {
+  "kind": "state",
+  "file": "specs/mockups/CalendarMonth.frame.html",
+  "targets": [
+   "lib/screens/engagements/CalendarMonthView.jsx"
+  ],
+  "liveRoute": "/engagements/calendar",
+  "mapState": "full"
+ },
+ "CalendarSettings": {
+  "kind": "screen",
+  "file": "specs/mockups/CalendarSettings.frame.html",
+  "targets": [
+   "lib/screens/CalendarSettingsScreen.jsx"
+  ],
+  "liveRoute": "/engagements/calendar",
+  "mapState": "other"
+ },
+ "CalendarSyncBroken": {
+  "kind": "state",
+  "file": "specs/mockups/CalendarSyncBroken.frame.html",
+  "targets": [
+   "lib/screens/engagements/CalendarSyncBanner.jsx"
+  ],
+  "liveRoute": "/engagements/calendar",
+  "mapState": "error"
+ },
+ "CalendarTeam": {
+  "kind": "state",
+  "file": "specs/mockups/CalendarTeam.frame.html",
+  "targets": [
+   "lib/screens/engagements/CalendarTeamView.jsx"
+  ],
+  "liveRoute": "/engagements/calendar",
+  "mapState": "full"
+ },
+ "CalendarWeek": {
+  "kind": "screen",
+  "file": "specs/mockups/CalendarWeek.frame.html",
+  "targets": [
+   "lib/screens/WeekView.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "CalendarWeekEmpty": {
+  "kind": "state",
+  "file": "specs/mockups/CalendarWeekEmpty.frame.html",
+  "targets": [
+   "lib/screens/WeekView.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "CampaignGroupList": {
+  "kind": "screen",
+  "file": "specs/mockups/CampaignGroupList.frame.html",
+  "targets": [
+   "lib/screens/run/CampaignGroupList.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "CampaignGroupListEmpty": {
+  "kind": "state",
+  "file": "specs/mockups/CampaignGroupListEmpty.frame.html",
+  "targets": [
+   "lib/screens/run/CampaignGroupList.svelte (not mountable: no list route)"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "CampaignGroupRecord": {
+  "kind": "screen",
+  "file": "specs/mockups/CampaignGroupRecord.frame.html",
+  "targets": [
+   "lib/screens/run/CampaignGroupRecord.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "CampaignGroupRecordEmpty": {
+  "kind": "state",
+  "file": "specs/mockups/CampaignGroupRecordEmpty.frame.html",
+  "targets": [
+   "lib/screens/run/CampaignGroupRecord.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "Categories": {
+  "kind": "screen",
+  "file": "specs/mockups/Categories.frame.html",
+  "targets": [
+   "lib/screens/items/CategoriesPage.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "ConnectWizard": {
+  "kind": "screen",
+  "file": "specs/mockups/ConnectWizard.frame.html",
+  "targets": [
+   "lib/screens/money/MoneyConnect.svelte (Wizard archetype)"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "DialogHours": {
+  "kind": "screen",
+  "file": "specs/mockups/DialogHours.frame.html",
+  "targets": [
+   "lib/screens/engagements/HoursDialog.jsx"
+  ],
+  "liveRoute": "/settings/practice",
+  "mapState": "other"
+ },
+ "DiscountEditor": {
+  "kind": "screen",
+  "file": "specs/mockups/DiscountEditor.frame.html",
+  "targets": [
+   "lib/screens/items/DiscountEditor.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "DocBuilder": {
+  "kind": "screen",
+  "file": "specs/mockups/DocBuilder.frame.html",
+  "targets": [
+   "lib/screens/documents/DocTemplateEditor.jsx",
+   "lib/screens/documents/DocsBuilder.jsx",
+   "lib/screens/documents/DocsClauses.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "DocPipeline": {
+  "kind": "screen",
+  "file": "specs/mockups/DocPipeline.frame.html",
+  "targets": [
+   "lib/screens/documents/DocPipeline.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "DocPreview": {
+  "kind": "screen",
+  "file": "specs/mockups/DocPreview.frame.html",
+  "targets": [
+   "lib/components/editor/PreviewPanel.jsx",
+   "lib/screens/documents/DocPreview.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "DocsAICheck": {
+  "kind": "screen",
+  "file": "specs/mockups/DocsAICheck.frame.html",
+  "targets": [
+   "lib/screens/documents/DocsAICheck.jsx"
+  ],
+  "liveRoute": "/documents/contracts/templates",
+  "mapState": "other"
+ },
+ "DocsAIDraft": {
+  "kind": "screen",
+  "file": "specs/mockups/DocsAIDraft.frame.html",
+  "targets": [
+   "lib/screens/documents/DocsAIDraft.jsx"
+  ],
+  "liveRoute": "/documents/contracts/templates",
+  "mapState": "other"
+ },
+ "DocsBuilder": {
+  "kind": "screen",
+  "file": "specs/mockups/DocsBuilder.frame.html",
+  "targets": [
+   "lib/screens/documents/DocsBuilder.jsx"
+  ],
+  "liveRoute": "/documents/contracts/templates",
+  "mapState": "other"
+ },
+ "DocsCertificate": {
+  "kind": "screen",
+  "file": "specs/mockups/DocsCertificate.frame.html",
+  "targets": [
+   "lib/screens/documents/DocsCertificate.jsx"
+  ],
+  "liveRoute": "/settings/documents",
+  "mapState": "other"
+ },
+ "DocsClauses": {
+  "kind": "screen",
+  "file": "specs/mockups/DocsClauses.frame.html",
+  "targets": [
+   "lib/screens/documents/DocsClauses.jsx"
+  ],
+  "liveRoute": "/documents/contracts/templates",
+  "mapState": "other"
+ },
+ "DocsDeclined": {
+  "kind": "screen",
+  "file": "specs/mockups/DocsDeclined.frame.html",
+  "targets": [
+   "lib/screens/documents/DocsDeclined.jsx"
+  ],
+  "liveRoute": "/documents/executed",
+  "mapState": "other"
+ },
+ "DocSendModal": {
+  "kind": "screen",
+  "file": "specs/mockups/DocSendModal.frame.html",
+  "targets": [
+   "lib/screens/documents/DocsSend.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "DocsFormBuilder": {
+  "kind": "screen",
+  "file": "specs/mockups/DocsFormBuilder.frame.html",
+  "targets": [
+   "lib/screens/documents/DocsFormBuilder.jsx"
+  ],
+  "liveRoute": "/documents/forms/templates",
+  "mapState": "other"
+ },
+ "DocsList": {
+  "kind": "screen",
+  "file": "specs/mockups/DocsList.frame.html",
+  "targets": [
+   "lib/screens/documents/DocsList.jsx"
+  ],
+  "liveRoute": "/documents/pipeline",
+  "mapState": "full"
+ },
+ "DocsPdfImport": {
+  "kind": "screen",
+  "file": "specs/mockups/DocsPdfImport.frame.html",
+  "targets": [
+   "lib/screens/documents/DocsPdfImport.jsx"
+  ],
+  "liveRoute": "/documents/contracts/templates",
+  "mapState": "other"
+ },
+ "DocsPublish": {
+  "kind": "screen",
+  "file": "specs/mockups/DocsPublish.frame.html",
+  "targets": [
+   "lib/screens/documents/DocsPublish.jsx"
+  ],
+  "liveRoute": "/documents/contracts/templates",
+  "mapState": "other"
+ },
+ "DocsSend": {
+  "kind": "screen",
+  "file": "specs/mockups/DocsSend.frame.html",
+  "targets": [
+   "lib/screens/documents/DocsSend.jsx"
+  ],
+  "liveRoute": "/documents/pipeline",
+  "mapState": "other"
+ },
+ "DocsSettings": {
+  "kind": "screen",
+  "file": "specs/mockups/DocsSettings.frame.html",
+  "targets": [
+   "lib/screens/DocumentAxesScreen.jsx"
+  ],
+  "liveRoute": "/settings/documents",
+  "mapState": "full"
+ },
+ "DocsSignAndPay": {
+  "kind": "state",
+  "file": "specs/mockups/DocsSignAndPay.frame.html",
+  "targets": [
+   "routes/sign/+page.svelte + lib/portal/DocumentSigning.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": "other"
+ },
+ "DocsSignPhone": {
+  "kind": "state",
+  "file": "specs/mockups/DocsSignPhone.frame.html",
+  "targets": [
+   "routes/sign/+page.svelte (phone width)"
+  ],
+  "liveRoute": null,
+  "mapState": "other"
+ },
+ "DocTemplateEditor": {
+  "kind": "screen",
+  "file": "specs/mockups/DocTemplateEditor.frame.html",
+  "targets": [
+   "lib/screens/documents/DocTemplateEditor.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "DrawerBook": {
+  "kind": "screen",
+  "file": "specs/mockups/DrawerBook.frame.html",
+  "targets": [
+   "lib/shell/BookSessionDialog.jsx"
+  ],
+  "liveRoute": "/engagements/calendar",
+  "mapState": "other"
+ },
+ "DrawerDiscard": {
+  "kind": "shared-state",
+  "file": "specs/mockups/DrawerDiscard.frame.html",
+  "targets": [
+   "lib/forms/SideSheet.svelte / ActionSurface"
+  ],
+  "liveRoute": "/people/clients",
+  "mapState": "other"
+ },
+ "DrawerError": {
+  "kind": "state",
+  "file": "specs/mockups/DrawerError.frame.html",
+  "targets": [
+   "lib/forms/DecisionModal.jsx",
+   "lib/screens/growth/CampaignEditor.jsx"
+  ],
+  "liveRoute": "/people/clients",
+  "mapState": "error"
+ },
+ "DrawerStacked": {
+  "kind": "state",
+  "file": "specs/mockups/DrawerStacked.frame.html",
+  "targets": [
+   "lib/screens/WeekView.jsx"
+  ],
+  "liveRoute": "/engagements/calendar",
+  "mapState": "other"
+ },
+ "EmptyAccounts": {
+  "kind": "state",
+  "file": "specs/mockups/EmptyAccounts.frame.html",
+  "targets": [
+   "lib/screens/accounts/AccountRecord.jsx",
+   "lib/screens/accounts/AccountsList.jsx"
+  ],
+  "liveRoute": "/accounts/all",
+  "mapState": "empty"
+ },
+ "EmptyCalendar": {
+  "kind": "state",
+  "file": "specs/mockups/EmptyCalendar.frame.html",
+  "targets": [
+   "lib/screens/WeekView.jsx"
+  ],
+  "liveRoute": "/engagements/calendar",
+  "mapState": "empty"
+ },
+ "EmptyDocuments": {
+  "kind": "state",
+  "file": "specs/mockups/EmptyDocuments.frame.html",
+  "targets": [
+   "lib/screens/documents/DocPipeline.jsx",
+   "lib/screens/documents/DocsList.jsx"
+  ],
+  "liveRoute": "/documents/pipeline",
+  "mapState": "empty"
+ },
+ "EmptyMoney": {
+  "kind": "state",
+  "file": "specs/mockups/EmptyMoney.frame.html",
+  "targets": [
+   "lib/money/StripeNeedsBanner.jsx",
+   "lib/screens/money/MoneyInvoices.jsx"
+  ],
+  "liveRoute": "/money/invoices",
+  "mapState": "empty"
+ },
+ "EmptyMoneyNoStripe": {
+  "kind": "state",
+  "file": "specs/mockups/EmptyMoneyNoStripe.frame.html",
+  "targets": [
+   "lib/screens/money/MoneyInvoices.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "EmptyPeople": {
+  "kind": "state",
+  "file": "specs/mockups/EmptyPeople.frame.html",
+  "targets": [
+   "lib/screens/people/PeopleLedger.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "EmptyPipeline": {
+  "kind": "state",
+  "file": "specs/mockups/EmptyPipeline.frame.html",
+  "targets": [
+   "lib/screens/documents/DocPipeline.jsx"
+  ],
+  "liveRoute": "/documents/pipeline",
+  "mapState": "empty"
+ },
+ "EmptyReports": {
+  "kind": "state",
+  "file": "specs/mockups/EmptyReports.frame.html",
+  "targets": [
+   "lib/empty/EmptyState.svelte on the named list"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "EmptyRun": {
+  "kind": "state",
+  "file": "specs/mockups/EmptyRun.frame.html",
+  "targets": [
+   "lib/empty/EmptyState.svelte on the named list"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "EmptyServicesCoach": {
+  "kind": "state",
+  "file": "specs/mockups/EmptyServicesCoach.frame.html",
+  "targets": [
+   "lib/screens/items/ServicesList.jsx"
+  ],
+  "liveRoute": "/items/services",
+  "mapState": "empty"
+ },
+ "EmptyTasks": {
+  "kind": "state",
+  "file": "specs/mockups/EmptyTasks.frame.html",
+  "targets": [
+   "lib/screens/tasks/TasksMine.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "EngAvailability": {
+  "kind": "screen",
+  "file": "specs/mockups/EngAvailability.frame.html",
+  "targets": [
+   "lib/screens/engagements/AvailabilityScreen.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "EngAvailabilityDay": {
+  "kind": "state",
+  "file": "specs/mockups/EngAvailabilityDay.frame.html",
+  "targets": [
+   "lib/screens/engagements/AvailabilityScreen.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "EngBookingLinks": {
+  "kind": "screen",
+  "file": "specs/mockups/EngBookingLinks.frame.html",
+  "targets": [
+   "lib/screens/engagements/BookingLinksScreen.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "EngBookingLinksEmpty": {
+  "kind": "state",
+  "file": "specs/mockups/EngBookingLinksEmpty.frame.html",
+  "targets": [
+   "lib/screens/engagements/BookingLinksScreen.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "EngBookingLinkSheet": {
+  "kind": "screen",
+  "file": "specs/mockups/EngBookingLinkSheet.frame.html",
+  "targets": [
+   "lib/screens/engagements/BookingLinksScreen.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "EngConfirmation": {
+  "kind": "state",
+  "file": "specs/mockups/EngConfirmation.frame.html",
+  "targets": [
+   "lib/screens/engagements/BookingConfirmation.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": "other"
+ },
+ "EngMyLink": {
+  "kind": "screen",
+  "file": "specs/mockups/EngMyLink.frame.html",
+  "targets": [
+   "lib/screens/EngMyLinkScreen.jsx"
+  ],
+  "liveRoute": "/engagements/booking",
+  "mapState": "other"
+ },
+ "EngOnlineBooking": {
+  "kind": "screen",
+  "file": "specs/mockups/EngOnlineBooking.frame.html",
+  "targets": [
+   "lib/screens/engagements/OnlineBookingScreen.jsx"
+  ],
+  "liveRoute": "/engagements/booking",
+  "mapState": "full"
+ },
+ "EngPlatformLinks": {
+  "kind": "screen",
+  "file": "specs/mockups/EngPlatformLinks.frame.html",
+  "targets": [
+   "lib/screens/engagements/PlatformLinksScreen.jsx"
+  ],
+  "liveRoute": "/platform/tenants",
+  "mapState": "other"
+ },
+ "EngPublicCoach": {
+  "kind": "screen",
+  "file": "specs/mockups/EngPublicCoach.frame.html",
+  "targets": [
+   "routes/book/+page.jsx",
+   "routes/book/[coachSlug]/+page.jsx"
+  ],
+  "liveRoute": "/book/tyler-roberts",
+  "mapState": "other"
+ },
+ "EngPublicPractice": {
+  "kind": "screen",
+  "file": "specs/mockups/EngPublicPractice.frame.html",
+  "targets": [
+   "routes/book/+page.jsx"
+  ],
+  "liveRoute": "/book/foundry",
+  "mapState": "other"
+ },
+ "EngServiceRules": {
+  "kind": "screen",
+  "file": "specs/mockups/EngServiceRules.frame.html",
+  "targets": [
+   "lib/screens/engagements/ServiceRulesScreen.jsx"
+  ],
+  "liveRoute": "/engagements/booking/settings",
+  "mapState": "full"
+ },
+ "EngSessions": {
+  "kind": "screen",
+  "file": "specs/mockups/EngSessions.frame.html",
+  "targets": [
+   "lib/screens/engagements/SessionsLedger.jsx"
+  ],
+  "liveRoute": "/engagements/sessions",
+  "mapState": "full"
+ },
+ "EngWaitlist": {
+  "kind": "screen",
+  "file": "specs/mockups/EngWaitlist.frame.html",
+  "targets": [
+   "lib/screens/engagements/WaitlistScreen.jsx"
+  ],
+  "liveRoute": "/engagements/waitlist",
+  "mapState": "full"
+ },
+ "EngWaitlistClaim": {
+  "kind": "screen",
+  "file": "specs/mockups/EngWaitlistClaim.frame.html",
+  "targets": [
+   "routes/waitlist/claim/+page.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": "other"
+ },
+ "EstimateEditor": {
+  "kind": "screen",
+  "file": "specs/mockups/EstimateEditor.frame.html",
+  "targets": [
+   "lib/screens/money/EstimateEditor.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "FormBuilder": {
+  "kind": "screen",
+  "file": "specs/mockups/FormBuilder.frame.html",
+  "targets": [
+   "lib/screens/run/FormBuilder.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "GiftCards": {
+  "kind": "screen",
+  "file": "specs/mockups/GiftCards.frame.html",
+  "targets": [
+   "lib/screens/items/GiftCardsPage.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "GrowthCampaignEditor": {
+  "kind": "screen",
+  "file": "specs/mockups/GrowthCampaignEditor.frame.html",
+  "targets": [
+   "lib/screens/growth/CampaignEditor.jsx"
+  ],
+  "liveRoute": "/growth/campaigns",
+  "mapState": "other"
+ },
+ "GrowthCampaigns": {
+  "kind": "screen",
+  "file": "specs/mockups/GrowthCampaigns.frame.html",
+  "targets": [
+   "lib/screens/growth/Campaigns.jsx"
+  ],
+  "liveRoute": "/growth/campaigns",
+  "mapState": "full"
+ },
+ "GrowthDomain": {
+  "kind": "screen",
+  "file": "specs/mockups/GrowthDomain.frame.html",
+  "targets": [
+   "lib/screens/settings/GrowthDomain.jsx"
+  ],
+  "liveRoute": "/settings/email",
+  "mapState": "other"
+ },
+ "GrowthFunnel": {
+  "kind": "screen",
+  "file": "specs/mockups/GrowthFunnel.frame.html",
+  "targets": [
+   "lib/screens/run/FormBuilder.svelte (not mountable: /api/custom-fields missing)"
+  ],
+  "liveRoute": "/growth/funnels",
+  "mapState": "other"
+ },
+ "GrowthLanding": {
+  "kind": "screen",
+  "file": "specs/mockups/GrowthLanding.frame.html",
+  "targets": [
+   "lib/screens/growth/LandingPages.jsx"
+  ],
+  "liveRoute": "/growth/pages",
+  "mapState": "other"
+ },
+ "GrowthResults": {
+  "kind": "screen",
+  "file": "specs/mockups/GrowthResults.frame.html",
+  "targets": [
+   "lib/screens/growth/Campaigns.jsx"
+  ],
+  "liveRoute": "/growth/campaigns",
+  "mapState": "other"
+ },
+ "GrowthSegments": {
+  "kind": "screen",
+  "file": "specs/mockups/GrowthSegments.frame.html",
+  "targets": [
+   "lib/screens/growth/Segments.jsx"
+  ],
+  "liveRoute": "/growth/lists",
+  "mapState": "full"
+ },
+ "GrowthUnsubscribe": {
+  "kind": "orphan-unbuilt",
+  "file": "specs/mockups/GrowthUnsubscribe.frame.html",
+  "targets": [
+   "NO SCREEN — public unsubscribe page not built"
+  ],
+  "liveRoute": null,
+  "mapState": "other"
+ },
+ "Hardware": {
+  "kind": "screen",
+  "file": "specs/mockups/Hardware.frame.html",
+  "targets": [
+   "lib/screens/money/MoneyReaders.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "HomeFirstRun": {
+  "kind": "screen",
+  "file": "specs/mockups/HomeFirstRun.frame.html",
+  "targets": [
+   "lib/screens/home/HomeFirstRun.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "HomeOwner": {
+  "kind": "screen",
+  "file": "specs/mockups/HomeOwner.frame.html",
+  "targets": [
+   "lib/prompts/PromptBand.jsx",
+   "lib/prompts/PromptCard.jsx",
+   "lib/screens/Home.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "HomeStaff": {
+  "kind": "screen",
+  "file": "specs/mockups/HomeStaff.frame.html",
+  "targets": [
+   "lib/prompts/PromptBand.jsx",
+   "lib/screens/home/HomeStaff.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "ImageLibrary": {
+  "kind": "screen",
+  "file": "specs/mockups/ImageLibrary.frame.html",
+  "targets": [
+   "lib/screens/items/ImageLibraryPage.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "ImportSource": {
+  "kind": "screen",
+  "file": "specs/mockups/ImportSource.frame.html",
+  "targets": [
+   "lib/screens/SetImport.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "ImportWizard": {
+  "kind": "screen",
+  "file": "specs/mockups/ImportWizard.frame.html",
+  "targets": [
+   "lib/screens/SetImport.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "InvoiceEditor": {
+  "kind": "screen",
+  "file": "specs/mockups/InvoiceEditor.frame.html",
+  "targets": [
+   "lib/screens/money/InvoiceEditor.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "InvoicesList": {
+  "kind": "screen",
+  "file": "specs/mockups/InvoicesList.frame.html",
+  "targets": [
+   "lib/screens/money/MoneyInvoices.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "ItemsApplyDiscount": {
+  "kind": "screen",
+  "file": "specs/mockups/ItemsApplyDiscount.frame.html",
+  "targets": [
+   "lib/forms/DecisionModal.jsx"
+  ],
+  "liveRoute": "/items/discounts",
+  "mapState": "other"
+ },
+ "ItemsAttachAgreement": {
+  "kind": "screen",
+  "file": "specs/mockups/ItemsAttachAgreement.frame.html",
+  "targets": [
+   "lib/screens/items/ModalAttachAgreement.jsx"
+  ],
+  "liveRoute": "/items/services",
+  "mapState": "other"
+ },
+ "ItemsChangePrice": {
+  "kind": "screen",
+  "file": "specs/mockups/ItemsChangePrice.frame.html",
+  "targets": [
+   "lib/screens/items/ModalChangePrice.jsx"
+  ],
+  "liveRoute": "/items/services",
+  "mapState": "other"
+ },
+ "ItemsDefaults": {
+  "kind": "screen",
+  "file": "specs/mockups/ItemsDefaults.frame.html",
+  "targets": [
+   "lib/screens/items/ItemsDefaultsPage.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "ItemsDiscounts": {
+  "kind": "screen",
+  "file": "specs/mockups/ItemsDiscounts.frame.html",
+  "targets": [
+   "lib/screens/items/CouponsPage.jsx",
+   "lib/screens/items/DiscountEditor.jsx"
+  ],
+  "liveRoute": "/items/discounts",
+  "mapState": "full"
+ },
+ "ItemsModifiers": {
+  "kind": "screen",
+  "file": "specs/mockups/ItemsModifiers.frame.html",
+  "targets": [
+   "lib/screens/items/ModifiersPage.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "ItemsOptions": {
+  "kind": "screen",
+  "file": "specs/mockups/ItemsOptions.frame.html",
+  "targets": [
+   "lib/screens/items/OptionsPage.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "ItemsPackageNew": {
+  "kind": "state",
+  "file": "specs/mockups/ItemsPackageNew.frame.html",
+  "targets": [
+   "lib/screens/SectionActions.jsx"
+  ],
+  "liveRoute": "/items/packages",
+  "mapState": "other"
+ },
+ "ItemsPlanNew": {
+  "kind": "state",
+  "file": "specs/mockups/ItemsPlanNew.frame.html",
+  "targets": [
+   "lib/screens/SectionActions.jsx"
+  ],
+  "liveRoute": "/items/plans",
+  "mapState": "other"
+ },
+ "ItemsServiceRecord": {
+  "kind": "screen",
+  "file": "specs/mockups/ItemsServiceRecord.frame.html",
+  "targets": [
+   "lib/screens/items/ServicesList.jsx"
+  ],
+  "liveRoute": "/items/services",
+  "mapState": "other"
+ },
+ "ItemsStopSelling": {
+  "kind": "screen",
+  "file": "specs/mockups/ItemsStopSelling.frame.html",
+  "targets": [
+   "lib/app/Screen.jsx",
+   "lib/record/ItemsRecordActions.jsx",
+   "lib/screens/items/ModalArchiveService.jsx"
+  ],
+  "liveRoute": "/items/services",
+  "mapState": "other"
+ },
+ "ItemsUnits": {
+  "kind": "screen",
+  "file": "specs/mockups/ItemsUnits.frame.html",
+  "targets": [
+   "lib/screens/items/UnitsPage.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "ListBlocked": {
+  "kind": "state",
+  "file": "specs/mockups/ListBlocked.frame.html",
+  "targets": [
+   "lib/money/StripeNeedsBanner.jsx",
+   "lib/screens/money/MoneyInvoices.jsx"
+  ],
+  "liveRoute": "/money/invoices",
+  "mapState": "other"
+ },
+ "ListFiltered": {
+  "kind": "shared-state",
+  "file": "specs/mockups/ListFiltered.frame.html",
+  "targets": [
+   "lib/lists/ListView.svelte / LedgerPage"
+  ],
+  "liveRoute": "/people/clients",
+  "mapState": "filtered"
+ },
+ "ListSelected": {
+  "kind": "shared-state",
+  "file": "specs/mockups/ListSelected.frame.html",
+  "targets": [
+   "lib/lists/ListView.svelte / LedgerPage"
+  ],
+  "liveRoute": "/people/clients",
+  "mapState": "other"
+ },
+ "Loyalty": {
+  "kind": "screen",
+  "file": "specs/mockups/Loyalty.frame.html",
+  "targets": [
+   "lib/components/kit/HeroNumber.jsx",
+   "lib/screens/items/GiftCardsPage.jsx",
+   "lib/screens/items/LoyaltyPage.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "Main": {
+  "kind": "shell",
+  "file": "specs/mockups/Main.frame.html",
+  "targets": [
+   "lib/app/Shell.svelte + lib/shell/*"
+  ],
+  "liveRoute": "/home",
+  "mapState": "full"
+ },
+ "MergePreview": {
+  "kind": "screen",
+  "file": "specs/mockups/MergePreview.frame.html",
+  "targets": [
+   "lib/record/MergeDialog.jsx"
+  ],
+  "liveRoute": "/people/all",
+  "mapState": "other"
+ },
+ "MergeResult": {
+  "kind": "screen",
+  "file": "specs/mockups/MergeResult.frame.html",
+  "targets": [
+   "lib/record/MergeResult.jsx"
+  ],
+  "liveRoute": "/people/all",
+  "mapState": "other"
+ },
+ "ModalArchiveService": {
+  "kind": "screen",
+  "file": "specs/mockups/ModalArchiveService.frame.html",
+  "targets": [
+   "lib/screens/items/ModalArchiveService.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "ModalChangePrice": {
+  "kind": "screen",
+  "file": "specs/mockups/ModalChangePrice.frame.html",
+  "targets": [
+   "lib/forms/DecisionModal.jsx",
+   "lib/screens/items/ModalChangePrice.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "ModalDiscard": {
+  "kind": "shared-state",
+  "file": "specs/mockups/ModalDiscard.frame.html",
+  "targets": [
+   "lib/forms/DecisionModal.svelte family"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "ModalMerge": {
+  "kind": "shared-state",
+  "file": "specs/mockups/ModalMerge.frame.html",
+  "targets": [
+   "lib/forms/DecisionModal.svelte family"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "ModalPaymentPolicy": {
+  "kind": "shared-state",
+  "file": "specs/mockups/ModalPaymentPolicy.frame.html",
+  "targets": [
+   "lib/forms/DecisionModal.svelte family"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "ModalRefund": {
+  "kind": "shared-state",
+  "file": "specs/mockups/ModalRefund.frame.html",
+  "targets": [
+   "lib/forms/DecisionModal.svelte family"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "MoneyAfter7": {
+  "kind": "state",
+  "file": "specs/mockups/MoneyAfter7.frame.html",
+  "targets": [
+   "lib/screens/money/MoneyInvoiceRecord.jsx"
+  ],
+  "liveRoute": "/home",
+  "mapState": "other"
+ },
+ "MoneyCancel": {
+  "kind": "screen",
+  "file": "specs/mockups/MoneyCancel.frame.html",
+  "targets": [
+   "lib/money/StripeNeedsBanner.jsx",
+   "lib/screens/money/MoneySubs.jsx"
+  ],
+  "liveRoute": "/money/subscriptions",
+  "mapState": "other"
+ },
+ "MoneyConnect": {
+  "kind": "screen",
+  "file": "specs/mockups/MoneyConnect.frame.html",
+  "targets": [
+   "lib/screens/money/MoneyConnect.jsx"
+  ],
+  "liveRoute": "/settings/money",
+  "mapState": "other"
+ },
+ "MoneyCredits": {
+  "kind": "screen",
+  "file": "specs/mockups/MoneyCredits.frame.html",
+  "targets": [
+   "lib/screens/money/MoneyCredits.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "MoneyDispute": {
+  "kind": "screen",
+  "file": "specs/mockups/MoneyDispute.frame.html",
+  "targets": [
+   "lib/money/StripeNeedsBanner.jsx",
+   "lib/screens/money/MoneyPayments.jsx"
+  ],
+  "liveRoute": "/money/payments",
+  "mapState": "other"
+ },
+ "MoneyDisputes": {
+  "kind": "screen",
+  "file": "specs/mockups/MoneyDisputes.frame.html",
+  "targets": [
+   "lib/screens/money/MoneyDisputes.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "MoneyInvoices": {
+  "kind": "screen",
+  "file": "specs/mockups/MoneyInvoices.frame.html",
+  "targets": [
+   "lib/screens/money/MoneyEstimates.jsx",
+   "lib/screens/money/MoneyInvoices.jsx"
+  ],
+  "liveRoute": "/money/invoices",
+  "mapState": "full"
+ },
+ "MoneyPaymentsList": {
+  "kind": "screen",
+  "file": "specs/mockups/MoneyPaymentsList.frame.html",
+  "targets": [
+   "lib/screens/money/MoneyPayments.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "MoneyPayoutsList": {
+  "kind": "screen",
+  "file": "specs/mockups/MoneyPayoutsList.frame.html",
+  "targets": [
+   "lib/screens/money/MoneyPayouts.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "MoneyRecordCash": {
+  "kind": "screen",
+  "file": "specs/mockups/MoneyRecordCash.frame.html",
+  "targets": [
+   "lib/money/StripeNeedsBanner.jsx",
+   "lib/screens/money/MoneyPayments.jsx"
+  ],
+  "liveRoute": "/money/payments",
+  "mapState": "other"
+ },
+ "MoneyRefund": {
+  "kind": "screen",
+  "file": "specs/mockups/MoneyRefund.frame.html",
+  "targets": [
+   "lib/money/StripeNeedsBanner.jsx",
+   "lib/screens/money/MoneyInvoices.jsx"
+  ],
+  "liveRoute": "/money/invoices",
+  "mapState": "other"
+ },
+ "MoneySettings": {
+  "kind": "screen",
+  "file": "specs/mockups/MoneySettings.frame.html",
+  "targets": [
+   "lib/screens/money/MoneySettings.jsx"
+  ],
+  "liveRoute": "/settings/money",
+  "mapState": "full"
+ },
+ "MoneySubRecord": {
+  "kind": "screen",
+  "file": "specs/mockups/MoneySubRecord.frame.html",
+  "targets": [
+   "lib/screens/money/MoneySubRecord.jsx"
+  ],
+  "liveRoute": "/money/subscriptions",
+  "mapState": "other"
+ },
+ "MoneySubs": {
+  "kind": "screen",
+  "file": "specs/mockups/MoneySubs.frame.html",
+  "targets": [
+   "lib/screens/money/MoneySubs.jsx"
+  ],
+  "liveRoute": "/money/subscriptions",
+  "mapState": "full"
+ },
+ "MoneyUpdateCard": {
+  "kind": "screen",
+  "file": "specs/mockups/MoneyUpdateCard.frame.html",
+  "targets": [
+   "lib/money/UpdateCardSheet.jsx"
+  ],
+  "liveRoute": "/app/payments",
+  "mapState": "other"
+ },
+ "NavStructure": {
+  "kind": "shell",
+  "file": "specs/mockups/NavStructure.frame.html",
+  "targets": [
+   "lib/app/Shell.svelte + lib/shell/*"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "NetworkList": {
+  "kind": "screen",
+  "file": "specs/mockups/NetworkList.frame.html",
+  "targets": [
+   "lib/screens/network/NetworkListScreen.jsx"
+  ],
+  "liveRoute": "/network",
+  "mapState": "full"
+ },
+ "NetworkPartner": {
+  "kind": "screen",
+  "file": "specs/mockups/NetworkPartner.frame.html",
+  "targets": [
+   "lib/screens/network/NetworkPartner.jsx"
+  ],
+  "liveRoute": "/network",
+  "mapState": "other"
+ },
+ "NetworkReferOut": {
+  "kind": "screen",
+  "file": "specs/mockups/NetworkReferOut.frame.html",
+  "targets": [
+   "lib/screens/network/NetworkReferOut.jsx"
+  ],
+  "liveRoute": "/network",
+  "mapState": "other"
+ },
+ "NotificationPanel": {
+  "kind": "shell",
+  "file": "specs/mockups/NotificationPanel.frame.html",
+  "targets": [
+   "lib/app/Shell.svelte + lib/shell/*"
+  ],
+  "liveRoute": "/home",
+  "mapState": "other"
+ },
+ "PackageEditor": {
+  "kind": "screen",
+  "file": "specs/mockups/PackageEditor.frame.html",
+  "targets": [
+   "lib/screens/items/PackageEditor.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "PaymentLinks": {
+  "kind": "screen",
+  "file": "specs/mockups/PaymentLinks.frame.html",
+  "targets": [
+   "lib/screens/money/PaymentLinks.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "PaymentMethods": {
+  "kind": "screen",
+  "file": "specs/mockups/PaymentMethods.frame.html",
+  "targets": [
+   "lib/screens/money/PaymentMethods.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "PeopleAdolescents": {
+  "kind": "state",
+  "file": "specs/mockups/PeopleAdolescents.frame.html",
+  "targets": [
+   "lib/screens/people/PeopleLedger.svelte (/people/adolescents)"
+  ],
+  "liveRoute": "/people/adolescents",
+  "mapState": "full"
+ },
+ "PeopleLeads": {
+  "kind": "screen",
+  "file": "specs/mockups/PeopleLeads.frame.html",
+  "targets": [
+   "lib/screens/people/PeopleLedger.jsx"
+  ],
+  "liveRoute": "/people/leads",
+  "mapState": "full"
+ },
+ "PeopleList": {
+  "kind": "screen",
+  "file": "specs/mockups/PeopleList.frame.html",
+  "targets": [
+   "lib/screens/people/PeopleLedger.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "PeopleParents": {
+  "kind": "screen",
+  "file": "specs/mockups/PeopleParents.frame.html",
+  "targets": [
+   "lib/screens/people/PeopleLedger.jsx"
+  ],
+  "liveRoute": "/people/parents",
+  "mapState": "full"
+ },
+ "PersonSheet": {
+  "kind": "screen",
+  "file": "specs/mockups/PersonSheet.frame.html",
+  "targets": [
+   "lib/forms/PersonForm.jsx",
+   "lib/forms/SideSheet.jsx",
+   "lib/screens/accounts/NewAccountSheet.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "PhoneCalendarDay": {
+  "kind": "screen-or-state",
+  "file": "specs/mockups/PhoneCalendarDay.frame.html",
+  "targets": [
+   "lib/staff/* + lib/phone/*"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "PhoneEmpty": {
+  "kind": "state",
+  "file": "specs/mockups/PhoneEmpty.frame.html",
+  "targets": [
+   "lib/screens/items/ServicesList.jsx"
+  ],
+  "liveRoute": "/items/services",
+  "mapState": "empty"
+ },
+ "PhoneError": {
+  "kind": "screen-or-state",
+  "file": "specs/mockups/PhoneError.frame.html",
+  "targets": [
+   "lib/staff/* + lib/phone/*"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "PhoneGetPaid": {
+  "kind": "screen-or-state",
+  "file": "specs/mockups/PhoneGetPaid.frame.html",
+  "targets": [
+   "lib/staff/* + lib/phone/*"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "PhonePeople": {
+  "kind": "screen",
+  "file": "specs/mockups/PhonePeople.frame.html",
+  "targets": [
+   "lib/screens/documents/DocsList.jsx",
+   "lib/screens/engagements/BookingHistoryLeaf.jsx",
+   "lib/screens/engagements/PlatformLinksScreen.jsx",
+   "lib/screens/engagements/SessionsLedger.jsx",
+   "lib/screens/engagements/WaitlistScreen.jsx",
+   "lib/screens/items/ServicesList.jsx",
+   "lib/screens/people/TeamListScreen.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "PhoneRecord": {
+  "kind": "screen-or-state",
+  "file": "specs/mockups/PhoneRecord.frame.html",
+  "targets": [
+   "lib/staff/* + lib/phone/*"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "PlanEditor": {
+  "kind": "screen",
+  "file": "specs/mockups/PlanEditor.frame.html",
+  "targets": [
+   "lib/screens/items/PlanEditor.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "PlatFlags": {
+  "kind": "screen",
+  "file": "specs/mockups/PlatFlags.frame.html",
+  "targets": [
+   "lib/screens/PlatFlags.jsx"
+  ],
+  "liveRoute": "/platform/flags",
+  "mapState": "full"
+ },
+ "PlatGrantAccess": {
+  "kind": "screen",
+  "file": "specs/mockups/PlatGrantAccess.frame.html",
+  "targets": [
+   "lib/screens/platform/PlatGrantAccess.jsx"
+  ],
+  "liveRoute": "/platform/grant-access",
+  "mapState": "other"
+ },
+ "PlatHealth": {
+  "kind": "screen",
+  "file": "specs/mockups/PlatHealth.frame.html",
+  "targets": [
+   "lib/screens/PlatHealth.jsx"
+  ],
+  "liveRoute": "/platform/health",
+  "mapState": "full"
+ },
+ "PlatJobs": {
+  "kind": "screen",
+  "file": "specs/mockups/PlatJobs.frame.html",
+  "targets": [
+   "lib/screens/platform/PlatJobs.jsx"
+  ],
+  "liveRoute": "/platform/jobs",
+  "mapState": "full"
+ },
+ "PlatOverview": {
+  "kind": "screen",
+  "file": "specs/mockups/PlatOverview.frame.html",
+  "targets": [
+   "lib/screens/platform/PlatOverview.jsx"
+  ],
+  "liveRoute": "/platform/tenants",
+  "mapState": "other"
+ },
+ "PlatPracticeRecord": {
+  "kind": "screen",
+  "file": "specs/mockups/PlatPracticeRecord.frame.html",
+  "targets": [
+   "lib/screens/platform/PlatPracticeRecord.jsx"
+  ],
+  "liveRoute": "/platform/tenants",
+  "mapState": "other"
+ },
+ "PlatPractices": {
+  "kind": "screen",
+  "file": "specs/mockups/PlatPractices.frame.html",
+  "targets": [
+   "lib/screens/platform/PlatPractices.jsx"
+  ],
+  "liveRoute": "/platform/tenants",
+  "mapState": "full"
+ },
+ "PlatProvisioning": {
+  "kind": "screen",
+  "file": "specs/mockups/PlatProvisioning.frame.html",
+  "targets": [
+   "lib/screens/ProvisioningScreen.jsx"
+  ],
+  "liveRoute": "/platform/provisioning",
+  "mapState": "full"
+ },
+ "PlatTiers": {
+  "kind": "screen",
+  "file": "specs/mockups/PlatTiers.frame.html",
+  "targets": [
+   "lib/screens/platform/PlatTiers.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "PlatTiersUntick": {
+  "kind": "state",
+  "file": "specs/mockups/PlatTiersUntick.frame.html",
+  "targets": [
+   "lib/screens/platform/PlatTiers.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "PlatUsage": {
+  "kind": "screen",
+  "file": "specs/mockups/PlatUsage.frame.html",
+  "targets": [
+   "lib/screens/platform/PlatUsage.jsx"
+  ],
+  "liveRoute": "/platform/tenants",
+  "mapState": "other"
+ },
+ "PlatViewingAs": {
+  "kind": "screen",
+  "file": "specs/mockups/PlatViewingAs.frame.html",
+  "targets": [
+   "lib/screens/platform/PlatViewingAs.jsx"
+  ],
+  "liveRoute": "/platform/impersonation",
+  "mapState": "other"
+ },
+ "PopoverBlockDay": {
+  "kind": "state",
+  "file": "specs/mockups/PopoverBlockDay.frame.html",
+  "targets": [
+   "lib/screens/engagements/BlockTimePopover.jsx"
+  ],
+  "liveRoute": "/engagements/calendar",
+  "mapState": "other"
+ },
+ "PromptFeed": {
+  "kind": "screen",
+  "file": "specs/mockups/PromptFeed.frame.html",
+  "targets": [
+   "lib/lists/LedgerPage.jsx",
+   "lib/lists/WorklistPage.jsx",
+   "lib/prompts/PromptCard.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "RecordArchived": {
+  "kind": "state",
+  "file": "specs/mockups/RecordArchived.frame.html",
+  "targets": [
+   "lib/record/PersonRecord.jsx"
+  ],
+  "liveRoute": "/people/all",
+  "mapState": "other"
+ },
+ "RecordCoach": {
+  "kind": "screen",
+  "file": "specs/mockups/RecordCoach.frame.html",
+  "targets": [
+   "lib/record/PersonOverview.jsx",
+   "lib/record/PersonRecord.jsx",
+   "lib/record/PersonSessionsNotesTabs.jsx"
+  ],
+  "liveRoute": "/people/all",
+  "mapState": "other"
+ },
+ "RecordDocument": {
+  "kind": "screen",
+  "file": "specs/mockups/RecordDocument.frame.html",
+  "targets": [
+   "lib/record/PersonDocumentsTab.jsx"
+  ],
+  "liveRoute": "/people/all",
+  "mapState": "other"
+ },
+ "RecordFull": {
+  "kind": "screen",
+  "file": "specs/mockups/RecordFull.frame.html",
+  "targets": [
+   "lib/record/PersonOverview.jsx",
+   "lib/record/PersonRecord.jsx",
+   "lib/record/PersonSessionsNotesTabs.jsx"
+  ],
+  "liveRoute": "/people/all",
+  "mapState": "full"
+ },
+ "RecordGoals": {
+  "kind": "screen",
+  "file": "specs/mockups/RecordGoals.frame.html",
+  "targets": [
+   "lib/record/PersonGoalsTab.jsx"
+  ],
+  "liveRoute": "/people/all",
+  "mapState": "other"
+ },
+ "RecordInvoice": {
+  "kind": "screen",
+  "file": "specs/mockups/RecordInvoice.frame.html",
+  "targets": [
+   "lib/record/PersonMoneyTab.jsx"
+  ],
+  "liveRoute": "/money/invoices",
+  "mapState": "other"
+ },
+ "RecordLoading": {
+  "kind": "state",
+  "file": "specs/mockups/RecordLoading.frame.html",
+  "targets": [
+   "lib/record/PersonRecord.jsx",
+   "lib/screens/growth/CampaignEditor.jsx",
+   "lib/screens/run/Dashboard.jsx"
+  ],
+  "liveRoute": "/people/all",
+  "mapState": "other"
+ },
+ "RecordNew": {
+  "kind": "state",
+  "file": "specs/mockups/RecordNew.frame.html",
+  "targets": [
+   "lib/record/PersonRecord.jsx"
+  ],
+  "liveRoute": "/people/all",
+  "mapState": "other"
+ },
+ "RecordTeen": {
+  "kind": "screen",
+  "file": "specs/mockups/RecordTeen.frame.html",
+  "targets": [
+   "lib/record/PersonRecord.jsx"
+  ],
+  "liveRoute": "/people/adolescents",
+  "mapState": "other"
+ },
+ "ReportAccountant": {
+  "kind": "screen",
+  "file": "specs/mockups/ReportAccountant.frame.html",
+  "targets": [
+   "lib/screens/reports/ReportAccountant.jsx"
+  ],
+  "liveRoute": "/reports",
+  "mapState": "other"
+ },
+ "ReportCoaches": {
+  "kind": "screen",
+  "file": "specs/mockups/ReportCoaches.frame.html",
+  "targets": [
+   "lib/screens/reports/ReportCoaches.jsx"
+  ],
+  "liveRoute": "/reports",
+  "mapState": "other"
+ },
+ "ReportLeads": {
+  "kind": "screen",
+  "file": "specs/mockups/ReportLeads.frame.html",
+  "targets": [
+   "lib/screens/reports/ReportLeads.jsx"
+  ],
+  "liveRoute": "/reports",
+  "mapState": "other"
+ },
+ "ReportMoneyNew": {
+  "kind": "screen",
+  "file": "specs/mockups/ReportMoneyNew.frame.html",
+  "targets": [
+   "lib/screens/reports/ReportMoney.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "ReportPeople": {
+  "kind": "screen",
+  "file": "specs/mockups/ReportPeople.frame.html",
+  "targets": [
+   "lib/screens/reports/ReportPeople.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "ReportSessions": {
+  "kind": "screen",
+  "file": "specs/mockups/ReportSessions.frame.html",
+  "targets": [
+   "lib/screens/reports/ReportSessions.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "ReportsHomeNew": {
+  "kind": "state",
+  "file": "specs/mockups/ReportsHomeNew.frame.html",
+  "targets": [
+   "lib/screens/reports/ReportsHome.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "RunAds": {
+  "kind": "orphan-unbuilt",
+  "file": "specs/mockups/RunAds.frame.html",
+  "targets": [
+   "NOT BUILT (Run rows with no route — RECONCILE-R2 C3)"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "RunAI": {
+  "kind": "orphan-unbuilt",
+  "file": "specs/mockups/RunAI.frame.html",
+  "targets": [
+   "NOT BUILT (Run rows with no route — RECONCILE-R2 C3)"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "RunCalls": {
+  "kind": "orphan-unbuilt",
+  "file": "specs/mockups/RunCalls.frame.html",
+  "targets": [
+   "NOT BUILT (Run rows with no route — RECONCILE-R2 C3)"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "RunCompetitors": {
+  "kind": "orphan-unbuilt",
+  "file": "specs/mockups/RunCompetitors.frame.html",
+  "targets": [
+   "NOT BUILT (Run rows with no route — RECONCILE-R2 C3)"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "RunConnections": {
+  "kind": "orphan-unbuilt",
+  "file": "specs/mockups/RunConnections.frame.html",
+  "targets": [
+   "NOT BUILT (Run rows with no route — RECONCILE-R2 C3)"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "RunListings": {
+  "kind": "orphan-unbuilt",
+  "file": "specs/mockups/RunListings.frame.html",
+  "targets": [
+   "NOT BUILT (Run rows with no route — RECONCILE-R2 C3)"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "RunLocked": {
+  "kind": "orphan-unbuilt",
+  "file": "specs/mockups/RunLocked.frame.html",
+  "targets": [
+   "NOT BUILT (Run rows with no route — RECONCILE-R2 C3)"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "RunOverview": {
+  "kind": "orphan-unbuilt",
+  "file": "specs/mockups/RunOverview.frame.html",
+  "targets": [
+   "NOT BUILT (Run rows with no route — RECONCILE-R2 C3)"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "RunReceipt": {
+  "kind": "screen",
+  "file": "specs/mockups/RunReceipt.frame.html",
+  "targets": [
+   "lib/screens/reports/RunReceipt.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "RunReviews": {
+  "kind": "orphan-unbuilt",
+  "file": "specs/mockups/RunReviews.frame.html",
+  "targets": [
+   "NOT BUILT (Run rows with no route — RECONCILE-R2 C3)"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "RunSearch": {
+  "kind": "orphan-unbuilt",
+  "file": "specs/mockups/RunSearch.frame.html",
+  "targets": [
+   "NOT BUILT (Run rows with no route — RECONCILE-R2 C3)"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "RunSocial": {
+  "kind": "orphan-unbuilt",
+  "file": "specs/mockups/RunSocial.frame.html",
+  "targets": [
+   "NOT BUILT (Run rows with no route — RECONCILE-R2 C3)"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "RunWebsite": {
+  "kind": "orphan-unbuilt",
+  "file": "specs/mockups/RunWebsite.frame.html",
+  "targets": [
+   "NOT BUILT (Run rows with no route — RECONCILE-R2 C3)"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "Scheduling": {
+  "kind": "screen",
+  "file": "specs/mockups/Scheduling.frame.html",
+  "targets": [
+   "lib/screens/people/SchedulingScreen.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "ServiceAfterSave": {
+  "kind": "state",
+  "file": "specs/mockups/ServiceAfterSave.frame.html",
+  "targets": [
+   "lib/components/editor/AfterSavePanel.jsx",
+   "lib/screens/items/ServiceAfterSave.jsx",
+   "lib/screens/items/ServiceEditorRail.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "ServiceEditor": {
+  "kind": "screen",
+  "file": "specs/mockups/ServiceEditor.frame.html",
+  "targets": [
+   "lib/components/editor/CollapsibleGroup.jsx",
+   "lib/components/editor/EditorColumn.jsx",
+   "lib/components/editor/EditorRail.jsx",
+   "lib/components/editor/EditorSection.jsx",
+   "lib/components/editor/FieldDuration.jsx",
+   "lib/components/editor/FieldMoney.jsx",
+   "lib/screens/documents/DocTemplateEditor.jsx",
+   "lib/screens/items/ServiceEditor.jsx",
+   "lib/screens/items/ServiceEditorRail.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "ServiceEditorBlocked": {
+  "kind": "state",
+  "file": "specs/mockups/ServiceEditorBlocked.frame.html",
+  "targets": [
+   "lib/components/editor/BlockerBanner.jsx",
+   "lib/components/editor/GeneratedSentence.jsx",
+   "lib/components/kit/StatusBadge.jsx",
+   "lib/screens/items/ServiceEditor.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "ServiceEditorNew": {
+  "kind": "state",
+  "file": "specs/mockups/ServiceEditorNew.frame.html",
+  "targets": [
+   "lib/screens/items/ServiceEditor.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "ServicesBulk": {
+  "kind": "state",
+  "file": "specs/mockups/ServicesBulk.frame.html",
+  "targets": [
+   "lib/screens/items/ServicesList.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "ServicesEmpty": {
+  "kind": "state",
+  "file": "specs/mockups/ServicesEmpty.frame.html",
+  "targets": [
+   "lib/components/kit/QuickCreateRow.jsx",
+   "lib/screens/items/ServicesList.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "ServicesList": {
+  "kind": "screen",
+  "file": "specs/mockups/ServicesList.frame.html",
+  "targets": [
+   "lib/components/editor/BlockerBanner.jsx",
+   "lib/components/kit/StatusBadge.jsx",
+   "lib/lists/ExportMenu.jsx",
+   "lib/lists/LedgerPage.jsx",
+   "lib/screens/items/ServicesList.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "ServicesNoMatch": {
+  "kind": "state",
+  "file": "specs/mockups/ServicesNoMatch.frame.html",
+  "targets": [
+   "lib/screens/items/ServicesList.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "SessionsList": {
+  "kind": "screen",
+  "file": "specs/mockups/SessionsList.frame.html",
+  "targets": [
+   "lib/screens/engagements/SessionsLedger.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "SetBilling": {
+  "kind": "screen",
+  "file": "specs/mockups/SetBilling.frame.html",
+  "targets": [
+   "lib/screens/SetBilling.jsx"
+  ],
+  "liveRoute": "/settings/billing",
+  "mapState": "full"
+ },
+ "SetBranding": {
+  "kind": "screen",
+  "file": "specs/mockups/SetBranding.frame.html",
+  "targets": [
+   "lib/screens/settings/SetBranding.jsx"
+  ],
+  "liveRoute": "/settings/branding",
+  "mapState": "full"
+ },
+ "SetData": {
+  "kind": "screen",
+  "file": "specs/mockups/SetData.frame.html",
+  "targets": [
+   "lib/screens/SetData.jsx"
+  ],
+  "liveRoute": "/settings/data",
+  "mapState": "full"
+ },
+ "SetDeveloper": {
+  "kind": "screen",
+  "file": "specs/mockups/SetDeveloper.frame.html",
+  "targets": [
+   "lib/screens/SetDeveloper.jsx"
+  ],
+  "liveRoute": "/settings/developer",
+  "mapState": "full"
+ },
+ "SetImport": {
+  "kind": "screen",
+  "file": "specs/mockups/SetImport.frame.html",
+  "targets": [
+   "lib/screens/SetImport.jsx"
+  ],
+  "liveRoute": "/settings/import",
+  "mapState": "other"
+ },
+ "SetIntegrations": {
+  "kind": "screen",
+  "file": "specs/mockups/SetIntegrations.frame.html",
+  "targets": [
+   "lib/screens/IntegrationsScreen.jsx"
+  ],
+  "liveRoute": "/settings/integrations",
+  "mapState": "full"
+ },
+ "SetMoney": {
+  "kind": "screen",
+  "file": "specs/mockups/SetMoney.frame.html",
+  "targets": [
+   "lib/screens/money/MoneySettings.jsx",
+   "lib/shared/LastChanged.jsx",
+   "lib/shared/SettingsHubRow.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "SetNotifications": {
+  "kind": "screen",
+  "file": "specs/mockups/SetNotifications.frame.html",
+  "targets": [
+   "lib/screens/NotificationPrefsScreen.jsx"
+  ],
+  "liveRoute": "/settings/notifications",
+  "mapState": "full"
+ },
+ "SetPlans": {
+  "kind": "screen",
+  "file": "specs/mockups/SetPlans.frame.html",
+  "targets": [
+   "lib/screens/SetPlans.jsx"
+  ],
+  "liveRoute": "/settings/plans",
+  "mapState": "other"
+ },
+ "SetRequiredFields": {
+  "kind": "screen",
+  "file": "specs/mockups/SetRequiredFields.frame.html",
+  "targets": [
+   "lib/screens/settings/RequiredFieldsScreen.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "SetRoles": {
+  "kind": "screen",
+  "file": "specs/mockups/SetRoles.frame.html",
+  "targets": [
+   "lib/screens/RolesScreen.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "SetSignIn": {
+  "kind": "screen",
+  "file": "specs/mockups/SetSignIn.frame.html",
+  "targets": [
+   "lib/shared/LastChanged.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "SetTerminology": {
+  "kind": "screen",
+  "file": "specs/mockups/SetTerminology.frame.html",
+  "targets": [
+   "lib/screens/TerminologyScreen.jsx"
+  ],
+  "liveRoute": "/settings/terminology",
+  "mapState": "full"
+ },
+ "Settings": {
+  "kind": "screen",
+  "file": "specs/mockups/Settings.frame.html",
+  "targets": [
+   "lib/screens/SettingsForm.jsx"
+  ],
+  "liveRoute": "/settings/practice",
+  "mapState": "full"
+ },
+ "SettingsBooking": {
+  "kind": "screen",
+  "file": "specs/mockups/SettingsBooking.frame.html",
+  "targets": [
+   "lib/screens/engagements/BookingSettingsHub.jsx"
+  ],
+  "liveRoute": "/engagements/booking/settings",
+  "mapState": "full"
+ },
+ "SettingsBookingConfirm": {
+  "kind": "state",
+  "file": "specs/mockups/SettingsBookingConfirm.frame.html",
+  "targets": [
+   "lib/screens/engagements/BookingOffConfirm.jsx",
+   "lib/screens/engagements/BookingSettingsHub.jsx"
+  ],
+  "liveRoute": "/engagements/booking/settings",
+  "mapState": "other"
+ },
+ "SettingsConfirm": {
+  "kind": "state",
+  "file": "specs/mockups/SettingsConfirm.frame.html",
+  "targets": [
+   "lib/forms/DecisionModal.jsx"
+  ],
+  "liveRoute": "/settings/practice",
+  "mapState": "other"
+ },
+ "SettingsEmailBroken": {
+  "kind": "state",
+  "file": "specs/mockups/SettingsEmailBroken.frame.html",
+  "targets": [
+   "lib/screens/EmailSettingsPage.jsx"
+  ],
+  "liveRoute": "/settings/email",
+  "mapState": "error"
+ },
+ "SettingsError": {
+  "kind": "state",
+  "file": "specs/mockups/SettingsError.frame.html",
+  "targets": [
+   "lib/screens/settings/SettingsSaveError.jsx"
+  ],
+  "liveRoute": "/settings/practice",
+  "mapState": "error"
+ },
+ "SettingsHome": {
+  "kind": "screen",
+  "file": "specs/mockups/SettingsHome.frame.html",
+  "targets": [
+   "lib/screens/SettingsHome.jsx"
+  ],
+  "liveRoute": "/settings",
+  "mapState": "full"
+ },
+ "SettingsMine": {
+  "kind": "screen",
+  "file": "specs/mockups/SettingsMine.frame.html",
+  "targets": [
+   "lib/screens/settings/SettingsMine.jsx"
+  ],
+  "liveRoute": "/settings/sign-in",
+  "mapState": "other"
+ },
+ "SetUsage": {
+  "kind": "screen",
+  "file": "specs/mockups/SetUsage.frame.html",
+  "targets": [
+   "lib/screens/settings/SetUsage.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "SidebarV2": {
+  "kind": "screen",
+  "file": "specs/mockups/SidebarV2.frame.html",
+  "targets": [
+   "lib/app/Shell.jsx"
+  ],
+  "liveRoute": "/people/all",
+  "mapState": "other"
+ },
+ "SignedOut": {
+  "kind": "screen",
+  "file": "specs/mockups/SignedOut.frame.html",
+  "targets": [
+   "routes/login/+page.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "SignupExisting": {
+  "kind": "screen-or-state",
+  "file": "specs/mockups/SignupExisting.frame.html",
+  "targets": [
+   "routes/signup + lib/screens/signup/*"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "SignupForm": {
+  "kind": "screen",
+  "file": "specs/mockups/SignupForm.frame.html",
+  "targets": [
+   "lib/screens/signup/SignupForm.jsx"
+  ],
+  "liveRoute": "/signup",
+  "mapState": "other"
+ },
+ "SignupFound": {
+  "kind": "state",
+  "file": "specs/mockups/SignupFound.frame.html",
+  "targets": [
+   "lib/screens/signup/SignupFound.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "SignupQuestions": {
+  "kind": "screen",
+  "file": "specs/mockups/SignupQuestions.frame.html",
+  "targets": [
+   "lib/screens/home/SignupQuestions.jsx"
+  ],
+  "liveRoute": "/signup/questions",
+  "mapState": "other"
+ },
+ "SignupVerify": {
+  "kind": "screen-or-state",
+  "file": "specs/mockups/SignupVerify.frame.html",
+  "targets": [
+   "routes/signup + lib/screens/signup/*"
+  ],
+  "liveRoute": "/signup",
+  "mapState": "other"
+ },
+ "StateArchived": {
+  "kind": "shared-state",
+  "file": "specs/mockups/StateArchived.frame.html",
+  "targets": [
+   "lib/empty/ScreenState.svelte + shell banners"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "StateError": {
+  "kind": "state",
+  "file": "specs/mockups/StateError.frame.html",
+  "targets": [
+   "lib/screens/items/ServicesList.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "StateHomeLoading": {
+  "kind": "state",
+  "file": "specs/mockups/StateHomeLoading.frame.html",
+  "targets": [
+   "lib/screens/home/HomeLoading.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "StateListLoading": {
+  "kind": "state",
+  "file": "specs/mockups/StateListLoading.frame.html",
+  "targets": [
+   "lib/screens/items/ServicesList.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "StateNoPermission": {
+  "kind": "screen",
+  "file": "specs/mockups/StateNoPermission.frame.html",
+  "targets": [
+   "lib/screens/items/ServicesList.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "StateOffline": {
+  "kind": "shared-state",
+  "file": "specs/mockups/StateOffline.frame.html",
+  "targets": [
+   "lib/empty/ScreenState.svelte + shell banners"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "StateReadOnly": {
+  "kind": "shared-state",
+  "file": "specs/mockups/StateReadOnly.frame.html",
+  "targets": [
+   "lib/empty/ScreenState.svelte + shell banners"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "StateSaving": {
+  "kind": "shared-state",
+  "file": "specs/mockups/StateSaving.frame.html",
+  "targets": [
+   "lib/empty/ScreenState.svelte + shell banners"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "StripeApps": {
+  "kind": "config",
+  "file": "specs/mockups/StripeApps.frame.html",
+  "targets": [
+   "lib/money/StripeSurface.svelte (Stripe-hosted component config)"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "StripeBalanceReport": {
+  "kind": "screen",
+  "file": "specs/mockups/StripeBalanceReport.frame.html",
+  "targets": [
+   "lib/screens/reports/ReportAccountant.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "StripeBalances": {
+  "kind": "screen",
+  "file": "specs/mockups/StripeBalances.frame.html",
+  "targets": [
+   "lib/screens/money/MoneyBalances.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "StripeBankVerify": {
+  "kind": "config",
+  "file": "specs/mockups/StripeBankVerify.frame.html",
+  "targets": [
+   "lib/money/StripeSurface.svelte (Stripe-hosted component config)"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "StripeCapital": {
+  "kind": "config",
+  "file": "specs/mockups/StripeCapital.frame.html",
+  "targets": [
+   "lib/money/StripeSurface.svelte (Stripe-hosted component config)"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "StripeCheckout": {
+  "kind": "screen",
+  "file": "specs/mockups/StripeCheckout.frame.html",
+  "targets": [
+   "lib/screens/money/CheckoutAndElements.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "StripeDisputeDetail": {
+  "kind": "screen",
+  "file": "specs/mockups/StripeDisputeDetail.frame.html",
+  "targets": [
+   "lib/screens/money/DisputeDetail.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "StripeDisputes": {
+  "kind": "screen",
+  "file": "specs/mockups/StripeDisputes.frame.html",
+  "targets": [
+   "lib/screens/money/MoneyDisputes.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "StripeDocuments": {
+  "kind": "screen",
+  "file": "specs/mockups/StripeDocuments.frame.html",
+  "targets": [
+   "lib/screens/money/MoneyStatements.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "StripeElements": {
+  "kind": "screen",
+  "file": "specs/mockups/StripeElements.frame.html",
+  "targets": [
+   "lib/screens/money/CheckoutAndElements.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "StripeGlobalPayouts": {
+  "kind": "config",
+  "file": "specs/mockups/StripeGlobalPayouts.frame.html",
+  "targets": [
+   "lib/money/StripeSurface.svelte (Stripe-hosted component config)"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "StripeHardwareOrders": {
+  "kind": "screen",
+  "file": "specs/mockups/StripeHardwareOrders.frame.html",
+  "targets": [
+   "lib/screens/money/MoneyReaders.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "StripeHardwareShop": {
+  "kind": "screen",
+  "file": "specs/mockups/StripeHardwareShop.frame.html",
+  "targets": [
+   "lib/screens/money/MoneyReaders.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "StripeIdentity": {
+  "kind": "config",
+  "file": "specs/mockups/StripeIdentity.frame.html",
+  "targets": [
+   "lib/money/StripeSurface.svelte (Stripe-hosted component config)"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "StripeInstantPayout": {
+  "kind": "screen",
+  "file": "specs/mockups/StripeInstantPayout.frame.html",
+  "targets": [
+   "lib/screens/money/MoneyBalances.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "StripeLink": {
+  "kind": "config",
+  "file": "specs/mockups/StripeLink.frame.html",
+  "targets": [
+   "lib/money/StripeSurface.svelte (Stripe-hosted component config)"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "StripeNotification": {
+  "kind": "screen",
+  "file": "specs/mockups/StripeNotification.frame.html",
+  "targets": [
+   "lib/money/StripeNeedsBanner.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "StripeOnboarding": {
+  "kind": "screen",
+  "file": "specs/mockups/StripeOnboarding.frame.html",
+  "targets": [
+   "lib/screens/money/MoneyConnect.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "StripePaymentDetail": {
+  "kind": "screen",
+  "file": "specs/mockups/StripePaymentDetail.frame.html",
+  "targets": [
+   "lib/screens/money/MoneyPaymentRecord.jsx",
+   "lib/screens/money/MoneyPayments.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "StripePaymentMethods": {
+  "kind": "screen",
+  "file": "specs/mockups/StripePaymentMethods.frame.html",
+  "targets": [
+   "lib/screens/money/PaymentMethods.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "StripePaymentsList": {
+  "kind": "screen",
+  "file": "specs/mockups/StripePaymentsList.frame.html",
+  "targets": [
+   "lib/screens/money/MoneyPayments.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "StripePayoutDetail": {
+  "kind": "screen",
+  "file": "specs/mockups/StripePayoutDetail.frame.html",
+  "targets": [
+   "lib/screens/money/PayoutDetail.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "StripePayoutReconcile": {
+  "kind": "screen",
+  "file": "specs/mockups/StripePayoutReconcile.frame.html",
+  "targets": [
+   "lib/screens/money/PayoutDetail.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "StripePayoutsList": {
+  "kind": "screen",
+  "file": "specs/mockups/StripePayoutsList.frame.html",
+  "targets": [
+   "lib/screens/money/MoneyPayouts.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "StripeRadar": {
+  "kind": "config",
+  "file": "specs/mockups/StripeRadar.frame.html",
+  "targets": [
+   "lib/money/StripeSurface.svelte (Stripe-hosted component config)"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "StripeReportingChart": {
+  "kind": "config",
+  "file": "specs/mockups/StripeReportingChart.frame.html",
+  "targets": [
+   "lib/money/StripeSurface.svelte (Stripe-hosted component config)"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "StripeRevenueRecognition": {
+  "kind": "screen",
+  "file": "specs/mockups/StripeRevenueRecognition.frame.html",
+  "targets": [
+   "lib/screens/reports/ReportMoney.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "StripeSigma": {
+  "kind": "config",
+  "file": "specs/mockups/StripeSigma.frame.html",
+  "targets": [
+   "lib/money/StripeSurface.svelte (Stripe-hosted component config)"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "StripeTaxCodes": {
+  "kind": "config",
+  "file": "specs/mockups/StripeTaxCodes.frame.html",
+  "targets": [
+   "lib/money/StripeSurface.svelte (Stripe-hosted component config)"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "StripeTaxExport": {
+  "kind": "config",
+  "file": "specs/mockups/StripeTaxExport.frame.html",
+  "targets": [
+   "lib/money/StripeSurface.svelte (Stripe-hosted component config)"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "StripeTaxRegistrations": {
+  "kind": "config",
+  "file": "specs/mockups/StripeTaxRegistrations.frame.html",
+  "targets": [
+   "lib/money/StripeSurface.svelte (Stripe-hosted component config)"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "StripeTaxSettings": {
+  "kind": "config",
+  "file": "specs/mockups/StripeTaxSettings.frame.html",
+  "targets": [
+   "lib/money/StripeSurface.svelte (Stripe-hosted component config)"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "StripeTaxThreshold": {
+  "kind": "config",
+  "file": "specs/mockups/StripeTaxThreshold.frame.html",
+  "targets": [
+   "lib/money/StripeSurface.svelte (Stripe-hosted component config)"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "StripeUsageBilling": {
+  "kind": "config",
+  "file": "specs/mockups/StripeUsageBilling.frame.html",
+  "targets": [
+   "lib/money/StripeSurface.svelte (Stripe-hosted component config)"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "SubscribeAlready": {
+  "kind": "screen-or-state",
+  "file": "specs/mockups/SubscribeAlready.frame.html",
+  "targets": [
+   "routes/signup + lib/screens/signup/*"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "SubscribePage": {
+  "kind": "screen-or-state",
+  "file": "specs/mockups/SubscribePage.frame.html",
+  "targets": [
+   "routes/signup + lib/screens/signup/*"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "SubscribeReturn": {
+  "kind": "screen-or-state",
+  "file": "specs/mockups/SubscribeReturn.frame.html",
+  "targets": [
+   "routes/signup + lib/screens/signup/*"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "SubscriptionEditor": {
+  "kind": "screen",
+  "file": "specs/mockups/SubscriptionEditor.frame.html",
+  "targets": [
+   "lib/screens/money/SubscriptionEditor.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "TapToPaySetup": {
+  "kind": "state",
+  "file": "specs/mockups/TapToPaySetup.frame.html",
+  "targets": [
+   "lib/staff/StaffTapToPay.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "TasksMine": {
+  "kind": "screen",
+  "file": "specs/mockups/TasksMine.frame.html",
+  "targets": [
+   "lib/screens/tasks/TasksMine.jsx"
+  ],
+  "liveRoute": "/tasks/mine",
+  "mapState": "full"
+ },
+ "TasksTeam": {
+  "kind": "state",
+  "file": "specs/mockups/TasksTeam.frame.html",
+  "targets": [
+   "lib/screens/tasks/TasksTeam.jsx"
+  ],
+  "liveRoute": "/tasks/team",
+  "mapState": "full"
+ },
+ "TeamInvite": {
+  "kind": "screen",
+  "file": "specs/mockups/TeamInvite.frame.html",
+  "targets": [
+   "lib/screens/people/TeamInviteDrawer.jsx"
+  ],
+  "liveRoute": "/people/team/invites",
+  "mapState": "other"
+ },
+ "TeamList": {
+  "kind": "screen",
+  "file": "specs/mockups/TeamList.frame.html",
+  "targets": [
+   "lib/screens/people/TeamListScreen.jsx"
+  ],
+  "liveRoute": "/people/team",
+  "mapState": "full"
+ },
+ "TeamRemove": {
+  "kind": "screen",
+  "file": "specs/mockups/TeamRemove.frame.html",
+  "targets": [
+   "lib/screens/people/TeamRemoveScreen.jsx"
+  ],
+  "liveRoute": "/people/team",
+  "mapState": "other"
+ },
+ "TeamRoles": {
+  "kind": "screen",
+  "file": "specs/mockups/TeamRoles.frame.html",
+  "targets": [
+   "lib/screens/TeamRolesScreen.jsx"
+  ],
+  "liveRoute": "/settings/roles/presets",
+  "mapState": "full"
+ },
+ "TeamRolesAdvanced": {
+  "kind": "screen",
+  "file": "specs/mockups/TeamRolesAdvanced.frame.html",
+  "targets": [
+   "lib/screens/RolesScreen.jsx"
+  ],
+  "liveRoute": "/settings/roles",
+  "mapState": "full"
+ },
+ "TeamSeeAs": {
+  "kind": "screen",
+  "file": "specs/mockups/TeamSeeAs.frame.html",
+  "targets": [
+   "lib/screens/people/TeamListScreen.jsx",
+   "lib/screens/people/TeamSeeAs.jsx",
+   "lib/shell/ViewingAsBanner.jsx"
+  ],
+  "liveRoute": "/home",
+  "mapState": "other"
+ },
+ "TeamSolo": {
+  "kind": "screen",
+  "file": "specs/mockups/TeamSolo.frame.html",
+  "targets": [
+   "lib/screens/people/TeamListScreen.jsx"
+  ],
+  "liveRoute": "/people/team",
+  "mapState": "other"
+ },
+ "TemplateEditor": {
+  "kind": "screen",
+  "file": "specs/mockups/TemplateEditor.frame.html",
+  "targets": [
+   "lib/screens/run/TemplateEditor.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "TemplateEditorDiscard": {
+  "kind": "state",
+  "file": "specs/mockups/TemplateEditorDiscard.frame.html",
+  "targets": [
+   "lib/screens/run/TemplateEditor.svelte + lib/components/editor/DiscardGuard.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "TemplateList": {
+  "kind": "screen",
+  "file": "specs/mockups/TemplateList.frame.html",
+  "targets": [
+   "lib/screens/run/TemplateList.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "TemplateListFiltered": {
+  "kind": "state",
+  "file": "specs/mockups/TemplateListFiltered.frame.html",
+  "targets": [
+   "lib/screens/run/TemplateList.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "TermAppClientHome": {
+  "kind": "state",
+  "file": "specs/mockups/TermAppClientHome.frame.html",
+  "targets": [
+   "TERMINOLOGY VARIANT of the base frame"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "TermBookingSettings": {
+  "kind": "state",
+  "file": "specs/mockups/TermBookingSettings.frame.html",
+  "targets": [
+   "TERMINOLOGY VARIANT of the base frame"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "TermCalendarWeek": {
+  "kind": "state",
+  "file": "specs/mockups/TermCalendarWeek.frame.html",
+  "targets": [
+   "TERMINOLOGY VARIANT of the base frame"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "TermHomeOwner": {
+  "kind": "state",
+  "file": "specs/mockups/TermHomeOwner.frame.html",
+  "targets": [
+   "TERMINOLOGY VARIANT of the base frame"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "TermInvoiceEditor": {
+  "kind": "state",
+  "file": "specs/mockups/TermInvoiceEditor.frame.html",
+  "targets": [
+   "TERMINOLOGY VARIANT of the base frame"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "TermPeopleList": {
+  "kind": "state",
+  "file": "specs/mockups/TermPeopleList.frame.html",
+  "targets": [
+   "TERMINOLOGY VARIANT of the base frame"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "TermServiceEditor": {
+  "kind": "screen",
+  "file": "specs/mockups/TermServiceEditor.frame.html",
+  "targets": [
+   "lib/screens/items/ServiceEditor.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "TermServicesEmpty": {
+  "kind": "state",
+  "file": "specs/mockups/TermServicesEmpty.frame.html",
+  "targets": [
+   "TERMINOLOGY VARIANT of the base frame"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "TermServicesList": {
+  "kind": "screen",
+  "file": "specs/mockups/TermServicesList.frame.html",
+  "targets": [
+   "lib/screens/items/ServicesList.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "TermSessionsList": {
+  "kind": "state",
+  "file": "specs/mockups/TermSessionsList.frame.html",
+  "targets": [
+   "TERMINOLOGY VARIANT of the base frame"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "VirtualTerminal": {
+  "kind": "screen",
+  "file": "specs/mockups/VirtualTerminal.frame.html",
+  "targets": [
+   "lib/screens/money/VirtualTerminal.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ },
+ "Waitlist": {
+  "kind": "screen",
+  "file": "specs/mockups/Waitlist.frame.html",
+  "targets": [
+   "lib/screens/engagements/WaitlistScreen.jsx"
+  ],
+  "liveRoute": null,
+  "mapState": null
+ }
+}

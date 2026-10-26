@@ -1,0 +1,76 @@
+# Docustay, self-hosted. `./init.sh` once, then `docker compose up -d`, then open http://localhost:8080/setup.
+# Six containers: your database, your file store (signed PDFs), a PDF converter, the app (the API), its worker, and the web app (every screen; the only one that is reachable from outside). Nothing of ours is inside. The worker sends one anonymous usage ping a day (a random install id, the version, five counts — never a document, name or email); turn it off with DOCUSTAY_TELEMETRY=off. With DOCUSTAY_LICENSE_KEY set it also checks your Pro licence.
+name: docustay
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: docustay
+      POSTGRES_PASSWORD: ${KEYSTONE_DB_PASSWORD:?run ./init.sh first}
+      POSTGRES_DB: docustay
+    volumes: [dbdata:/var/lib/postgresql/data]
+    healthcheck: { test: ["CMD-SHELL", "pg_isready -U docustay -d docustay"], interval: 5s, timeout: 5s, retries: 30, start_period: 60s }   # a first start creates the database; on a busy machine that can take over a minute
+
+  storage:
+    build: ../infra/seaweedfs
+    restart: unless-stopped
+    environment:
+      KEYSTONE_S3_ACCESS_KEY_ID: ${KEYSTONE_S3_ACCESS_KEY_ID:?run ./init.sh first}
+      KEYSTONE_S3_SECRET_ACCESS_KEY: ${KEYSTONE_S3_SECRET_ACCESS_KEY:?run ./init.sh first}
+      KEYSTONE_S3_BUCKET: docustay
+    volumes: [filedata:/data]
+
+  gotenberg:
+    image: gotenberg/gotenberg:8
+    restart: unless-stopped
+
+  app:
+    image: ${DOCUSTAY_APP_IMAGE:-docustay-app:local}   # the worker runs this same image, so it is built once. Prebuilt: DOCUSTAY_APP_IMAGE=ghcr.io/docustay/docustay-app:latest in .env, then `docker compose pull app worker web && docker compose up -d` (only the small file store is built here; R13 OI-004: telling compose not to build failed, because the store has no published image)
+    build: { context: .., dockerfile: Dockerfile }
+    restart: unless-stopped
+    command: ["node", "docustay/entrypoint.mjs", "app"]
+    depends_on: { db: { condition: service_healthy }, storage: { condition: service_started } }
+    env_file: .env
+    environment: &appenv
+      KEYSTONE_DB_SUPERUSER_URL: postgresql://docustay:${KEYSTONE_DB_PASSWORD}@db:5432/docustay
+      KEYSTONE_DB_SSL: "off"
+      KEYSTONE_S3_ENDPOINT: http://storage:8333
+      KEYSTONE_S3_BUCKET: docustay
+      KEYSTONE_GOTENBERG_URL: http://gotenberg:3000
+      PORT: "8080"
+      # the address people open Docustay at: the start of every signing link and reset link in an email. Set KEYSTONE_PUBLIC_URL in .env when it is not this machine.
+      KEYSTONE_PUBLIC_URL: ${KEYSTONE_PUBLIC_URL:-http://localhost:${DOCUSTAY_PORT:-8080}}
+      KEYSTONE_DOCUSTAY_APP_URL: ${KEYSTONE_PUBLIC_URL:-http://localhost:${DOCUSTAY_PORT:-8080}}
+      KEYSTONE_DOCUSTAY_SIGN_URL: ${KEYSTONE_PUBLIC_URL:-http://localhost:${DOCUSTAY_PORT:-8080}}
+      # the app is reachable only through the web container, which writes the caller's address into X-Forwarded-For itself (never forwarding a client's own): trust that one hop, or every visitor shares one rate-limit bucket and one audit address
+      KEYSTONE_TRUSTED_PROXY_HOPS: "1"
+    volumes: [appdata:/data]
+
+  web:
+    image: ${DOCUSTAY_WEB_IMAGE:-docustay-web:local}   # prebuilt: DOCUSTAY_WEB_IMAGE=ghcr.io/docustay/docustay-web:latest
+    build: { context: .., dockerfile: docustay/web/Dockerfile }
+    restart: unless-stopped
+    depends_on: { app: { condition: service_healthy } }
+    environment:
+      DOCUSTAY_API_URL: http://app:8080
+      DOCUSTAY_SELF_HOST: "1"
+      KEYSTONE_PUBLIC_URL: ${KEYSTONE_PUBLIC_URL:-http://localhost:${DOCUSTAY_PORT:-8080}}
+      PORT: "3000"
+      # who is calling: on its own the web app uses the address that connected to it. Behind a reverse proxy that is the proxy, so every signer's address in the audit trail and on the certificate would be the proxy's.
+      # Set DOCUSTAY_CLIENT_IP_HEADER=X-Forwarded-For in .env when (and only when) a proxy you control is in front; DOCUSTAY_PROXY_COUNT is how many (default 1). See docs/self-host-reverse-proxy.md.
+      ADDRESS_HEADER: ${DOCUSTAY_CLIENT_IP_HEADER:-}
+      XFF_DEPTH: ${DOCUSTAY_PROXY_COUNT:-1}
+    ports: ["${DOCUSTAY_PORT:-8080}:3000"]
+
+  worker:
+    image: ${DOCUSTAY_APP_IMAGE:-docustay-app:local}
+    restart: unless-stopped
+    command: ["node", "docustay/entrypoint.mjs", "worker"]
+    healthcheck: { disable: true }          # the image checks the API port; the worker has none
+    depends_on: { app: { condition: service_healthy } }
+    env_file: .env
+    environment: *appenv
+    volumes: [appdata:/data]
+
+volumes: { dbdata: {}, filedata: {}, appdata: {} }

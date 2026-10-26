@@ -1,0 +1,44 @@
+{
+ "_note": "written by scripts/publish-public.mjs after each publish: package folder -> the version on the registry and the commit it was built from. A folder that changed since its commit must carry a new version before the next publish.",
+ "js": {
+  "name": "@docustay2026/sdk",
+  "version": "0.2.2",
+  "commit": "d4a6fe9530184adee1a6456247e912c1d087eae5"
+ },
+ "embed": {
+  "name": "@docustay2026/embed",
+  "version": "0.2.2",
+  "commit": "d4a6fe9530184adee1a6456247e912c1d087eae5"
+ },
+ "react": {
+  "name": "@docustay2026/react",
+  "version": "0.2.2",
+  "commit": "d4a6fe9530184adee1a6456247e912c1d087eae5"
+ },
+ "vue": {
+  "name": "@docustay2026/vue",
+  "version": "0.2.2",
+  "commit": "d4a6fe9530184adee1a6456247e912c1d087eae5"
+ },
+ "angular": {
+  "name": "@docustay2026/angular",
+  "version": "0.2.2",
+  "commit": "d4a6fe9530184adee1a6456247e912c1d087eae5"
+ },
+ "mcp": {
+  "name": "@docustay2026/mcp",
+  "version": "0.2.2",
+  "commit": "d4a6fe9530184adee1a6456247e912c1d087eae5",
+  "note": "0.2.2 was published on 23 Oct; npm cannot overwrite it. Since then only the package description and the sdk dependency range changed (metadata). Kept at 0.2.2 so every package reads 0.2.2; the registry keeps the older description text."
+ },
+ "cli": {
+  "name": "docustay",
+  "version": "0.2.2",
+  "commit": "d4a6fe9530184adee1a6456247e912c1d087eae5"
+ },
+ "python": {
+  "name": "docustay (PyPI)",
+  "version": "0.2.2",
+  "commit": "d4a6fe9530184adee1a6456247e912c1d087eae5"
+ }
+}

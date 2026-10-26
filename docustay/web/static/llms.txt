@@ -1,0 +1,211 @@
+# Docustay
+
+> The e-signature API you own. One flat price for every user. Open source and self-hostable. Pro is $35 a month for your whole team: no per-seat fees, unlimited people and documents. Signers can pay while they sign, straight into your own Stripe account, and Pro adds no fee. Docustay sends documents for signature, signers need no account, and the signed PDF is sealed with a certificate of completion that lists who signed and when. REST API, SDKs, embedded signing, webhooks and an MCP server, with a free plan and a self-hosted edition.
+
+This site is in English. Every page also exists as Markdown: add .md to its address (the home page is https://docustay.app/index.md). The plain facts (plans, prices, limits, licence, security, hosting) are in https://docustay.app/about.md.
+
+## Features
+
+What Docustay does, step by step: how it works, Scribe, payments, proof, embedded signing, test mode, agent-ready and your brand.
+
+- [E-signature features from file to sealed copy](https://docustay.app/features.md): E-signature features from file to sealed copy: Scribe, templates, signing on any device, payments and proof, in the app and from your API.
+- [How e-signatures work: from file to sealed copy](https://docustay.app/features/how-it-works.md): How e-signatures work in Docustay: create a document, send it, sign on any device, get paid and keep proof anyone can check.
+- [Scribe: the AI document builder](https://docustay.app/features/scribe.md): Scribe is an AI document builder: it asks a few clickable questions, then builds the whole document with every field placed. It drafts; a person sends.
+- [Payments inside e-signature, into your Stripe | Docustay](https://docustay.app/features/payments.md): Payments inside e-signature: the signer pays as part of signing, straight into your own Stripe account. Docustay never holds the money.
+- [Certificate of completion for every signed PDF | Docustay](https://docustay.app/features/proof.md): Every finished document is sealed with a certificate of completion that lists who signed and when. Anyone can verify a copy without an account.
+- [Embedded e-signature for your app | Docustay](https://docustay.app/features/embedded-signing.md): Embedded e-signature: put the signer, the document builder and Scribe inside your own product as components, on the websites you allow.
+- [E-signature test mode: a built-in sandbox | Docustay](https://docustay.app/features/test-mode.md): E-signature test mode: test keys, watermarked documents and email only to you. Build the whole flow before a real person gets anything.
+- [MCP server e-signature for AI agents | Docustay](https://docustay.app/features/agent-ready.md): An MCP server e-signature tool and a Claude plugin let an assistant draft documents. A person approves every send, and a draft-only key enforces it.
+- [Your logo and colours on every document | Docustay](https://docustay.app/features/white-label.md): Put your logo, your colour and a welcome note on the signing page, and your name on every email, on every plan. Need a fully white-labelled product? That is the commercial licence or self-hosting.
+
+## Use cases
+
+How people use it: contracts, waivers, leases, HR, schools and more.
+
+- [E-signature use cases](https://docustay.app/use-cases.md): See how people use Docustay for contracts, NDAs, waivers, HR paperwork, leases, school paperwork and client agreements. Each starts from a real template.
+- [Contracts that get signed](https://docustay.app/use-cases/contracts.md): Send a service agreement, contractor agreement, vendor agreement or statement of work. Everyone signs from a link and you keep a sealed copy with its certificate.
+- [NDAs signed in minutes](https://docustay.app/use-cases/ndas.md): Send a mutual or one-way NDA, and a non-solicitation agreement, for signature. Both sides sign from a link and each gets a sealed copy with a certificate.
+- [Waivers and consent](https://docustay.app/use-cases/waivers-and-consent.md): Send liability waivers, photo and media releases, permission slips and activity consent paperwork for signature. Each signer gets a sealed copy and you keep the record.
+- [HR paperwork and onboarding](https://docustay.app/use-cases/hr-and-onboarding.md): Send an offer letter, new hire paperwork and a non-solicitation agreement. Each person signs from a link, and you keep sealed copies with certificates.
+- [Leases and rental applications](https://docustay.app/use-cases/real-estate.md): Send a rental application, a lease addendum and a deposit agreement. Tenants sign on a phone, landlords are told when it is their turn, and you keep sealed copies.
+- [Permission slips and school forms](https://docustay.app/use-cases/education.md): Send permission slips, photo releases and volunteer agreements. Parents sign from a phone, and you have a sealed record for every student.
+- [Statements of work and client agreements](https://docustay.app/use-cases/agencies.md): Send a statement of work, a change order, a service agreement and a deposit agreement. Clients sign from a link and can pay inside the document.
+
+## Templates
+
+Free, ready-to-send templates, each with its roles, fields and what to check before sending.
+
+- [NDA template](https://docustay.app/templates/nda-template.md): A free mutual NDA template in plain words. Name both parties, send it, and each side signs from a link and keeps a sealed copy with a certificate.
+- [Offer letter template](https://docustay.app/templates/offer-letter-template.md): A free offer letter template with the role, pay, start date and an acceptance line. The candidate signs from a phone and you keep the sealed copy.
+- [Independent contractor agreement template](https://docustay.app/templates/independent-contractor-agreement-template.md): A free independent contractor agreement template. Cover the work, the pay and who owns what is made, then send it for both signatures.
+- [Statement of work template](https://docustay.app/templates/statement-of-work-template.md): A free statement of work template. List the deliverables, the dates and the price, then send it to the client to sign inside one document.
+- [Service agreement template](https://docustay.app/templates/service-agreement-template.md): A free service agreement template for a provider and a client. Set the scope, the fees and the term, and send it for both signatures from a link.
+- [Non-solicitation agreement](https://docustay.app/templates/non-solicitation-agreement.md): A free non-solicitation agreement. Each side promises not to recruit the other's people or clients for a set time, and both sign from a link.
+- [Photo release form](https://docustay.app/templates/photo-release-form.md): A free photo release form. Ask permission to use pictures of a person, collect it on any phone, and keep a sealed copy of each yes.
+- [Permission slip template](https://docustay.app/templates/permission-slip-template.md): A free permission slip template for trips and activities. Send it to every family from a list; each parent signs on a phone and you see who is missing.
+- [Liability waiver template](https://docustay.app/templates/liability-waiver-template.md): A free liability waiver template for events and activities. Send it to each person, who signs on their own phone, and you keep a record of every one.
+- [New hire paperwork](https://docustay.app/templates/new-hire-paperwork.md): A free new hire paperwork pack. Send the first-day forms in one document and the new person fills in and signs everything from a phone.
+- [Change order template](https://docustay.app/templates/change-order-template.md): A free change order template. Record a change to scope, price or dates, and get it signed before the extra work begins.
+- [Media release form](https://docustay.app/templates/media-release-form.md): A free media release form for minors. A parent or guardian grants permission to use a child's image or name, and you keep a sealed copy.
+- [Rental application form](https://docustay.app/templates/rental-application-form.md): A free rental application form. Send it to the applicant, who fills in their details and signs from a phone, and each application is saved on its own.
+- [Lease addendum template](https://docustay.app/templates/lease-addendum-template.md): A free lease addendum template. Record a change to an existing lease, the tenant signs first and the landlord is told when it is their turn.
+- [Vendor agreement template](https://docustay.app/templates/vendor-agreement-template.md): A free vendor agreement template. Set what a supplier delivers, what you pay and when, and send it for both signatures.
+- [Payment plan agreement template](https://docustay.app/templates/payment-plan-agreement-template.md): A free payment plan agreement template. Write the amounts and the dates into the agreement, and collect a deposit as the document is signed with one payment field.
+- [Mutual release agreement](https://docustay.app/templates/mutual-release-agreement.md): A free mutual release agreement. Both parties release each other from named claims, and both sign from a link.
+- [Volunteer agreement template](https://docustay.app/templates/volunteer-agreement-template.md): A free volunteer agreement template. State the role, the rules and the limits for someone who helps without pay, and sign it from a link.
+- [Referral agreement template](https://docustay.app/templates/referral-agreement-template.md): A free referral agreement template. Set what counts as a referral and what the referrer is paid, and send it for both signatures.
+- [Deposit agreement](https://docustay.app/templates/deposit-agreement.md): A free deposit agreement. State the amount, what it covers and when it is returned, and the payer can pay inside the document as they sign.
+- [Equipment loan agreement](https://docustay.app/templates/equipment-loan-agreement.md): A free equipment loan agreement. List what is lent, the condition and the return date, and both sides sign from a link.
+- [Invoice approval form](https://docustay.app/templates/invoice-approval-form.md): A free invoice approval form. A manager approves an invoice before it is paid, and the approval is recorded with its time.
+- [Contact and inquiry form template, free](https://docustay.app/templates/contact-and-inquiry.md): A free contact and inquiry form template. A short contact form: who is asking, how to reply, what it is about and the message. Send it to the people who need to fill it in; each signs their own copy.
+- [Event registration form template, free](https://docustay.app/templates/event-registration.md): A free event registration form template. Register for an event: attendee details, sessions or tickets, dietary and access needs, and agreement to the event rules. Send it to the people who need to fill it in; each signs their own copy.
+- [RSVP form template, free](https://docustay.app/templates/rsvp.md): A free rsvp form template. Reply to an invitation: attending or not, how many, meal choice and a note for the host. Send it to the people who need to fill it in; each signs their own copy.
+- [Volunteer application form template, free](https://docustay.app/templates/volunteer-application.md): A free volunteer application form template. Apply to volunteer: interests, availability, experience, references and agreement to the volunteer code. Send it to the people who need to fill it in; each signs their own copy.
+- [Job application form template, free](https://docustay.app/templates/job-application.md): A free job application form template. Apply for a job: contact details, the role, right to work, experience, education, availability and references. Send it to the people who need to fill it in; each signs their own copy.
+- [New hire information form template, free](https://docustay.app/templates/new-hire-information.md): A free new hire information form template. A new team member's contact details, preferred name, emergency contact, uniform and equipment needs and first-day questions. Send it to the people who need to fill it in; each signs their own copy.
+- [Emergency contact form template, free](https://docustay.app/templates/emergency-contact.md): A free emergency contact form template. Who to call in an emergency: two contacts, how they are related and the best way to reach them. Send it to the people who need to fill it in; each signs their own copy.
+- [Customer feedback survey form template, free](https://docustay.app/templates/customer-feedback-survey.md): A free customer feedback survey form template. Rate the experience, say what went well and what did not, and choose whether to be contacted. Send it to the people who need to fill it in; each signs their own copy.
+- [Order form template, free](https://docustay.app/templates/order-form.md): A free order form template. Place an order: items and quantities, delivery or collection, and agreement to the terms. No payment details are collected. Send it to the people who need to fill it in; each signs their own copy.
+- [Change of contact details form template, free](https://docustay.app/templates/change-of-contact-details.md): A free change of contact details form template. Update a name, email, phone or address, with the date the change takes effect. Send it to the people who need to fill it in; each signs their own copy.
+- [Appointment request form template, free](https://docustay.app/templates/appointment-request.md): A free appointment request form template. Request an appointment: the service, preferred dates and times, how to reach you and anything to prepare. Send it to the people who need to fill it in; each signs their own copy.
+- [Room or facility booking request form template, free](https://docustay.app/templates/facility-booking-request.md): A free room or facility booking request form template. Request a room or facility: date and times, the purpose, the number of people, the layout and equipment, and agreement to the house rules. Send it to the people who need to fill it in; each signs their own copy.
+- [Suggestions and ideas form template, free](https://docustay.app/templates/suggestions-and-ideas.md): A free suggestions and ideas form template. Share an idea: what it is, the problem it solves, who it helps and whether you would like to help make it happen. Send it to the people who need to fill it in; each signs their own copy.
+- [Vehicle inspection checklist form template, free](https://docustay.app/templates/vehicle-inspection-checklist.md): A free vehicle inspection checklist form template. A pre- or post-use check of a vehicle: mileage, fuel, lights, tires, fluids, damage, with photos and a supervisor's sign-off. Send it to the people who need to fill it in; each signs their own copy.
+- [Incident report form template, free](https://docustay.app/templates/incident-report.md): A free incident report form template. What happened, when and where, who was involved, any injury or damage, what was done straight away, with witnesses and photos, reviewed by a supervisor. Send it to the people who need to fill it in; each signs their own copy.
+- [Time-off request form template, free](https://docustay.app/templates/time-off-request.md): A free time-off request form template. Request time off: type of leave, dates, hours, cover arrangements, approved by a manager. Send it to the people who need to fill it in; each signs their own copy.
+- [Expense reimbursement form template, free](https://docustay.app/templates/expense-reimbursement.md): A free expense reimbursement form template. Claim back expenses: each item, date, amount and purpose, with receipts attached, approved by a manager. No bank details are collected. Send it to the people who need to fill it in; each signs their own copy.
+- [Purchase request form template, free](https://docustay.app/templates/purchase-request.md): A free purchase request form template. Ask to buy something: what, from whom, why, how much and by when, with a quote attached and an approver's signature. Send it to the people who need to fill it in; each signs their own copy.
+- [Vendor information form template, free](https://docustay.app/templates/vendor-information.md): A free vendor information form template. A supplier's business name, contacts, what it supplies, insurance and certifications, with documents attached. No bank or tax numbers are collected. Send it to the people who need to fill it in; each signs their own copy.
+- [Membership application form template, free](https://docustay.app/templates/membership-application.md): A free membership application form template. Apply to join: contact details, membership type, interests, how you heard about us and agreement to the rules, approved by the membership secretary. Send it to the people who need to fill it in; each signs their own copy.
+- [Donation pledge form template, free](https://docustay.app/templates/donation-pledge.md): A free donation pledge form template. Pledge a gift: the amount, how often, when, how to be thanked and whether the gift may be named. No card or bank details are collected. Send it to the people who need to fill it in; each signs their own copy.
+- [Service request or work order form template, free](https://docustay.app/templates/service-request-work-order.md): A free service request or work order form template. Request work: what needs doing, where, how urgent, access arrangements, photos, and the technician's sign-off on completion. Send it to the people who need to fill it in; each signs their own copy.
+- [Return and refund request form template, free](https://docustay.app/templates/return-and-refund-request.md): A free return and refund request form template. Ask to return an item: the order, the item, the reason, the outcome wanted and photos, approved by the seller. No card details are collected. Send it to the people who need to fill it in; each signs their own copy.
+- [Maintenance request form template, free](https://docustay.app/templates/maintenance-request.md): A free maintenance request form template. Report a repair: what and where, how urgent, permission to enter, photos, and sign-off when fixed. Send it to the people who need to fill it in; each signs their own copy.
+- [Move-in and move-out condition checklist form template, free](https://docustay.app/templates/move-in-move-out-checklist.md): A free move-in and move-out condition checklist form template. Room-by-room condition at move-in or move-out, meter readings, keys handed over and photos, signed by the occupant and the property manager. Send it to the people who need to fill it in; each signs their own copy.
+- [Class or course registration form template, free](https://docustay.app/templates/class-or-course-registration.md): A free class or course registration form template. Enroll in a class: the course and session, experience level, learning needs, emergency contact and the terms of the course. Send it to the people who need to fill it in; each signs their own copy.
+- [Reference check form template, free](https://docustay.app/templates/reference-check.md): A free reference check form template. A referee confirms how they know the candidate, the dates, the role, and gives an honest view of strengths, areas to develop and suitability. Send it to the people who need to fill it in; each signs their own copy.
+- [Exit interview form template, free](https://docustay.app/templates/exit-interview.md): A free exit interview form template. A leaving team member's reasons, what worked, what could be better, and whether they would return, kept confidential. Send it to the people who need to fill it in; each signs their own copy.
+- [Visitor sign-in form template, free](https://docustay.app/templates/visitor-sign-in.md): A free visitor sign-in form template. A visitor's name, organization, who they are seeing, arrival time, vehicle and agreement to the site rules. Send it to the people who need to fill it in; each signs their own copy.
+- [Policy acknowledgement form template, free](https://docustay.app/templates/policy-acknowledgement.md): A free policy acknowledgement form template. Confirm you have read a named policy and version, understood it, had the chance to ask questions and will follow it. Send it to the people who need to fill it in; each signs their own copy.
+- [Free document templates](https://docustay.app/free-templates.md): __TEMPLATES__ free templates: contracts, NDAs, leases, waivers, HR and school forms, requests and registrations. Open the real pages, change anything, send in a minute.
+
+## Developers
+
+The API, SDKs, command line, webhooks, embedded signing, test mode and AI agent tools.
+
+- [E-signature API you can own](https://docustay.app/developers.md): A REST API, SDKs, signed webhooks and an embeddable signer, with test mode on from the first call. Open source under AGPL-3.0. Free to build; Pro is one flat price to ship.
+- [E-signature REST API](https://docustay.app/developers/api.md): POST /api/v1/documents/send with a template and a party. Bearer keys, scopes, Idempotency-Key on every create, typed errors and a 600 a minute limit per key.
+- [E-signature SDKs](https://docustay.app/developers/sdks.md): Clients for JavaScript, TypeScript and Python add idempotency keys, retries, typed errors and webhook verification. Built and tested; install from npm and PyPI. Go, PHP and C# clients are generated from the OpenAPI file.
+- [E-signature webhooks](https://docustay.app/developers/webhooks.md): Every document event, from sent and opened to signed, completed, declined and voided, signed with the Standard Webhooks headers. Verify the raw body, ignore repeats by webhook-id, replay from the delivery log.
+- [Practice with a test key](https://docustay.app/developers/test-mode.md): Send with a dsk_test_ key and the document is emailed only to you, watermarked TEST, and left out of usage and billing. Practise without sending anything real.
+- [E-signature command line](https://docustay.app/developers/cli.md): Sign in, send a test document, forward real signed webhooks to localhost, verify a PDF and read your logs, all from the command line. MIT licensed.
+- [MCP server for e-signatures](https://docustay.app/developers/agents.md): A hosted connector and a local MCP server let an assistant draft documents from templates and plays. It cannot send: a person approves each send. Draft-only keys last 90 days.
+- [Put the signer in your own page](https://docustay.app/developers/embedding.md): Show the signing form inside your own page with the docustay-sign element. Sessions last one hour, origins are allow-listed, and your key stays on your server.
+- [API keys and scopes](https://docustay.app/developers/keys-and-security.md): Keys carry scopes, can expire, can be limited to addresses and are shown once. Test keys act on test data only. Every use is in the audit log with the key's name.
+- [Template library API for documents](https://docustay.app/developers/plays.md): List the 54 built-in templates, draft from one or customize it, and manage skills and playbooks over the API. Built-in templates are free; your own Plays and Playbooks are on Pro.
+
+## Sign from code
+
+A short, tested program for sending a document for signature in each language.
+
+- [Sign documents from your code](https://docustay.app/sign-pdf.md): Send a document for signature from JavaScript, TypeScript, Python, Go, PHP or C#: a short program for each, run against Docustay with a test key.
+- [Send a document for signature from JavaScript](https://docustay.app/sign-pdf/javascript.md): Send a document for signature from JavaScript, with a program that was run against Docustay with a test key.
+- [Send a document for signature from TypeScript](https://docustay.app/sign-pdf/typescript.md): Send a document for signature from TypeScript, with a program that was run against Docustay with a test key.
+- [Send a document for signature from Python](https://docustay.app/sign-pdf/python.md): Send a document for signature from Python, with a program that was run against Docustay with a test key.
+- [Send a document for signature from Go](https://docustay.app/sign-pdf/go.md): Send a document for signature from Go, with a program that was run against Docustay with a test key.
+- [Send a document for signature from PHP](https://docustay.app/sign-pdf/php.md): Send a document for signature from PHP, with a program that was run against Docustay with a test key.
+- [Send a document for signature from C#](https://docustay.app/sign-pdf/csharp.md): Send a document for signature from C#, with a program that was run against Docustay with a test key.
+
+## Documentation
+
+The developer documentation: quickstart, authentication, webhooks, embedding, self-hosting and the full API reference.
+
+- [Docustay developer documentation](https://docustay.app/docs/index.md): Send documents for signature from your own software: REST API, SDKs, embedded signing, webhooks, an MCP server and agent skills.
+- [Quickstart](https://docustay.app/docs/quickstart.md): Send a document for signature and follow it, with curl, JavaScript or Python, in about ten minutes.
+- [Authentication](https://docustay.app/docs/authentication.md): API keys for the Docustay API: the scopes, expiry and address allowlists, test keys that send nothing real, and how to keep a key safe.
+- [Templates and text tags](https://docustay.app/docs/templates-and-text-tags.md): Make a template from HTML or from a PDF file by writing text tags where fields go.
+- [Embedded signing](https://docustay.app/docs/embedding.md): Show a Docustay signing form inside your own website or app, with a web component and React, Vue and Angular wrappers.
+- [Field detection](https://docustay.app/docs/field-detection.md): Press Find fields on a PDF and have the signature, date, initials, text and tick-box fields found for you, with the right people on each.
+- [Documents from words and people](https://docustay.app/docs/documents-from-words.md): Make a document from written words and the people who sign it, answer a template's questions, let an assistant draft or change it, collect a payment at signing, and send it, all from the API, the SDKs or MCP.
+- [Webhooks](https://docustay.app/docs/webhooks.md): Get a signed HTTP call when a document is sent, viewed, signed, declined or expires, and verify it.
+- [Test mode](https://docustay.app/docs/test-mode.md): Practice runs that email only you, carry a TEST watermark and are never counted or billed.
+- [Errors, retries and limits](https://docustay.app/docs/errors-and-limits.md): How the Docustay API reports errors, how idempotency keys make retries safe, the rate limit for each key, and the upload size limits for each plan.
+- [Email setup](https://docustay.app/docs/email-setup.md): How Docustay email is sent on the hosted service, and, for a self-hosted install, how to make mail from your own domain arrive: SPF, DKIM and DMARC records, how to test, and the settings.
+- [SDKs](https://docustay.app/docs/sdks.md): Official clients for JavaScript/TypeScript and Python, and generated clients for Go, PHP and C#.
+- [MCP server and agent skills](https://docustay.app/docs/mcp-and-skills.md): Let an AI assistant send documents, follow them and save signed copies, with previews and your own key.
+- [Connect ChatGPT, Claude or any assistant](https://docustay.app/docs/connector.md): A hosted connector with sign-in: an assistant works on drafts in your workspace and a person approves every send.
+- [Licensing](https://docustay.app/docs/licensing.md): Which licence covers which part of Docustay, what the AGPL-3.0 asks of you, which pieces are MIT, and when you need a commercial licence.
+- [API reference](https://docustay.app/docs/api-reference.md): Every operation of the Docustay API, generated from the OpenAPI file.
+- [Scribe in your own app](https://docustay.app/docs/scribe-embed.md): Show Scribe, the drafting assistant, inside your own page with a draft-only session.
+- [Email API](https://docustay.app/docs/email-api.md): Control the email of a document from your code, read the email log and get a webhook when a message is delivered or bounces.
+- [Settings reference](https://docustay.app/docs/settings-reference.md): Every setting a self-hosted Docustay reads, with its default and whether it is required.
+- [Upgrade a self-hosted install](https://docustay.app/docs/self-host-upgrade.md): How to move a self-hosted Docustay to a newer version safely, check that it worked, and go back if it did not.
+- [Back up and restore](https://docustay.app/docs/self-host-backup.md): What to back up on a self-hosted Docustay, a script that does it, and how to restore it on a new machine.
+- [Harden a self-hosted install](https://docustay.app/docs/self-host-hardening.md): A checklist for running Docustay on your own servers when the documents are sensitive. What to switch on, what to keep private, and what to check.
+- [Put Docustay behind your own address](https://docustay.app/docs/self-host-reverse-proxy.md): Serve a self-hosted Docustay on your own domain with HTTPS, using Caddy, nginx or Traefik, and set the address that goes into emails.
+- [Pro licence keys](https://docustay.app/docs/self-host-licence.md): How a self-hosted Docustay Pro licence works from purchase to renewal, where the key goes, and what happens when it ends.
+- ["Tutorial: e-signatures in a Next.js app"](https://docustay.app/docs/tutorial-nextjs.md): Send a document from a Next.js route, show the signing form inside your page, and check the webhook that says it was signed.
+- ["Tutorial: send a document from Python"](https://docustay.app/docs/tutorial-python.md): Send a document from Python, show the signing form on your own page, and verify the webhook, using the Docustay SDK and the standard library.
+- ["Tutorial: let an AI agent draft contracts, with a person approving"](https://docustay.app/docs/tutorial-agent.md): Give an AI agent a draft-only key so it can prepare documents but cannot send one until a person approves it in the app.
+- [Single sign-on with OpenID Connect](https://docustay.app/docs/self-host-sso.md): Let people sign in to a self-hosted Docustay with your own identity provider, such as Keycloak, Authentik, Entra or Okta.
+- [Search and payments](https://docustay.app/docs/payments-and-playbooks.md): Search the workspace, list the payments taken while signing, and refund them in full or in part.
+- [The template library](https://docustay.app/docs/template-library.md): The 54 built-in templates, how to send from one or customize it, and how skills and playbooks fit around them.
+
+## Pricing and licensing
+
+Plans, prices, limits, the open-source licence and self-hosting.
+
+- [What it takes to run Docustay yourself](https://docustay.app/self-host/requirements.md): What it takes to run Docustay on your own machine: about 1 GB of memory to run, more than 3.8 GB to build, and what is not measured yet.
+- [Back up and upgrade a self-hosted Docustay](https://docustay.app/self-host/backups-and-upgrades.md): Four files make a whole backup. Restore on a new machine, test it once, and upgrade with three commands after every backup.
+- [Single sign-on and hardening for self-hosted Docustay](https://docustay.app/self-host/sso-and-hardening.md): Connect your own OpenID Connect provider, keep the inside private, encrypt what is stored and follow a seven-part hardening list.
+- [Docustay is open source (AGPL-3.0)](https://docustay.app/open-source.md): The server and app are AGPL-3.0 and the SDKs, element and MCP server are MIT. Run it yourself, read it, and ask for a commercial licence only to embed or resell it.
+- [Licensing: AGPL or commercial licence](https://docustay.app/licensing.md): Docustay is open source under AGPL-3.0. Run it for your own business free, or with Self-host Pro. Embed, white-label, resell or fork it privately with a commercial licence.
+- [Pricing](https://docustay.app/pricing.md): Pro is $35 a month for the whole workspace, with unlimited team members, signers, documents and templates. Free sends 15 documents a month to 15 different signers. Pay as you go is $5 per team member a month and bills only what you use. Lifetime is a one-time payment.
+- [Self-hosted e-signature in three commands](https://docustay.app/self-host.md): Self-hosted e-signature: run Docustay on your own server under the AGPL-3.0. Community is free; Self-host Pro is a yearly licence per install.
+
+## Free tools
+
+Sign, fill and verify a PDF in the browser; the file is never uploaded.
+
+- [Verify a signed PDF](https://docustay.app/verify.md): Verify a signed PDF in your browser. The check reads the digital signature and the file's fingerprint and says whether the file is intact. The file is not uploaded.
+- [Sign a PDF](https://docustay.app/tools/sign-pdf.md): Add your signature, initials, a date or text to a PDF in your browser. The file is never uploaded.
+- [Fill a PDF](https://docustay.app/tools/fill-pdf.md): Type into the fields of a PDF form, or add text, check marks and dates to any PDF, in your browser. The file is never uploaded.
+- [Signature generator](https://docustay.app/tools/signature-generator.md): Draw or type a signature and save it as an image. Made in your browser, never uploaded.
+
+## Trust
+
+Security, privacy, data handling, status and the legal pages.
+
+- [Trust centre: security, privacy and proof](https://docustay.app/trust.md): Security, privacy and data handling, proof of signing and the companies that help us run Docustay, on one page. What is in place today and what is not. No certification is claimed.
+- [Is an electronic signature legal?](https://docustay.app/trust/legal-validity.md): What the US ESIGN Act and UETA look for in plain words, what Docustay records for each, and what it does not do. A simple electronic signature with a strong record. Not legal advice.
+- [Acceptable use](https://docustay.app/legal/acceptable-use.md): What you may and may not send through Docustay: no unlawful, deceptive or harmful use, no attempt to break the service, and what we do when a rule is broken.
+- [Status](https://docustay.app/status.md): Whether Docustay is working right now, and what happened when it was not: live status of the app and the API, with the past incidents and what we did about each.
+- [Terms](https://docustay.app/legal/terms.md): The terms of service.
+- [Privacy policy](https://docustay.app/legal/privacy-policy.md): The privacy policy.
+- [Third-party notices](https://docustay.app/legal/notices.md): The open-source software Docustay includes, with its licences.
+- [Cookies](https://docustay.app/legal/cookies.md): The cookies this site uses.
+- [Data processing addendum](https://docustay.app/legal/dpa.md): The data processing addendum.
+- [Refunds and cancellation](https://docustay.app/legal/refunds.md): How to cancel Docustay Pro, what happens at the end of the paid period, and the no-refunds rule.
+- [Renewal terms](https://docustay.app/legal/renewal.md): How Pro renews, how to stop a renewal, and the self-host licence.
+
+## Company
+
+About Docustay and the facts, help, what is next, the demo, the guide to signing a PDF, the changelog and how to reach the team.
+
+- [About Docustay and the facts](https://docustay.app/about.md): We build Docustay, we read every message sent to hello@docustay.app, and we say plainly what we will not do. The facts, in one place: plans and prices, limits, licence, SDKs, security basics and hosting.
+- [How to sign a PDF](https://docustay.app/guides/how-to-sign-a-pdf.md): Sign a PDF three ways: type or draw your signature on a phone or computer, from a link someone sent you, or by sending your own PDF out for signature with Docustay.
+- [What's next for Docustay](https://docustay.app/whats-next.md): Version 1 does one thing well: documents written, sent, signed and sealed, with the whole platform for developers and self-hosters. Here is what we are looking at for later. Nothing is promised or dated.
+- [Help: send, sign, pay and manage your workspace](https://docustay.app/help.md): Help in plain words: how to send and sign a document, how plans, budgets and bills work, how to take payments, and who to write to when it is not enough.
+- [Contact](https://docustay.app/contact.md): Write to the Docustay team: questions about the product, pricing or self-hosting, security reports and privacy requests. We read every message and reply by email.
+- [Changelog](https://docustay.app/changelog.md): What changed in Docustay, newest first.
+
+## Other
+
+- [Legal: terms, privacy and the rest](https://docustay.app/legal.md): Every legal document in one place: the terms, the privacy policy, cookies, the data processing addendum, refunds, renewal terms, acceptable use and third-party notices.
+
+## Machine-readable
+
+- [OpenAPI 3.1 description](https://docustay.app/openapi.json): every API operation
+- [About and facts](https://docustay.app/about.md): plans, prices, limits, licence, SDKs, security, hosting
+- [Sitemap](https://docustay.app/sitemap.xml): every public page
+- [All pages and documentation in one file](https://docustay.app/llms-full.txt)

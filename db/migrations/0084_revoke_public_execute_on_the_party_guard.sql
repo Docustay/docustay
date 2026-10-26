@@ -1,0 +1,12 @@
+-- ═══════════════════════════════════════════════════════════════════════════════════════════════
+-- P2.4 (correction to 0082) — REVOKE PUBLIC EXECUTE ON THE PARTY CONTACT GUARD.
+--
+-- ★★★ A FUNCTION'S DEFAULT ACL IS `EXECUTE TO PUBLIC`, AND THIS ONE IS SECURITY DEFINER. Left at
+--     the default it hands the definer's privileges to every role — `db/gates/catalog-conformance.mjs`
+--     caught it on the first run after 0082 and named the exact remedy. ★★ The other definers in
+--     this schema were revoked the same way; a new one that skips it reopens a hole the house has
+--     already closed once, which is why the check is a gate rather than a habit.
+--   ★ It is a TRIGGER function: nothing calls it by name, so nothing loses anything. The trigger
+--     itself executes as the table owner regardless of this ACL.
+-- ═══════════════════════════════════════════════════════════════════════════════════════════════
+REVOKE ALL ON FUNCTION keystone.network_party_contact_is_not_a_person() FROM PUBLIC;

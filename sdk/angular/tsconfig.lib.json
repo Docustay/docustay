@@ -1,0 +1,1 @@
+{ "extends": "./tsconfig.json", "compilerOptions": { "noEmit": false, "declaration": true, "declarationMap": true, "sourceMap": true, "outDir": "./out-tsc/lib", "types": [] }, "angularCompilerOptions": { "compilationMode": "partial", "strictTemplates": true, "strictInjectionParameters": true }, "include": ["src/**/*.ts"], "exclude": ["test"] }

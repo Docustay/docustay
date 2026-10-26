@@ -1,0 +1,6 @@
+-- 0613 · THE REMINDER SWEEP COULD NOT RE-ARM ITSELF (found 3 Oct 2026 by the Part 5B sweep test; MEASURED with app_rw: `UPDATE keystone.document_instance SET next_reminder_at = now() + interval '1 day'` with no viewer → "new row violates row-level security policy").
+-- ★ Why: Postgres checks the NEW row of an UPDATE against the SELECT policies too. `system_reminder_read` (0418) only admitted rows whose `next_reminder_at` is set AND already due, so a sweep that re-arms the reminder to a FUTURE time — or clears it to NULL once the cadence is used up — wrote a row no policy would let it see, and the whole act failed.
+-- ★ Fix: the viewer-less read admits every LIVE (sent / partially signed) document of the tenant. The sweep's own query already carries `next_reminder_at <= now()` (that predicate IS the idempotency, dueFacts.mjs), so what it acts on is unchanged; the write policy (`system_reminder_write`, still limited to due rows) is unchanged.
+DROP POLICY IF EXISTS system_reminder_read ON keystone.document_instance;
+CREATE POLICY system_reminder_read ON keystone.document_instance FOR SELECT
+  USING (tenant_id = keystone.current_tenant_id() AND keystone.current_user_id() IS NULL AND state IN ('sent','partially_signed') AND archived_at IS NULL);

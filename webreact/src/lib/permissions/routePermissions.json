@@ -1,0 +1,3491 @@
+{
+ "DELETE /api/developer/webhook-endpoints/:id": {
+  "kind": "self"
+ },
+ "DELETE /api/documents/chat/conversations/:id": {
+  "kind": "section",
+  "section": "/documents"
+ },
+ "DELETE /api/platform/session": {
+  "kind": "platform"
+ },
+ "DELETE /api/staff/payer-groups/:id/members/:memberId": {
+  "kind": "section",
+  "section": null
+ },
+ "DELETE /api/v1/documents/:id": {
+  "kind": "handler",
+  "check": "src/routes/developerDocuments.mjs — developer API key with documents:write (ROUTE_SCOPES), checked by tokenRoute before anything runs; only a draft never sent can be discarded"
+ },
+ "DELETE /api/v1/plays/:name": {
+  "kind": "handler",
+  "check": "src/routes/developerPlays.mjs — developer API key with plays:write (ROUTE_SCOPES), checked by tokenRoute before anything runs"
+ },
+ "DELETE /api/v1/webhooks/:id": {
+  "kind": "handler",
+  "check": "src/routes/developerWebhooks.mjs — developer API key with webhooks:write (ROUTE_SCOPES), checked by tokenRoute before anything runs"
+ },
+ "DELETE /mcp": {
+  "kind": "public",
+  "note": "src/routes/developerConnector.mjs — always answers 405; reads and writes nothing"
+ },
+ "PATCH /api/developer/webhook-endpoints/:id": {
+  "kind": "self"
+ },
+ "PATCH /api/platform/tiers/:tierId": {
+  "kind": "platform"
+ },
+ "POST /api/account/deletion": {
+  "kind": "self"
+ },
+ "POST /api/account/deletion/cancel": {
+  "kind": "self"
+ },
+ "POST /api/accounts": {
+  "kind": "grant",
+  "object": "account",
+  "action": "edit",
+  "subject": null,
+  "section": "/accounts"
+ },
+ "POST /api/accounts/pipeline": {
+  "kind": "grant",
+  "object": "account",
+  "action": "edit",
+  "subject": "accountId",
+  "section": "/accounts"
+ },
+ "POST /api/accounts/pipeline/advance": {
+  "kind": "grant",
+  "object": "account",
+  "action": "edit",
+  "subject": null,
+  "section": "/accounts"
+ },
+ "POST /api/accounts/run/pause": {
+  "kind": "grant",
+  "object": "account",
+  "action": "edit",
+  "subject": "accountId",
+  "section": "/accounts/all"
+ },
+ "POST /api/accounts/run/resume": {
+  "kind": "grant",
+  "object": "account",
+  "action": "edit",
+  "subject": "accountId",
+  "section": "/accounts/all"
+ },
+ "POST /api/accounts/update": {
+  "kind": "grant",
+  "object": "account",
+  "action": "edit",
+  "subject": "accountId",
+  "section": "/accounts"
+ },
+ "POST /api/app/booking": {
+  "kind": "client"
+ },
+ "POST /api/app/booking/cancel": {
+  "kind": "client"
+ },
+ "POST /api/app/booking/join": {
+  "kind": "client"
+ },
+ "POST /api/app/booking/reschedule": {
+  "kind": "client"
+ },
+ "POST /api/app/documents/:instanceId/checkout-session": {
+  "kind": "client"
+ },
+ "POST /api/app/documents/:instanceId/sign": {
+  "kind": "client"
+ },
+ "POST /api/app/documents/disclosure": {
+  "kind": "client"
+ },
+ "POST /api/app/documents/sign": {
+  "kind": "client"
+ },
+ "POST /api/app/messages": {
+  "kind": "client"
+ },
+ "POST /api/app/messages/:messageId/read": {
+  "kind": "client"
+ },
+ "POST /api/app/notifications/preference": {
+  "kind": "client"
+ },
+ "POST /api/app/notifications/read": {
+  "kind": "client"
+ },
+ "POST /api/app/payments/pay": {
+  "kind": "client"
+ },
+ "POST /api/app/profile/request-data": {
+  "kind": "client"
+ },
+ "POST /api/app/waitlist/demand": {
+  "kind": "client"
+ },
+ "POST /api/auth/code/request": {
+  "kind": "public"
+ },
+ "POST /api/auth/code/verify": {
+  "kind": "public"
+ },
+ "POST /api/auth/invite/accept": {
+  "kind": "public"
+ },
+ "POST /api/auth/local/reset": {
+  "kind": "public",
+  "note": "set a new password with the emailed code; src/auth/install.mjs"
+ },
+ "POST /api/auth/local/signin": {
+  "kind": "public",
+  "note": "src/routes/localAuth.mjs:28 — only exists when KEYSTONE_LOCAL_AUTH=1 (404 otherwise); rate-limited per IP"
+ },
+ "POST /api/auth/local/signup": {
+  "kind": "public",
+  "note": "src/routes/localAuth.mjs:20 — only when KEYSTONE_LOCAL_AUTH=1 and not self-hosted; rate-limited per IP"
+ },
+ "POST /api/auth/login": {
+  "kind": "public"
+ },
+ "POST /api/auth/logout": {
+  "kind": "public"
+ },
+ "POST /api/auth/passkeys/login/begin": {
+  "kind": "public"
+ },
+ "POST /api/auth/passkeys/login/finish": {
+  "kind": "public"
+ },
+ "POST /api/auth/passkeys/register/begin": {
+  "kind": "public"
+ },
+ "POST /api/auth/passkeys/register/finish": {
+  "kind": "public"
+ },
+ "POST /api/auth/passkeys/remove": {
+  "kind": "public"
+ },
+ "POST /api/auth/passkeys/rename": {
+  "kind": "public"
+ },
+ "POST /api/auth/password-reset/code": {
+  "kind": "public",
+  "note": "src/auth/install.mjs — the typed code; per-code and per-account guess limits in redeemEmailCode; answers a single-use grant"
+ },
+ "POST /api/auth/password-reset/link": {
+  "kind": "public",
+  "note": "src/auth/install.mjs — the fallback link from the same email, finished on the server"
+ },
+ "POST /api/auth/password-reset/request": {
+  "kind": "public",
+  "note": "src/auth/install.mjs — emails a six-digit code (and the fallback link); always answers the same, rate-limited inside requestEmailCode"
+ },
+ "POST /api/auth/password-reset/set": {
+  "kind": "public",
+  "note": "src/auth/install.mjs — the grant plus the new password; signs nobody in, ends every session, two-step still asked"
+ },
+ "POST /api/auth/password/change": {
+  "kind": "public",
+  "note": "src/auth/twoStepRoutes.mjs — change or set the signed-in person's own password; current password or emailed code, plus the second step when it is on"
+ },
+ "POST /api/auth/password/request-code": {
+  "kind": "public",
+  "note": "src/auth/twoStepRoutes.mjs — a signed-in person asks for a code to their own address (loadSelf)"
+ },
+ "POST /api/auth/sessions/revoke": {
+  "kind": "public"
+ },
+ "POST /api/auth/two-step/authenticator/remove": {
+  "kind": "public"
+ },
+ "POST /api/auth/two-step/confirm": {
+  "kind": "public"
+ },
+ "POST /api/auth/two-step/devices/forget": {
+  "kind": "public"
+ },
+ "POST /api/auth/two-step/devices/remember": {
+  "kind": "public"
+ },
+ "POST /api/auth/two-step/disable": {
+  "kind": "public"
+ },
+ "POST /api/auth/two-step/passkey/begin": {
+  "kind": "public"
+ },
+ "POST /api/auth/two-step/passkey/finish": {
+  "kind": "public"
+ },
+ "POST /api/auth/two-step/proof/passkey/begin": {
+  "kind": "public"
+ },
+ "POST /api/auth/two-step/recovery-codes": {
+  "kind": "public"
+ },
+ "POST /api/auth/two-step/start": {
+  "kind": "public"
+ },
+ "POST /api/auth/two-step/verify": {
+  "kind": "public"
+ },
+ "POST /api/automations/callback": {
+  "kind": "webhook"
+ },
+ "POST /api/booking/mine/taking": {
+  "kind": "handler",
+  "check": "src/booking/pagesAdmin.mjs — Owner/Admin, or the booking.* named action (own_page, services_manage, pages_manage) for the caller's own row"
+ },
+ "POST /api/booking/pages/address": {
+  "kind": "handler",
+  "check": "src/booking/pagesAdmin.mjs — Owner/Admin, or the booking.* named action (own_page, services_manage, pages_manage) for the caller's own row"
+ },
+ "POST /api/booking/pages/custom": {
+  "kind": "handler",
+  "check": "src/booking/pagesAdmin.mjs — Owner/Admin, or the booking.* named action (own_page, services_manage, pages_manage) for the caller's own row"
+ },
+ "POST /api/booking/pages/custom/delete": {
+  "kind": "handler",
+  "check": "src/booking/pagesAdmin.mjs — Owner/Admin, or the booking.* named action (own_page, services_manage, pages_manage) for the caller's own row"
+ },
+ "POST /api/booking/team/rotate-key": {
+  "kind": "handler",
+  "check": "src/routes/teamBookingAdmin.mjs — atLeastRank owner"
+ },
+ "POST /api/booking/team/service": {
+  "kind": "handler",
+  "check": "src/routes/teamBookingAdmin.mjs — atLeastRank admin"
+ },
+ "POST /api/bookings/:id/attendees": {
+  "kind": "handler",
+  "check": "src/routes/teamBookingAdmin.mjs — atLeastRank admin"
+ },
+ "POST /api/bookings/:id/check-in": {
+  "kind": "handler",
+  "check": "src/routes/bookingLifecycle.mjs:81 — sign-in required; host check inside the lifecycle function"
+ },
+ "POST /api/bookings/:id/complete": {
+  "kind": "handler",
+  "check": "src/routes/bookingLifecycle.mjs:116"
+ },
+ "POST /api/bookings/:id/reassign": {
+  "kind": "handler",
+  "check": "src/routes/teamBookingAdmin.mjs — atLeastRank admin"
+ },
+ "POST /api/demo/keep/confirm": {
+  "kind": "public"
+ },
+ "POST /api/demo/keep/request": {
+  "kind": "public"
+ },
+ "POST /api/demo/start": {
+  "kind": "public"
+ },
+ "POST /api/developer/api-keys": {
+  "kind": "self"
+ },
+ "POST /api/developer/api-keys/:id/allowlist": {
+  "kind": "self"
+ },
+ "POST /api/developer/api-keys/:id/policy": {
+  "kind": "self"
+ },
+ "POST /api/developer/api-keys/:id/revoke": {
+  "kind": "self"
+ },
+ "POST /api/developer/api-keys/:id/scopes": {
+  "kind": "self"
+ },
+ "POST /api/developer/webhook-deliveries/replay": {
+  "kind": "self"
+ },
+ "POST /api/developer/webhook-endpoints": {
+  "kind": "self"
+ },
+ "POST /api/developer/webhook-endpoints/:id/rotate": {
+  "kind": "self"
+ },
+ "POST /api/developer/webhook-endpoints/:id/test": {
+  "kind": "self"
+ },
+ "POST /api/documents/ai/check": {
+  "kind": "grant",
+  "object": "document",
+  "action": "template.author",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/ai/draft": {
+  "kind": "grant",
+  "object": "document",
+  "action": "template.author",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/approvals/decide": {
+  "kind": "grant",
+  "object": "document",
+  "action": "edit",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/categories": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": "/settings/documents"
+ },
+ "POST /api/documents/chat/conversations": {
+  "kind": "section",
+  "section": "/documents"
+ },
+ "POST /api/documents/chat/conversations/:id/messages": {
+  "kind": "section",
+  "section": "/documents"
+ },
+ "POST /api/documents/chat/proposals/:id/accept": {
+  "kind": "section",
+  "section": "/documents"
+ },
+ "POST /api/documents/chat/proposals/:id/confirm": {
+  "kind": "handler",
+  "check": "src/routes/documentsChat.mjs — the person's own click; assertMay(document edit on the card's document) runs before executeCard, which calls the same domain function the screen calls"
+ },
+ "POST /api/documents/chat/proposals/:id/reject": {
+  "kind": "section",
+  "section": "/documents"
+ },
+ "POST /api/documents/chat/proposals/:id/undo": {
+  "kind": "section",
+  "section": "/documents"
+ },
+ "POST /api/documents/chat/ratings": {
+  "kind": "section",
+  "section": "/documents"
+ },
+ "POST /api/documents/chat/review": {
+  "kind": "handler",
+  "check": "src/routes/documentsChat.mjs — assertMay(document edit on the draft) before the read-it acknowledgement is recorded"
+ },
+ "POST /api/documents/clauses": {
+  "kind": "grant",
+  "object": "document",
+  "action": "template.author",
+  "subject": null,
+  "section": "/documents/contracts"
+ },
+ "POST /api/documents/clauses/insert": {
+  "kind": "grant",
+  "object": "document",
+  "action": "template.author",
+  "subject": null,
+  "section": "/documents/contracts"
+ },
+ "POST /api/documents/clauses/update": {
+  "kind": "grant",
+  "object": "document",
+  "action": "template.author",
+  "subject": null,
+  "section": "/documents/contracts"
+ },
+ "POST /api/documents/contracts/templates": {
+  "kind": "grant",
+  "object": "document",
+  "action": "template.author",
+  "subject": null,
+  "section": "/documents/contracts"
+ },
+ "POST /api/documents/decline": {
+  "kind": "grant",
+  "object": "document",
+  "action": "document.sign",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/disclosure/accept": {
+  "kind": "grant",
+  "object": "document",
+  "action": "document.sign",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/disclosure/withdraw": {
+  "kind": "grant",
+  "object": "document",
+  "action": "document.sign",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/email/domain": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": "/documents/settings"
+ },
+ "POST /api/documents/email/domain/remove": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": "/documents/settings"
+ },
+ "POST /api/documents/email/domain/verify": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": "/documents/settings"
+ },
+ "POST /api/documents/email/mailbox/connect": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": "/documents/settings"
+ },
+ "POST /api/documents/email/mailbox/disconnect": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": "/documents/settings"
+ },
+ "POST /api/documents/email/resume": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/email/smtp-password": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": "/documents/settings"
+ },
+ "POST /api/documents/email/test": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": "/documents/settings"
+ },
+ "POST /api/documents/engine/ai/jobs": {
+  "kind": "grant",
+  "object": "document",
+  "action": "template.author",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/engine/ai/jobs/cancel": {
+  "kind": "grant",
+  "object": "document",
+  "action": "template.author",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/engine/ai/key": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": "/documents/settings"
+ },
+ "POST /api/documents/engine/ai/key/clear": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": "/documents/settings"
+ },
+ "POST /api/documents/engine/ai/outcome": {
+  "kind": "grant",
+  "object": "document",
+  "action": "template.author",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/engine/ai/test": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": "/documents/settings"
+ },
+ "POST /api/documents/engine/check": {
+  "kind": "grant",
+  "object": "document",
+  "action": "template.author",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/engine/documents": {
+  "kind": "grant",
+  "object": "document",
+  "action": "template.author",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/engine/documents/revise": {
+  "kind": "grant",
+  "object": "document",
+  "action": "edit",
+  "subject": "instanceId",
+  "section": "/documents"
+ },
+ "POST /api/documents/engine/guided": {
+  "kind": "grant",
+  "object": "document",
+  "action": "template.author",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/engine/import/markdown": {
+  "kind": "grant",
+  "object": "document",
+  "action": "template.author",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/engine/patches/apply": {
+  "kind": "grant",
+  "object": "document",
+  "action": "template.author",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/engine/templates": {
+  "kind": "grant",
+  "object": "document",
+  "action": "template.author",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/engine/templates/defaults": {
+  "kind": "grant",
+  "object": "document",
+  "action": "template.author",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/engine/templates/version": {
+  "kind": "grant",
+  "object": "document",
+  "action": "template.author",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/execute": {
+  "kind": "grant",
+  "object": "document",
+  "action": "document.execute",
+  "subject": null,
+  "section": "/documents/executed"
+ },
+ "POST /api/documents/forms/templates": {
+  "kind": "grant",
+  "object": "document",
+  "action": "template.author",
+  "subject": null,
+  "section": "/documents/forms"
+ },
+ "POST /api/documents/instances": {
+  "kind": "grant",
+  "object": "document",
+  "action": "edit",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/library/customize": {
+  "kind": "grant",
+  "object": "document",
+  "action": "edit",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/library/master": {
+  "kind": "grant",
+  "object": "document",
+  "action": "template.author",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/library/use": {
+  "kind": "grant",
+  "object": "document",
+  "action": "edit",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/pdf-imports": {
+  "kind": "grant",
+  "object": "document",
+  "action": "template.author",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/pdf-imports/confirm": {
+  "kind": "grant",
+  "object": "document",
+  "action": "template.author",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/pdf/attachment/remove": {
+  "kind": "grant",
+  "object": "document",
+  "action": "edit",
+  "subject": "instanceId",
+  "section": "/documents"
+ },
+ "POST /api/documents/pdf/bulk": {
+  "kind": "grant",
+  "object": "document",
+  "action": "edit",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/pdf/data-erase": {
+  "kind": "grant",
+  "object": "document",
+  "action": "delete",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/pdf/data-report": {
+  "kind": "grant",
+  "object": "document",
+  "action": "delete",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/pdf/discard": {
+  "kind": "grant",
+  "object": "document",
+  "action": "edit",
+  "subject": "instanceId",
+  "section": "/documents"
+ },
+ "POST /api/documents/pdf/download-link": {
+  "kind": "grant",
+  "object": "document",
+  "action": "edit",
+  "subject": "instanceId",
+  "section": "/documents"
+ },
+ "POST /api/documents/pdf/extend": {
+  "kind": "grant",
+  "object": "document",
+  "action": "edit",
+  "subject": "instanceId",
+  "section": "/documents"
+ },
+ "POST /api/documents/pdf/find-fields": {
+  "kind": "grant",
+  "object": "document",
+  "action": "edit",
+  "subject": "instanceId",
+  "section": "/documents"
+ },
+ "POST /api/documents/pdf/find-fields/ai": {
+  "kind": "grant",
+  "object": "document",
+  "action": "edit",
+  "subject": "instanceId",
+  "section": "/documents"
+ },
+ "POST /api/documents/pdf/find-fields/ai/apply": {
+  "kind": "grant",
+  "object": "document",
+  "action": "edit",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/pdf/find-fields/ai/cancel": {
+  "kind": "grant",
+  "object": "document",
+  "action": "edit",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/pdf/from-html": {
+  "kind": "grant",
+  "object": "document",
+  "action": "edit",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/pdf/from-rich-template": {
+  "kind": "grant",
+  "object": "document",
+  "action": "edit",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/pdf/from-template": {
+  "kind": "grant",
+  "object": "document",
+  "action": "edit",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/pdf/kiosk": {
+  "kind": "grant",
+  "object": "document",
+  "action": "edit",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/pdf/reassign": {
+  "kind": "grant",
+  "object": "document",
+  "action": "edit",
+  "subject": "instanceId",
+  "section": "/documents"
+ },
+ "POST /api/documents/pdf/refund-payment": {
+  "kind": "grant",
+  "object": "document",
+  "action": "delete",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/pdf/remind": {
+  "kind": "grant",
+  "object": "document",
+  "action": "edit",
+  "subject": "instanceId",
+  "section": "/documents"
+ },
+ "POST /api/documents/pdf/replace-file": {
+  "kind": "grant",
+  "object": "document",
+  "action": "edit",
+  "subject": "instanceId",
+  "section": "/documents"
+ },
+ "POST /api/documents/pdf/save": {
+  "kind": "grant",
+  "object": "document",
+  "action": "edit",
+  "subject": "instanceId",
+  "section": "/documents"
+ },
+ "POST /api/documents/pdf/save-template": {
+  "kind": "grant",
+  "object": "document",
+  "action": "edit",
+  "subject": "instanceId",
+  "section": "/documents"
+ },
+ "POST /api/documents/pdf/send": {
+  "kind": "grant",
+  "object": "document",
+  "action": "edit",
+  "subject": "instanceId",
+  "section": "/documents"
+ },
+ "POST /api/documents/pdf/send-again": {
+  "kind": "grant",
+  "object": "document",
+  "action": "edit",
+  "subject": "instanceId",
+  "section": "/documents"
+ },
+ "POST /api/documents/pdf/sign-now": {
+  "kind": "grant",
+  "object": "document",
+  "action": "edit",
+  "subject": "instanceId",
+  "section": "/documents"
+ },
+ "POST /api/documents/pdf/split-packet": {
+  "kind": "grant",
+  "object": "document",
+  "action": "edit",
+  "subject": "instanceId",
+  "section": "/documents"
+ },
+ "POST /api/documents/pdf/templates/approve": {
+  "kind": "grant",
+  "object": "document",
+  "action": "delete",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/pdf/templates/clone": {
+  "kind": "grant",
+  "object": "document",
+  "action": "edit",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/pdf/templates/meta": {
+  "kind": "grant",
+  "object": "document",
+  "action": "edit",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/pdf/templates/reject": {
+  "kind": "grant",
+  "object": "document",
+  "action": "delete",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/pdf/templates/retire": {
+  "kind": "grant",
+  "object": "document",
+  "action": "edit",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/pdf/templates/version": {
+  "kind": "grant",
+  "object": "document",
+  "action": "edit",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/pdf/test": {
+  "kind": "grant",
+  "object": "document",
+  "action": "edit",
+  "subject": "instanceId",
+  "section": "/documents"
+ },
+ "POST /api/documents/pdf/uploads": {
+  "kind": "grant",
+  "object": "document",
+  "action": "edit",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/pdf/uploads/complete": {
+  "kind": "grant",
+  "object": "document",
+  "action": "edit",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/pdf/void": {
+  "kind": "grant",
+  "object": "document",
+  "action": "edit",
+  "subject": "instanceId",
+  "section": "/documents"
+ },
+ "POST /api/documents/people": {
+  "kind": "grant",
+  "object": "document",
+  "action": "edit",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/people/delete": {
+  "kind": "grant",
+  "object": "document",
+  "action": "delete",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/people/update": {
+  "kind": "grant",
+  "object": "document",
+  "action": "edit",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/playbooks/archive": {
+  "kind": "grant",
+  "object": "document",
+  "action": "play.manage",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/playbooks/enable": {
+  "kind": "grant",
+  "object": "document",
+  "action": "play.manage",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/playbooks/save": {
+  "kind": "grant",
+  "object": "document",
+  "action": "play.manage",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/plays/archive": {
+  "kind": "grant",
+  "object": "document",
+  "action": "play.manage",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/plays/duplicate": {
+  "kind": "grant",
+  "object": "document",
+  "action": "play.manage",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/plays/import": {
+  "kind": "grant",
+  "object": "document",
+  "action": "play.manage",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/plays/on": {
+  "kind": "grant",
+  "object": "document",
+  "action": "play.manage",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/plays/publish": {
+  "kind": "grant",
+  "object": "document",
+  "action": "play.manage",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/plays/save": {
+  "kind": "grant",
+  "object": "document",
+  "action": "play.manage",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/plays/test": {
+  "kind": "grant",
+  "object": "document",
+  "action": "play.manage",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/send": {
+  "kind": "grant",
+  "object": "document",
+  "action": "edit",
+  "subject": "instanceId",
+  "section": "/documents"
+ },
+ "POST /api/documents/settings": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": "/documents/settings"
+ },
+ "POST /api/documents/sign": {
+  "kind": "grant",
+  "object": "document",
+  "action": "document.sign",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/starters": {
+  "kind": "grant",
+  "object": "document",
+  "action": "edit",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/teams": {
+  "kind": "rank",
+  "rank": "admin"
+ },
+ "POST /api/documents/teams/assign": {
+  "kind": "handler",
+  "check": "src/documents/teams.mjs assignTeam — only someone who can see the document or template may move it"
+ },
+ "POST /api/documents/teams/delete": {
+  "kind": "rank",
+  "rank": "admin"
+ },
+ "POST /api/documents/teams/members": {
+  "kind": "rank",
+  "rank": "admin"
+ },
+ "POST /api/documents/teams/rename": {
+  "kind": "rank",
+  "rank": "admin"
+ },
+ "POST /api/documents/templates/body": {
+  "kind": "grant",
+  "object": "document",
+  "action": "template.author",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/templates/publish": {
+  "kind": "grant",
+  "object": "document",
+  "action": "template.author",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/templates/settings": {
+  "kind": "grant",
+  "object": "document",
+  "action": "template.author",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/templates/version": {
+  "kind": "grant",
+  "object": "document",
+  "action": "template.author",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/documents/types": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": "/settings/documents"
+ },
+ "POST /api/documents/verify": {
+  "kind": "public"
+ },
+ "POST /api/domains": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": "/settings/domains"
+ },
+ "POST /api/domains/check": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": "/settings/domains"
+ },
+ "POST /api/domains/remove": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": "/settings/domains"
+ },
+ "POST /api/email/domain": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": "/settings/email"
+ },
+ "POST /api/email/domain/remove": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": "/settings/email"
+ },
+ "POST /api/email/domain/verify": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": "/settings/email"
+ },
+ "POST /api/email/identity": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": "/settings/email"
+ },
+ "POST /api/email/mailbox/connect": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": "/settings/email"
+ },
+ "POST /api/email/mailbox/disconnect": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": "/settings/email"
+ },
+ "POST /api/email/smtp-password": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": "/settings/email"
+ },
+ "POST /api/email/test": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": "/settings/email"
+ },
+ "POST /api/engagements/attendance": {
+  "kind": "grant",
+  "object": "engagement",
+  "action": "edit",
+  "subject": null,
+  "section": "/engagements/sessions"
+ },
+ "POST /api/engagements/attendance/settle": {
+  "kind": "grant",
+  "object": "engagement",
+  "action": "edit",
+  "subject": "bookingId",
+  "section": "/engagements/sessions"
+ },
+ "POST /api/engagements/availability": {
+  "kind": "grant",
+  "object": "engagement",
+  "action": "edit",
+  "subject": null,
+  "section": "/engagements/booking"
+ },
+ "POST /api/engagements/availability/end": {
+  "kind": "grant",
+  "object": "engagement",
+  "action": "edit",
+  "subject": null,
+  "section": "/engagements/booking"
+ },
+ "POST /api/engagements/availability/limit": {
+  "kind": "self",
+  "note": "the caller's own hours unless body.hostId — src/routes/engagementsHours.mjs:159"
+ },
+ "POST /api/engagements/blocks": {
+  "kind": "grant",
+  "object": "engagement",
+  "action": "edit",
+  "subject": null,
+  "section": "/engagements/calendar"
+ },
+ "POST /api/engagements/blocks/skip": {
+  "kind": "grant",
+  "object": "engagement",
+  "action": "edit",
+  "subject": null,
+  "section": "/engagements/calendar"
+ },
+ "POST /api/engagements/blocks/stop": {
+  "kind": "grant",
+  "object": "engagement",
+  "action": "edit",
+  "subject": null,
+  "section": "/engagements/calendar"
+ },
+ "POST /api/engagements/booking-policy": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": "/engagements/booking/settings"
+ },
+ "POST /api/engagements/bookings": {
+  "kind": "grant",
+  "object": "engagement",
+  "action": "edit",
+  "subject": null,
+  "section": "/engagements/calendar"
+ },
+ "POST /api/engagements/bookings/cancel": {
+  "kind": "grant",
+  "object": "engagement",
+  "action": "edit",
+  "subject": "bookingId",
+  "section": "/engagements/calendar"
+ },
+ "POST /api/engagements/bookings/flag": {
+  "kind": "grant",
+  "object": "engagement",
+  "action": "edit",
+  "subject": null,
+  "section": "/engagements/calendar"
+ },
+ "POST /api/engagements/bookings/recurring": {
+  "kind": "grant",
+  "object": "engagement",
+  "action": "edit",
+  "subject": null,
+  "section": "/engagements/calendar"
+ },
+ "POST /api/engagements/bookings/recurring/cancel": {
+  "kind": "grant",
+  "object": "engagement",
+  "action": "edit",
+  "subject": null,
+  "section": "/engagements/calendar"
+ },
+ "POST /api/engagements/bookings/reschedule": {
+  "kind": "grant",
+  "object": "engagement",
+  "action": "edit",
+  "subject": "bookingId",
+  "section": "/engagements/calendar"
+ },
+ "POST /api/engagements/calendar/disconnect": {
+  "kind": "self",
+  "note": "the caller's own calendar connection — src/routes/calendar.mjs:281"
+ },
+ "POST /api/engagements/calendar/event-title-mode": {
+  "kind": "self",
+  "note": "src/routes/calendar.mjs:268"
+ },
+ "POST /api/engagements/calendar/push-target": {
+  "kind": "self",
+  "note": "src/routes/calendar.mjs:255"
+ },
+ "POST /api/engagements/calendar/refresh-calendars": {
+  "kind": "self",
+  "note": "src/routes/calendar.mjs"
+ },
+ "POST /api/engagements/calendar/remote-changes/accept": {
+  "kind": "self",
+  "note": "src/routes/calendar.mjs:349"
+ },
+ "POST /api/engagements/calendar/remote-changes/reject": {
+  "kind": "self",
+  "note": "src/routes/calendar.mjs:360"
+ },
+ "POST /api/engagements/calendar/watched-calendars": {
+  "kind": "self",
+  "note": "src/routes/calendar.mjs:242"
+ },
+ "POST /api/engagements/date-overrides": {
+  "kind": "grant",
+  "object": "engagement",
+  "action": "edit",
+  "subject": null,
+  "section": "/engagements/booking"
+ },
+ "POST /api/engagements/date-overrides/remove": {
+  "kind": "self",
+  "note": "src/routes/engagementsHours.mjs:149"
+ },
+ "POST /api/engagements/hours": {
+  "kind": "grant",
+  "object": "engagement",
+  "action": "edit",
+  "subject": null,
+  "section": "/engagements/calendar"
+ },
+ "POST /api/engagements/my-link": {
+  "kind": "self",
+  "note": "the caller's own booking link — src/routes/bookingLinks.mjs:71"
+ },
+ "POST /api/engagements/participants": {
+  "kind": "grant",
+  "object": "engagement",
+  "action": "edit",
+  "subject": "bookingId",
+  "section": "/engagements/calendar"
+ },
+ "POST /api/engagements/waitlist": {
+  "kind": "grant",
+  "object": "engagement",
+  "action": "edit",
+  "subject": null,
+  "section": "/engagements/waitlist"
+ },
+ "POST /api/engagements/waitlist/offer": {
+  "kind": "grant",
+  "object": "engagement",
+  "action": "edit",
+  "subject": null,
+  "section": "/engagements/waitlist"
+ },
+ "POST /api/engagements/waitlist/remove": {
+  "kind": "grant",
+  "object": "engagement",
+  "action": "edit",
+  "subject": null,
+  "section": "/engagements/waitlist"
+ },
+ "POST /api/growth/campaign-groups": {
+  "kind": "grant",
+  "object": "campaign",
+  "action": "edit",
+  "subject": null,
+  "section": "/growth/campaigns"
+ },
+ "POST /api/growth/campaign-groups/:id/pause": {
+  "kind": "grant",
+  "object": "campaign",
+  "action": "edit",
+  "subject": null,
+  "section": "/growth/campaigns"
+ },
+ "POST /api/growth/campaign-groups/attach": {
+  "kind": "grant",
+  "object": "campaign",
+  "action": "edit",
+  "subject": null,
+  "section": "/growth/campaigns"
+ },
+ "POST /api/growth/campaign-groups/delete": {
+  "kind": "grant",
+  "object": "campaign",
+  "action": "edit",
+  "subject": "groupId",
+  "section": "/growth/campaigns"
+ },
+ "POST /api/growth/campaign-groups/detach": {
+  "kind": "grant",
+  "object": "campaign",
+  "action": "edit",
+  "subject": null,
+  "section": "/growth/campaigns"
+ },
+ "POST /api/growth/campaign-groups/update": {
+  "kind": "grant",
+  "object": "campaign",
+  "action": "edit",
+  "subject": "groupId",
+  "section": "/growth/campaigns"
+ },
+ "POST /api/growth/campaigns": {
+  "kind": "grant",
+  "object": "campaign",
+  "action": "edit",
+  "subject": null,
+  "section": "/growth/campaigns"
+ },
+ "POST /api/growth/campaigns/schedule": {
+  "kind": "grant",
+  "object": "campaign",
+  "action": "edit",
+  "subject": null,
+  "section": "/growth/campaigns"
+ },
+ "POST /api/growth/campaigns/send": {
+  "kind": "grant",
+  "object": "campaign",
+  "action": "edit",
+  "subject": null,
+  "section": "/growth/campaigns"
+ },
+ "POST /api/growth/campaigns/test": {
+  "kind": "grant",
+  "object": "campaign",
+  "action": "edit",
+  "subject": null,
+  "section": "/growth/campaigns"
+ },
+ "POST /api/growth/campaigns/update": {
+  "kind": "grant",
+  "object": "campaign",
+  "action": "edit",
+  "subject": "campaignId",
+  "section": "/growth/campaigns"
+ },
+ "POST /api/growth/forms": {
+  "kind": "grant",
+  "object": "campaign",
+  "action": "edit",
+  "note": "user_may(campaign, edit) — src/routes/index.mjs:2542"
+ },
+ "POST /api/growth/forms/:id": {
+  "kind": "grant",
+  "object": "campaign",
+  "action": "edit",
+  "note": "src/routes/index.mjs:2565"
+ },
+ "POST /api/growth/pages": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": "/growth/pages"
+ },
+ "POST /api/growth/pages/delete": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": "landingPageId",
+  "section": "/growth/pages"
+ },
+ "POST /api/growth/pages/draft": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": "landingPageId",
+  "section": "/growth/pages"
+ },
+ "POST /api/growth/pages/publish": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": "landingPageId",
+  "section": "/growth/pages"
+ },
+ "POST /api/growth/pages/update": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": "landingPageId",
+  "section": "/growth/pages"
+ },
+ "POST /api/growth/segments": {
+  "kind": "grant",
+  "object": "campaign",
+  "action": "edit",
+  "subject": null,
+  "section": "/growth/lists"
+ },
+ "POST /api/growth/templates": {
+  "kind": "handler",
+  "check": "createTemplateVersion — src/routes/growthTemplates.mjs:285"
+ },
+ "POST /api/growth/templates/:key/activate": {
+  "kind": "handler",
+  "check": "activateTemplate — src/routes/growthTemplates.mjs:290"
+ },
+ "POST /api/growth/templates/:key/preview": {
+  "kind": "grant",
+  "object": "campaign",
+  "action": "view"
+ },
+ "POST /api/growth/templates/:key/reset": {
+  "kind": "grant",
+  "object": "campaign",
+  "action": "edit"
+ },
+ "POST /api/growth/templates/:key/test-send": {
+  "kind": "handler",
+  "check": "testSendTemplate — src/routes/growthTemplates.mjs:295"
+ },
+ "POST /api/items/active": {
+  "kind": "grant",
+  "object": "item",
+  "action": "edit",
+  "subject": null,
+  "section": "/items/services"
+ },
+ "POST /api/items/agreements": {
+  "kind": "grant",
+  "object": "item",
+  "action": "edit",
+  "subject": null,
+  "section": "/items/services"
+ },
+ "POST /api/items/agreements/detach": {
+  "kind": "grant",
+  "object": "item",
+  "action": "edit",
+  "subject": null,
+  "section": "/items/services"
+ },
+ "POST /api/items/categories": {
+  "kind": "grant",
+  "object": "item",
+  "action": "edit",
+  "subject": null,
+  "section": "/items/services"
+ },
+ "POST /api/items/categories/delete": {
+  "kind": "grant",
+  "object": "item",
+  "action": "edit",
+  "subject": null,
+  "section": "/items/services"
+ },
+ "POST /api/items/categories/update": {
+  "kind": "grant",
+  "object": "item",
+  "action": "edit",
+  "subject": null,
+  "section": "/items/services"
+ },
+ "POST /api/items/contracted-prices": {
+  "kind": "grant",
+  "object": "item",
+  "action": "edit",
+  "subject": null,
+  "section": "/items/services"
+ },
+ "POST /api/items/coupons": {
+  "kind": "grant",
+  "object": "discount",
+  "action": "edit",
+  "subject": null,
+  "section": "/items/coupons"
+ },
+ "POST /api/items/coupons/active": {
+  "kind": "grant",
+  "object": "discount",
+  "action": "edit",
+  "subject": null,
+  "section": "/items/coupons"
+ },
+ "POST /api/items/coupons/update": {
+  "kind": "grant",
+  "object": "discount",
+  "action": "edit",
+  "subject": null,
+  "section": "/items/coupons"
+ },
+ "POST /api/items/gift-cards": {
+  "kind": "grant",
+  "object": "item",
+  "action": "gift_card.manage",
+  "subject": null,
+  "section": "/items/services"
+ },
+ "POST /api/items/gift-cards/nudge": {
+  "kind": "grant",
+  "object": "item",
+  "action": "gift_card.manage",
+  "subject": null,
+  "section": "/items/services"
+ },
+ "POST /api/items/gift-cards/resend": {
+  "kind": "grant",
+  "object": "item",
+  "action": "gift_card.manage",
+  "subject": null,
+  "section": "/items/services"
+ },
+ "POST /api/items/gift-cards/void": {
+  "kind": "grant",
+  "object": "item",
+  "action": "gift_card.manage",
+  "subject": null,
+  "section": "/items/services"
+ },
+ "POST /api/items/images": {
+  "kind": "grant",
+  "object": "item",
+  "action": "edit",
+  "subject": null,
+  "section": "/items/services"
+ },
+ "POST /api/items/images/delete": {
+  "kind": "grant",
+  "object": "item",
+  "action": "edit",
+  "subject": null,
+  "section": "/items/services"
+ },
+ "POST /api/items/loyalty/rewards": {
+  "kind": "grant",
+  "object": "item",
+  "action": "loyalty.manage",
+  "subject": null,
+  "section": "/items/services"
+ },
+ "POST /api/items/loyalty/rewards/update": {
+  "kind": "grant",
+  "object": "item",
+  "action": "loyalty.manage",
+  "subject": null,
+  "section": "/items/services"
+ },
+ "POST /api/items/loyalty/rules": {
+  "kind": "grant",
+  "object": "item",
+  "action": "loyalty.manage",
+  "subject": null,
+  "section": "/items/services"
+ },
+ "POST /api/items/loyalty/tell": {
+  "kind": "grant",
+  "object": "item",
+  "action": "loyalty.manage",
+  "subject": null,
+  "section": "/items/services"
+ },
+ "POST /api/items/loyalty/tell-all": {
+  "kind": "grant",
+  "object": "item",
+  "action": "loyalty.manage",
+  "subject": null,
+  "section": "/items/services"
+ },
+ "POST /api/items/modifiers": {
+  "kind": "grant",
+  "object": "item",
+  "action": "edit",
+  "subject": null,
+  "section": "/items/services"
+ },
+ "POST /api/items/modifiers/active": {
+  "kind": "grant",
+  "object": "item",
+  "action": "edit",
+  "subject": null,
+  "section": "/items/services"
+ },
+ "POST /api/items/modifiers/quote": {
+  "kind": "grant",
+  "object": "item",
+  "action": "view",
+  "subject": null,
+  "section": "/items/services"
+ },
+ "POST /api/items/modifiers/update": {
+  "kind": "grant",
+  "object": "item",
+  "action": "edit",
+  "subject": null,
+  "section": "/items/services"
+ },
+ "POST /api/items/options": {
+  "kind": "grant",
+  "object": "item",
+  "action": "edit",
+  "subject": null,
+  "section": "/items/services"
+ },
+ "POST /api/items/options/active": {
+  "kind": "grant",
+  "object": "item",
+  "action": "edit",
+  "subject": null,
+  "section": "/items/services"
+ },
+ "POST /api/items/options/update": {
+  "kind": "grant",
+  "object": "item",
+  "action": "edit",
+  "subject": null,
+  "section": "/items/services"
+ },
+ "POST /api/items/packages": {
+  "kind": "grant",
+  "object": "item",
+  "action": "edit",
+  "subject": null,
+  "section": "/items/packages"
+ },
+ "POST /api/items/packages/update": {
+  "kind": "grant",
+  "object": "item",
+  "action": "edit",
+  "subject": null,
+  "section": "/items/packages"
+ },
+ "POST /api/items/plans": {
+  "kind": "grant",
+  "object": "item",
+  "action": "edit",
+  "subject": null,
+  "section": "/items/plans"
+ },
+ "POST /api/items/plans/update": {
+  "kind": "grant",
+  "object": "item",
+  "action": "edit",
+  "subject": null,
+  "section": "/items/plans"
+ },
+ "POST /api/items/prices": {
+  "kind": "grant",
+  "object": "item",
+  "action": "edit",
+  "subject": null,
+  "section": "/items/services"
+ },
+ "POST /api/items/programs": {
+  "kind": "grant",
+  "object": "item",
+  "action": "edit",
+  "subject": null,
+  "section": "/items/services"
+ },
+ "POST /api/items/programs/delete": {
+  "kind": "grant",
+  "object": "item",
+  "action": "edit",
+  "subject": null,
+  "section": "/items/services"
+ },
+ "POST /api/items/programs/reorder": {
+  "kind": "grant",
+  "object": "item",
+  "action": "edit",
+  "subject": null,
+  "section": "/items/services"
+ },
+ "POST /api/items/programs/update": {
+  "kind": "grant",
+  "object": "item",
+  "action": "edit",
+  "subject": null,
+  "section": "/items/services"
+ },
+ "POST /api/items/promotion-codes": {
+  "kind": "grant",
+  "object": "discount",
+  "action": "edit",
+  "subject": null,
+  "section": "/items/coupons"
+ },
+ "POST /api/items/promotion-codes/deactivate": {
+  "kind": "grant",
+  "object": "discount",
+  "action": "edit",
+  "subject": null,
+  "section": "/items/coupons"
+ },
+ "POST /api/items/services": {
+  "kind": "grant",
+  "object": "item",
+  "action": "edit",
+  "subject": null,
+  "section": "/items/services"
+ },
+ "POST /api/items/services/booking": {
+  "kind": "handler",
+  "check": "src/booking/pagesAdmin.mjs — Owner/Admin, or the booking.* named action (own_page, services_manage, pages_manage) for the caller's own row"
+ },
+ "POST /api/items/services/duplicate": {
+  "kind": "grant",
+  "object": "item",
+  "action": "edit",
+  "subject": null,
+  "section": "/items/services"
+ },
+ "POST /api/items/services/update": {
+  "kind": "grant",
+  "object": "item",
+  "action": "edit",
+  "subject": null,
+  "section": "/items/services"
+ },
+ "POST /api/items/units": {
+  "kind": "grant",
+  "object": "item",
+  "action": "edit",
+  "subject": null,
+  "section": "/items/services"
+ },
+ "POST /api/items/units/active": {
+  "kind": "grant",
+  "object": "item",
+  "action": "edit",
+  "subject": null,
+  "section": "/items/services"
+ },
+ "POST /api/jobs/give-up": {
+  "kind": "platform"
+ },
+ "POST /api/jobs/retry": {
+  "kind": "platform"
+ },
+ "POST /api/lifecycle/unsubscribe": {
+  "kind": "public"
+ },
+ "POST /api/locations": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit"
+ },
+ "POST /api/locations/:id": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit"
+ },
+ "POST /api/me/calendar-preferences": {
+  "kind": "self"
+ },
+ "POST /api/me/density": {
+  "kind": "self"
+ },
+ "POST /api/me/devices": {
+  "kind": "self"
+ },
+ "POST /api/me/devices/forget": {
+  "kind": "self"
+ },
+ "POST /api/me/sidebar-collapsed": {
+  "kind": "self"
+ },
+ "POST /api/money/account": {
+  "kind": "section",
+  "section": "/money/account"
+ },
+ "POST /api/money/bank-verify-session": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/payments"
+ },
+ "POST /api/money/coupons/:couponId/apply-to-person": {
+  "kind": "grant",
+  "object": "discount",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/invoices"
+ },
+ "POST /api/money/coupons/:couponId/remove-from-person": {
+  "kind": "grant",
+  "object": "discount",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/invoices"
+ },
+ "POST /api/money/credit-notes/issue": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/invoices"
+ },
+ "POST /api/money/credit-notes/void": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/invoices"
+ },
+ "POST /api/money/credits/adjust": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/payments"
+ },
+ "POST /api/money/credits/list": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "view",
+  "subject": null,
+  "section": "/money/payments"
+ },
+ "POST /api/money/devices/deactivate": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/settings/money"
+ },
+ "POST /api/money/devices/register": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/settings/money"
+ },
+ "POST /api/money/devices/rename": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": "/settings/money"
+ },
+ "POST /api/money/disputes/accept": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/disputes"
+ },
+ "POST /api/money/disputes/close": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/disputes"
+ },
+ "POST /api/money/disputes/evidence": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/disputes"
+ },
+ "POST /api/money/entitlements": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/subscriptions"
+ },
+ "POST /api/money/estimates": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/estimates"
+ },
+ "POST /api/money/estimates/cancel": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/estimates"
+ },
+ "POST /api/money/estimates/send": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/estimates"
+ },
+ "POST /api/money/estimates/update": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/estimates"
+ },
+ "POST /api/money/fraud/approve": {
+  "kind": "grant",
+  "object": "dispute",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/payments"
+ },
+ "POST /api/money/invoices": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/invoices"
+ },
+ "POST /api/money/invoices/delete-draft": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/invoices"
+ },
+ "POST /api/money/invoices/duplicate": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/invoices"
+ },
+ "POST /api/money/invoices/lines/order": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/invoices"
+ },
+ "POST /api/money/invoices/mark-paid": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/invoices"
+ },
+ "POST /api/money/invoices/mark-uncollectible": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/invoices"
+ },
+ "POST /api/money/invoices/recompute": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/invoices"
+ },
+ "POST /api/money/invoices/reminders/toggle": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/invoices"
+ },
+ "POST /api/money/invoices/send": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/invoices"
+ },
+ "POST /api/money/invoices/update": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/invoices"
+ },
+ "POST /api/money/invoices/void": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/invoices"
+ },
+ "POST /api/money/line-items": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/invoices"
+ },
+ "POST /api/money/line-items/update": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/invoices"
+ },
+ "POST /api/money/line-items/void": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/invoices"
+ },
+ "POST /api/money/payment-links": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/payment-links"
+ },
+ "POST /api/money/payment-links/deactivate": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/payment-links"
+ },
+ "POST /api/money/payment-methods": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/payments"
+ },
+ "POST /api/money/payment-methods/detach": {
+  "kind": "grant",
+  "object": "person",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/subscriptions"
+ },
+ "POST /api/money/payment-plans/agree": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/invoices"
+ },
+ "POST /api/money/payment-plans/cancel": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/invoices"
+ },
+ "POST /api/money/payment-plans/offer": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/invoices"
+ },
+ "POST /api/money/payments/attach": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/payments"
+ },
+ "POST /api/money/payments/record": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/payments"
+ },
+ "POST /api/money/refund": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/payments"
+ },
+ "POST /api/money/refund/approve": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/payments"
+ },
+ "POST /api/money/refund/decline": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/payments"
+ },
+ "POST /api/money/refunds/cancel": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/payments"
+ },
+ "POST /api/money/stripe/component-session": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "view",
+  "subject": null,
+  "section": "/money/payments"
+ },
+ "POST /api/money/subscriptions": {
+  "kind": "section",
+  "section": "/money/subscriptions"
+ },
+ "POST /api/money/subscriptions/pause": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/subscriptions"
+ },
+ "POST /api/money/subscriptions/remove-discount": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/subscriptions"
+ },
+ "POST /api/money/subscriptions/resume": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/subscriptions"
+ },
+ "POST /api/money/subscriptions/start": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/subscriptions"
+ },
+ "POST /api/money/subscriptions/stop": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/subscriptions"
+ },
+ "POST /api/money/subscriptions/stripe": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/subscriptions"
+ },
+ "POST /api/money/subscriptions/update-card": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/subscriptions"
+ },
+ "POST /api/money/tap/activate": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/payments"
+ },
+ "POST /api/money/tap/connection-token": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/payments"
+ },
+ "POST /api/money/tap/intent": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/payments"
+ },
+ "POST /api/money/terminal/cancel": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/payments"
+ },
+ "POST /api/money/terminal/display": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/payments"
+ },
+ "POST /api/money/terminal/intent": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/virtual-terminal"
+ },
+ "POST /api/money/terminal/process": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/payments"
+ },
+ "POST /api/money/terminal/refund": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/payments"
+ },
+ "POST /api/network": {
+  "kind": "grant",
+  "object": "network_party",
+  "action": "edit",
+  "subject": null,
+  "section": "/network"
+ },
+ "POST /api/network/referrals": {
+  "kind": "section",
+  "section": null
+ },
+ "POST /api/network/referrals/:id/outcome": {
+  "kind": "section",
+  "section": null
+ },
+ "POST /api/network/referrals/inbound": {
+  "kind": "section",
+  "section": null
+ },
+ "POST /api/network/update": {
+  "kind": "grant",
+  "object": "network_party",
+  "action": "edit",
+  "subject": null,
+  "section": "/network"
+ },
+ "POST /api/notes/:id/share": {
+  "kind": "handler",
+  "check": "registerOne — src/routes/notes.mjs:57"
+ },
+ "POST /api/notes/:id/unshare": {
+  "kind": "handler",
+  "check": "registerOne — src/routes/notes.mjs:58"
+ },
+ "POST /api/notifications": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": "/settings/notifications"
+ },
+ "POST /api/notifications/preferences": {
+  "kind": "grant",
+  "object": "person",
+  "action": "edit",
+  "subject": "appUserId",
+  "section": "/settings/mine"
+ },
+ "POST /api/notifications/read": {
+  "kind": "grant",
+  "object": "person",
+  "action": "edit",
+  "subject": null,
+  "section": "/settings/mine"
+ },
+ "POST /api/notifications/read-all": {
+  "kind": "grant",
+  "object": "person",
+  "action": "edit",
+  "subject": null,
+  "section": "/settings/mine"
+ },
+ "POST /api/notifications/test": {
+  "kind": "grant",
+  "object": "person",
+  "action": "edit",
+  "subject": null,
+  "section": "/settings/mine"
+ },
+ "POST /api/oauth/approve": {
+  "kind": "handler",
+  "check": "src/routes/developerConnector.mjs — a signed-in person (runTenantScoped); may hand over only the scopes scopesGrantableBy says they hold, else 403"
+ },
+ "POST /api/oauth/preview": {
+  "kind": "handler",
+  "check": "src/routes/developerConnector.mjs — a signed-in person (runTenantScoped); reads only the application's sealed name and the workspace name"
+ },
+ "POST /api/people": {
+  "kind": "grant",
+  "object": "person",
+  "action": "person.create",
+  "subject": null,
+  "section": "/people"
+ },
+ "POST /api/people/:id/attachments": {
+  "kind": "grant",
+  "object": "person",
+  "action": "edit",
+  "subject": "param:id",
+  "section": "/people/all"
+ },
+ "POST /api/people/:id/attachments/:attachmentId/delete": {
+  "kind": "grant",
+  "object": "person",
+  "action": "delete",
+  "subject": "param:id",
+  "section": "/people/all"
+ },
+ "POST /api/people/:personId/goals": {
+  "kind": "section",
+  "section": null
+ },
+ "POST /api/people/assign": {
+  "kind": "grant",
+  "object": "person",
+  "action": "edit",
+  "subject": "personId",
+  "section": "/people"
+ },
+ "POST /api/people/bulk/archive": {
+  "kind": "grant",
+  "object": "person",
+  "action": "edit",
+  "subject": null,
+  "section": "/people"
+ },
+ "POST /api/people/bulk/assign": {
+  "kind": "grant",
+  "object": "person",
+  "action": "edit",
+  "subject": null,
+  "section": "/people"
+ },
+ "POST /api/people/bulk/export": {
+  "kind": "grant",
+  "object": "person",
+  "action": "edit",
+  "subject": null,
+  "section": "/people"
+ },
+ "POST /api/people/bulk/stage": {
+  "kind": "grant",
+  "object": "person",
+  "action": "edit",
+  "subject": null,
+  "section": "/people"
+ },
+ "POST /api/people/check-duplicate": {
+  "kind": "grant",
+  "object": "person",
+  "action": "person.create",
+  "subject": null,
+  "section": "/people"
+ },
+ "POST /api/people/consent-status": {
+  "kind": "grant",
+  "object": "person",
+  "action": "edit",
+  "subject": "personId",
+  "section": "/people"
+ },
+ "POST /api/people/goals/:goalId": {
+  "kind": "section",
+  "section": null
+ },
+ "POST /api/people/guardian": {
+  "kind": "grant",
+  "object": "person",
+  "action": "person.create",
+  "subject": null,
+  "section": "/people"
+ },
+ "POST /api/people/guardian/remove": {
+  "kind": "grant",
+  "object": "person",
+  "action": "person.create",
+  "subject": null,
+  "section": "/people"
+ },
+ "POST /api/people/invite": {
+  "kind": "grant",
+  "object": "person",
+  "action": "team.invite",
+  "subject": null,
+  "section": "/people/team"
+ },
+ "POST /api/people/invite/cancel": {
+  "kind": "grant",
+  "object": "person",
+  "action": "team.invite",
+  "subject": null,
+  "section": "/people/team"
+ },
+ "POST /api/people/lead-next-step": {
+  "kind": "grant",
+  "object": "person",
+  "action": "edit",
+  "subject": "personId",
+  "section": "/people"
+ },
+ "POST /api/people/lead-stage": {
+  "kind": "grant",
+  "object": "person",
+  "action": "edit",
+  "subject": "personId",
+  "section": "/people/leads"
+ },
+ "POST /api/people/leave": {
+  "kind": "self"
+ },
+ "POST /api/people/merge": {
+  "kind": "grant",
+  "object": "person",
+  "action": "record.archive",
+  "subject": null,
+  "section": "/people"
+ },
+ "POST /api/people/merge/dismiss": {
+  "kind": "grant",
+  "object": "person",
+  "action": "record.archive",
+  "subject": null,
+  "section": "/people"
+ },
+ "POST /api/people/merge/preview": {
+  "kind": "grant",
+  "object": "person",
+  "action": "record.archive",
+  "subject": null,
+  "section": "/people"
+ },
+ "POST /api/people/merge/undo": {
+  "kind": "grant",
+  "object": "person",
+  "action": "record.archive",
+  "subject": null,
+  "section": "/people"
+ },
+ "POST /api/people/portal-link": {
+  "kind": "grant",
+  "object": "person",
+  "action": "team.invite",
+  "subject": null,
+  "section": "/people/team"
+ },
+ "POST /api/people/programs": {
+  "kind": "grant",
+  "object": "person",
+  "action": "edit",
+  "subject": "personId",
+  "section": "/people"
+ },
+ "POST /api/people/samples/remove": {
+  "kind": "grant",
+  "object": "person",
+  "action": "edit",
+  "subject": null,
+  "section": "/people"
+ },
+ "POST /api/people/scheduling/copy-last-week": {
+  "kind": "section",
+  "section": null
+ },
+ "POST /api/people/scheduling/shifts": {
+  "kind": "section",
+  "section": null
+ },
+ "POST /api/people/scheduling/shifts/:id": {
+  "kind": "section",
+  "section": null
+ },
+ "POST /api/people/scheduling/shifts/:id/delete": {
+  "kind": "section",
+  "section": null
+ },
+ "POST /api/people/scheduling/time-off": {
+  "kind": "section",
+  "section": null
+ },
+ "POST /api/people/scheduling/time-off/:id/delete": {
+  "kind": "section",
+  "section": null
+ },
+ "POST /api/people/staff-role": {
+  "kind": "grant",
+  "object": "person",
+  "action": "staff_role.change",
+  "subject": null,
+  "section": "/people/team"
+ },
+ "POST /api/people/stage": {
+  "kind": "grant",
+  "object": "person",
+  "action": "edit",
+  "subject": "personId",
+  "section": "/people"
+ },
+ "POST /api/people/team/:personId/offboard": {
+  "kind": "action",
+  "action": "team.remove",
+  "section": "/people/team"
+ },
+ "POST /api/people/team/:personId/reactivate": {
+  "kind": "action",
+  "action": "staff_role.change",
+  "section": "/people/team"
+ },
+ "POST /api/people/team/:personId/suspend": {
+  "kind": "action",
+  "action": "staff_role.change",
+  "section": "/people/team"
+ },
+ "POST /api/people/team/see-as": {
+  "kind": "grant",
+  "object": "person",
+  "action": "view",
+  "section": "/people/team"
+ },
+ "POST /api/people/team/see-as/exit": {
+  "kind": "staff"
+ },
+ "POST /api/people/update": {
+  "kind": "grant",
+  "object": "person",
+  "action": "edit",
+  "subject": "personId",
+  "section": "/people"
+ },
+ "POST /api/platform/automations/kill-switch": {
+  "kind": "platform"
+ },
+ "POST /api/platform/docustay/review": {
+  "kind": "platform"
+ },
+ "POST /api/platform/docustay/review/resolve": {
+  "kind": "platform"
+ },
+ "POST /api/platform/flags": {
+  "kind": "platform"
+ },
+ "POST /api/platform/jobs/run-now": {
+  "kind": "platform"
+ },
+ "POST /api/platform/practices/:tenantId/access-requests": {
+  "kind": "platform"
+ },
+ "POST /api/platform/practices/:tenantId/access/end": {
+  "kind": "platform"
+ },
+ "POST /api/platform/prompts/dismiss": {
+  "kind": "platform"
+ },
+ "POST /api/platform/provisioning/advance": {
+  "kind": "platform"
+ },
+ "POST /api/platform/run/competitor-watch": {
+  "kind": "platform"
+ },
+ "POST /api/platform/session": {
+  "kind": "platform"
+ },
+ "POST /api/platform/tiers": {
+  "kind": "platform"
+ },
+ "POST /api/platform/usage/tell": {
+  "kind": "platform"
+ },
+ "POST /api/product/docustay/activate": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": "/settings/plans"
+ },
+ "POST /api/product/docustay/ai-usage/ceiling": {
+  "kind": "handler",
+  "check": "src/routes/docustay.mjs viewerGuard — keystone.docustay_may_view() (the named Docustay viewers, in the platform organisation only); the value is the platform.ai_monthly_usd setting"
+ },
+ "POST /api/product/docustay/ai-usage/pause": {
+  "kind": "handler",
+  "check": "src/routes/docustay.mjs viewerGuard — keystone.docustay_may_view() (the named Docustay viewers, in the platform organisation only); the value is the platform.ai_paused setting"
+ },
+ "POST /api/product/docustay/billing-email": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": "/settings/plans"
+ },
+ "POST /api/product/docustay/budget": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": "/settings/plans"
+ },
+ "POST /api/product/docustay/cancel": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": "/settings/plans"
+ },
+ "POST /api/product/docustay/cancel/prepare": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": "/settings/plans"
+ },
+ "POST /api/product/docustay/checkout": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": "/settings/plans"
+ },
+ "POST /api/product/docustay/checkout/confirm": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": "/settings/plans"
+ },
+ "POST /api/product/docustay/delete-workspace": {
+  "kind": "section",
+  "section": "/settings/plans"
+ },
+ "POST /api/product/docustay/delete-workspace/cancel": {
+  "kind": "section",
+  "section": "/settings/plans"
+ },
+ "POST /api/product/docustay/estimate": {
+  "kind": "grant",
+  "object": "document",
+  "action": "view",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/product/docustay/inbox/read-all": {
+  "kind": "grant",
+  "object": "document",
+  "action": "edit",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/product/docustay/licenses": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": "/settings/plans"
+ },
+ "POST /api/product/docustay/payments/connect": {
+  "kind": "section",
+  "section": "/settings/plans"
+ },
+ "POST /api/product/docustay/payments/disconnect": {
+  "kind": "section",
+  "section": "/settings/plans"
+ },
+ "POST /api/product/docustay/payments/refresh": {
+  "kind": "section",
+  "section": "/settings/plans"
+ },
+ "POST /api/product/docustay/payments/settings": {
+  "kind": "section",
+  "section": "/settings/plans"
+ },
+ "POST /api/product/docustay/payments/update-link": {
+  "kind": "section",
+  "section": "/settings/plans"
+ },
+ "POST /api/product/docustay/payments/wizard": {
+  "kind": "section",
+  "section": "/settings/plans"
+ },
+ "POST /api/product/docustay/payments/wizard/continue": {
+  "kind": "section",
+  "section": "/settings/plans"
+ },
+ "POST /api/product/docustay/portal": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": "/settings/plans"
+ },
+ "POST /api/product/docustay/preflight": {
+  "kind": "grant",
+  "object": "document",
+  "action": "view",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/product/docustay/prompt-event": {
+  "kind": "grant",
+  "object": "document",
+  "action": "view",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/product/docustay/resume": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": "/settings/plans"
+ },
+ "POST /api/product/docustay/switch-plan": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": "/settings/plans"
+ },
+ "POST /api/product/docustay/switch-plan/cancel": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": "/settings/plans"
+ },
+ "POST /api/product/docustay/switch-plan/preview": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": "/settings/plans"
+ },
+ "POST /api/product/docustay/welcome-emails": {
+  "kind": "grant",
+  "object": "document",
+  "action": "edit",
+  "subject": null,
+  "section": "/documents"
+ },
+ "POST /api/prompts/dismiss": {
+  "kind": "staff"
+ },
+ "POST /api/public/book": {
+  "kind": "public"
+ },
+ "POST /api/public/book/manage/cancel": {
+  "kind": "public",
+  "note": "src/routes/publicBookingPages.mjs — Host-resolved, booking everywhere 22 Oct"
+ },
+ "POST /api/public/book/manage/move": {
+  "kind": "public",
+  "note": "src/routes/publicBookingPages.mjs — Host-resolved, booking everywhere 22 Oct"
+ },
+ "POST /api/public/book/team": {
+  "kind": "public",
+  "note": "src/routes/publicBookingPages.mjs — Host-resolved, booking everywhere 22 Oct"
+ },
+ "POST /api/public/builder/frame-origin": {
+  "kind": "public",
+  "note": "src/routes/developerBuilder.mjs — answers only whether an HMAC-signed, unexpired statement is genuine; it reads and writes nothing"
+ },
+ "POST /api/public/documents/decline": {
+  "kind": "public"
+ },
+ "POST /api/public/documents/self-serve/start": {
+  "kind": "public"
+ },
+ "POST /api/public/documents/sign": {
+  "kind": "public"
+ },
+ "POST /api/public/documents/view": {
+  "kind": "public"
+ },
+ "POST /api/public/docustay/addon": {
+  "kind": "public",
+  "note": "src/routes/publicDocustay.mjs — the closed Pro add-on: a valid licence key for the install gets the bundle, every other key gets the licence route's plain refusal; per-IP limit"
+ },
+ "POST /api/public/docustay/contact": {
+  "kind": "public",
+  "note": "src/routes/docustayContact.mjs — honeypot, global, per-IP and per-address limits"
+ },
+ "POST /api/public/docustay/license": {
+  "kind": "public",
+  "note": "src/routes/publicDocustay.mjs:25 — a self-hosted install checks its key; per-IP limit"
+ },
+ "POST /api/public/docustay/ping": {
+  "kind": "public",
+  "note": "src/routes/publicDocustay.mjs:31 — five whitelisted usage numbers; per-IP limit"
+ },
+ "POST /api/public/docustay/selfhost/checkout": {
+  "kind": "public",
+  "note": "src/routes/publicDocustay.mjs:38 — starts a Stripe Checkout; per-IP limit"
+ },
+ "POST /api/public/docustay/usage-report": {
+  "kind": "public",
+  "note": "src/routes/publicDocustay.mjs:45 — same whitelist as the ping; per-IP limit"
+ },
+ "POST /api/public/leads": {
+  "kind": "public"
+ },
+ "POST /api/public/money/estimate/accept": {
+  "kind": "public"
+ },
+ "POST /api/public/money/estimate/decline": {
+  "kind": "public"
+ },
+ "POST /api/public/money/gift-cards/buy": {
+  "kind": "public"
+ },
+ "POST /api/public/money/invoice/pay": {
+  "kind": "public"
+ },
+ "POST /api/public/money/links/:slug/intent": {
+  "kind": "public"
+ },
+ "POST /api/public/oauth/register": {
+  "kind": "public",
+  "note": "src/routes/developerConnector.mjs — dynamic client registration; stores nothing (the client id seals its own name and redirect addresses); https or localhost addresses only, at most 5"
+ },
+ "POST /api/public/oauth/token": {
+  "kind": "public",
+  "note": "src/routes/developerConnector.mjs — needs a sealed one-time code from a signed-in person's Allow, the PKCE verifier and the same client and return address; mints a draft-only key"
+ },
+ "POST /api/public/pdf/acknowledge": {
+  "kind": "public"
+ },
+ "POST /api/public/pdf/assist": {
+  "kind": "public"
+ },
+ "POST /api/public/pdf/attachment": {
+  "kind": "public"
+ },
+ "POST /api/public/pdf/decide": {
+  "kind": "public"
+ },
+ "POST /api/public/pdf/decline": {
+  "kind": "public"
+ },
+ "POST /api/public/pdf/delegate": {
+  "kind": "public"
+ },
+ "POST /api/public/pdf/download/file": {
+  "kind": "public"
+ },
+ "POST /api/public/pdf/download/send-code": {
+  "kind": "public"
+ },
+ "POST /api/public/pdf/download/verify": {
+  "kind": "public"
+ },
+ "POST /api/public/pdf/download/view": {
+  "kind": "public"
+ },
+ "POST /api/public/pdf/embed-origins": {
+  "kind": "public",
+  "note": "src/routes/documentsPdf.mjs:254 — a signing-party token (party()) is required; returns only the origins of that document's own sender"
+ },
+ "POST /api/public/pdf/file": {
+  "kind": "public"
+ },
+ "POST /api/public/pdf/payment/confirm": {
+  "kind": "public"
+ },
+ "POST /api/public/pdf/payment/start": {
+  "kind": "public"
+ },
+ "POST /api/public/pdf/progress": {
+  "kind": "public"
+ },
+ "POST /api/public/pdf/request-changes": {
+  "kind": "public"
+ },
+ "POST /api/public/pdf/send-code": {
+  "kind": "public"
+ },
+ "POST /api/public/pdf/sign": {
+  "kind": "public"
+ },
+ "POST /api/public/pdf/test/file": {
+  "kind": "public"
+ },
+ "POST /api/public/pdf/test/view": {
+  "kind": "public"
+ },
+ "POST /api/public/pdf/upload-file": {
+  "kind": "public"
+ },
+ "POST /api/public/pdf/verify": {
+  "kind": "public"
+ },
+ "POST /api/public/pdf/view": {
+  "kind": "public"
+ },
+ "POST /api/public/s2s/book": {
+  "kind": "public"
+ },
+ "POST /api/public/s2s/book/manage/cancel": {
+  "kind": "public",
+  "note": "src/routes/publicBookingS2S.mjs — signed, token authorises one booking; booking everywhere 22 Oct"
+ },
+ "POST /api/public/s2s/book/manage/move": {
+  "kind": "public",
+  "note": "src/routes/publicBookingS2S.mjs — signed, token authorises one booking; booking everywhere 22 Oct"
+ },
+ "POST /api/public/waitlist/claim": {
+  "kind": "public"
+ },
+ "POST /api/public/waitlist/decline": {
+  "kind": "public"
+ },
+ "POST /api/qa/cast-session": {
+  "kind": "public"
+ },
+ "POST /api/qa/fake-model": {
+  "kind": "public"
+ },
+ "POST /api/qa/fake-model/plan": {
+  "kind": "public"
+ },
+ "POST /api/qa/session": {
+  "kind": "public"
+ },
+ "POST /api/qa/webhook-sink": {
+  "kind": "public"
+ },
+ "POST /api/records/archive": {
+  "kind": "action",
+  "action": "record.archive",
+  "section": "/people/all",
+  "note": "object from body"
+ },
+ "POST /api/records/bulk": {
+  "kind": "action",
+  "action": "record.archive",
+  "section": "/people/all",
+  "note": "object from body — bulk Delete/Archive/Restore on any list (§13.3); same gate as archive (Owner/Admin); each id independent"
+ },
+ "POST /api/records/custom-field-value": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": null
+ },
+ "POST /api/records/delete": {
+  "kind": "action",
+  "action": "record.archive",
+  "section": "/people/all",
+  "note": "object from body — the shared Delete; same gate as archive (Owner/Admin)"
+ },
+ "POST /api/records/restore": {
+  "kind": "action",
+  "action": "record.restore",
+  "section": "/people/all",
+  "note": "object from body"
+ },
+ "POST /api/settings": {
+  "kind": "handler",
+  "check": "src/routes/settings.mjs:2112"
+ },
+ "POST /api/settings/billing/close": {
+  "kind": "section",
+  "section": "/settings/billing"
+ },
+ "POST /api/settings/billing/portal-session": {
+  "kind": "section",
+  "section": "/settings/billing"
+ },
+ "POST /api/settings/branding/logo": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "section": "/settings/branding"
+ },
+ "POST /api/settings/connect/start": {
+  "kind": "handler",
+  "check": "src/routes/settings.mjs:715"
+ },
+ "POST /api/settings/data-export": {
+  "kind": "section",
+  "section": "/settings/data"
+ },
+ "POST /api/settings/data/export": {
+  "kind": "section",
+  "section": "/settings/data"
+ },
+ "POST /api/settings/developer/sandbox": {
+  "kind": "section",
+  "section": "/settings/developer/sandbox"
+ },
+ "POST /api/settings/email/disconnect": {
+  "kind": "handler",
+  "check": "src/routes/settings.mjs:1847"
+ },
+ "POST /api/settings/email/routing": {
+  "kind": "section",
+  "section": "/settings/email"
+ },
+ "POST /api/settings/email/templates/:key/preview": {
+  "kind": "section",
+  "section": "/settings/email"
+ },
+ "POST /api/settings/email/templates/:key/test-send": {
+  "kind": "section",
+  "section": "/settings/email"
+ },
+ "POST /api/settings/fields-required": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "section": "/settings/practice"
+ },
+ "POST /api/settings/growth": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "section": "/settings"
+ },
+ "POST /api/settings/import": {
+  "kind": "section",
+  "section": "/settings/import"
+ },
+ "POST /api/settings/import/:id/check": {
+  "kind": "section",
+  "section": "/settings/import"
+ },
+ "POST /api/settings/import/:id/mapping": {
+  "kind": "section",
+  "section": "/settings/import"
+ },
+ "POST /api/settings/import/:id/run": {
+  "kind": "section",
+  "section": "/settings/import"
+ },
+ "POST /api/settings/import/:id/undo": {
+  "kind": "section",
+  "section": "/settings/import"
+ },
+ "POST /api/settings/invoice-layouts/archive": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "section": "/settings/money"
+ },
+ "POST /api/settings/invoice-layouts/unarchive": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "section": "/settings/money"
+ },
+ "POST /api/settings/locations/assignments": {
+  "kind": "handler",
+  "check": "src/routes/locationAssignments.mjs:49"
+ },
+ "POST /api/settings/members/action": {
+  "kind": "section",
+  "section": "/settings/roles"
+ },
+ "POST /api/settings/members/permission": {
+  "kind": "section",
+  "section": "/settings/roles"
+ },
+ "POST /api/settings/members/reset": {
+  "kind": "section",
+  "section": "/settings/roles"
+ },
+ "POST /api/settings/mine": {
+  "kind": "section",
+  "section": "/settings/mine"
+ },
+ "POST /api/settings/mine/photo": {
+  "kind": "section",
+  "section": "/settings/mine"
+ },
+ "POST /api/settings/money/disconnect": {
+  "kind": "handler",
+  "check": "moneyOAuthFloor — src/routes/settings.mjs:774"
+ },
+ "POST /api/settings/notifications/rule": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "subject": null,
+  "section": "/settings/notifications"
+ },
+ "POST /api/settings/payment-methods": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "section": "/settings/money"
+ },
+ "POST /api/settings/plans/checkout-session": {
+  "kind": "rank",
+  "rank": "owner",
+  "section": "/settings/plans"
+ },
+ "POST /api/settings/practice/shape": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "section": "/settings/shape"
+ },
+ "POST /api/settings/practice/slug": {
+  "kind": "grant",
+  "object": "setting",
+  "action": "edit",
+  "section": "/settings/practice"
+ },
+ "POST /api/settings/roles/action": {
+  "kind": "section",
+  "section": "/settings/roles"
+ },
+ "POST /api/settings/roles/create": {
+  "kind": "section",
+  "section": "/settings/roles"
+ },
+ "POST /api/settings/roles/delete": {
+  "kind": "section",
+  "section": "/settings/roles"
+ },
+ "POST /api/settings/roles/permission": {
+  "kind": "section",
+  "section": "/settings/roles"
+ },
+ "POST /api/settings/roles/rename": {
+  "kind": "section",
+  "section": "/settings/roles"
+ },
+ "POST /api/settings/roles/reset": {
+  "kind": "section",
+  "section": "/settings/roles"
+ },
+ "POST /api/settings/security": {
+  "kind": "rank",
+  "rank": "admin"
+ },
+ "POST /api/settings/security/remind": {
+  "kind": "rank",
+  "rank": "admin"
+ },
+ "POST /api/settings/security/reset": {
+  "kind": "rank",
+  "rank": "admin"
+ },
+ "POST /api/settings/sign-in/revoke": {
+  "kind": "section",
+  "section": "/settings/sign-in"
+ },
+ "POST /api/settings/sign-in/revoke-all": {
+  "kind": "section",
+  "section": "/settings/sign-in"
+ },
+ "POST /api/settings/support-access/:grantId/end": {
+  "kind": "rank",
+  "rank": "admin"
+ },
+ "POST /api/settings/support-access/:requestId/answer": {
+  "kind": "rank",
+  "rank": "admin"
+ },
+ "POST /api/settings/terminology/lint": {
+  "kind": "section",
+  "section": "/settings/terminology"
+ },
+ "POST /api/setup/owner": {
+  "kind": "public",
+  "note": "src/routes/localAuth.mjs:41 — self-hosted only; needs the KEYSTONE_SETUP_TOKEN, once; rate-limited"
+ },
+ "POST /api/signup": {
+  "kind": "public"
+ },
+ "POST /api/signup/questions": {
+  "kind": "public"
+ },
+ "POST /api/signup/verify/request": {
+  "kind": "public"
+ },
+ "POST /api/signup/verify/verify": {
+  "kind": "public"
+ },
+ "POST /api/staff/payer-groups": {
+  "kind": "section",
+  "section": null
+ },
+ "POST /api/staff/payer-groups/:id": {
+  "kind": "section",
+  "section": null
+ },
+ "POST /api/staff/payer-groups/:id/archive": {
+  "kind": "section",
+  "section": null
+ },
+ "POST /api/staff/payer-groups/:id/members": {
+  "kind": "section",
+  "section": null
+ },
+ "POST /api/staff/payer-groups/:id/members/move": {
+  "kind": "section",
+  "section": null
+ },
+ "POST /api/tasks": {
+  "kind": "grant",
+  "object": "task",
+  "action": "edit",
+  "section": "/tasks"
+ },
+ "POST /api/tasks/automations/:key": {
+  "kind": "grant",
+  "object": "automation",
+  "action": "edit",
+  "note": "src/routes/tasks.mjs:246"
+ },
+ "POST /api/tasks/complete": {
+  "kind": "grant",
+  "object": "task",
+  "action": "edit",
+  "subject": "taskId",
+  "section": "/tasks"
+ },
+ "POST /api/tasks/reassign": {
+  "kind": "grant",
+  "object": "task",
+  "action": "edit",
+  "subject": "taskId",
+  "section": "/tasks"
+ },
+ "POST /api/tasks/snooze": {
+  "kind": "grant",
+  "object": "task",
+  "action": "edit",
+  "section": "/tasks"
+ },
+ "POST /api/tax-ids": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/invoices"
+ },
+ "POST /api/tax-ids/delete": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/invoices"
+ },
+ "POST /api/tax-ids/update": {
+  "kind": "grant",
+  "object": "invoice",
+  "action": "edit",
+  "subject": null,
+  "section": "/money/invoices"
+ },
+ "POST /api/telemetry": {
+  "kind": "public"
+ },
+ "POST /api/uploads/ticket": {
+  "kind": "grant",
+  "object": "item",
+  "action": "edit",
+  "subject": null,
+  "section": "/items/services"
+ },
+ "POST /api/v1/documents": {
+  "kind": "handler",
+  "check": "src/routes/developerDocuments.mjs — developer API key with documents:write (ROUTE_SCOPES), checked by token before the handler runs"
+ },
+ "POST /api/v1/documents/:id/embed-session": {
+  "kind": "handler",
+  "check": "src/routes/developerDocuments.mjs:160 — developer API key with documents:write (ROUTE_SCOPES) + Idempotency-Key; asOwner and assertTestKeyMay run before the session is made"
+ },
+ "POST /api/v1/documents/:id/remind": {
+  "kind": "handler",
+  "check": "src/routes/developerDocuments.mjs — developer API key with documents:write (ROUTE_SCOPES) + Idempotency-Key, checked by tokenRoute before anything runs"
+ },
+ "POST /api/v1/documents/:id/revise": {
+  "kind": "handler",
+  "check": "src/routes/developerDocuments.mjs — developer API key with documents:write (ROUTE_SCOPES), checked by token before the handler runs"
+ },
+ "POST /api/v1/documents/:id/send": {
+  "kind": "handler",
+  "check": "src/routes/developerDocuments.mjs — developer API key with documents:write (ROUTE_SCOPES), checked by token before the handler runs"
+ },
+ "POST /api/v1/documents/:id/test-sign": {
+  "kind": "handler",
+  "check": "src/routes/developerDocuments.mjs — developer API key with documents:write (ROUTE_SCOPES), checked by tokenRoute before anything runs; refuses a live key"
+ },
+ "POST /api/v1/documents/:id/void": {
+  "kind": "handler",
+  "check": "src/routes/developerDocuments.mjs — developer API key with documents:write (ROUTE_SCOPES), checked by tokenRoute before anything runs"
+ },
+ "POST /api/v1/documents/ai/draft": {
+  "kind": "handler",
+  "check": "src/routes/developerDocuments.mjs — developer API key with documents:write (ROUTE_SCOPES), checked by tokenRoute before anything runs"
+ },
+ "POST /api/v1/documents/ai/edit": {
+  "kind": "handler",
+  "check": "src/routes/developerDocuments.mjs — developer API key with documents:write (ROUTE_SCOPES), checked by token before the handler runs"
+ },
+ "POST /api/v1/documents/ai/jobs/:id/cancel": {
+  "kind": "handler",
+  "check": "src/routes/developerDocuments.mjs — developer API key with documents:write (ROUTE_SCOPES), checked by token before the handler runs"
+ },
+ "POST /api/v1/documents/check": {
+  "kind": "handler",
+  "check": "src/routes/developerDocuments.mjs — developer API key with documents:write (ROUTE_SCOPES), checked by token before the handler runs"
+ },
+ "POST /api/v1/documents/detect-fields": {
+  "kind": "handler",
+  "check": "src/routes/developerDocuments.mjs — developer API key with documents:read or templates:read (ROUTE_SCOPES), checked by token before the handler runs; it stores nothing"
+ },
+ "POST /api/v1/documents/send": {
+  "kind": "handler",
+  "check": "src/routes/developerDocuments.mjs — developer API key with documents:write (ROUTE_SCOPES) + Idempotency-Key, checked by tokenRoute before anything runs"
+ },
+ "POST /api/v1/drafts": {
+  "kind": "handler",
+  "check": "src/routes/developerPlays.mjs — developer API key with drafts:write (ROUTE_SCOPES), checked by tokenRoute before anything runs"
+ },
+ "POST /api/v1/drafts/:draftRef/answers": {
+  "kind": "handler",
+  "check": "src/routes/developerPlays.mjs — developer API key with drafts:write (ROUTE_SCOPES), checked by tokenRoute before anything runs"
+ },
+ "POST /api/v1/embedded/builder-session": {
+  "kind": "handler",
+  "check": "src/routes/developerBuilder.mjs — developer API key with embedded:write (ROUTE_SCOPES) + Idempotency-Key; the website must be on the organisation's own embedding list; the key it makes can only read and write templates, is member rank and ends in an hour"
+ },
+ "POST /api/v1/embedded/scribe-session": {
+  "kind": "handler",
+  "check": "src/routes/developerBuilder.mjs — developer API key with embedded:write (ROUTE_SCOPES) + Idempotency-Key; the site must be on the embed allow-list; the key it mints is draft-only and lasts an hour"
+ },
+ "POST /api/v1/payments/:id/refund": {
+  "kind": "handler",
+  "check": "src/routes/developerRun9.mjs — developer API key with documents:write (ROUTE_SCOPES) + Idempotency-Key, checked by tokenRoute before anything runs; refunds through Stripe as the workspace owner. Run 9."
+ },
+ "POST /api/v1/playbooks": {
+  "kind": "handler",
+  "check": "src/routes/developerPlays.mjs — developer API key with plays:write (ROUTE_SCOPES), checked by tokenRoute before anything runs"
+ },
+ "POST /api/v1/playbooks/:name/enable": {
+  "kind": "handler",
+  "check": "src/routes/developerPlays.mjs — developer API key with plays:write (ROUTE_SCOPES), checked by tokenRoute before anything runs; switches a pack on or off for the workspace. Run 9 Part 4R."
+ },
+ "POST /api/v1/plays": {
+  "kind": "handler",
+  "check": "src/routes/developerPlays.mjs — developer API key with plays:write (ROUTE_SCOPES), checked by tokenRoute before anything runs"
+ },
+ "POST /api/v1/plays/:name/duplicate": {
+  "kind": "handler",
+  "check": "src/routes/developerPlays.mjs — developer API key with plays:write (ROUTE_SCOPES), checked by tokenRoute before anything runs"
+ },
+ "POST /api/v1/plays/:name/publish": {
+  "kind": "handler",
+  "check": "src/routes/developerPlays.mjs — developer API key with plays:write (ROUTE_SCOPES), checked by tokenRoute before anything runs"
+ },
+ "POST /api/v1/plays/test": {
+  "kind": "handler",
+  "check": "src/routes/developerPlays.mjs — developer API key with plays:write (ROUTE_SCOPES), checked by tokenRoute before anything runs"
+ },
+ "POST /api/v1/preflight": {
+  "kind": "handler",
+  "check": "src/routes/developerDocuments.mjs — developer API key (ROUTE_SCOPES), checked by tokenRoute before anything runs; it reads the plan and changes nothing"
+ },
+ "POST /api/v1/templates/:id/defaults": {
+  "kind": "handler",
+  "check": "src/routes/developerDocuments.mjs — developer API key with documents:write (ROUTE_SCOPES), checked by token before the handler runs"
+ },
+ "POST /api/v1/templates/:id/documents": {
+  "kind": "handler",
+  "check": "src/routes/developerDocuments.mjs — developer API key with documents:write (ROUTE_SCOPES), checked by token before the handler runs"
+ },
+ "POST /api/v1/templates/file": {
+  "kind": "handler",
+  "check": "src/routes/developerDocuments.mjs — developer API key with documents:write (ROUTE_SCOPES) + Idempotency-Key, checked by tokenRoute before anything runs"
+ },
+ "POST /api/v1/templates/html": {
+  "kind": "handler",
+  "check": "src/routes/developerDocuments.mjs — developer API key with documents:write (ROUTE_SCOPES) + Idempotency-Key, checked by tokenRoute before anything runs"
+ },
+ "POST /api/v1/templates/library/:slug/customize": {
+  "kind": "handler",
+  "check": "src/routes/developerPlays.mjs (registerLibraryV1) — developer API key with templates:write or documents:write (ROUTE_SCOPES), checked by tokenRoute before anything runs; a new template (the monthly cap applies). Run 9 Part 4R."
+ },
+ "POST /api/v1/templates/library/:slug/documents": {
+  "kind": "handler",
+  "check": "src/routes/developerPlays.mjs (registerLibraryV1) — developer API key with templates:write or documents:write (ROUTE_SCOPES), checked by tokenRoute before anything runs; a draft from a built-in, as the workspace owner. Run 9 Part 4R."
+ },
+ "POST /api/v1/templates/source": {
+  "kind": "handler",
+  "check": "src/routes/developerDocuments.mjs — developer API key with documents:write (ROUTE_SCOPES) + Idempotency-Key, checked by tokenRoute before anything runs"
+ },
+ "POST /api/v1/webhooks": {
+  "kind": "handler",
+  "check": "src/routes/developerWebhooks.mjs — developer API key with webhooks:write (ROUTE_SCOPES), checked by tokenRoute before anything runs"
+ },
+ "POST /api/v1/webhooks/:id/rotate": {
+  "kind": "handler",
+  "check": "src/routes/developerWebhooks.mjs — developer API key with webhooks:write (ROUTE_SCOPES), checked by tokenRoute before anything runs"
+ },
+ "POST /api/v1/webhooks/:id/test": {
+  "kind": "handler",
+  "check": "src/routes/developerWebhooks.mjs — developer API key with webhooks:write (ROUTE_SCOPES), checked by tokenRoute before anything runs"
+ },
+ "POST /api/webhooks/:provider": {
+  "kind": "webhook"
+ },
+ "POST /go/:pageSlug/lead": {
+  "kind": "public"
+ },
+ "POST /go/f/:formSlug": {
+  "kind": "public"
+ },
+ "POST /go/subscribe/:tenantSlug": {
+  "kind": "public"
+ },
+ "POST /go/unsubscribe": {
+  "kind": "public"
+ },
+ "POST /go/unsubscribe/undo": {
+  "kind": "public"
+ },
+ "POST /mcp": {
+  "kind": "handler",
+  "check": "src/routes/developerConnector.mjs — a bearer API key, probed against /api/v1 before anything runs; every tool is an /api/v1 call that carries the same key, so ROUTE_SCOPES and the draft-only policy decide"
+ },
+ "PUT /api/account/profile": {
+  "kind": "self"
+ },
+ "PUT /api/app/profile": {
+  "kind": "client"
+ },
+ "PUT /api/documents/pdf/uploads/:uploadId/parts/:n": {
+  "kind": "section",
+  "section": "/documents"
+ },
+ "PUT /api/platform/tiers/capabilities": {
+  "kind": "platform"
+ },
+ "PUT /api/settings/notifications": {
+  "kind": "section",
+  "section": "/settings/notifications"
+ }
+}

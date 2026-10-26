@@ -1,0 +1,979 @@
+[
+ {
+  "slug": "nda-template",
+  "title": "NDA template",
+  "use": "ndas",
+  "line": "Both sides keep what they share private.",
+  "when": [
+   "Use it before you share plans, prices, code or client names with someone you may work with.",
+   "It runs both ways, so each side is bound by the same promise."
+  ],
+  "check": [
+   "Name what counts as confidential, in your own words.",
+   "Set how long the promise lasts.",
+   "Check the state whose law should apply."
+  ],
+  "summary": "Two sides share private information and each agrees to protect the other’s: what counts, what they may do with it, how long it lasts.",
+  "who": "Two businesses or people who are about to share private information to explore a deal, a partnership or a project.",
+  "roles": [
+   "Party A",
+   "Party B"
+  ],
+  "seats": [
+   "signer_1",
+   "signer_2"
+  ],
+  "pages": 3,
+  "minutes": 8,
+  "labels": [
+   "First party’s name",
+   "Second party’s name",
+   "Effective date",
+   "Party A’s legal name",
+   "Party A’s address",
+   "Party B’s legal name",
+   "Party B’s address",
+   "the purpose, in a sentence or two",
+   "Sharing period",
+   "Protection period",
+   "Governing law (state)",
+   "Printed name",
+   "Title or capacity",
+   "Party A signature"
+  ],
+  "fields": 25,
+  "required": 25
+ },
+ {
+  "slug": "offer-letter-template",
+  "title": "Offer letter template",
+  "use": "hr-and-onboarding",
+  "line": "Role, pay and start date, for a candidate to accept.",
+  "when": [
+   "Use it when you have chosen someone and want their yes on paper.",
+   "It states what you are offering and asks for one signature to accept."
+  ],
+  "check": [
+   "Fill in pay, hours and start date exactly.",
+   "Say whether the offer depends on a background check.",
+   "Set an expiry so the offer cannot be accepted months later."
+  ],
+  "summary": "A full offer of employment: role, start date, pay, hours, benefits, conditions, notice and confidentiality, accepted by signing.",
+  "who": "An employer making a job offer, and a candidate accepting it by signing.",
+  "roles": [
+   "Employer",
+   "Candidate"
+  ],
+  "seats": [
+   "signer_1",
+   "signer_2"
+  ],
+  "pages": 3,
+  "minutes": 10,
+  "labels": [
+   "Company name",
+   "Date of this letter",
+   "Candidate’s full name",
+   "Company’s legal name",
+   "Job title",
+   "Manager’s name",
+   "Start date",
+   "Place of work, or remote",
+   "Pay, with how often",
+   "How often you are paid",
+   "Classification",
+   "Paid time off",
+   "Hours or schedule",
+   "Background check"
+  ],
+  "fields": 26,
+  "required": 25
+ },
+ {
+  "slug": "independent-contractor-agreement-template",
+  "title": "Independent contractor agreement template",
+  "use": "contracts",
+  "line": "Who does the work, how it is paid, who owns the result.",
+  "when": [
+   "Use it when someone who is not an employee will do work for you.",
+   "It names the work, the payment and the ownership of what is delivered."
+  ],
+  "check": [
+   "Describe the work so both sides could tell if it was done.",
+   "State the rate and when it is paid.",
+   "Check whether your state treats this person as a contractor."
+  ],
+  "summary": "An agreement between a company and an independent contractor: the work, pay, independence, ownership of what is made, confidentiality and ending.",
+  "who": "A business that hires an independent contractor for a defined piece of work, and the contractor doing it.",
+  "roles": [
+   "Company",
+   "Contractor"
+  ],
+  "seats": [
+   "signer_1",
+   "signer_2"
+  ],
+  "pages": 4,
+  "minutes": 10,
+  "labels": [
+   "Company name",
+   "Contractor’s name",
+   "Start date",
+   "Company’s legal name",
+   "Company address",
+   "Contractor’s full name",
+   "Contractor’s address",
+   "Describe the services",
+   "How the Contractor is paid",
+   "Amount, in US dollars",
+   "How often the Contractor invoices",
+   "Days to pay",
+   "Notice period",
+   "Include the non-solicitation section"
+  ],
+  "fields": 31,
+  "required": 31
+ },
+ {
+  "slug": "statement-of-work-template",
+  "title": "Statement of work template",
+  "use": "agencies",
+  "line": "What will be done, by when, for how much.",
+  "when": [
+   "Use it for one job under a larger agreement, so each job has its own scope.",
+   "It fixes the deliverables, the dates and the price before work starts."
+  ],
+  "check": [
+   "List each deliverable as something that can be checked.",
+   "Give dates, not weeks.",
+   "Say what happens to work outside the scope."
+  ],
+  "summary": "A detailed statement of work: objectives, scope, deliverables with dates, assumptions, acceptance, fees by milestone and change control.",
+  "who": "An agency or freelancer and a client agreeing exactly what will be delivered, by when, for how much, under an existing or standalone agreement.",
+  "roles": [
+   "Agency",
+   "Client"
+  ],
+  "seats": [
+   "signer_1",
+   "signer_2"
+  ],
+  "pages": 6,
+  "minutes": 26,
+  "labels": [
+   "Project name",
+   "Date of this SOW",
+   "Agency’s legal name",
+   "Client’s legal name",
+   "Date of the master agreement, if any",
+   "State the objective in a few sentences",
+   "Say how the Client will know it worked",
+   "Start date",
+   "End date",
+   "List what the Agency is assuming",
+   "the Agency’s project lead",
+   "How often the sides check in",
+   "the Client’s project lead",
+   "Review period"
+  ],
+  "fields": 77,
+  "required": 65
+ },
+ {
+  "slug": "service-agreement-template",
+  "title": "Service agreement template",
+  "use": "contracts",
+  "line": "Scope, fees and term between a provider and a client.",
+  "when": [
+   "Use it when you will do ongoing or repeated work for a client.",
+   "It covers the scope, the fees, the term and how either side ends it."
+  ],
+  "check": [
+   "Match the scope to what you actually offer.",
+   "Write the fee and the payment date.",
+   "Decide how much notice ends the agreement."
+  ],
+  "summary": "A full agreement for work one person or business does for another: scope, fees, term, ownership, confidentiality, liability and how it ends.",
+  "who": "Anyone who does work for another business or person for a fee: consultants, studios, freelancers, small agencies.",
+  "roles": [
+   "Provider",
+   "Client"
+  ],
+  "seats": [
+   "signer_1",
+   "signer_2"
+  ],
+  "pages": 8,
+  "minutes": 20,
+  "labels": [
+   "Provider’s name",
+   "Client’s name",
+   "Date of this Agreement",
+   "Provider’s legal name",
+   "Client’s legal name",
+   "Provider’s address",
+   "Client’s address",
+   "Provider’s email",
+   "Client’s email",
+   "Time to review",
+   "Days to pay an invoice",
+   "Notice to end for convenience",
+   "Include the non-solicitation section",
+   "Governing law (state)"
+  ],
+  "fields": 58,
+  "required": 50
+ },
+ {
+  "slug": "non-solicitation-agreement",
+  "title": "Non-solicitation agreement",
+  "use": "ndas",
+  "line": "A promise not to hire away each other's people.",
+  "when": [
+   "Use it when two businesses will work closely and share staff or clients.",
+   "It limits recruiting for a stated period."
+  ],
+  "check": [
+   "Name who is covered: staff, clients or both.",
+   "Set a period you could defend as reasonable.",
+   "Check how your state treats these promises."
+  ],
+  "summary": "An employee acknowledges and agrees not to solicit the company’s customers or colleagues for a set period after leaving.",
+  "who": "An employer and an employee who want to record, in plain words, an agreement not to recruit each other’s people or take its customers.",
+  "roles": [
+   "Company",
+   "Employee"
+  ],
+  "seats": [
+   "signer_1",
+   "signer_2"
+  ],
+  "pages": 3,
+  "minutes": 6,
+  "labels": [
+   "Company name",
+   "Employee’s full name",
+   "Company’s legal name",
+   "Date",
+   "Employee’s role",
+   "Period after leaving",
+   "Governing law (state)",
+   "Printed name",
+   "Employee signature",
+   "Employee date signed",
+   "Title or capacity",
+   "Company signature",
+   "Company date signed"
+  ],
+  "fields": 14,
+  "required": 14
+ },
+ {
+  "slug": "photo-release-form",
+  "title": "Photo release form",
+  "use": "waivers-and-consent",
+  "line": "Permission to use someone's picture.",
+  "when": [
+   "Use it before you publish a picture of someone.",
+   "It says where and how the picture may be used."
+  ],
+  "check": [
+   "List where the pictures will appear.",
+   "Say how long you may use them.",
+   "Use the media release form if the person is a minor."
+  ],
+  "summary": "Permission to take and use photos or video of a person, with choices about where they appear and a way to withdraw.",
+  "who": "A photographer, organization or business that takes photos or video of people and wants clear permission for where they are used.",
+  "roles": [
+   "Subject"
+  ],
+  "seats": [
+   "signer_1"
+  ],
+  "pages": 2,
+  "minutes": 7,
+  "labels": [
+   "Your full name",
+   "Organization or photographer",
+   "Event or occasion",
+   "Date",
+   "On the Organization’s website",
+   "On the Organization’s social media accounts",
+   "In printed material such as flyers, brochures and reports",
+   "In news stories and press releases",
+   "In paid advertising",
+   "My name may be used in captions",
+   "How long this lasts",
+   "Your email",
+   "Organization’s email",
+   "Printed name"
+  ],
+  "fields": 16,
+  "required": 10
+ },
+ {
+  "slug": "permission-slip-template",
+  "title": "Permission slip template",
+  "use": "education",
+  "line": "A parent agrees to a trip or an activity.",
+  "when": [
+   "Use it for a trip, an event or an activity that needs a parent's yes.",
+   "It names the activity, the date and who to call."
+  ],
+  "check": [
+   "Give the date, place and times.",
+   "Add an emergency contact field.",
+   "Say what the school or group will and will not cover.",
+   "Keep health notes brief. Docustay is not for protected health information yet."
+  ],
+  "summary": "A parent or guardian gives permission for a child to take part in a trip or activity, with health notes and emergency contacts.",
+  "who": "A school, club or group that takes children on a trip or activity and needs a parent’s or guardian’s consent and emergency details.",
+  "roles": [
+   "Parent or guardian"
+  ],
+  "seats": [
+   "signer_1"
+  ],
+  "pages": 2,
+  "minutes": 8,
+  "labels": [
+   "School or group",
+   "Trip or activity",
+   "Date",
+   "Child’s full name",
+   "Child’s date of birth",
+   "Class or year",
+   "Health notes",
+   "My child will bring medicine",
+   "Dietary needs",
+   "Emergency contact’s name",
+   "Their phone",
+   "My phone",
+   "If I cannot be reached, I agree that the adults in charge may get urgent medical help for my child",
+   "How the group travels"
+  ],
+  "fields": 20,
+  "required": 13
+ },
+ {
+  "slug": "liability-waiver-template",
+  "title": "Liability waiver template",
+  "use": "waivers-and-consent",
+  "line": "Risk and responsibility, signed before an activity.",
+  "when": [
+   "Use it before a class, a race, a rental or any activity with risk.",
+   "It states the risks and asks each person to accept them."
+  ],
+  "check": [
+   "Describe the real risks of your activity.",
+   "Check what your state allows a waiver to cover.",
+   "Collect a guardian's signature for anyone under 18."
+  ],
+  "summary": "A participant acknowledges the risks of an activity, agrees to follow the rules and confirms their emergency contact.",
+  "who": "An organizer of a sports event, class, workshop or activity where participants accept the normal risks and agree to the rules.",
+  "roles": [
+   "Participant"
+  ],
+  "seats": [
+   "signer_1"
+  ],
+  "pages": 2,
+  "minutes": 4,
+  "labels": [
+   "Event name",
+   "Your full name",
+   "Date",
+   "Organizer",
+   "Governing law (state)",
+   "I have read this waiver and I understand it. I know that I am giving up some legal rights by signing it.",
+   "Printed name",
+   "Participant signature",
+   "Participant date signed"
+  ],
+  "fields": 9,
+  "required": 9
+ },
+ {
+  "slug": "new-hire-paperwork",
+  "title": "New hire paperwork",
+  "use": "hr-and-onboarding",
+  "line": "The forms to fill on day one, in one send.",
+  "when": [
+   "Use it on or before the first day, so the paperwork is not the first day.",
+   "It gathers the usual forms into one send."
+  ],
+  "check": [
+   "Remove what you do not use.",
+   "Add your own policies as extra pages.",
+   "Keep tax and identity forms in your own payroll system."
+  ],
+  "summary": "One packet for a new starter, in several parts: welcome, handbook, confidentiality, equipment, payroll details and first-day information.",
+  "who": "An employer welcoming a new starter: handbook, confidentiality, equipment, payroll details and first-day information in one packet to sign.",
+  "roles": [
+   "Company",
+   "New starter"
+  ],
+  "seats": [
+   "signer_1",
+   "signer_2"
+  ],
+  "pages": 6,
+  "minutes": 16,
+  "labels": [
+   "Company name",
+   "Your full name",
+   "Start date",
+   "Role",
+   "Manager’s name",
+   "the people team contact",
+   "the IT contact",
+   "I have received and read the staff handbook",
+   "Handbook initials",
+   "I understand that I must treat colleagues, customers and suppliers with respect, and that harassment and discrimination ",
+   "the person for raising concerns",
+   "I will keep the company’s and its customers’ private information private, during and after my employment",
+   "Privacy initials",
+   "I agree"
+  ],
+  "fields": 50,
+  "required": 39
+ },
+ {
+  "slug": "change-order-template",
+  "title": "Change order template",
+  "use": "agencies",
+  "line": "A signed change to the scope or the price.",
+  "when": [
+   "Use it when the client asks for something the first agreement did not cover.",
+   "It records what changes and what it costs."
+  ],
+  "check": [
+   "Name the agreement it changes.",
+   "State the new price and the new date.",
+   "Say that everything else stays the same."
+  ],
+  "summary": "A written change to an existing agreement: what is changing, how the cost and time were worked out, and the new total and finish date.",
+  "who": "A provider and client changing the scope, price or finish date of work that is already agreed.",
+  "roles": [
+   "Provider",
+   "Client"
+  ],
+  "seats": [
+   "signer_1",
+   "signer_2"
+  ],
+  "pages": 3,
+  "minutes": 9,
+  "labels": [
+   "Project name",
+   "Date of this change order",
+   "Provider",
+   "Client",
+   "Date of the original agreement",
+   "Change order number",
+   "Describe what is changing",
+   "Reason for the change",
+   "Price before",
+   "Change in cost, with currency",
+   "Price after",
+   "Finish date before",
+   "New finish date",
+   "Explain how the extra cost or time was worked out"
+  ],
+  "fields": 24,
+  "required": 23
+ },
+ {
+  "slug": "media-release-form",
+  "title": "Media release form",
+  "use": "waivers-and-consent",
+  "line": "A guardian lets you use a child's image and name.",
+  "when": [
+   "Use it when the person in the picture or recording is under 18.",
+   "A parent or guardian signs on the child's behalf."
+  ],
+  "check": [
+   "Say which media: photo, video or audio.",
+   "List where it will be shown.",
+   "Allow the guardian to withdraw permission later."
+  ],
+  "summary": "A parent or guardian chooses where photos and video of their child may be used, with safeguards and a clear way to withdraw.",
+  "who": "A school, club or charity that wants to photograph or film children and needs the parent’s or guardian’s informed, specific permission.",
+  "roles": [
+   "Parent or guardian"
+  ],
+  "seats": [
+   "signer_1"
+  ],
+  "pages": 3,
+  "minutes": 8,
+  "labels": [
+   "Organization",
+   "Event or activity",
+   "Child’s full name",
+   "Child’s date of birth",
+   "Inside the Organization, such as displays, newsletters and noticeboards",
+   "On the Organization’s website",
+   "On the Organization’s social media accounts",
+   "In news stories and press releases",
+   "In training or teaching material",
+   "Write “first name allowed” if it may",
+   "Organization’s email",
+   "An earlier end date, if I want one",
+   "Your full name",
+   "Your relationship to the child"
+  ],
+  "fields": 19,
+  "required": 12
+ },
+ {
+  "slug": "rental-application-form",
+  "title": "Rental application form",
+  "use": "real-estate",
+  "line": "The applicant fills it in and signs.",
+  "when": [
+   "Use it when someone wants to rent from you.",
+   "It collects the details you need to decide."
+  ],
+  "check": [
+   "Ask only what the law lets you ask.",
+   "Say whether a fee is charged.",
+   "Tell applicants how long you take to decide."
+  ],
+  "summary": "An applicant gives their details, address and income history, references and permission for the landlord to check what they have written.",
+  "who": "A landlord or property manager collecting an applicant’s details, income, history and permission to run checks.",
+  "roles": [
+   "Applicant"
+  ],
+  "seats": [
+   "signer_1"
+  ],
+  "pages": 4,
+  "minutes": 18,
+  "labels": [
+   "Property address",
+   "Move-in date",
+   "Monthly rent, if listed",
+   "Full name",
+   "Date of birth",
+   "Phone",
+   "Email",
+   "Current address",
+   "How long at this address",
+   "Current landlord’s name and phone",
+   "Why you are moving",
+   "How many, including you",
+   "Other occupants",
+   "Pets"
+  ],
+  "fields": 43,
+  "required": 26
+ },
+ {
+  "slug": "lease-addendum-template",
+  "title": "Lease addendum template",
+  "use": "real-estate",
+  "line": "A change to a lease, signed in order.",
+  "when": [
+   "Use it when a lease needs one added term, such as a pet or a new occupant.",
+   "It points at the lease and states the one change."
+  ],
+  "check": [
+   "Name the lease and its date.",
+   "Write the added term plainly.",
+   "Say that the rest of the lease still applies."
+  ],
+  "summary": "An addendum that changes an existing lease on one subject, with its terms, start date and what stays the same, signed by both sides.",
+  "who": "A landlord and tenant adding or changing a term of an existing lease: pets, parking, rent date, guests, repairs or something else.",
+  "roles": [
+   "Landlord",
+   "Tenant"
+  ],
+  "seats": [
+   "signer_1",
+   "signer_2"
+  ],
+  "pages": 3,
+  "minutes": 9,
+  "labels": [
+   "Property address",
+   "Date of this addendum",
+   "Landlord’s name",
+   "Tenant’s name",
+   "Date of the original lease",
+   "What it is about",
+   "Write the new terms",
+   "Effective date",
+   "Type, breed and size",
+   "Pet’s name",
+   "Pet deposit or fee, in US dollars",
+   "Extra amount, in US dollars",
+   "When it is due",
+   "Space number or area"
+  ],
+  "fields": 24,
+  "required": 16
+ },
+ {
+  "slug": "vendor-agreement-template",
+  "title": "Vendor agreement template",
+  "use": "contracts",
+  "line": "Terms for a supplier you will buy from again.",
+  "when": [
+   "Use it when you will buy from a supplier more than once.",
+   "It sets deliveries, prices and payment dates."
+  ],
+  "check": [
+   "List what is delivered and how it is checked.",
+   "State prices and payment terms.",
+   "Say how either side can end it."
+  ],
+  "summary": "An agreement under which a vendor supplies goods or services to a company: orders, delivery, pricing, quality, payment, insurance and ending.",
+  "who": "A business buying goods or services from a supplier on a continuing basis, and the supplier agreeing to deliver them.",
+  "roles": [
+   "Company",
+   "Vendor"
+  ],
+  "seats": [
+   "signer_1",
+   "signer_2"
+  ],
+  "pages": 6,
+  "minutes": 17,
+  "labels": [
+   "Company name",
+   "Vendor name",
+   "Date of this Agreement",
+   "Company’s legal name",
+   "Company address",
+   "Vendor’s legal name",
+   "Vendor address",
+   "Inspection period",
+   "Notice of a price change",
+   "Payment terms",
+   "Amount of cover, in US dollars",
+   "a fixed amount, in US dollars",
+   "Initial term",
+   "Notice not to renew"
+  ],
+  "fields": 50,
+  "required": 43
+ },
+ {
+  "slug": "payment-plan-agreement-template",
+  "title": "Payment plan agreement template",
+  "use": "agencies",
+  "line": "Payments by date, written into the agreement.",
+  "when": [
+   "Use it when a client will pay in parts.",
+   "It lists each payment and its date."
+  ],
+  "check": [
+   "Write each amount and its date.",
+   "Say what happens when a payment is late.",
+   "Connect your Stripe account to take a deposit as it is signed."
+  ],
+  "summary": "A customer agrees to pay an outstanding balance in installments: the amount, the schedule, what happens if one is missed, and the first payment.",
+  "who": "A business and a customer agreeing to settle a balance in installments, with the first payment taken securely before signing.",
+  "roles": [
+   "Business",
+   "Customer"
+  ],
+  "seats": [
+   "signer_1",
+   "signer_2"
+  ],
+  "pages": 3,
+  "minutes": 11,
+  "labels": [
+   "Date of this agreement",
+   "Business name",
+   "Customer’s full name",
+   "The balance, with currency",
+   "what it is for",
+   "Any agreed reduction, such as a discount for paying on time",
+   "Number of installments",
+   "How often",
+   "First payment due",
+   "Installment 1 due",
+   "Installment 1 amount",
+   "Installment 2 due",
+   "Installment 2 amount",
+   "Installment 3 due"
+  ],
+  "fields": 29,
+  "required": 23
+ },
+ {
+  "slug": "mutual-release-agreement",
+  "title": "Mutual release agreement",
+  "use": "contracts",
+  "line": "Both sides let go of claims against each other.",
+  "when": [
+   "Use it to close out a dispute or a finished job.",
+   "Each side gives up the claims named in it."
+  ],
+  "check": [
+   "Name the claims being released.",
+   "Say what, if anything, is paid.",
+   "Check what your state does not allow a release to cover."
+  ],
+  "summary": "Two sides settle a matter and release each other from claims about it, with what is settled, any payment, and what is not released.",
+  "who": "Two people or businesses settling a matter and agreeing not to bring claims against each other about it.",
+  "roles": [
+   "Party A",
+   "Party B",
+   "Witness"
+  ],
+  "seats": [
+   "signer_1",
+   "signer_2",
+   "signer_3"
+  ],
+  "pages": 3,
+  "minutes": 7,
+  "labels": [
+   "Date of this Release",
+   "First party’s name",
+   "Second party’s name",
+   "Describe what is being settled",
+   "Settlement terms, if any",
+   "Payment and when it is due, if any",
+   "What either side may say",
+   "Days to consider this Release",
+   "Governing law (state)",
+   "Printed name",
+   "Party A signature",
+   "Party A date signed",
+   "Party B signature",
+   "Party B date signed"
+  ],
+  "fields": 18,
+  "required": 16
+ },
+ {
+  "slug": "volunteer-agreement-template",
+  "title": "Volunteer agreement template",
+  "use": "education",
+  "line": "Terms for an adult who helps without pay.",
+  "when": [
+   "Use it when someone will help at your school, club or event.",
+   "It states what they will do and the rules they accept."
+  ],
+  "check": [
+   "Describe the role and the hours.",
+   "List your safety and conduct rules.",
+   "Say that the role is unpaid."
+  ],
+  "summary": "An agreement between an organization and a volunteer: the role, what each side commits to, confidentiality, safety, and how it ends.",
+  "who": "A charity, school, club or event that relies on volunteers and wants role, expectations, confidentiality and safety written down.",
+  "roles": [
+   "Organization",
+   "Volunteer"
+  ],
+  "seats": [
+   "signer_1",
+   "signer_2"
+  ],
+  "pages": 3,
+  "minutes": 7,
+  "labels": [
+   "Organization name",
+   "Organization’s legal name",
+   "Volunteer’s full name",
+   "Role",
+   "Start date",
+   "Hours or schedule",
+   "Supervisor’s name",
+   "Expenses covered, if any",
+   "Emergency contact’s name",
+   "Their phone",
+   "Printed name",
+   "Volunteer signature",
+   "Volunteer date signed",
+   "Title or capacity"
+  ],
+  "fields": 23,
+  "required": 22
+ },
+ {
+  "slug": "referral-agreement-template",
+  "title": "Referral agreement template",
+  "use": "contracts",
+  "line": "A fee for sending you a client.",
+  "when": [
+   "Use it when someone will send you clients for a fee.",
+   "It defines a referral and the payment."
+  ],
+  "check": [
+   "Define what counts as a referral.",
+   "State the fee and when it is due.",
+   "Say how long the arrangement lasts."
+  ],
+  "summary": "A company agrees to reward a referrer when a person they introduce becomes a customer: what counts, the reward, when it is paid and the rules.",
+  "who": "A business that rewards another person or business for introducing customers.",
+  "roles": [
+   "Company",
+   "Referrer"
+  ],
+  "seats": [
+   "signer_1",
+   "signer_2"
+  ],
+  "pages": 3,
+  "minutes": 7,
+  "labels": [
+   "Start date",
+   "Company",
+   "Referrer",
+   "Time to confirm a Referral",
+   "Time to become a customer",
+   "The reward, such as a percentage or a fixed amount",
+   "Reward paid within",
+   "Governing law (state)",
+   "Printed name",
+   "Title or capacity",
+   "Company signature",
+   "Company date signed",
+   "Referrer signature",
+   "Referrer date signed"
+  ],
+  "fields": 16,
+  "required": 16
+ },
+ {
+  "slug": "deposit-agreement",
+  "title": "Deposit agreement",
+  "use": "real-estate",
+  "line": "The deposit, its terms and when it comes back.",
+  "when": [
+   "Use it when you take a deposit for a rental, a booking or a job.",
+   "It states the amount and the conditions for returning it."
+  ],
+  "check": [
+   "Write the amount and what it secures.",
+   "Say when and how it is returned.",
+   "List what may be deducted."
+  ],
+  "summary": "A customer pays a deposit to hold a booking, item or place: what it holds, when it is refunded, when it is kept, and the card payment.",
+  "who": "A business or landlord taking a deposit to hold something for a customer, and saying when it is refunded or kept.",
+  "roles": [
+   "Business",
+   "Customer"
+  ],
+  "seats": [
+   "signer_1",
+   "signer_2"
+  ],
+  "pages": 3,
+  "minutes": 7,
+  "labels": [
+   "Date of this agreement",
+   "Business name",
+   "Customer’s full name",
+   "What the deposit holds",
+   "Pay deposit",
+   "How the deposit is held",
+   "Refund within",
+   "the condition for a refund",
+   "Date after which the deposit is kept",
+   "Remaining balance and when it is due",
+   "Governing law (state)",
+   "Printed name",
+   "Title or capacity",
+   "Business signature"
+  ],
+  "fields": 18,
+  "required": 17
+ },
+ {
+  "slug": "equipment-loan-agreement",
+  "title": "Equipment loan agreement",
+  "use": "contracts",
+  "line": "What was lent, to whom, and when it comes back.",
+  "when": [
+   "Use it when you lend equipment to a person or a team.",
+   "It lists each item and the date it returns."
+  ],
+  "check": [
+   "List each item with its condition.",
+   "Set the return date.",
+   "Say who pays if it is lost or damaged."
+  ],
+  "summary": "A lender lends an item to a borrower: description and condition, how it may be used, return date and who pays if it is lost or damaged.",
+  "who": "A business, school or person lending equipment to another, with its condition recorded and what happens if it is lost or damaged.",
+  "roles": [
+   "Lender",
+   "Borrower"
+  ],
+  "seats": [
+   "signer_1",
+   "signer_2"
+  ],
+  "pages": 3,
+  "minutes": 9,
+  "labels": [
+   "Date of this agreement",
+   "Lender’s name",
+   "Borrower’s name",
+   "Item and make",
+   "Serial number or tag",
+   "Accessories, such as cables and cases",
+   "Estimated replacement value, in US dollars",
+   "Condition",
+   "Notes on condition",
+   "I agree that the condition is as described",
+   "Lend date",
+   "Return by",
+   "Where to return it",
+   "the purpose, such as a project or event"
+  ],
+  "fields": 24,
+  "required": 21
+ },
+ {
+  "slug": "invoice-approval-form",
+  "title": "Invoice approval form",
+  "use": "agencies",
+  "line": "A signed yes before an invoice is paid.",
+  "when": [
+   "Use it when an invoice needs a named person's approval before payment.",
+   "It records who approved and when."
+  ],
+  "check": [
+   "Name the invoice and its amount.",
+   "Name who must approve.",
+   "Say what happens if it is rejected."
+  ],
+  "summary": "A record of an invoice, what it is for, and the approver’s decision, signed by the person who sent it and the person who approved it.",
+  "who": "A business that needs a named person to approve an invoice before it is paid, with a record of who decided and when.",
+  "roles": [
+   "Sender",
+   "Approver"
+  ],
+  "seats": [
+   "signer_1",
+   "signer_2"
+  ],
+  "pages": 2,
+  "minutes": 8,
+  "labels": [
+   "Invoice number",
+   "Supplier",
+   "Invoice date",
+   "Amount, with currency",
+   "Due date",
+   "Cost center or project",
+   "What the invoice is for",
+   "The goods or services were received, and the invoice matches the order or contract",
+   "The price and quantities match the order or contract",
+   "The goods or services were delivered or carried out as described",
+   "The invoice has not been paid already and is not a duplicate",
+   "There is budget for it, and the right cost center or project is recorded",
+   "Decision",
+   "Note, if any"
+  ],
+  "fields": 23,
+  "required": 20
+ }
+]

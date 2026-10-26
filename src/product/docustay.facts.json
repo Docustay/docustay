@@ -1,0 +1,251 @@
+{
+  "_about": "THE DOCUSTAY FACTS FILE. Every public fact lives here and nowhere else. Edit it only with `plumb change`; then `plumb sync` regenerates everything and `plumb check` proves it. Money is whole cents (USD). Counts that live in code (templates, MCP tools, SDK languages, scopes, webhook events, settings) are computed at build time and are not listed here.",
+  "name": "Docustay",
+  "positioning": "{headline}",
+  "tagline": {
+    "headline": "The e-signature API you own. One flat price for every user.",
+    "short": "Open-source e-signature. One flat price for every user.",
+    "veryShort": "Open-source e-signature API. One price, no seats.",
+    "siteTitle": "The e-signature API you own, at one flat price",
+    "hnTitle": "Show HN: Docustay, an open-source e-signature API with one flat price and no seats",
+    "about": "The open-source e-signature API. One flat price for every user, payments built in, self-hostable.",
+    "support": "Open source and self-hostable. Pro is {pro} a month for your whole team: no per-seat fees, unlimited people and documents. Signers can pay while they sign, straight into your own Stripe account, and Pro adds no fee.",
+    "payAsYouGoLine": "Pay as you go is {person} per person if you would rather pay per person."
+  },
+  "version": "0.2.2",
+  "company": {
+    "line": "Docustay is a product of GLRS LLC",
+    "legalName": "GLRS LLC",
+    "law": "California; Santa Cruz County courts"
+  },
+  "urls": {
+    "site": "https://docustay.app",
+    "app": "https://app.docustay.app",
+    "repo": "https://github.com/Docustay/docustay",
+    "org": "https://github.com/Docustay",
+    "docs": "https://docustay.app/docs",
+    "openapi": "https://docustay.app/api/openapi.json",
+    "demo": "https://docustay.app/demo",
+    "developers": "https://docustay.app/developers",
+    "contact": "https://docustay.app/contact"
+  },
+  "addresses": {
+    "hello": "hello@docustay.app",
+    "support": "support@docustay.app",
+    "privacy": "privacy@docustay.app",
+    "security": "security@docustay.app",
+    "abuse": "abuse@docustay.app",
+    "conduct": "conduct@docustay.app"
+  },
+  "licences": {
+    "server": "AGPL-3.0",
+    "clients": "MIT"
+  },
+  "packages": {
+    "npmScope": "@docustay2026",
+    "npm": [
+      "@docustay2026/sdk",
+      "@docustay2026/embed",
+      "@docustay2026/react",
+      "@docustay2026/vue",
+      "@docustay2026/angular",
+      "@docustay2026/mcp",
+      "docustay"
+    ],
+    "pypi": "docustay",
+    "packagist": "docustay/docustay-php",
+    "nuget": "Docustay.Api",
+    "go": "github.com/docustay/docustay-go/docustay",
+    "images": [
+      "ghcr.io/docustay/docustay-app",
+      "ghcr.io/docustay/docustay-web"
+    ]
+  },
+  "subProcessors": [
+    {
+      "name": "Railway",
+      "does": "Application and database hosting",
+      "data": "All data you store"
+    },
+    {
+      "name": "Google Cloud and Firebase",
+      "does": "Sign-in and supporting infrastructure",
+      "data": "Account email and sign-in identifiers"
+    },
+    {
+      "name": "Stripe",
+      "does": "Payments and billing",
+      "data": "Billing details and payment references; card numbers go to Stripe directly"
+    },
+    {
+      "name": "Resend",
+      "does": "Sending email",
+      "data": "Recipient email address and the message"
+    },
+    {
+      "name": "Anthropic",
+      "does": "The AI model behind Scribe and Find fields with AI",
+      "data": "The text or page pictures of a document, only when a person uses an AI feature, and only for that request"
+    },
+    {
+      "name": "Cloudflare",
+      "does": "Delivery of the website and the signing pages, and the bot check on the sign-up page",
+      "data": "The visitor's address and browser. Page traffic passes through it in transit"
+    },
+    {
+      "name": "PostHog",
+      "does": "Product analytics",
+      "data": "Events about how the website and the service are used, tied to an account id, never document content"
+    },
+    {
+      "name": "Google Analytics",
+      "does": "Website visit statistics, only after you press Accept in the cookie choice",
+      "data": "Page visits and a browser identifier, never document content or signer details"
+    },
+    {
+      "name": "A public time-stamp authority (DigiCert by default)",
+      "does": "Trusted timestamp on a signed file",
+      "data": "A hash of the document only, never its contents"
+    }
+  ],
+  "ownServerTools": [
+    "Umami (website visit counts, on our own server, not a sub-processor)"
+  ],
+  "pricing": {
+    "currency": "usd",
+    "free": {
+      "key": "docustay_free",
+      "name": "Free",
+      "personMonthlyMinor": 0,
+      "docsIncluded": 15,
+      "docOverMinor": null,
+      "draftsIncluded": 10,
+      "draftOverMinor": null,
+      "feeBps": 200,
+      "people": 1,
+      "signersPerMonth": 15,
+      "templatesPerMonth": 5,
+      "uploadMb": 25,
+      "bulkCap": 15
+    },
+    "payg": {
+      "key": "docustay_payg",
+      "name": "Pay as you go",
+      "personMonthlyMinor": 500,
+      "docsIncluded": 15,
+      "docOverMinor": 50,
+      "draftsIncluded": 10,
+      "draftOverMinor": 30,
+      "feeBps": 200,
+      "people": null,
+      "templatesPerMonth": 25,
+      "uploadMb": 25,
+      "bulkCap": null
+    },
+    "pro": {
+      "key": "docustay_pro",
+      "name": "Pro",
+      "monthlyMinor": 3500,
+      "stripeVersion": "v4",
+      "docsIncluded": null,
+      "docOverMinor": null,
+      "draftsIncluded": 100,
+      "draftOverMinor": 30,
+      "feeBps": 0,
+      "people": null,
+      "templatesPerMonth": null,
+      "uploadMb": 100,
+      "bulkCap": null
+    },
+    "lifetime": {
+      "key": "docustay_lifetime",
+      "name": "Lifetime",
+      "oneTimeMinor": 29900,
+      "docsIncluded": null,
+      "docOverMinor": null,
+      "draftsIncluded": 50,
+      "draftOverMinor": 30,
+      "feeBps": 0,
+      "people": null,
+      "templatesPerMonth": null,
+      "uploadMb": 100,
+      "bulkCap": null
+    },
+    "newLimitsFrom": "2026-11-01T00:00:00Z",
+    "selfhost": {
+      "proYearlyMinor": 39000,
+      "commercialFromMinor": 300000
+    },
+    "budget": {
+      "defaultMinor": 5000,
+      "alertPercents": [
+        50,
+        80,
+        100
+      ],
+      "confirmOverMinor": 500,
+      "earlyInvoiceMinor": 5000,
+      "failedPaymentPauseDays": 7
+    },
+    "stripe": {
+      "selfhostLookup": "docustay_pro_selfhost_yearly_v2",
+      "retiredLookups": [
+        "docustay_pro_monthly_v2",
+        "docustay_pro_monthly_v3",
+        "docustay_pro_yearly_v2",
+        "docustay_pro_yearly_v3",
+        "docustay_pro_selfhost_yearly_v1"
+      ],
+      "dashboardName": "Docustay"
+    }
+  },
+  "_pricingNote": "Pro is one price for everyone. The API keeps a deprecated `founders` field that is always false.",
+  "limits": {
+    "freeEmailsPerDay": 25,
+    "paidEmailsPerDay": 500,
+    "apiRequestsPerMinute": 600,
+    "idempotencyKeyMin": 8,
+    "idempotencyKeyMax": 200,
+    "metadataPairsMax": 20,
+    "backupDays": 30,
+    "demoKeptHours": 24,
+    "apiBodyMb": 1,
+    "htmlTemplateMb": 2
+  },
+  "previousVersion": "0.2.1",
+  "author": {
+    "name": "Docustay",
+    "email": "support@docustay.app"
+  },
+  "github": {
+    "description": "{about}",
+    "topics": [
+      "e-signature",
+      "esignature",
+      "electronic-signature",
+      "docusign-alternative",
+      "open-source",
+      "self-hosted",
+      "pdf",
+      "api",
+      "webhooks",
+      "mcp",
+      "agpl"
+    ],
+    "discussions": true
+  },
+  "node": {
+    "ci": 22,
+    "sdkMin": 18
+  },
+  "imageLabels": {
+    "app": {
+      "title": "Docustay app",
+      "description": "{about}"
+    },
+    "web": {
+      "title": "Docustay web",
+      "description": "{about}"
+    }
+  }
+}

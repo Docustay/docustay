@@ -1,0 +1,815 @@
+{
+ "accounts": {
+  "AccountActions": {
+   "file": "lib/record/AccountActions.jsx",
+   "export": "default"
+  },
+  "AccountForm": {
+   "file": "lib/forms/AccountForm.jsx",
+   "export": "default"
+  },
+  "AccountsList": {
+   "file": "lib/screens/accounts/AccountsList.jsx",
+   "export": "default"
+  },
+  "AccountRecord": {
+   "file": "lib/screens/accounts/AccountRecord.jsx",
+   "export": "default"
+  },
+  "NewAccountSheet": {
+   "file": "lib/screens/accounts/NewAccountSheet.jsx",
+   "export": "default"
+  }
+ },
+ "documents": {
+  "StageBoard": {
+   "file": "lib/screens/StageBoard.jsx",
+   "export": "default"
+  },
+  "TemplateBuilder": {
+   "file": "lib/screens/TemplateBuilder.jsx",
+   "export": "default"
+  },
+  "SendDocumentDrawer": {
+   "file": "lib/screens/documents/DocsSend.jsx",
+   "export": "default"
+  },
+  "DocsList": {
+   "file": "lib/screens/documents/DocsList.jsx",
+   "export": "default"
+  },
+  "DocsHome": {
+   "file": "lib/screens/documents/DocsHome.jsx",
+   "export": "default"
+  },
+  "DocsTemplates": {
+   "file": "lib/screens/documents/DocsTemplates.jsx",
+   "export": "default"
+  },
+  "DocumentActions": {
+   "file": "lib/record/DocumentActions.jsx",
+   "export": "default"
+  },
+  "DocPipeline": {
+   "file": "lib/screens/documents/DocPipeline.jsx",
+   "export": "default"
+  },
+  "DocsSent": {
+   "file": "lib/screens/documents/DocsSent.jsx",
+   "export": "default"
+  },
+  "Redirect": {
+   "file": "lib/screens/documents/RedirectToDocs.jsx",
+   "export": "default"
+  },
+  "DocTemplateEditor": {
+   "file": "lib/screens/documents/DocTemplateEditor.jsx",
+   "export": "default"
+  },
+  "SourceWriter": {
+   "file": "lib/screens/documents/SourceWriter.jsx",
+   "export": "default"
+  },
+  "DocsClauses": {
+   "file": "lib/screens/documents/DocsClauses.jsx",
+   "export": "default"
+  },
+  "DocsSettings": {
+   "file": "lib/screens/documents/DocsSettings.jsx",
+   "export": "default"
+  },
+  "DocsFormBuilder": {
+   "file": "lib/screens/documents/DocsFormBuilder.jsx",
+   "export": "default"
+  },
+  "DocsPdfImport": {
+   "file": "lib/screens/documents/DocsPdfImport.jsx",
+   "export": "default"
+  },
+  "DocsCertificate": {
+   "file": "lib/screens/documents/DocsCertificate.jsx",
+   "export": "default"
+  },
+  "DocsDeclined": {
+   "file": "lib/screens/documents/DocsDeclined.jsx",
+   "export": "default"
+  },
+  "DocPreview": {
+   "file": "lib/screens/documents/DocPreview.jsx",
+   "export": "default"
+  },
+  "DocsAICheck": {
+   "file": "lib/screens/documents/DocsAICheck.jsx",
+   "export": "default"
+  },
+  "DocsUpload": {
+   "file": "lib/screens/documents/DocsUpload.jsx",
+   "export": "default"
+  },
+  "DocsKiosk": {
+   "file": "lib/screens/documents/DocsKiosk.jsx",
+   "export": "default"
+  },
+  "DocsBulk": {
+   "file": "lib/screens/documents/DocsBulk.jsx",
+   "export": "default"
+  },
+  "DocsDeveloper": {
+   "file": "lib/screens/documents/DocsDeveloper.jsx",
+   "export": "default"
+  },
+  "DocsPdfTemplates": {
+   "file": "lib/screens/documents/DocsPdfTemplates.jsx",
+   "export": "default"
+  },
+  "DocsPdfTemplate": {
+   "file": "lib/screens/documents/DocsPdfTemplate.jsx",
+   "export": "default"
+  },
+  "DocsPdf": {
+   "file": "lib/screens/documents/DocsPdf.jsx",
+   "export": "default"
+  }
+ },
+ "engagements": {
+  "WeekView": {
+   "file": "lib/screens/WeekView.jsx",
+   "export": "default"
+  },
+  "AttendanceControl": {
+   "file": "lib/screens/AttendanceControl.jsx",
+   "export": "default"
+  },
+  "SessionsLedger": {
+   "file": "lib/screens/engagements/SessionsLedger.jsx",
+   "export": "default"
+  },
+  "WaitlistScreen": {
+   "file": "lib/screens/engagements/WaitlistScreen.jsx",
+   "export": "default"
+  },
+  "OnlineBookingScreen": {
+   "file": "lib/screens/engagements/OnlineBookingScreen.jsx",
+   "export": "default"
+  },
+  "ServiceRulesScreen": {
+   "file": "lib/screens/engagements/ServiceRulesScreen.jsx",
+   "export": "default"
+  },
+  "BookingChannelsScreen": {
+   "file": "lib/screens/engagements/BookingChannelsScreen.jsx",
+   "export": "default"
+  },
+  "AvailabilityScreen": {
+   "file": "lib/screens/engagements/AvailabilityScreen.jsx",
+   "export": "default"
+  },
+  "BookingSettingsHub": {
+   "file": "lib/screens/engagements/BookingSettingsHub.jsx",
+   "export": "default"
+  },
+  "BookingSettingsCalendarLeaf": {
+   "file": "lib/screens/engagements/BookingSettingsCalendarLeaf.jsx",
+   "export": "default"
+  },
+  "BookingSettingsTeamLeaf": {
+   "file": "lib/screens/engagements/BookingSettingsTeamLeaf.jsx",
+   "export": "default"
+  },
+  "BookingSettingsPayingLeaf": {
+   "file": "lib/screens/engagements/BookingSettingsPayingLeaf.jsx",
+   "export": "default"
+  },
+  "BookingSettingsSendingLeaf": {
+   "file": "lib/screens/engagements/BookingSettingsSendingLeaf.jsx",
+   "export": "default"
+  },
+  "BookingHistoryLeaf": {
+   "file": "lib/screens/engagements/BookingHistoryLeaf.jsx",
+   "export": "default"
+  },
+  "CalendarMoveModal": {
+   "file": "lib/screens/engagements/CalendarMoveModal.jsx",
+   "export": "default"
+  },
+  "CalendarFlagModal": {
+   "file": "lib/screens/engagements/CalendarFlagModal.jsx",
+   "export": "default"
+  },
+  "BlockTimePopover": {
+   "file": "lib/screens/engagements/BlockTimePopover.jsx",
+   "export": "default"
+  },
+  "HoursDialog": {
+   "file": "lib/screens/engagements/HoursDialog.jsx",
+   "export": "default"
+  },
+  "CalendarMonthView": {
+   "file": "lib/screens/engagements/CalendarMonthView.jsx",
+   "export": "default"
+  },
+  "CalendarTeamView": {
+   "file": "lib/screens/engagements/CalendarTeamView.jsx",
+   "export": "default"
+  },
+  "CalendarSyncBanner": {
+   "file": "lib/screens/engagements/CalendarSyncBanner.jsx",
+   "export": "default"
+  },
+  "Redirect": {
+   "file": "lib/screens/documents/RedirectToDocs.jsx",
+   "export": "default"
+  }
+ },
+ "growth": {
+  "Campaigns": {
+   "file": "lib/screens/growth/Campaigns.jsx",
+   "export": "default"
+  },
+  "Segments": {
+   "file": "lib/screens/growth/Segments.jsx",
+   "export": "default"
+  },
+  "LandingPages": {
+   "file": "lib/screens/growth/LandingPages.jsx",
+   "export": "default"
+  },
+  "CampaignEditor": {
+   "file": "lib/screens/growth/CampaignEditor.jsx",
+   "export": "default"
+  }
+ },
+ "home": {
+  "Home": {
+   "file": "lib/screens/Home.jsx",
+   "export": "default"
+  },
+  "SignupQuestions": {
+   "file": "lib/screens/home/SignupQuestions.jsx",
+   "export": "default"
+  },
+  "HomeStaff": {
+   "file": "lib/screens/home/HomeStaff.jsx",
+   "export": "default"
+  },
+  "HomeFirstRun": {
+   "file": "lib/screens/home/HomeFirstRun.jsx",
+   "export": "default"
+  },
+  "HomeLoading": {
+   "file": "lib/screens/home/HomeLoading.jsx",
+   "export": "default"
+  },
+  "PromptFeed": {
+   "file": "lib/screens/home/PromptFeed.jsx",
+   "export": "default"
+  }
+ },
+ "items": {
+  "ItemsRecordActions": {
+   "file": "lib/record/ItemsRecordActions.jsx",
+   "export": "default"
+  },
+  "ServicesList": {
+   "file": "lib/screens/items/ServicesList.jsx",
+   "export": "default"
+  },
+  "CatalogueTabs": {
+   "file": "lib/screens/catalogue/CatalogueTabs.jsx",
+   "export": "default"
+  },
+  "ServiceEditor": {
+   "file": "lib/screens/items/ServiceEditor.jsx",
+   "export": "default"
+  },
+  "PackageEditor": {
+   "file": "lib/screens/items/PackageEditor.jsx",
+   "export": "default"
+  },
+  "PlanEditor": {
+   "file": "lib/screens/items/PlanEditor.jsx",
+   "export": "default"
+  },
+  "DiscountEditor": {
+   "file": "lib/screens/items/DiscountEditor.jsx",
+   "export": "default"
+  },
+  "CategoriesPage": {
+   "file": "lib/screens/items/CategoriesPage.jsx",
+   "export": "default"
+  },
+  "Redirect": {
+   "file": "lib/screens/documents/RedirectToDocs.jsx",
+   "export": "default"
+  },
+  "ProgramsPage": {
+   "file": "lib/screens/items/ProgramsPage.jsx",
+   "export": "default"
+  },
+  "ProgramRecord": {
+   "file": "lib/screens/items/ProgramRecord.jsx",
+   "export": "default"
+  },
+  "ModifiersPage": {
+   "file": "lib/screens/items/ModifiersPage.jsx",
+   "export": "default"
+  },
+  "OptionsPage": {
+   "file": "lib/screens/items/OptionsPage.jsx",
+   "export": "default"
+  },
+  "UnitsPage": {
+   "file": "lib/screens/items/UnitsPage.jsx",
+   "export": "default"
+  },
+  "ImageLibraryPage": {
+   "file": "lib/screens/items/ImageLibraryPage.jsx",
+   "export": "default"
+  },
+  "LoyaltyPage": {
+   "file": "lib/screens/items/LoyaltyPage.jsx",
+   "export": "default"
+  },
+  "GiftCardsPage": {
+   "file": "lib/screens/items/GiftCardsPage.jsx",
+   "export": "default"
+  },
+  "ItemsDefaultsPage": {
+   "file": "lib/screens/items/ItemsDefaultsPage.jsx",
+   "export": "default"
+  },
+  "CouponsPage": {
+   "file": "lib/screens/items/CouponsPage.jsx",
+   "export": "default"
+  },
+  "CouponEditor": {
+   "file": "lib/screens/items/CouponEditor.jsx",
+   "export": "default"
+  },
+  "ServiceEditorRail": {
+   "file": "lib/screens/items/ServiceEditorRail.jsx",
+   "export": "default"
+  },
+  "ServiceAfterSave": {
+   "file": "lib/screens/items/ServiceAfterSave.jsx",
+   "export": "default"
+  },
+  "ModalArchiveService": {
+   "file": "lib/screens/items/ModalArchiveService.jsx",
+   "export": "default"
+  },
+  "ModalAttachAgreement": {
+   "file": "lib/screens/items/ModalAttachAgreement.jsx",
+   "export": "default"
+  },
+  "ModalChangePrice": {
+   "file": "lib/screens/items/ModalChangePrice.jsx",
+   "export": "default"
+  }
+ },
+ "money": {
+  "MoneyActions": {
+   "file": "lib/forms/MoneyActions.jsx",
+   "export": "default"
+  },
+  "InvoiceEditorSlideUp": {
+   "file": "lib/screens/money/InvoiceEditorSlideUp.jsx",
+   "export": "default"
+  },
+  "MoneyInvoices": {
+   "file": "lib/screens/money/MoneyInvoices.jsx",
+   "export": "default"
+  },
+  "InvoiceEditor": {
+   "file": "lib/screens/money/InvoiceEditor.jsx",
+   "export": "default"
+  },
+  "MoneyPayouts": {
+   "file": "lib/screens/money/MoneyPayouts.jsx",
+   "export": "default"
+  },
+  "MoneyDisputes": {
+   "file": "lib/screens/money/MoneyDisputes.jsx",
+   "export": "default"
+  },
+  "MoneyRefunds": {
+   "file": "lib/screens/money/MoneyRefunds.jsx",
+   "export": "default"
+  },
+  "MoneyConnect": {
+   "file": "lib/screens/money/MoneyConnect.jsx",
+   "export": "default"
+  },
+  "MoneyPayments": {
+   "file": "lib/screens/money/MoneyPayments.jsx",
+   "export": "default"
+  },
+  "MoneyAccountManagement": {
+   "file": "lib/screens/money/MoneyAccountManagement.jsx",
+   "export": "default"
+  },
+  "SetTax": {
+   "file": "lib/screens/settings/SetTax.jsx",
+   "export": "default"
+  }
+ },
+ "network": {
+  "NetworkListScreen": {
+   "file": "lib/screens/network/NetworkListScreen.jsx",
+   "export": "default"
+  },
+  "NetworkPartner": {
+   "file": "lib/screens/network/NetworkPartner.jsx",
+   "export": "default"
+  },
+  "NetworkReleases": {
+   "file": "lib/screens/network/NetworkReleases.jsx",
+   "export": "default"
+  }
+ },
+ "people": {
+  "PersonForm": {
+   "file": "lib/forms/PersonForm.jsx",
+   "export": "default"
+  },
+  "PersonActions": {
+   "file": "lib/record/PersonActions.jsx",
+   "export": "default"
+  },
+  "TeamListScreen": {
+   "file": "lib/screens/people/TeamListScreen.jsx",
+   "export": "default"
+  },
+  "TeamInviteDrawer": {
+   "file": "lib/screens/people/TeamInviteDrawer.jsx",
+   "export": "default"
+  },
+  "TeamRemoveScreen": {
+   "file": "lib/screens/people/TeamRemoveScreen.jsx",
+   "export": "default"
+  },
+  "PeopleLedger": {
+   "file": "lib/screens/people/PeopleLedger.jsx",
+   "export": "default"
+  },
+  "SchedulingScreen": {
+   "file": "lib/screens/people/SchedulingScreen.jsx",
+   "export": "default"
+  },
+  "TeamSeeAs": {
+   "file": "lib/screens/people/TeamSeeAs.jsx",
+   "export": "default"
+  },
+  "LeadBoard": {
+   "file": "lib/screens/people/LeadBoard.jsx",
+   "export": "default"
+  }
+ },
+ "platform": {
+  "PlatformScreen": {
+   "file": "lib/screens/platform/PlatformScreen.jsx",
+   "export": "default"
+  },
+  "PlatOverview": {
+   "file": "lib/screens/platform/PlatOverview.jsx",
+   "export": "default"
+  },
+  "PlatPractices": {
+   "file": "lib/screens/platform/PlatPractices.jsx",
+   "export": "default"
+  },
+  "PlatPracticeRecord": {
+   "file": "lib/screens/platform/PlatPracticeRecord.jsx",
+   "export": "default"
+  },
+  "PlatGrantAccess": {
+   "file": "lib/screens/platform/PlatGrantAccess.jsx",
+   "export": "default"
+  },
+  "PlatViewingAs": {
+   "file": "lib/screens/platform/PlatViewingAs.jsx",
+   "export": "default"
+  },
+  "ProvisioningScreen": {
+   "file": "lib/screens/ProvisioningScreen.jsx",
+   "export": "default"
+  },
+  "PlatUsage": {
+   "file": "lib/screens/platform/PlatUsage.jsx",
+   "export": "default"
+  },
+  "PlatAutomations": {
+   "file": "lib/screens/platform/PlatAutomations.jsx",
+   "export": "default"
+  },
+  "PlatBranding": {
+   "file": "lib/screens/platform/PlatBranding.jsx",
+   "export": "default"
+  },
+  "PlatFlags": {
+   "file": "lib/screens/PlatFlags.jsx",
+   "export": "default"
+  },
+  "PlatHealth": {
+   "file": "lib/screens/PlatHealth.jsx",
+   "export": "default"
+  },
+  "PlatJobs": {
+   "file": "lib/screens/platform/PlatJobs.jsx",
+   "export": "default"
+  },
+  "PlatTiers": {
+   "file": "lib/screens/platform/PlatTiers.jsx",
+   "export": "default"
+  },
+  "PlatformJobActions": {
+   "file": "lib/screens/PlatformJobActions.jsx",
+   "export": "default"
+  }
+ },
+ "portal": {
+  "ClientApp": {
+   "file": "lib/portal/ClientApp.jsx",
+   "export": "default"
+  }
+ },
+ "reports": {
+  "ReportsHome": {
+   "file": "lib/screens/reports/ReportsHome.jsx",
+   "export": "default"
+  },
+  "ReportMoney": {
+   "file": "lib/screens/reports/ReportMoney.jsx",
+   "export": "default"
+  },
+  "ReportPeople": {
+   "file": "lib/screens/reports/ReportPeople.jsx",
+   "export": "default"
+  },
+  "ReportSessions": {
+   "file": "lib/screens/reports/ReportSessions.jsx",
+   "export": "default"
+  },
+  "ReportLeads": {
+   "file": "lib/screens/reports/ReportLeads.jsx",
+   "export": "default"
+  },
+  "ReportCoaches": {
+   "file": "lib/screens/reports/ReportCoaches.jsx",
+   "export": "default"
+  },
+  "RunReceipt": {
+   "file": "lib/screens/reports/RunReceipt.jsx",
+   "export": "default"
+  }
+ },
+ "run": {
+  "TemplateList": {
+   "file": "lib/screens/run/TemplateList.jsx",
+   "export": "default"
+  },
+  "TemplateEditor": {
+   "file": "lib/screens/run/TemplateEditor.jsx",
+   "export": "default"
+  },
+  "CampaignGroupList": {
+   "file": "lib/screens/run/CampaignGroupList.jsx",
+   "export": "default"
+  },
+  "CampaignGroupRecord": {
+   "file": "lib/screens/run/CampaignGroupRecord.jsx",
+   "export": "default"
+  },
+  "FormBuilder": {
+   "file": "lib/screens/run/FormBuilder.jsx",
+   "export": "default"
+  },
+  "LandingPages": {
+   "file": "lib/screens/growth/LandingPages.jsx",
+   "export": "default"
+  },
+  "Campaigns": {
+   "file": "lib/screens/growth/Campaigns.jsx",
+   "export": "default"
+  },
+  "CampaignEditor": {
+   "file": "lib/screens/growth/CampaignEditor.jsx",
+   "export": "default"
+  },
+  "Segments": {
+   "file": "lib/screens/growth/Segments.jsx",
+   "export": "default"
+  },
+  "RunDashboard": {
+   "file": "lib/screens/run/RunDashboard.jsx",
+   "export": "default"
+  },
+  "RunWebsite": {
+   "file": "lib/screens/run/RunWebsite.jsx",
+   "export": "default"
+  },
+  "RunSearch": {
+   "file": "lib/screens/run/RunSearch.jsx",
+   "export": "default"
+  },
+  "RunAiVisibility": {
+   "file": "lib/screens/run/RunAiVisibility.jsx",
+   "export": "default"
+  },
+  "RunListings": {
+   "file": "lib/screens/run/RunListings.jsx",
+   "export": "default"
+  },
+  "RunReviews": {
+   "file": "lib/screens/run/RunReviews.jsx",
+   "export": "default"
+  },
+  "RunSocial": {
+   "file": "lib/screens/run/RunSocial.jsx",
+   "export": "default"
+  },
+  "RunAds": {
+   "file": "lib/screens/run/RunAds.jsx",
+   "export": "default"
+  },
+  "RunCalls": {
+   "file": "lib/screens/run/RunCalls.jsx",
+   "export": "default"
+  },
+  "RunCompetitors": {
+   "file": "lib/screens/run/RunCompetitors.jsx",
+   "export": "default"
+  },
+  "RunConnections": {
+   "file": "lib/screens/run/RunConnections.jsx",
+   "export": "default"
+  }
+ },
+ "settings": {
+  "SettingsHome": {
+   "file": "lib/screens/SettingsHome.jsx",
+   "export": "default"
+  },
+  "IntegrationsScreen": {
+   "file": "lib/screens/IntegrationsScreen.jsx",
+   "export": "default"
+  },
+  "SettingsForm": {
+   "file": "lib/screens/SettingsForm.jsx",
+   "export": "default"
+  },
+  "RolesScreen": {
+   "file": "lib/screens/RolesScreen.jsx",
+   "export": "default"
+  },
+  "TeamRolesScreen": {
+   "file": "lib/screens/TeamRolesScreen.jsx",
+   "export": "default"
+  },
+  "TerminologyScreen": {
+   "file": "lib/screens/TerminologyScreen.jsx",
+   "export": "default"
+  },
+  "ProgramsAndClientTypes": {
+   "file": "lib/screens/settings/ProgramsAndClientTypes.jsx",
+   "export": "default"
+  },
+  "ClientAppScreen": {
+   "file": "lib/screens/ClientAppScreen.jsx",
+   "export": "default"
+  },
+  "ShapeScreen": {
+   "file": "lib/screens/ShapeScreen.jsx",
+   "export": "default"
+  },
+  "DocumentAxesScreen": {
+   "file": "lib/screens/DocumentAxesScreen.jsx",
+   "export": "default"
+  },
+  "NotificationPrefsScreen": {
+   "file": "lib/screens/NotificationPrefsScreen.jsx",
+   "export": "default"
+  },
+  "SetDeveloper": {
+   "file": "lib/screens/SetDeveloper.jsx",
+   "export": "default"
+  },
+  "ApiKeysScreen": {
+   "file": "lib/screens/ApiKeysScreen.jsx",
+   "export": "default"
+  },
+  "AuditLogScreen": {
+   "file": "lib/screens/AuditLogScreen.jsx",
+   "export": "default"
+  },
+  "EmailSettingsPage": {
+   "file": "lib/screens/EmailSettingsPage.jsx",
+   "export": "default"
+  },
+  "WebhookEndpointForm": {
+   "file": "lib/forms/WebhookEndpointForm.jsx",
+   "export": "default"
+  },
+  "SetBilling": {
+   "file": "lib/screens/SetBilling.jsx",
+   "export": "default"
+  },
+  "SetPlans": {
+   "file": "lib/screens/SetPlans.jsx",
+   "export": "default"
+  },
+  "CalendarSettingsScreen": {
+   "file": "lib/screens/CalendarSettingsScreen.jsx",
+   "export": "default"
+  },
+  "SettingsMine": {
+   "file": "lib/screens/settings/SettingsMine.jsx",
+   "export": "default"
+  },
+  "SetImport": {
+   "file": "lib/screens/SetImport.jsx",
+   "export": "default"
+  },
+  "SetData": {
+   "file": "lib/screens/SetData.jsx",
+   "export": "default"
+  },
+  "GrowthDomain": {
+   "file": "lib/screens/settings/GrowthDomain.jsx",
+   "export": "default"
+  },
+  "SetUsage": {
+   "file": "lib/screens/SetUsage.jsx",
+   "export": "default"
+  },
+  "SetBranding": {
+   "file": "lib/screens/SetBranding.jsx",
+   "export": "default"
+  },
+  "SetEmail": {
+   "file": "lib/screens/SetEmail.jsx",
+   "export": "default"
+  },
+  "SetTax": {
+   "file": "lib/screens/settings/SetTax.jsx",
+   "export": "default"
+  },
+  "SetAutomations": {
+   "file": "lib/screens/settings/SetAutomations.jsx",
+   "export": "default"
+  },
+  "SetNotifications": {
+   "file": "lib/screens/settings/SetNotifications.jsx",
+   "export": "default"
+  },
+  "RequiredFieldsScreen": {
+   "file": "lib/screens/settings/RequiredFieldsScreen.jsx",
+   "export": "default"
+  },
+  "SettingsSaveError": {
+   "file": "lib/screens/settings/SettingsSaveError.jsx",
+   "export": "default"
+  },
+  "SettingsEmailBroken": {
+   "file": "lib/screens/settings/SettingsEmailBroken.jsx",
+   "export": "default"
+  },
+  "SettingsWebhookLog": {
+   "file": "lib/screens/settings/SettingsWebhookLog.jsx",
+   "export": "default"
+  },
+  "SettingsDomains": {
+   "file": "lib/screens/settings/SettingsDomains.jsx",
+   "export": "default"
+  },
+  "Redirect": {
+   "file": "lib/screens/documents/RedirectToDocs.jsx",
+   "export": "default"
+  }
+ },
+ "staff": {},
+ "tasks": {
+  "TasksMine": {
+   "file": "lib/screens/tasks/TasksMine.jsx",
+   "export": "default"
+  },
+  "AutomationsPage": {
+   "file": "lib/screens/AutomationsPage.jsx",
+   "export": "default"
+  },
+  "TasksTeam": {
+   "file": "lib/screens/tasks/TasksTeam.jsx",
+   "export": "default"
+  },
+  "AutomationEdit": {
+   "file": "lib/screens/tasks/AutomationEdit.jsx",
+   "export": "default"
+  }
+ },
+ "whatsnew": {
+  "WhatsNew": {
+   "file": "lib/screens/whatsnew/WhatsNew.jsx",
+   "export": "default"
+  }
+ }
+}

@@ -1,0 +1,333 @@
+[
+ {
+  "slug": "services-agreement",
+  "title": "Services agreement",
+  "use": "contracts",
+  "who": "Anyone who does work for another business or person for a fee: consultants, studios, freelancers, small agencies.",
+  "summary": "A full agreement for work one person or business does for another: scope, fees, term, ownership, confidentiality, liability and how it ends.",
+  "pages": 8,
+  "fields": 58,
+  "seats": [
+   "Provider",
+   "Client"
+  ],
+  "minutes": 20
+ },
+ {
+  "slug": "mutual-nda",
+  "title": "Mutual non-disclosure agreement",
+  "use": "ndas",
+  "who": "Two businesses or people who are about to share private information to explore a deal, a partnership or a project.",
+  "summary": "Two sides share private information and each agrees to protect the other’s: what counts, what they may do with it, how long it lasts.",
+  "pages": 3,
+  "fields": 25,
+  "seats": [
+   "Party A",
+   "Party B"
+  ],
+  "minutes": 8
+ },
+ {
+  "slug": "contractor-agreement",
+  "title": "Independent contractor agreement",
+  "use": "hr-and-onboarding",
+  "who": "A business that hires an independent contractor for a defined piece of work, and the contractor doing it.",
+  "summary": "An agreement between a company and an independent contractor: the work, pay, independence, ownership of what is made, confidentiality and ending.",
+  "pages": 4,
+  "fields": 31,
+  "seats": [
+   "Company",
+   "Contractor"
+  ],
+  "minutes": 10
+ },
+ {
+  "slug": "vendor-agreement",
+  "title": "Vendor agreement",
+  "use": "contracts",
+  "who": "A business buying goods or services from a supplier on a continuing basis, and the supplier agreeing to deliver them.",
+  "summary": "An agreement under which a vendor supplies goods or services to a company: orders, delivery, pricing, quality, payment, insurance and ending.",
+  "pages": 6,
+  "fields": 50,
+  "seats": [
+   "Company",
+   "Vendor"
+  ],
+  "minutes": 17
+ },
+ {
+  "slug": "statement-of-work",
+  "title": "Statement of work",
+  "use": "agencies",
+  "who": "An agency or freelancer and a client agreeing exactly what will be delivered, by when, for how much, under an existing or standalone agreement.",
+  "summary": "A detailed statement of work: objectives, scope, deliverables with dates, assumptions, acceptance, fees by milestone and change control.",
+  "pages": 6,
+  "fields": 77,
+  "seats": [
+   "Agency",
+   "Client"
+  ],
+  "minutes": 26
+ },
+ {
+  "slug": "photo-release",
+  "title": "Photo and media release",
+  "use": "waivers-and-consent",
+  "who": "A photographer, organization or business that takes photos or video of people and wants clear permission for where they are used.",
+  "summary": "Permission to take and use photos or video of a person, with choices about where they appear and a way to withdraw.",
+  "pages": 2,
+  "fields": 16,
+  "seats": [
+   "Subject"
+  ],
+  "minutes": 7
+ },
+ {
+  "slug": "permission-slip",
+  "title": "Permission slip",
+  "use": "education",
+  "who": "A school, club or group that takes children on a trip or activity and needs a parent’s or guardian’s consent and emergency details.",
+  "summary": "A parent or guardian gives permission for a child to take part in a trip or activity, with health notes and emergency contacts.",
+  "pages": 2,
+  "fields": 20,
+  "seats": [
+   "Parent or guardian"
+  ],
+  "minutes": 8
+ },
+ {
+  "slug": "event-waiver",
+  "title": "Event waiver",
+  "use": "waivers-and-consent",
+  "who": "An organizer of a sports event, class, workshop or activity where participants accept the normal risks and agree to the rules.",
+  "summary": "A participant acknowledges the risks of an activity, agrees to follow the rules and confirms their emergency contact.",
+  "pages": 2,
+  "fields": 9,
+  "seats": [
+   "Participant"
+  ],
+  "minutes": 4
+ },
+ {
+  "slug": "media-consent-minors",
+  "title": "Media consent for a minor",
+  "use": "education",
+  "who": "A school, club or charity that wants to photograph or film children and needs the parent’s or guardian’s informed, specific permission.",
+  "summary": "A parent or guardian chooses where photos and video of their child may be used, with safeguards and a clear way to withdraw.",
+  "pages": 3,
+  "fields": 19,
+  "seats": [
+   "Parent or guardian"
+  ],
+  "minutes": 8
+ },
+ {
+  "slug": "consent-to-treatment",
+  "title": "Consent to treatment",
+  "use": "healthcare-intake",
+  "who": "A coach, therapist, clinic, studio or practitioner who wants a client’s informed agreement to a service before it begins.",
+  "summary": "A client agrees to a service after reading what it is, what to expect, how their information is handled and how to stop.",
+  "pages": 3,
+  "fields": 22,
+  "seats": [
+   "Client",
+   "Provider"
+  ],
+  "minutes": 9
+ },
+ {
+  "slug": "intake-form",
+  "title": "Client intake form",
+  "use": "healthcare-intake",
+  "who": "Any practice or service that collects a new client’s details, history and agreement before a first appointment.",
+  "summary": "The details and agreement a new client gives before a first appointment: contact, background, goals, emergency contact and how their data is used.",
+  "pages": 3,
+  "fields": 27,
+  "seats": [
+   "Client"
+  ],
+  "minutes": 11
+ },
+ {
+  "slug": "volunteer-agreement",
+  "title": "Volunteer agreement",
+  "use": "waivers-and-consent",
+  "who": "A charity, school, club or event that relies on volunteers and wants role, expectations, confidentiality and safety written down.",
+  "summary": "An agreement between an organization and a volunteer: the role, what each side commits to, confidentiality, safety, and how it ends.",
+  "pages": 3,
+  "fields": 23,
+  "seats": [
+   "Organization",
+   "Volunteer"
+  ],
+  "minutes": 7
+ },
+ {
+  "slug": "offer-letter",
+  "title": "Offer letter",
+  "use": "hr-and-onboarding",
+  "who": "An employer making a job offer, and a candidate accepting it by signing.",
+  "summary": "A full offer of employment: role, start date, pay, hours, benefits, conditions, notice and confidentiality, accepted by signing.",
+  "pages": 3,
+  "fields": 26,
+  "seats": [
+   "Employer",
+   "Candidate"
+  ],
+  "minutes": 10
+ },
+ {
+  "slug": "non-solicitation-acknowledgement",
+  "title": "Non-solicitation acknowledgement",
+  "use": "hr-and-onboarding",
+  "who": "An employer and an employee who want to record, in plain words, an agreement not to recruit each other’s people or take its customers.",
+  "summary": "An employee acknowledges and agrees not to solicit the company’s customers or colleagues for a set period after leaving.",
+  "pages": 3,
+  "fields": 14,
+  "seats": [
+   "Company",
+   "Employee"
+  ],
+  "minutes": 6
+ },
+ {
+  "slug": "onboarding-pack",
+  "title": "Employee onboarding pack",
+  "use": "hr-and-onboarding",
+  "who": "An employer welcoming a new starter: handbook, confidentiality, equipment, payroll details and first-day information in one packet to sign.",
+  "summary": "One packet for a new starter, in several parts: welcome, handbook, confidentiality, equipment, payroll details and first-day information.",
+  "pages": 6,
+  "fields": 50,
+  "seats": [
+   "Company",
+   "New starter"
+  ],
+  "minutes": 16
+ },
+ {
+  "slug": "rental-application",
+  "title": "Rental application",
+  "use": "real-estate",
+  "who": "A landlord or property manager collecting an applicant’s details, income, history and permission to run checks.",
+  "summary": "An applicant gives their details, address and income history, references and permission for the landlord to check what they have written.",
+  "pages": 4,
+  "fields": 43,
+  "seats": [
+   "Applicant"
+  ],
+  "minutes": 18
+ },
+ {
+  "slug": "lease-addendum",
+  "title": "Lease addendum",
+  "use": "real-estate",
+  "who": "A landlord and tenant adding or changing a term of an existing lease: pets, parking, rent date, guests, repairs or something else.",
+  "summary": "An addendum that changes an existing lease on one subject, with its terms, start date and what stays the same, signed by both sides.",
+  "pages": 3,
+  "fields": 24,
+  "seats": [
+   "Landlord",
+   "Tenant"
+  ],
+  "minutes": 9
+ },
+ {
+  "slug": "invoice-approval",
+  "title": "Invoice approval",
+  "use": "contracts",
+  "who": "A business that needs a named person to approve an invoice before it is paid, with a record of who decided and when.",
+  "summary": "A record of an invoice, what it is for, and the approver’s decision, signed by the person who sent it and the person who approved it.",
+  "pages": 2,
+  "fields": 23,
+  "seats": [
+   "Sender",
+   "Approver"
+  ],
+  "minutes": 8
+ },
+ {
+  "slug": "change-order",
+  "title": "Change order",
+  "use": "agencies",
+  "who": "A provider and client changing the scope, price or finish date of work that is already agreed.",
+  "summary": "A written change to an existing agreement: what is changing, how the cost and time were worked out, and the new total and finish date.",
+  "pages": 3,
+  "fields": 24,
+  "seats": [
+   "Provider",
+   "Client"
+  ],
+  "minutes": 9
+ },
+ {
+  "slug": "equipment-loan",
+  "title": "Equipment loan agreement",
+  "use": "contracts",
+  "who": "A business, school or person lending equipment to another, with its condition recorded and what happens if it is lost or damaged.",
+  "summary": "A lender lends an item to a borrower: description and condition, how it may be used, return date and who pays if it is lost or damaged.",
+  "pages": 3,
+  "fields": 24,
+  "seats": [
+   "Lender",
+   "Borrower"
+  ],
+  "minutes": 9
+ },
+ {
+  "slug": "referral-agreement",
+  "title": "Referral agreement",
+  "use": "contracts",
+  "who": "A business that rewards another person or business for introducing customers.",
+  "summary": "A company agrees to reward a referrer when a person they introduce becomes a customer: what counts, the reward, when it is paid and the rules.",
+  "pages": 3,
+  "fields": 16,
+  "seats": [
+   "Company",
+   "Referrer"
+  ],
+  "minutes": 7
+ },
+ {
+  "slug": "mutual-release",
+  "title": "Mutual release",
+  "use": "contracts",
+  "who": "Two people or businesses settling a matter and agreeing not to bring claims against each other about it.",
+  "summary": "Two sides settle a matter and release each other from claims about it, with what is settled, any payment, and what is not released.",
+  "pages": 3,
+  "fields": 18,
+  "seats": [
+   "Party A",
+   "Party B",
+   "Witness"
+  ],
+  "minutes": 7
+ },
+ {
+  "slug": "payment-plan-agreement",
+  "title": "Payment plan agreement",
+  "use": "contracts",
+  "who": "A business and a customer agreeing to settle a balance in installments, with the first payment taken securely before signing.",
+  "summary": "A customer agrees to pay an outstanding balance in installments: the amount, the schedule, what happens if one is missed, and the first payment.",
+  "pages": 3,
+  "fields": 29,
+  "seats": [
+   "Business",
+   "Customer"
+  ],
+  "minutes": 11
+ },
+ {
+  "slug": "deposit-agreement",
+  "title": "Deposit agreement",
+  "use": "real-estate",
+  "who": "A business or landlord taking a deposit to hold something for a customer, and saying when it is refunded or kept.",
+  "summary": "A customer pays a deposit to hold a booking, item or place: what it holds, when it is refunded, when it is kept, and the card payment.",
+  "pages": 3,
+  "fields": 18,
+  "seats": [
+   "Business",
+   "Customer"
+  ],
+  "minutes": 7
+ }
+]

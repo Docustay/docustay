@@ -1,0 +1,53 @@
+{
+  "name": "@docustay2026/mcp",
+  "version": "0.2.2",
+  "description": "The open-source e-signature API. One flat price for every user, payments built in, self-hostable.",
+  "type": "module",
+  "license": "MIT",
+  "bin": {
+    "docustay-mcp": "./src/server.js"
+  },
+  "main": "./src/tools.js",
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "pretest": "npm install --no-save --no-package-lock ../js"
+  },
+  "dependencies": {
+    "@docustay2026/sdk": "^0.2.2",
+    "@modelcontextprotocol/sdk": "^1.20.0",
+    "zod": "^3.25.0"
+  },
+  "homepage": "https://docustay.app/developers",
+  "keywords": [
+    "docustay",
+    "e-signature",
+    "esignature",
+    "documents",
+    "signing",
+    "mcp"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Docustay/docustay.git",
+    "directory": "sdk/mcp"
+  },
+  "bugs": {
+    "url": "https://github.com/Docustay/docustay/issues"
+  },
+  "author": {
+    "name": "Docustay",
+    "email": "support@docustay.app",
+    "url": "https://docustay.app"
+  }
+}

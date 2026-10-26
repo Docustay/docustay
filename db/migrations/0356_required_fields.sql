@@ -1,0 +1,12 @@
+-- 0356_required_fields
+-- C1.9 — Required fields are a practice setting.
+--
+-- ★ Adds the `fields.required` setting key to the catalogue (registered in
+--   `src/settings/keys.mjs`). No schema change: the key is a JSON object stored
+--   in the existing `keystone.tenant_setting` table, same as every other setting.
+--
+-- ★ The setting is optional — an unset key defaults to the minimum needed to
+--   create each record (person: first_name + one of email/mobile; account: name).
+
+-- ★ No DDL — the table already exists. This migration is a waypoint for the
+--   feature's own checkpoint.

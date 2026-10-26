@@ -1,0 +1,59 @@
+/* DOCUSTAY SITE TOKENS (13 Oct 2026 rebuild; CREAM, 16 Oct 2026: specs/SITE-CREAM-RESTYLE.md, decision 33). One source for colour, type, space, radius, elevation, motion and glass.
+   The site is LIGHT ONLY: one cream ground for the whole page (header and footer included), white paper for cards, documents and code windows.
+   The token NAMES are the old ones (components read them); their values are the light ones. The signed-in app, the signing page, emails, PDFs and every document do not read this file. */
+:root {
+  /* the ground: ONE token, so the colour can be swapped (the warmer alternative was #faf8f3) */
+  --ground: #f7f6fc;
+  --paper-w: #ffffff; --hairline: #e4e1f0; --hairline-in: #e8e5f3; --violet-tint: #f3f0fe; --violet-hover: #4a2fa3;
+  /* the old dark layers, now the ground and the paper */
+  --ink-0: var(--ground); --ink-1: #ffffff; --ink-2: #ffffff; --ink-3: var(--violet-tint); --ink-4: var(--ground);
+  /* text: ink, muted, faint (each at least 4.5:1 on the ground) */
+  --tx-1: #16161d; --tx-2: #4c4a5e; --tx-3: #6b6880;
+  /* paper: every document, signing page, e-mail and PDF */
+  --doc-paper: #faf8f3; --doc-ink: #1b1b1b; --doc-line: #d9d5c8;
+  /* one violet family; on cream the text-bearing steps are the deep ones */
+  --v-300: #4a2fa3; --v-400: #5a3ac1; --v-500: #5a3ac1; --v-600: #6a49e0; --v-700: #5a3ac1; --v-800: #4a2fa3;
+  --cyan: #0b6f7a; --cyan-soft: #e3f2f3;
+  /* status colours: scoped to the site's own wrappers below (R13-D155), never :root, so the signed-in app keeps its own --ok/--warn/--bad/--info */
+  /* hairlines */
+  --ln-1: #e4e1f0; --ln-2: #e4e1f0; --ln-v: rgb(90 58 193 / .28);
+  /* gradients became solid colour (spec 4: GradientText is solid ink or violet) */
+  --grad-title: linear-gradient(180deg, #16161d, #16161d);
+  --grad-btn: linear-gradient(180deg, #5a3ac1, #5a3ac1);
+  /* glass recipes: white frosted paper over the cream (at most three blurred surfaces at once; solid white when backdrop-filter is missing) */
+  --glass-obsidian-bg: rgb(255 255 255 / .9); --glass-obsidian-blur: 8px;   --glass-obsidian-edge: #e4e1f0;
+  --glass-smoked-bg: rgb(255 255 255 / .72);  --glass-smoked-blur: 18px;   --glass-smoked-edge: #e4e1f0;
+  --glass-indigo-bg: rgb(255 255 255 / .92);  --glass-indigo-blur: 16px;   --glass-indigo-edge: #e4e1f0;
+  --glass-solid: #ffffff;
+  /* type */
+  --f-display: "Instrument Serif", "Instrument Serif Fallback", Georgia, serif;
+  --f-ui: "Geist Variable", "Geist Fallback", system-ui, sans-serif;
+  --f-mono: "JetBrains Mono Variable", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --t-display: clamp(3rem, 7.4vw, 5.75rem);      /* 92 at 1440 */
+  --t-title: clamp(2.3rem, 4.6vw, 3.75rem);      /* 60 */
+  --t-sub: clamp(1.7rem, 3vw, 2.5rem);           /* 40 */
+  --t-body: 1.1875rem;                            /* 19 */
+  --t-small: 1rem;
+  --t-eyebrow: .78rem;
+  /* space (4/8) */
+  --s-1: 4px; --s-2: 8px; --s-3: 12px; --s-4: 16px; --s-5: 24px; --s-6: 32px; --s-7: 48px; --s-8: 64px; --s-9: 96px; --s-10: 128px;
+  --wrap: 1180px; --gutter: 64px;
+  /* radius */
+  --r-1: 4px; --r-2: 8px; --r-3: 12px; --r-4: 16px; --r-5: 24px; --r-pill: 999px;
+  /* elevation: depth comes from soft, violet-tinted shadow, never from glow */
+  --sh-card: 0 1px 2px rgb(22 22 29 / .04), 0 24px 48px -28px rgb(60 40 140 / .28);
+  --sh-1: var(--sh-card);
+  --sh-2: 0 1px 2px rgb(22 22 29 / .05), 0 36px 70px -34px rgb(60 40 140 / .34);
+  --sh-glow: 0 0 0 transparent;
+  --sh-btn: 0 1px 2px rgb(22 22 29 / .08), 0 10px 24px -12px rgb(90 58 193 / .55);
+  /* motion */
+  --d-fast: 150ms; --d-base: 280ms; --d-slow: 500ms;
+  --e-out: cubic-bezier(.2, .8, .2, 1); --e-inout: cubic-bezier(.65, 0, .35, 1);
+  --rise: 24px;
+}
+@media (max-width: 900px) { :root { --gutter: 20px; --t-body: 1.0625rem; } }
+@media (prefers-reduced-motion: reduce) { :root { --d-fast: 0ms; --d-base: 0ms; --d-slow: 0ms; --rise: 0px; } }
+
+/* R13-D155: the site's bright status colours, only inside the website (its layout wrapper carries data-area; the error page is .nf). On :root they leaked into
+   the signed-in app (the root error page imports this file), turning the app's warnings and status words neon on its light theme. */
+[data-area], .nf { --ok: #1c7448; --warn: #8a5208; --bad: #b4233c; --info: #1d5fa8; }

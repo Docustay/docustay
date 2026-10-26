@@ -1,0 +1,46 @@
+{
+  "name": "docustay",
+  "version": "0.2.2",
+  "description": "Open-source e-signature. One flat price for every user.",
+  "type": "module",
+  "license": "MIT",
+  "bin": {
+    "docustay": "./dist/docustay.mjs"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "esbuild bin/docustay.mjs --bundle --platform=node --format=esm --outfile=dist/docustay.mjs",
+    "test": "node --test test/*.test.mjs"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.10"
+  },
+  "homepage": "https://docustay.app/developers",
+  "keywords": [
+    "docustay",
+    "e-signature",
+    "esignature",
+    "documents",
+    "signing"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Docustay/docustay.git",
+    "directory": "sdk/cli"
+  },
+  "bugs": {
+    "url": "https://github.com/Docustay/docustay/issues"
+  },
+  "author": {
+    "name": "Docustay",
+    "email": "support@docustay.app",
+    "url": "https://docustay.app"
+  }
+}

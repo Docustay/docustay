@@ -1,0 +1,14 @@
+{
+  "name": "docustay",
+  "version": "0.2.2",
+  "description": "The open-source e-signature API. One flat price for every user, payments built in, self-hostable.",
+  "license": "MIT",
+  "mcpServers": "./.mcp.json",
+  "author": {
+    "name": "Docustay",
+    "email": "support@docustay.app",
+    "url": "https://docustay.app"
+  },
+  "homepage": "https://docustay.app/developers",
+  "repository": "https://github.com/Docustay/docustay"
+}

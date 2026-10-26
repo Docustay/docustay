@@ -1,0 +1,65 @@
+# P17.2 — THE BUILD CONTEXT. NEW, AND ITS ABSENCE WAS A SECRET-EXPOSURE HAZARD.
+#
+# ★★★ WHY THIS FILE HAD TO EXIST BEFORE THE FIRST `railway up`. §D4 deploys by uploading THIS
+# DIRECTORY — there is no git, so there is no .gitignore doing this job by accident. [MEAS
+# 2026-09-13] the directory contains `.local/signing.key`, mode 600, real signing key material, and
+# `.env.local`, which holds four database URLs with passwords and KEYSTONE_TOKEN_PEPPER.
+# Without this file every one of them is uploaded to the builder and baked into the build context.
+# ★★ A secret in an image layer is readable by anyone who can pull the image, FOREVER — including
+#    after the secret is rotated, because the old layer still exists. Secrets reach a container at
+#    RUNTIME, as service variables. That is why src/health/index.mjs now accepts
+#    KEYSTONE_SIGNING_CERT_PEM as well as a path.
+
+# ── SECRETS. Never in a build context, never in a layer. ─────────────────────
+.local/
+.env
+.env.local
+*.key
+*.pem
+# ★★★ Run 8 J5 (R8-51, F981): the patterns above match only the context ROOT. A self-hosted install builds with this repo as its context and the app image
+#    runs `COPY docustay ./docustay`, so `docustay/.env` (KEYSTONE_MASTER_KEY, the token pepper, the database password) was inside every self-built image —
+#    measured in docustay-app:local. Every folder, then, and the backup folders docs/self-host-backup.md writes beside it (they hold a copy of .env and a dump).
+**/.env
+**/.env.*
+!docustay/.env.example
+**/*.key
+**/*.pem
+!docustay/license-public.pem
+**/backup-*/
+!infra/backup/backup-offsite.sh
+
+# ── Not needed, and large. node_modules is reinstalled by `npm ci` in the image ──
+# ★ Copying it would also ship the host's platform-specific binaries into a linux image.
+node_modules/
+**/node_modules
+.git/
+# Final Push: the host's nested installs, SvelteKit output and working folders are never part of an image (the Dockerfiles run npm ci and build inside)
+docustay/web/build/
+docustay/web/.svelte-kit/
+specs/*
+# F145 — the one spec file the app reads at runtime (src/whats-new/parser.mjs:14)
+!specs/whats-new.md
+.claude/
+.stryker-tmp/
+
+
+# ── Build outputs. The image builds its own; a stale local copy must not win. ──
+# ★★ THIS IS THE STALENESS RULE, APPLIED TO THE IMAGE. CLAUDE.md §2.8b: a build artefact older
+#    than its sources is "a green light over code nobody compiled". If a stale local web/dist were
+#    copied in, the deployed front end could silently be an older bundle than the source that
+#    built alongside it — and the served-chunk check at P17.5 would be comparing the wrong thing.
+web/dist/
+web/authdist/
+web/webdist/
+# ★★★ A THIRD BUILD PRODUCT, EXCLUDED FOR THE SAME REASON AS THE OTHER TWO: it is built IN the
+#     image, and a stale local copy shipped into the layer is "a green light over code nobody
+#     compiled". The Dockerfile asserts it exists after building it, so an excluded-and-unbuilt
+#     directory fails loudly rather than serving yesterday's bundle.
+# ★ `node_modules/` already matches at any depth, which covers webui/node_modules.
+webui/.svelte-kit/
+web/.gate/
+
+# ── Local-only noise ─────────────────────────────────────────────────────────
+*.log
+.DS_Store
+verify/
