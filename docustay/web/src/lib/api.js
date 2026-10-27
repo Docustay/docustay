@@ -11,6 +11,7 @@ export const newKey = () => (crypto.randomUUID ? crypto.randomUUID() : `${Date.n
 // Run 8 (R8-14): the same GET asked for again while it is still in flight shares that one request (the shell, a page and a panel each asked for the same settings, 3 requests per screen);
 // every caller still gets its OWN copy of the answer, so one screen changing what it got never changes another's. Writes are never shared.
 const inflight = new Map();
+let sessionEndedChecked = false;
 export function api(path, opts = {}) {
   if ((opts.method ?? "GET") !== "GET" || opts.body !== undefined) return call(path, opts);
   let p = inflight.get(path); if (!p) { p = call(path, opts).finally(() => inflight.delete(path)); inflight.set(path, p); }
@@ -31,6 +32,11 @@ async function call(path, { method = "GET", body, key } = {}) {
   if (r.status === 403 && json?.error?.detail?.code === "two_step_required") { twoStepGate.needed = true; twoStepGate.message = json.error.message ?? ""; }
   // Run 7: a session idle past the workspace's limit has been ended on the server: go to sign-in and say why
   if (r.status === 401 && json?.error?.detail?.code === "idle_signed_out" && typeof location !== "undefined") location.assign("/login?signedout=idle");
+  // 26 Oct 2026: a signed-in page that is suddenly refused asks once why; if its workspace was deleted the person lands on sign-in with that sentence
+  if (r.status === 401 && !path.startsWith("/api/auth") && !path.startsWith("/api/public") && typeof location !== "undefined" && !sessionEndedChecked) {
+    sessionEndedChecked = true;
+    try { const e = await fetch("/api/auth/session-ended", { credentials: "same-origin", headers: { accept: "application/json" } }).then((x) => x.json()); if (e?.ended) location.assign("/login?signedout=deleted"); } catch { /* the usual "session ended" wording stands */ }
+  }
   const raw = json?.error?.message ?? null;
   // R13-D445: a server fault with no words of its own (a proxy's page, or only an HTTP phrase such as "Internal Server Error") is said in plain words; a 5xx the server worded itself passes through
   if (r.status >= 500 && (!raw || GENERIC_HTTP.test(String(raw).trim()))) return { ok: false, status: r.status, json, error: t("Something went wrong on our side. Try again in a moment.") };

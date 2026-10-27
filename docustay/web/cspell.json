@@ -85,6 +85,15 @@
     "enroll",
     "enrolled",
     "selfhost",
-    "POSTHOG"
+    "POSTHOG",
+    "Println",
+    "getenv",
+    "hostable",
+    "Packagist",
+    "venv",
+    "getaddrinfo",
+    "PAYG",
+    "rfile",
+    "wfile"
   ]
 }

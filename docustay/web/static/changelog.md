@@ -32,10 +32,6 @@ description: What changed in Docustay, newest first.
 - An install that sends through its own mail server or a connected mailbox now gets its notices (someone signed, everyone has signed), which were skipped before.
 - A fresh install says plainly that email is not set up on the Email settings and the Check step, before you press Send.
 
-## Fourteen languages (October 2026)
-
-- The signing page, the emails and the Certificate of Completion can be in fourteen languages, with Arabic read right to left. Every language except English is a machine-written draft marked Beta.
-
 ## Payments inside a document (October 2026)
 
 - Add a payment field and the signer pays through Stripe's hosted page, to the Stripe account you connect. The amount can be fixed, typed by the signer, a formula, a Stripe price or a payment link.

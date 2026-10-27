@@ -111,7 +111,7 @@ Also on it when they apply: the reason a person gave, who a seat was passed on f
 ## Download the sealed copy from your own code.
 
 ```
-curl https://docustay.app/api/v1/documents/DOCUMENT_ID/signed.pdf \
+curl https://docustay.app/api/v1/documents/$DOCUSTAY_DOCUMENT_ID/signed.pdf \
   -H "Authorization: Bearer $DOCUSTAY_API_KEY" -o signed.pdf
 ```
 

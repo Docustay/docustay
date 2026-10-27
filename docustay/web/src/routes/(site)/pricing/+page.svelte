@@ -54,9 +54,9 @@
     ["When does my allowance reset?", `On Free, on the 1st of each month (UTC). On Pay as you go, Pro and Lifetime, on your billing date: if you start on Oct 19 you get ${p.payg.docsIncluded} free documents and ${p.payg.draftsIncluded} free AI drafts from Oct 19 to Nov 19, and everything starts again on Nov 19. Stripe invoices the same window. Billing shows the date as "Resets Nov 19".`],
     ["Can my bill run away?", `No. Your budget is ${dollars(p.budget.defaultMinor)} for each billing month by default. You get an email at 50%, 80% and 100%, and at 100% sending pauses until you raise it. {{F-BUDGET}}`],
     ["Can I see the bill before I send?", "Yes. Bulk sends show a total and ask you to confirm, and so does anything over $5. The Billing page and GET /api/v1/usage show the running bill. {{F-USAGEAPI}}"],
-    ["What does a payment cost?", "Stripe's fees go to Stripe. Docustay adds 2% on Free and Pay as you go and 0% on Pro and Lifetime. {{F-FEE}}"],
+    ["What does a payment cost?", `Stripe's fees go to Stripe. Docustay adds ${p.free.feeBps / 100}% on Free and Pay as you go and ${p.pro.feeBps / 100}% on Pro and Lifetime. Payments are powered by Stripe and go to your own Stripe account. {{F-FEE}}`],
     ["What is an AI draft?", `One request that makes a document or a form from your words or a file. Free includes ${p.free.draftsPerMonth} a calendar month and Pay as you go ${p.payg.draftsIncluded} each billing month, Pro ${p.pro.draftsIncluded} and Lifetime ${p.lifetime.draftsIncluded}. Past that a draft is ${cents(p.payg.draftOverMinor)} on a paid plan. A failed or empty draft is never charged. {{F-AICREDITS}}`],
-    ["How does Lifetime work?", `You pay ${dollars(p.lifetime.oneTimeMinor)} once, for any workspace. It is Pro for as long as Docustay runs the hosted service, and it keeps its 0% fee on payments for that whole time. {{F-LIFETIME}}`],
+    ["How does Lifetime work?", `You pay ${dollars(p.lifetime.oneTimeMinor)} once, for any workspace. It is Pro for as long as Docustay runs the hosted service, and it keeps its ${p.lifetime.feeBps / 100}% fee on payments for that whole time. {{F-LIFETIME}}`],
     ["Can I switch plans?", "Yes, from Billing. Moving up (Pay as you go to Pro, or either to Lifetime) takes effect at once and the unused part of what you already paid is credited against the new price; the confirm box shows the exact amount before you click. Moving down, from Pro to Pay as you go, happens at the end of the period you paid for, and you can cancel it before then. Usage is always billed."],
     ["Can I use my own AI key?", "Yes, on Pay as you go, Pro and Lifetime: your drafts then use your own provider account and do not count against the plan's allowance. Free uses Docustay's AI writer."],
     ["Is Pro really unlimited?", "For normal business use of one organisation, yes: unlimited documents, signers and team members. A login belongs to one person. We look at, and may ask about, a workspace with more than 50 team members or 2,000 documents in a month, or one that stores more than 10 GB on any plan, and we pause sending that harms other people (for example mail that draws spam complaints)."],
@@ -69,7 +69,7 @@
 <SceneHero scene="rings" cls="prh">
   <p class="d-eyebrow">PRICING</p>
   <h1 class="d-h1 sm">Pay for what you use, <em>or get everything.</em></h1>
-  <p class="d-sub" data-feature="F-FREEPLAN F-PAYG F-PRO F-LIFETIME">{facts.tagline.headline} {facts.tagline.payAsYouGoLine} E-signature pricing in plain numbers. Start free. Pay as you go if you send a little. Pro if you send a lot. Every price is on this page, and you set a monthly budget so the bill never surprises you.</p>
+  <p class="d-sub" data-feature="F-FREEPLAN F-PAYG F-PRO F-LIFETIME">{facts.tagline.pricingIntro}</p>
 </SceneHero>
 <section class="d-wrap pr" data-page="/pricing" data-voice="V3" data-template="T2">
   <div class="plans">

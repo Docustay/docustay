@@ -10,7 +10,7 @@ const RAW = [
 const docustay = new Docustay(process.env.DOCUSTAY_API_KEY, process.env.DOCUSTAY_URL ? { baseUrl: process.env.DOCUSTAY_URL } : {});
 const doc = await docustay.sendDocument({
   templateId: process.env.DOCUSTAY_TEMPLATE_ID,
-  parties: [{ seat: "signer_1", name: "Pat Example", email: "pat@example.com" }],
+  parties: [{ seat: "signer_1", name: "Rosa Alvarez", email: "rosa@example.com" }],
 });
 console.log(doc.id, doc.state);` },
   { slug: "typescript", notes: "The types ship inside the package: SendRequest describes what you send and the answer is typed too, so a wrong field name fails in your editor and not at 2 a.m. The program runs as it stands on Node 22 and newer with --experimental-strip-types; elsewhere compile it with tsc as usual.", name: "TypeScript", ext: "ts", run: ["node", "--experimental-strip-types", "{file}"], sdk: true, install: "npm install @docustay2026/sdk",
@@ -19,7 +19,7 @@ console.log(doc.id, doc.state);` },
 const docustay = new Docustay(process.env.DOCUSTAY_API_KEY!, process.env.DOCUSTAY_URL ? { baseUrl: process.env.DOCUSTAY_URL } : {});
 const request: SendRequest = {
   templateId: process.env.DOCUSTAY_TEMPLATE_ID!,
-  parties: [{ seat: "signer_1", name: "Pat Example", email: "pat@example.com" }],
+  parties: [{ seat: "signer_1", name: "Rosa Alvarez", email: "rosa@example.com" }],
 };
 const doc = await docustay.sendDocument(request);
 console.log(doc.id, doc.state);` },
@@ -31,7 +31,7 @@ kw = {"base_url": os.environ["DOCUSTAY_URL"]} if os.environ.get("DOCUSTAY_URL") 
 docustay = Docustay(os.environ["DOCUSTAY_API_KEY"], **kw)
 doc = docustay.send_document(
     os.environ["DOCUSTAY_TEMPLATE_ID"],
-    [{"seat": "signer_1", "name": "Pat Example", "email": "pat@example.com"}],
+    [{"seat": "signer_1", "name": "Rosa Alvarez", "email": "rosa@example.com"}],
 )
 print(doc["id"], doc["state"])` },
   { slug: "go", notes: "The module needs Go __GO__ or newer and has no dependencies beyond the standard library. Every call that creates something takes an idempotency key: build one per attempt and reuse it when you retry. Pass the server only when you point at a self-hosted install. The client is generated from the OpenAPI document, so every operation is there.", name: "Go", ext: "go", file: "main.go", container: { image: "golang:1.22-alpine", run: "go mod init snippet >/dev/null 2>&1 && go get github.com/docustay/docustay-go/docustay@v__VERSION__ >/dev/null 2>&1 && go run ." }, sdk: true, install: "go get github.com/docustay/docustay-go/docustay@v__VERSION__",
@@ -57,7 +57,7 @@ func main() {
 	ctx := context.WithValue(context.Background(), docustay.ContextAccessToken, os.Getenv("DOCUSTAY_API_KEY"))
 
 	request := *docustay.NewSendRequest(os.Getenv("DOCUSTAY_TEMPLATE_ID"), []docustay.SendRequestPartiesInner{
-		*docustay.NewSendRequestPartiesInner("signer_1", "Pat Example", "pat@example.com"),
+		*docustay.NewSendRequestPartiesInner("signer_1", "Rosa Alvarez", "rosa@example.com"),
 	})
 	doc, _, err := client.DocumentsAPI.SendDocument(ctx).SendRequest(request).IdempotencyKey(fmt.Sprintf("send-%d", time.Now().UnixNano())).Execute()
 	if err != nil {
@@ -79,7 +79,7 @@ $api = new Docustay\\Api\\DocumentsApi(new GuzzleHttp\\Client(), $config);
 $request = new Docustay\\Model\\SendRequest([
     'template_id' => getenv('DOCUSTAY_TEMPLATE_ID'),
     'parties' => [new Docustay\\Model\\SendRequestPartiesInner([
-        'seat' => 'signer_1', 'name' => 'Pat Example', 'email' => 'pat@example.com',
+        'seat' => 'signer_1', 'name' => 'Rosa Alvarez', 'email' => 'rosa@example.com',
     ])],
 ]);
 $doc = $api->sendDocument(bin2hex(random_bytes(16)), $request);
@@ -95,7 +95,7 @@ var api = new DocumentsApi(config);
 
 var request = new SendRequest(
     templateId: Guid.Parse(Environment.GetEnvironmentVariable("DOCUSTAY_TEMPLATE_ID")!),
-    parties: new List<SendRequestPartiesInner> { new SendRequestPartiesInner(seat: "signer_1", name: "Pat Example", email: "pat@example.com") });
+    parties: new List<SendRequestPartiesInner> { new SendRequestPartiesInner(seat: "signer_1", name: "Rosa Alvarez", email: "rosa@example.com") });
 var doc = api.SendDocument(Guid.NewGuid().ToString(), request);
 Console.WriteLine($"{doc.Id} {doc.State}");` },
 ];

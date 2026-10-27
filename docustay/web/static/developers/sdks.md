@@ -35,7 +35,7 @@ import { Docustay } from "@docustay2026/sdk";
 const docustay = new Docustay(process.env.DOCUSTAY_API_KEY, process.env.DOCUSTAY_URL ? { baseUrl: process.env.DOCUSTAY_URL } : {});
 const doc = await docustay.sendDocument({
   templateId: process.env.DOCUSTAY_TEMPLATE_ID,
-  parties: [{ seat: "signer_1", name: "Pat Example", email: "pat@example.com" }],
+  parties: [{ seat: "signer_1", name: "Rosa Alvarez", email: "rosa@example.com" }],
 });
 console.log(doc.id, doc.state);
 ```
@@ -124,7 +124,7 @@ try {
 ```
 import { Docustay } from "@docustay2026/sdk";
 const docustay = new Docustay(process.env.DOCUSTAY_API_KEY);
-const doc = await docustay.sendDocument({ templateId: "TEMPLATE_ID", parties: [{ seat: "signer_1", name: "Rosa Alvarez", email: "rosa@example.com" }] });
+const doc = await docustay.sendDocument({ templateId: process.env.DOCUSTAY_TEMPLATE_ID, parties: [{ seat: "signer_1", name: "Rosa Alvarez", email: "rosa@example.com" }] });
 console.log(doc.id, doc.state);
 ```
 

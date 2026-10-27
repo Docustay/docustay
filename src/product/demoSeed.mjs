@@ -15,7 +15,7 @@ const senderValue = (f) => {
   if ((f.type === "dropdown" || f.type === "multiselect") && Array.isArray(f.options) && f.options.length) return f.type === "multiselect" ? [String(f.options[0])] : String(f.options[0]);
   const l = String(f.label ?? f.name ?? "").toLowerCase();
   if (/date/.test(l)) return today();
-  if (/rent|amount|deposit|fee/.test(l)) return "2150";   // some of these boxes are numbers, and a number refuses the comma
+  if (/rent|amount|deposit|fee|charge|dollar|price|cost|usd|\$/.test(l)) return "2150";   // some of these boxes are numbers, and a number refuses the comma
   if (/address|premises|property|unit/.test(l)) return "12 Maple Street, Unit 4B";
   if (/term|month/.test(l)) return "12 months";
   return "Maple Street Property Management";
@@ -44,7 +44,6 @@ async function makeForm(tenantId, ownerId, { slug, link }) {
   try {
     const used = await withTenant(tenantId, (tx) => D.useBuiltin(tx, { tenantId, actorUserId: ownerId, slug }), { userId: ownerId });
     const templateId = used.templateId; if (!templateId) return null;
-    await withTenant(tenantId, (tx) => D.publishForm(tx, { tenantId, templateId, slug: link, settings: { counterSign: { on: true, userId: ownerId } }, enabled: true }), { userId: ownerId });
     await withTenant(tenantId, (tx) => tx.query(`INSERT INTO keystone.docustay_demo_seed (tenant_id, kind, item_id) VALUES ($1, 'form', $2) ON CONFLICT DO NOTHING`, [tenantId, templateId]), { userId: ownerId });
     return templateId;
   } catch (e) { console.warn(`demo seed: form "${slug}" not made (${e?.message ?? e})`); return null; }

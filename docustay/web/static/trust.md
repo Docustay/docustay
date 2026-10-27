@@ -69,7 +69,7 @@ A signed document is kept for the period you set, or indefinitely if you leave i
 
 Take it with you. Download any signed copy as a PDF. Export a document's audit log, the workspace's audit log, and the people list as CSV. Read everything through the API.
 
-Removing it. A member can delete their own account, with a 14-day cooling-off period. An owner can delete the whole workspace, with a 7-day cooling-off period; then everything in it is removed. Backups are deleted after 30 days, and recorded deletions are carried out again after a restore. A record that a deletion happened is kept as a hash, a date and a request id, with no names or addresses.
+Removing it. A member can delete their own account, with a 14-day cooling-off period. An owner can delete the whole workspace, with a 14-day cooling-off period; then everything in it is removed. Backups are deleted after 30 days, and recorded deletions are carried out again after a restore. A record that a deletion happened is kept as a hash, a date and a request id, with no names or addresses.
 
 We do not sell data. We do not use your documents to train a model.
 

@@ -1,35 +1,31 @@
 {
  "/": {
-  "hash": "d071cf49e58bb0da",
-  "date": "2026-10-26"
+  "hash": "bb047db6269b350d",
+  "date": "2026-10-27"
  },
  "/features": {
-  "hash": "4c0469886b1c9049",
-  "date": "2026-10-25"
+  "hash": "10ceb5af91537409",
+  "date": "2026-10-27"
  },
  "/features/how-it-works": {
-  "hash": "0cbbe687c78d3bb2",
-  "date": "2026-10-25"
+  "hash": "5aa625935db43374",
+  "date": "2026-10-27"
  },
  "/features/scribe": {
-  "hash": "92e63a48442c5aea",
-  "date": "2026-10-23"
- },
- "/features/payments": {
-  "hash": "f7b14e9633d9c4ee",
-  "date": "2026-10-26"
+  "hash": "c509bad7d85d930d",
+  "date": "2026-10-27"
  },
  "/features/proof": {
-  "hash": "ba66a502b98bd7ab",
-  "date": "2026-10-23"
+  "hash": "d9651ab4faebe8a3",
+  "date": "2026-10-27"
  },
  "/features/embedded-signing": {
   "hash": "37823b8c52894064",
   "date": "2026-10-17"
  },
  "/features/test-mode": {
-  "hash": "55b69643d89e7f55",
-  "date": "2026-10-17"
+  "hash": "f2f084ab2aff38c2",
+  "date": "2026-10-27"
  },
  "/features/agent-ready": {
   "hash": "404703f36edd4a45",
@@ -85,47 +81,47 @@
  },
  "/developers": {
   "hash": "9065b3d0bfc7b7fe",
-  "date": "2026-10-26"
+  "date": "2026-10-27"
  },
  "/developers/api": {
-  "hash": "79d5bc22dabe4d25",
-  "date": "2026-10-25"
+  "hash": "48b66aeabfbf5949",
+  "date": "2026-10-27"
  },
  "/developers/sdks": {
-  "hash": "131a4ed0dbc31737",
-  "date": "2026-10-25"
+  "hash": "cd29218aa91fda59",
+  "date": "2026-10-27"
  },
  "/developers/webhooks": {
   "hash": "2c700b7a90a5bc95",
   "date": "2026-10-23"
  },
  "/developers/test-mode": {
-  "hash": "d6843e1aaeeadee0",
-  "date": "2026-10-17"
+  "hash": "db5a19e8aa8499ea",
+  "date": "2026-10-27"
  },
  "/developers/cli": {
-  "hash": "04b0b9d6b72befdf",
-  "date": "2026-10-23"
+  "hash": "66267b84df71650a",
+  "date": "2026-10-27"
  },
  "/developers/agents": {
-  "hash": "1e2fec3f42a242e7",
-  "date": "2026-10-16"
+  "hash": "dd3a9c3d8681992c",
+  "date": "2026-10-27"
  },
  "/developers/embedding": {
-  "hash": "fd29fe5df8e01d32",
-  "date": "2026-10-23"
+  "hash": "605935918295d932",
+  "date": "2026-10-27"
  },
  "/developers/keys-and-security": {
   "hash": "1635c09b5b617a7b",
   "date": "2026-10-23"
  },
  "/developers/plays": {
-  "hash": "b125bea85a422872",
-  "date": "2026-10-23"
+  "hash": "f59de4eea2f1a6e5",
+  "date": "2026-10-27"
  },
  "/trust": {
-  "hash": "ab029d682a978713",
-  "date": "2026-10-26"
+  "hash": "aec63e8b5e53ab32",
+  "date": "2026-10-27"
  },
  "/trust/legal-validity": {
   "hash": "7e942671d68611df",
@@ -133,7 +129,7 @@
  },
  "/about": {
   "hash": "c8c9e7fa19ff636f",
-  "date": "2026-10-26"
+  "date": "2026-10-27"
  },
  "/open-source": {
   "hash": "d94e41da191e05a4",
@@ -162,6 +158,30 @@
  "/legal": {
   "hash": "e8e1c06668ef76df",
   "date": "2026-10-25"
+ },
+ "/features/payments": {
+  "hash": "394632640b0c0bb9",
+  "date": "2026-10-27"
+ },
+ "/features/signing": {
+  "hash": "52bd42f7a8317e16",
+  "date": "2026-10-27"
+ },
+ "/features/templates-and-sending": {
+  "hash": "1ba7bd794325e163",
+  "date": "2026-10-27"
+ },
+ "/features/team-and-roles": {
+  "hash": "5fc6008f09d25576",
+  "date": "2026-10-27"
+ },
+ "/developers/payments": {
+  "hash": "5aa981da67001b42",
+  "date": "2026-10-27"
+ },
+ "/self-host/payments": {
+  "hash": "ba111fa2747b5489",
+  "date": "2026-10-27"
  },
  "/templates/nda-template": {
   "hash": "be2747432bb9cc28",
@@ -372,8 +392,8 @@
   "date": "2026-10-17"
  },
  "/pricing": {
-  "hash": "c950dacd3a306c29",
-  "date": "2026-10-26"
+  "hash": "3dd2c52fa224561f",
+  "date": "2026-10-27"
  },
  "/free-templates": {
   "hash": "78c345d400d8e33b",
@@ -404,8 +424,8 @@
   "date": "2026-10-16"
  },
  "/changelog": {
-  "hash": "43174a0627fa21eb",
-  "date": "2026-10-26"
+  "hash": "5acba238f90c9851",
+  "date": "2026-10-27"
  },
  "/self-host": {
   "hash": "58a3ede25c53ba4e",
@@ -444,36 +464,36 @@
   "date": "2026-10-16"
  },
  "/sign-pdf/javascript": {
-  "hash": "1f6cad89b25f8f7d",
-  "date": "2026-10-16"
+  "hash": "79fbe3f3fce68398",
+  "date": "2026-10-27"
  },
  "/sign-pdf/typescript": {
-  "hash": "406f550a2bb6b27e",
-  "date": "2026-10-16"
+  "hash": "a3792c00a073114d",
+  "date": "2026-10-27"
  },
  "/sign-pdf/python": {
-  "hash": "982e9c28f8240746",
-  "date": "2026-10-16"
+  "hash": "bd951b53bdcee247",
+  "date": "2026-10-27"
  },
  "/sign-pdf/go": {
-  "hash": "7720480f1ac27bbc",
-  "date": "2026-10-25"
+  "hash": "78578efedaa12605",
+  "date": "2026-10-27"
  },
  "/sign-pdf/php": {
-  "hash": "347e2653a74391e0",
-  "date": "2026-10-16"
+  "hash": "e8c22c5535b59fd1",
+  "date": "2026-10-27"
  },
  "/sign-pdf/csharp": {
-  "hash": "ddf3eb27e7e2ada6",
-  "date": "2026-10-16"
+  "hash": "0b9e59fc2b9bd856",
+  "date": "2026-10-27"
  },
  "/docs/index": {
-  "hash": "2e9d615f6973fe06",
-  "date": "2026-10-23"
+  "hash": "eaa51a685961eee6",
+  "date": "2026-10-27"
  },
  "/docs/quickstart": {
-  "hash": "545c814a3783d298",
-  "date": "2026-10-25"
+  "hash": "c85092228b05fddd",
+  "date": "2026-10-27"
  },
  "/docs/authentication": {
   "hash": "1f4e611cb06af1b8",
@@ -496,12 +516,12 @@
   "date": "2026-10-23"
  },
  "/docs/webhooks": {
-  "hash": "1953c7947c6137c4",
-  "date": "2026-10-25"
+  "hash": "e0e5fcc0b6a0600b",
+  "date": "2026-10-27"
  },
  "/docs/test-mode": {
-  "hash": "da3496dc22f4ec5e",
-  "date": "2026-10-23"
+  "hash": "510d309e56cbc43e",
+  "date": "2026-10-27"
  },
  "/docs/errors-and-limits": {
   "hash": "3062fcb830813453",
@@ -512,12 +532,12 @@
   "date": "2026-10-23"
  },
  "/docs/sdks": {
-  "hash": "aafb26389caabb7d",
-  "date": "2026-10-25"
+  "hash": "67b0bc183a322092",
+  "date": "2026-10-27"
  },
  "/docs/mcp-and-skills": {
-  "hash": "3db71e0d30e17bbb",
-  "date": "2026-10-23"
+  "hash": "dadeb51082958e3c",
+  "date": "2026-10-27"
  },
  "/docs/connector": {
   "hash": "38a651b4077ce31f",
@@ -532,12 +552,12 @@
   "date": "2026-10-23"
  },
  "/docs/email-api": {
-  "hash": "4e75cedd75368a71",
-  "date": "2026-10-23"
+  "hash": "f6ce1fefad1a1501",
+  "date": "2026-10-27"
  },
  "/docs/settings-reference": {
-  "hash": "49053f57a58c46ab",
-  "date": "2026-10-25"
+  "hash": "ec981f4b06f2ba3f",
+  "date": "2026-10-27"
  },
  "/docs/self-host-upgrade": {
   "hash": "5aa4f98708e81569",
@@ -560,24 +580,24 @@
   "date": "2026-10-23"
  },
  "/docs/tutorial-nextjs": {
-  "hash": "5a13e6e11764b643",
-  "date": "2026-10-23"
+  "hash": "a3d61b5debf81ee8",
+  "date": "2026-10-27"
  },
  "/docs/tutorial-python": {
-  "hash": "34d25a4b05afbf0e",
-  "date": "2026-10-25"
+  "hash": "28f400e24582684a",
+  "date": "2026-10-27"
  },
  "/docs/tutorial-agent": {
-  "hash": "87b4346ecb3ebb2d",
-  "date": "2026-10-23"
+  "hash": "6d870fc73c50cab7",
+  "date": "2026-10-27"
  },
  "/docs/self-host-sso": {
   "hash": "6f12cfeec428179d",
   "date": "2026-10-23"
  },
- "/docs/payments-and-playbooks": {
-  "hash": "955e8f5d0778d561",
-  "date": "2026-10-23"
+ "/docs/search-and-payments": {
+  "hash": "3e3561240fc09625",
+  "date": "2026-10-27"
  },
  "/docs/template-library": {
   "hash": "489028255bb2b494",

@@ -83,6 +83,8 @@ async function smtpSend(tx, { tenantId, identity, routed, html, text, attachment
  * @returns {{status, providerMessageId, error, mode, fallbackReason, limit?}}
  */
 export async function sendMail(tx, { tenantId, to, subject, html = null, text, attachments = null, headers = null, purpose = "default", replyTo = null, idempotencyKey = null, product = null }) {
+  // 26 Oct 2026 launch-night switch: KEYSTONE_MAIL_PAUSED=1 stops every outgoing email at this door (LAUNCH-NIGHT-RUNBOOK.md). Nothing is queued: the sender sees a skipped send and can resend once it is switched off.
+  if (process.env.KEYSTONE_MAIL_PAUSED === "1") return { providerMessageId: null, error: "Email sending is paused for a moment. Try again shortly.", mode: "paused", fallbackReason: null, status: "skipped" };
   const P = await ports();
   // Launch step 8: a demo workspace sends nothing — the message is recorded for the visitor's demo inbox and the product carries on as if it had gone
   if (P.hold) { const h = await P.hold(tx, { to, subject, text, html }); if (h) return { ...h, mode: "held", fallbackReason: null }; }

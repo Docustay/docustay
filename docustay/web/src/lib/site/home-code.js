@@ -6,7 +6,7 @@ const by = Object.fromEntries(SIGNPDF.map((s) => [s.slug, s.code]));
 import { GO, PHP, CSHARP } from "./send-samples.js";
 export { GO, PHP, CSHARP };
 export const CLI = `npx docustay login   # paste a key from Settings, Developers
-npx docustay send --test TEMPLATE_ID --party signer_1="Pat Example <pat@example.com>"`;
+npx docustay send --test $DOCUSTAY_TEMPLATE_ID --party signer_1="Rosa Alvarez <rosa@example.com>"`;
 export const MCP = `{
   "mcpServers": {
     "docustay": {

@@ -1,11 +1,11 @@
 ---
 title: Pricing
-description: Pro is $35 a month for the whole workspace, with unlimited team members, signers, documents and templates. Free sends 15 documents a month to 15 different signers. Pay as you go is $5 per team member a month and bills only what you use. Lifetime is a one-time payment.
+description: Free sends 15 documents a month to 15 different signers. Pay as you go adds team members at $5 a month and bills only what you use. Signers are free. Pro is one flat price for the whole workspace. Lifetime is a one-time payment.
 ---
 
 # Pricing
 
-The e-signature API you own. One flat price for every user. Pay as you go is $5 per person if you would rather pay per person.
+Start free. Pay as you go is $5 per person a month if you only send a few. Pro is $35 a month for your whole team, with no seats. Every price is on this page, and a monthly budget means the bill never surprises you.
 
 - **Free**: 15 documents a month, 10 AI drafts, 5 new templates a month, 15 different signers a month, one team member. A 2% fee on payments taken while signing.
 - **Pay as you go**: $5 per team member per month, signers free. 25 new templates a month. 15 documents free, then $0.50 each. 10 AI drafts free, then $0.30 each. Budget of $50 by default with alerts at 50, 80 and 100%.

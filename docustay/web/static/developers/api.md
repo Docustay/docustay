@@ -35,7 +35,7 @@ import { Docustay } from "@docustay2026/sdk";
 const docustay = new Docustay(process.env.DOCUSTAY_API_KEY, process.env.DOCUSTAY_URL ? { baseUrl: process.env.DOCUSTAY_URL } : {});
 const doc = await docustay.sendDocument({
   templateId: process.env.DOCUSTAY_TEMPLATE_ID,
-  parties: [{ seat: "signer_1", name: "Pat Example", email: "pat@example.com" }],
+  parties: [{ seat: "signer_1", name: "Rosa Alvarez", email: "rosa@example.com" }],
 });
 console.log(doc.id, doc.state);
 ```
@@ -103,7 +103,7 @@ Every error is { error: { kind, message, requestId, retryable } }. Quote the req
 state moves sent, then partially_signed, then executed (or declined, expired, void). The sealed PDF is made a few seconds after the last signature.
 
 ```
-curl https://app.docustay.app/api/v1/documents/DOCUMENT_ID \
+curl https://app.docustay.app/api/v1/documents/$DOCUSTAY_DOCUMENT_ID \
   -H "Authorization: Bearer $DOCUSTAY_API_KEY"
 ```
 

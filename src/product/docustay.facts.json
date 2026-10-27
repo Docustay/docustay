@@ -10,7 +10,8 @@
     "hnTitle": "Show HN: Docustay, an open-source e-signature API with one flat price and no seats",
     "about": "The open-source e-signature API. One flat price for every user, payments built in, self-hostable.",
     "support": "Open source and self-hostable. Pro is {pro} a month for your whole team: no per-seat fees, unlimited people and documents. Signers can pay while they sign, straight into your own Stripe account, and Pro adds no fee.",
-    "payAsYouGoLine": "Pay as you go is {person} per person if you would rather pay per person."
+    "payAsYouGoLine": "Pay as you go is {person} per person if you would rather pay per person.",
+    "pricingIntro": "Start free. Pay as you go is {person} per person a month if you only send a few. Pro is {pro} a month for your whole team, with no seats. Every price is on this page, and a monthly budget means the bill never surprises you."
   },
   "version": "0.2.2",
   "company": {
@@ -247,5 +248,35 @@
       "title": "Docustay web",
       "description": "{about}"
     }
+  },
+  "payments": {
+    "_about": "Payments inside a document. Read from the code by `plumb check` (currencies from src/documents/flowDefinition.mjs, the hold from src/documents/pdfSigning.mjs, the guided-setup country from src/product/docustayStripeAccount.mjs); pages state them and plumb check compares.",
+    "currencies": [
+      "usd",
+      "eur",
+      "gbp",
+      "cad",
+      "aud",
+      "nzd",
+      "chf",
+      "sek",
+      "nok",
+      "dkk"
+    ],
+    "holdDays": 7,
+    "setupMinutes": 5,
+    "minMinor": 50,
+    "maxMinor": 99999999,
+    "accountStates": [
+      "Ready",
+      "Verifying",
+      "Needs attention",
+      "Restricted",
+      "Paused by you",
+      "Disconnected"
+    ],
+    "guidedSetupCountries": [
+      "United States"
+    ]
   }
 }

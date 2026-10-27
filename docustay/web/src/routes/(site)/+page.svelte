@@ -83,10 +83,10 @@
 <!-- 1 · FIRST SCREEN -->
 <section class="hero" aria-labelledby="h1">
   <Backdrop kind="C1" />
-  <div class="hero-d" aria-hidden="true"><Scene3D kind="hero" soft /></div>
   <div class="hero-in">
     <span class="d-chip">FREE TO START · OPEN SOURCE (AGPL-3.0) · SELF-HOST IF YOU LIKE</span>
     <h1 id="h1" class="d-h1">{facts.tagline.headline}</h1>
+    <div class="hero-dwrap"><div class="hero-d" aria-hidden="true"><Scene3D kind="hero" soft /></div></div>
     <p class="d-sub c">{facts.tagline.support}</p>
     <div class="d-actions c"><a class="d-btn main" href="/demo" data-umami-event="cta_click" data-umami-event-location="hero" data-umami-event-target="demo">Try the demo</a><a class="d-btn alt" href="/signup" data-umami-event="cta_click" data-umami-event-location="hero" data-umami-event-target="signup">Start free</a></div>
     <p class="d-fine">No sign-up for the demo. Nothing is ever sent.</p>
@@ -316,7 +316,8 @@
   .home { overflow-x: clip; } .home p, .home li, .home code { overflow-wrap: anywhere; } .steps li > div { min-width: 0; }
   .home :global(.d-sub.c), .c { text-align: center; margin-left: auto; margin-right: auto; } .home :global(.d-actions.c) { justify-content: center; }
   .sec { position: relative; max-width: 1180px; margin: 0 auto; padding: 88px var(--gutter) 0; } .sec > :global(.sh) { margin-bottom: 40px; }
-  .hero-d { position: absolute; z-index: 1; right: max(28px, 4.5vw); top: 150px; width: 250px; } @media (max-width: 1180px) { .hero-d { display: none; } }
+  /* the D sits beside the sub line and buttons, never beside the headline: it is placed where the flow puts it (just under the h1), so it follows the headline whether that wraps to two lines or three */
+  .hero-dwrap { position: relative; width: 100%; height: 0; } .hero-d { position: absolute; z-index: 1; right: 0; top: 18px; width: 190px; } @media (max-width: 1180px) { .hero-dwrap { display: none; } }
   .hero { position: relative; padding: 150px var(--gutter) 40px; text-align: center; overflow: hidden; } .hero-in { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; }
   .hero :global(h1.d-h1) { max-width: 1120px; margin: 26px auto 0; font-size: clamp(3rem, 7.4vw, 5.75rem); } .hero :global(.d-sub) { max-width: 640px; }
   .stage { position: relative; z-index: 1; max-width: 1180px; height: 430px; margin: 46px auto 0; text-align: left; } .stage :global(.st-code) { position: absolute; left: 14px; top: 40px; width: 470px; } .stage :global(.st-tl) { position: absolute; right: 14px; top: 36px; width: 320px; transform: perspective(1400px) rotateY(-12deg) rotateX(3deg); }

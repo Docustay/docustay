@@ -14,10 +14,10 @@ import { recordHealthTransition } from "./platformEvents.mjs";
 //     stripe_webhooks, n8n, migrations, …) is still checked, still recorded, still on Platform → Health, and is reported ONCE A DAY in the 7 am summary
 //     (`dailySummary.mjs` already lists every non-immediate check). A reminder is once every 24h, not hourly. There is no "recovered" email (the platform fact
 //     is still recorded). And only PRODUCTION emails: staging/local record the same facts and send nothing.
-export const IMMEDIATE_KEYS = Object.freeze(["app", "database", "worker"]);
+export const IMMEDIATE_KEYS = Object.freeze(["app", "database", "worker", "queue_latency"]);   // queue_latency (26 Oct 2026): a person-facing job older than 2 minutes, or more than 3,000 jobs waiting
 const REPEAT_MINUTES = 24 * 60;
 /** Checks whose transitions are RECORDED as platform facts (health.check_failed / recovered) — the nine that always were. Only IMMEDIATE_KEYS email. */
-const RECORDED_KEYS = Object.freeze(["app", "database", "worker", "outbox", "queue", "backup", "restore", "stripe_webhooks", "n8n", "migrations"]);
+const RECORDED_KEYS = Object.freeze(["app", "database", "worker", "queue_latency", "outbox", "queue", "backup", "restore", "stripe_webhooks", "n8n", "migrations"]);
 /** Only the real production environment may page a person. */
 const mayEmailFor = (env) => (env.KEYSTONE_ENVIRONMENT ?? "") === "production";
 
@@ -66,14 +66,13 @@ export async function notifyTransitions(checks, { query, send, env = process.env
       if (kind !== "quiet" && kind !== "recovered" && canEmail && IMMEDIATE_KEYS.includes(c.key)) {
         const envName = env.KEYSTONE_ENVIRONMENT ?? "unknown";
         const subject = `Workbench ${envName}: ${c.label} needs attention`;
-        const routed = redirectForEnvironment({ to, subject }, env);
-        // ★★★ IF THIS THROWS, `alert_transition`'s write for THIS check must not survive it — the
-        //     catch below rolls back before the error reaches the caller.
-        // ★★ fix round 1 (F526 / review C1) — `deliverOrThrow` is what makes a RESOLVED `{ok:false}`
-        //    (a real Resend 500/429/timeout — sendViaResend never throws for these) throw too, not
-        //    just a network exception. Before this, that shape reached `out.push`/`COMMIT` as if it
-        //    had succeeded, so a real send failure was recorded and reported as delivered.
-        await deliverOrThrow(deliver, { to: routed.to, from: sendingAddress(env), subject: routed.subject, text: `${c.label}: ${c.detail}\n\nPlatform → Health shows every check.` });
+        // KEYSTONE_ALERT_EMAIL may name more than one address, separated by commas (launch night: alerts@ and hello@): each gets its own message
+        let lastRouted = null;
+        for (const one of String(to).split(/[;,]\s*/).filter((x) => x.includes("@"))) {
+          const routed = redirectForEnvironment({ to: one, subject }, env);
+          lastRouted = routed;
+          await deliverOrThrow(deliver, { to: routed.to, from: sendingAddress(env), subject: routed.subject, text: `${c.label}: ${c.detail}\n\nPlatform → Health shows every check.` });
+        }
         out.push({ key: c.key, kind });
       }
       await query("COMMIT");

@@ -72,7 +72,7 @@ The embed-session call needs an Idempotency-Key and a key with the embedded:writ
 ```
 curl -X POST https://app.docustay.app/api/v1/documents/send \
   -H "Authorization: Bearer $DOCUSTAY_API_KEY" -H "Idempotency-Key: $(uuidgen)" -H "Content-Type: application/json" \
-  -d '{ "templateId": "TEMPLATE_ID", "embedded": ["signer_1"], "parties": [{ "seat": "signer_1", "name": "Rosa Alvarez", "email": "rosa@example.com" }] }'
+  -d '{ "templateId": "'"$DOCUSTAY_TEMPLATE_ID"'", "embedded": ["signer_1"], "parties": [{ "seat": "signer_1", "name": "Rosa Alvarez", "email": "rosa@example.com" }] }'
 ```
 
 ## What the element tells your page.

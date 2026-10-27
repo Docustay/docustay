@@ -22,7 +22,7 @@ var api = new DocumentsApi(config);
 
 var request = new SendRequest(
     templateId: Guid.Parse(Environment.GetEnvironmentVariable("DOCUSTAY_TEMPLATE_ID")!),
-    parties: new List<SendRequestPartiesInner> { new SendRequestPartiesInner(seat: "signer_1", name: "Pat Example", email: "pat@example.com") });
+    parties: new List<SendRequestPartiesInner> { new SendRequestPartiesInner(seat: "signer_1", name: "Rosa Alvarez", email: "rosa@example.com") });
 var doc = api.SendDocument(Guid.NewGuid().ToString(), request);
 Console.WriteLine($"{doc.Id} {doc.State}");
 ```

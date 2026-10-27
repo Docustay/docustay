@@ -24,7 +24,7 @@ $api = new Docustay\Api\DocumentsApi(new GuzzleHttp\Client(), $config);
 $request = new Docustay\Model\SendRequest([
     'template_id' => getenv('DOCUSTAY_TEMPLATE_ID'),
     'parties' => [new Docustay\Model\SendRequestPartiesInner([
-        'seat' => 'signer_1', 'name' => 'Pat Example', 'email' => 'pat@example.com',
+        'seat' => 'signer_1', 'name' => 'Rosa Alvarez', 'email' => 'rosa@example.com',
     ])],
 ]);
 $doc = $api->sendDocument(bin2hex(random_bytes(16)), $request);

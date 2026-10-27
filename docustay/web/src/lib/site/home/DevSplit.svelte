@@ -3,8 +3,8 @@
   import Doodle from "$lib/doodle/Doodle.svelte";
   import { shown } from "$lib/fx/index.js";
   let { curl } = $props();
-  const js = `import { Docustay } from "@docustay2026/sdk";\nconst docustay = new Docustay(process.env.DOCUSTAY_API_KEY);\nawait docustay.sendDocument({\n  templateId: "TEMPLATE_ID",\n  parties: [{ seat: "signer_1", name: "Rosa Alvarez", email: "rosa@example.com" }],\n});`;
-  const py = `from docustay import Docustay\nd = Docustay(os.environ["DOCUSTAY_API_KEY"])\nd.send_document(\n  template_id="TEMPLATE_ID",\n  parties=[{"seat": "signer_1", "name": "Rosa Alvarez", "email": "rosa@example.com"}],\n)`;
+  const js = `import { Docustay } from "@docustay2026/sdk";\nconst docustay = new Docustay(process.env.DOCUSTAY_API_KEY);\nawait docustay.sendDocument({\n  templateId: process.env.DOCUSTAY_TEMPLATE_ID,\n  parties: [{ seat: "signer_1", name: "Rosa Alvarez", email: "rosa@example.com" }],\n});`;
+  const py = `from docustay import Docustay\nd = Docustay(os.environ["DOCUSTAY_API_KEY"])\nd.send_document(\n  template_id=os.environ["DOCUSTAY_TEMPLATE_ID"],\n  parties=[{"seat": "signer_1", "name": "Rosa Alvarez", "email": "rosa@example.com"}],\n)`;
   const tabs = [["curl", curl], ["JavaScript", js], ["Python", py]];
   let tab = $state(0);
 </script>

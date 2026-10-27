@@ -6,4 +6,4 @@ export const CURL_SEND = `curl -X POST "$DOCUSTAY_URL/api/v1/documents/send" \\
   -H "Authorization: Bearer $DOCUSTAY_API_KEY" \\
   -H "Idempotency-Key: $(uuidgen)" \\
   -H "Content-Type: application/json" \\
-  -d '{"templateId":"'"$DOCUSTAY_TEMPLATE_ID"'","parties":[{"seat":"signer_1","name":"Pat Example","email":"pat@example.com"}]}'`;
+  -d '{"templateId":"'"$DOCUSTAY_TEMPLATE_ID"'","parties":[{"seat":"signer_1","name":"Rosa Alvarez","email":"rosa@example.com"}]}'`;

@@ -26,12 +26,14 @@ const RULES = [
   [/pay as you go[^.\n]{0,80}unlimited templates|unlimited templates[^.\n]{0,80}pay as you go/i, `Pay as you go has ${PRICES.payg.templatesPerMonth} new templates a month: never "Unlimited" next to it`],
   [/free[^.\n]{0,60}unlimited signers|unlimited signers[^.\n]{0,60}\bfree plan\b/i, `Free has ${PRICES.free.signersPerMonth} different signers a month: never "Unlimited" next to it`],
 ];
+// the maintainer's approved positioning lines (final decision, 25-26 Oct 2026; pinned word for word by test/plumb_positioning_claims.test.mjs). Reason: the supporting line next to the tagline says Pro is $35 a month for the whole team, and the pricing intro says Pay as you go is $5 per person a month; these sentences are the maintainer's words, not the retired per-seat wording.
+const APPROVED = /unlimited people and documents\. Signers can pay|Pay as you go is \{?\$?[\d{}a-z]+\}? per person|Pay as you go is \$5 per person|Start free\. Pay as you go is/i;
 const bad = [];
 for (const root of [join(WEB, "src"), join(WEB, "static"), join(ROOT, "src/product"), join(ROOT, "src/queue"), join(ROOT, "src/mail"), join(ROOT, "src/routes"), join(ROOT, "sdk/mcp/src"), join(ROOT, "sdk/js/src"), join(ROOT, "sdk/cli/bin")]) {
   if (!existsSync(root)) continue;
   for (const f of walk(root)) {
     const lines = readFileSync(f, "utf8").split("\n");
-    lines.forEach((ln, i) => { for (const [re, why] of RULES) { const m = ln.match(re); if (m) bad.push(`${relative(ROOT, f)}:${i + 1}  ${why}  → …${ln.slice(Math.max(0, (m.index ?? 0) - 30), (m.index ?? 0) + 70).trim()}…`); } });
+    lines.forEach((ln, i) => { if (APPROVED.test(ln)) return; for (const [re, why] of RULES) { const m = ln.match(re); if (m) bad.push(`${relative(ROOT, f)}:${i + 1}  ${why}  → …${ln.slice(Math.max(0, (m.index ?? 0) - 30), (m.index ?? 0) + 70).trim()}…`); } });
   }
 }
 

@@ -18,7 +18,7 @@ export async function startOutboxWake({ connectionString, debounceMs = 150, log 
     pending.delete(tenantId);
     try {
       await queue.add("dispatch_outbox", { tenantId },
-        { jobKey: `dispatch_outbox:${tenantId}`, jobKeyMode: "replace", runAt: new Date(), priority: -10 });
+        { jobKey: `dispatch_outbox:${tenantId}`, jobKeyMode: "replace", runAt: new Date(), priority: -12 });
     } catch (e) { log.error?.(`outbox wake: could not queue a dispatch for ${tenantId}: ${e.message} (the minute sweep will)`); }
   };
   const onNote = (msg) => {

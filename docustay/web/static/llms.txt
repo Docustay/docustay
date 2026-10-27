@@ -11,12 +11,15 @@ What Docustay does, step by step: how it works, Scribe, payments, proof, embedde
 - [E-signature features from file to sealed copy](https://docustay.app/features.md): E-signature features from file to sealed copy: Scribe, templates, signing on any device, payments and proof, in the app and from your API.
 - [How e-signatures work: from file to sealed copy](https://docustay.app/features/how-it-works.md): How e-signatures work in Docustay: create a document, send it, sign on any device, get paid and keep proof anyone can check.
 - [Scribe: the AI document builder](https://docustay.app/features/scribe.md): Scribe is an AI document builder: it asks a few clickable questions, then builds the whole document with every field placed. It drafts; a person sends.
-- [Payments inside e-signature, into your Stripe | Docustay](https://docustay.app/features/payments.md): Payments inside e-signature: the signer pays as part of signing, straight into your own Stripe account. Docustay never holds the money.
 - [Certificate of completion for every signed PDF | Docustay](https://docustay.app/features/proof.md): Every finished document is sealed with a certificate of completion that lists who signed and when. Anyone can verify a copy without an account.
 - [Embedded e-signature for your app | Docustay](https://docustay.app/features/embedded-signing.md): Embedded e-signature: put the signer, the document builder and Scribe inside your own product as components, on the websites you allow.
 - [E-signature test mode: a built-in sandbox | Docustay](https://docustay.app/features/test-mode.md): E-signature test mode: test keys, watermarked documents and email only to you. Build the whole flow before a real person gets anything.
 - [MCP server e-signature for AI agents | Docustay](https://docustay.app/features/agent-ready.md): An MCP server e-signature tool and a Claude plugin let an assistant draft documents. A person approves every send, and a draft-only key enforces it.
 - [Your logo and colours on every document | Docustay](https://docustay.app/features/white-label.md): Put your logo, your colour and a welcome note on the signing page, and your name on every email, on every plan. Need a fully white-labelled product? That is the commercial licence or self-hosting.
+- [Get paid inside the signature, powered by Stripe](https://docustay.app/features/payments.md): Add a payment field and the signer pays by card as the last step of signing. Payments are powered by Stripe and go straight to your own Stripe account. Docustay never holds the money.
+- [Signing on any device, with no account](https://docustay.app/features/signing.md): The person you send to opens a link on a phone or a computer, with no account. They draw or type a signature, or decline. Reminders and a deadline keep it moving.
+- [Templates, text tags and sending to a list](https://docustay.app/features/templates-and-sending.md): Write fields into your text with tags, let Docustay find them in a PDF, start from the template library, send to a list from a spreadsheet, and set the signing order, reminders and expiry.
+- [Teams, roles and who pays for what](https://docustay.app/features/team-and-roles.md): Three roles: Owner, Admin and Member. Teams, invites, and the price: Pay as you go is per person, and Pro is one price for the whole workspace.
 
 ## Use cases
 
@@ -102,7 +105,8 @@ The API, SDKs, command line, webhooks, embedded signing, test mode and AI agent 
 - [MCP server for e-signatures](https://docustay.app/developers/agents.md): A hosted connector and a local MCP server let an assistant draft documents from templates and plays. It cannot send: a person approves each send. Draft-only keys last 90 days.
 - [Put the signer in your own page](https://docustay.app/developers/embedding.md): Show the signing form inside your own page with the docustay-sign element. Sessions last one hour, origins are allow-listed, and your key stays on your server.
 - [API keys and scopes](https://docustay.app/developers/keys-and-security.md): Keys carry scopes, can expire, can be limited to addresses and are shown once. Test keys act on test data only. Every use is in the audit log with the key's name.
-- [Template library API for documents](https://docustay.app/developers/plays.md): List the 54 built-in templates, draft from one or customize it, and manage skills and playbooks over the API. Built-in templates are free; your own Plays and Playbooks are on Pro.
+- [Plays and Playbooks API](https://docustay.app/developers/plays.md): List the built-in Plays, draft from one or customize it, and manage your own Plays and Playbooks over the API. Built-in templates are free; your own Plays and Playbooks are on Pro.
+- [Payments API, webhooks and CLI](https://docustay.app/developers/payments.md): Check Stripe status, list payments and refund them over the API. Payment webhooks, the docustay payments command, an MCP tool and how test mode treats a payment field.
 
 ## Sign from code
 
@@ -148,7 +152,7 @@ The developer documentation: quickstart, authentication, webhooks, embedding, se
 - ["Tutorial: send a document from Python"](https://docustay.app/docs/tutorial-python.md): Send a document from Python, show the signing form on your own page, and verify the webhook, using the Docustay SDK and the standard library.
 - ["Tutorial: let an AI agent draft contracts, with a person approving"](https://docustay.app/docs/tutorial-agent.md): Give an AI agent a draft-only key so it can prepare documents but cannot send one until a person approves it in the app.
 - [Single sign-on with OpenID Connect](https://docustay.app/docs/self-host-sso.md): Let people sign in to a self-hosted Docustay with your own identity provider, such as Keycloak, Authentik, Entra or Okta.
-- [Search and payments](https://docustay.app/docs/payments-and-playbooks.md): Search the workspace, list the payments taken while signing, and refund them in full or in part.
+- [Search and payments](https://docustay.app/docs/search-and-payments.md): Search the workspace, list the payments taken while signing, and refund them in full or in part.
 - [The template library](https://docustay.app/docs/template-library.md): The 54 built-in templates, how to send from one or customize it, and how skills and playbooks fit around them.
 
 ## Pricing and licensing
@@ -160,7 +164,8 @@ Plans, prices, limits, the open-source licence and self-hosting.
 - [Single sign-on and hardening for self-hosted Docustay](https://docustay.app/self-host/sso-and-hardening.md): Connect your own OpenID Connect provider, keep the inside private, encrypt what is stored and follow a seven-part hardening list.
 - [Docustay is open source (AGPL-3.0)](https://docustay.app/open-source.md): The server and app are AGPL-3.0 and the SDKs, element and MCP server are MIT. Run it yourself, read it, and ask for a commercial licence only to embed or resell it.
 - [Licensing: AGPL or commercial licence](https://docustay.app/licensing.md): Docustay is open source under AGPL-3.0. Run it for your own business free, or with Self-host Pro. Embed, white-label, resell or fork it privately with a commercial licence.
-- [Pricing](https://docustay.app/pricing.md): Pro is $35 a month for the whole workspace, with unlimited team members, signers, documents and templates. Free sends 15 documents a month to 15 different signers. Pay as you go is $5 per team member a month and bills only what you use. Lifetime is a one-time payment.
+- [Take payments on a self-hosted server](https://docustay.app/self-host/payments.md): Use your own Stripe keys, the charges switch, staging and what is and is not available compared with the hosted service.
+- [Pricing](https://docustay.app/pricing.md): Free sends 15 documents a month to 15 different signers. Pay as you go adds team members at $5 a month and bills only what you use. Signers are free. Pro is one flat price for the whole workspace. Lifetime is a one-time payment.
 - [Self-hosted e-signature in three commands](https://docustay.app/self-host.md): Self-hosted e-signature: run Docustay on your own server under the AGPL-3.0. Community is free; Self-host Pro is a yearly licence per install.
 
 ## Free tools

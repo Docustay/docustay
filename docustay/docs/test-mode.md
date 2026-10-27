@@ -27,19 +27,19 @@ Use test mode to check your whole flow before anything real is sent: that your t
 
 ## A short run-through
 
-Put your test key (it starts `dsk_test_`) in `DOCUSTAY_API_KEY`, the same variable every other page uses, and the id of one of your templates in place of `TEMPLATE_ID` (`GET /api/v1/documents/templates` lists them). Send, and open the email:
+Put your test key (it starts `dsk_test_`) in `DOCUSTAY_API_KEY`, the same variable every other page uses, and the id of one of your templates in place of `$DOCUSTAY_TEMPLATE_ID` (`GET /api/v1/documents/templates` lists them). Send, and open the email:
 
 ```bash
 curl -X POST https://app.docustay.app/api/v1/documents/send \
   -H "Authorization: Bearer $DOCUSTAY_API_KEY" \
   -H "Idempotency-Key: $(uuidgen)" -H "Content-Type: application/json" \
-  -d '{ "templateId": "TEMPLATE_ID", "parties": [{ "seat": "signer_1", "name": "Practice Person", "email": "someone@example.com" }] }'
+  -d '{ "templateId": "'"$DOCUSTAY_TEMPLATE_ID"'", "parties": [{ "seat": "signer_1", "name": "Practice Person", "email": "someone@example.com" }] }'
 ```
 
-The answer is the same shape as a live send (it does not carry a `test` field); fetching the document afterwards shows `"test": true`. The email arrives in your own inbox, not someone@example.com's. Sign it, then fetch the document, with the `id` the send answered in place of `DOCUMENT_ID`:
+The answer is the same shape as a live send (it does not carry a `test` field); fetching the document afterwards shows `"test": true`. The email arrives in your own inbox, not the address you put on the seat. Sign it, then fetch the document, with the `id` the send answered in place of `$DOCUSTAY_DOCUMENT_ID`:
 
 ```bash
-curl https://app.docustay.app/api/v1/documents/DOCUMENT_ID -H "Authorization: Bearer $DOCUSTAY_API_KEY"
+curl https://app.docustay.app/api/v1/documents/$DOCUSTAY_DOCUMENT_ID -H "Authorization: Bearer $DOCUSTAY_API_KEY"
 ```
 
 ## What test mode does not do

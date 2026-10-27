@@ -7,6 +7,7 @@ import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment
 import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 import { AREA } from "./palette.js";
 import PRICES from "../prices.json" with { type: "json" };
+const usd = (m) => `$${(m / 100).toLocaleString("en-US")}`;   // every price drawn in a 3D scene comes from the price list
 import { dGeometry } from "./dshape.js";
 import { toCreasedNormals } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 
@@ -35,7 +36,7 @@ function pageTexture({ title = "Agreement", accent = "#5a3ac1", sign = true, lin
     const ws = [0.94, 0.88, 0.92, 0.7, 0.9, 0.62, 0.86, 0.76, 0.9, 0.5]; x.fillStyle = "#d8d4c8";
     for (let i = 0; i < lines; i++) x.fillRect(56, 196 + i * 40, (w - 112) * ws[i % ws.length], 12);
     if (tick) { tick.forEach((t, i) => { const Y = 196 + i * 70; x.strokeStyle = "#34323f"; x.lineWidth = 4; x.strokeRect(56, Y, 38, 38); if (t) { x.strokeStyle = accent; x.lineWidth = 8; x.beginPath(); x.moveTo(62, Y + 20); x.lineTo(75, Y + 33); x.lineTo(114, Y - 8); x.stroke(); } x.fillStyle = "#d8d4c8"; x.fillRect(126, Y + 12, 300 - i * 30, 12); }); }
-    if (sign) { x.strokeStyle = accent; x.lineWidth = 3; x.setLineDash([12, 9]); x.strokeRect(56, h - 190, 240, 84); x.setLineDash([]); x.fillStyle = accent; x.font = "italic 64px 'Instrument Serif', Georgia, serif"; x.fillText("Pat Lee", 76, h - 130); x.fillStyle = "#8f8c9c"; x.font = MONO(500, 20); x.fillText("SIGNED", 76, h - 116 + 22); }
+    if (sign) { x.strokeStyle = accent; x.lineWidth = 3; x.setLineDash([12, 9]); x.strokeRect(56, h - 190, 240, 84); x.setLineDash([]); x.fillStyle = accent; x.font = "italic 64px 'Instrument Serif', Georgia, serif"; x.fillText("Rosa Alvarez", 76, h - 130); x.fillStyle = "#8f8c9c"; x.font = MONO(500, 20); x.fillText("SIGNED", 76, h - 116 + 22); }
     if (seal) { x.strokeStyle = accent; x.lineWidth = 6; x.beginPath(); x.arc(w - 130, h - 150, 56, 0, 7); x.stroke(); x.fillStyle = accent; x.font = MONO(700, 20); x.textAlign = "center"; x.fillText("SEALED", w - 130, h - 144); x.textAlign = "left"; }
   });
 }
@@ -153,7 +154,7 @@ function docStack() {
 function formCard() {
   const a = AREA.templates, g = new THREE.Group();
   const f = tex(700, 900, (x, w, h) => { x.fillStyle = "#fbfaf6"; x.fillRect(0, 0, w, h); x.fillStyle = "#17161f"; x.font = FONT(650, 52); x.fillText("RSVP", 52, 100); x.fillStyle = "#8f8c9c"; x.font = FONT(500, 26); x.fillText("Tell us if you can come", 52, 146);
-    [["Name", "Pat Lee"], ["Email", "pat@example.com"], ["Guests", "2"]].forEach(([k, v], i) => { const Y = 210 + i * 150; x.fillStyle = "#4a4858"; x.font = FONT(600, 26); x.fillText(k, 52, Y); x.strokeStyle = "#cfcabd"; x.lineWidth = 3; roundRect(x, 52, Y + 18, w - 104, 70, 10); x.stroke(); x.fillStyle = "#17161f"; x.font = FONT(500, 32); x.fillText(v, 74, Y + 64); });
+    [["Name", "Rosa Alvarez"], ["Email", "rosa@example.com"], ["Guests", "2"]].forEach(([k, v], i) => { const Y = 210 + i * 150; x.fillStyle = "#4a4858"; x.font = FONT(600, 26); x.fillText(k, 52, Y); x.strokeStyle = "#cfcabd"; x.lineWidth = 3; roundRect(x, 52, Y + 18, w - 104, 70, 10); x.stroke(); x.fillStyle = "#17161f"; x.font = FONT(500, 32); x.fillText(v, 74, Y + 64); });
     x.fillStyle = a.accent; roundRect(x, 52, h - 150, 220, 76, 38); x.fill(); x.fillStyle = "#fff"; x.font = FONT(650, 30); x.fillText("Send", 112, h - 102); });
   const side = mat("#cfcabd", { roughness: 0.9 }); const m = new THREE.Mesh(new RoundedBoxGeometry(1.7, 2.18, 0.05, 3, 0.04), [side, side, side, side, mat("#fff", { map: f, roughness: 0.7, clearcoat: 0 }), side]); m.castShadow = true; g.add(m);
   g.rotation.set(-0.05, -0.45, 0.03); return g;
@@ -181,14 +182,14 @@ function backupFolder() {
 }
 function lockCard() {
   const a = AREA.selfhost, g = new THREE.Group();
-  const f = tex(700, 460, (x, w, h) => { x.fillStyle = "#ffffff"; x.fillRect(0, 0, w, h); x.fillStyle = "#16161d"; x.font = FONT(650, 44); x.fillText("Sign in", 48, 90); x.strokeStyle = "#cfd8d3"; x.lineWidth = 3; roundRect(x, 48, 130, w - 96, 70, 12); x.stroke(); x.fillStyle = "#4c4a5e"; x.font = FONT(500, 28); x.fillText("you@company.com", 70, 175); x.fillStyle = a.accent; roundRect(x, 48, 250, w - 96, 84, 14); x.fill(); x.fillStyle = "#ffffff"; x.font = FONT(700, 32); x.fillText("Continue with SSO", 150, 304); });
+  const f = tex(700, 460, (x, w, h) => { x.fillStyle = "#ffffff"; x.fillRect(0, 0, w, h); x.fillStyle = "#16161d"; x.font = FONT(650, 44); x.fillText("Sign in", 48, 90); x.strokeStyle = "#cfd8d3"; x.lineWidth = 3; roundRect(x, 48, 130, w - 96, 70, 12); x.stroke(); x.fillStyle = "#4c4a5e"; x.font = FONT(500, 28); x.fillText("rosa@example.com", 70, 175); x.fillStyle = a.accent; roundRect(x, 48, 250, w - 96, 84, 14); x.fill(); x.fillStyle = "#ffffff"; x.font = FONT(700, 32); x.fillText("Continue with SSO", 150, 304); });
   const sd = mat("#e2e8e4"); const card = new THREE.Mesh(new RoundedBoxGeometry(2.3, 1.5, 0.06, 4, 0.09), [sd, sd, sd, sd, mat("#fff", { map: f, roughness: 0.5 }), sd]); card.castShadow = true; card.position.set(0.5, -0.3, -0.2); card.rotation.set(0, -0.2, 0); g.add(card);
   const lk = padlock(a.accent); lk.children.forEach((c) => { if (c.geometry && c.geometry.type === "BoxGeometry") {} }); lk.remove(lk.children[0]); lk.scale.setScalar(0.75); lk.position.set(-0.7, 0.1, 0.5); g.add(lk);
   g.rotation.y = -0.3; return g;
 }
 function licenceCard(kind = "agpl") {
   const a = AREA.selfhost, g = new THREE.Group();
-  const T = { agpl: ["Community", "AGPL-3.0", "Free to run, change and share. Source stays open.", a.accent], pro: ["Self-host Pro", "$390 / year", "One licence per install. Support and updates.", "#4c4a5e"], commercial: ["Commercial", "from about $3,000 / year", "No AGPL conditions. Priced by use.", "#8a5208"] }[kind];
+  const T = { agpl: ["Community", "AGPL-3.0", "Free to run, change and share. Source stays open.", a.accent], pro: ["Self-host Pro", `${usd(PRICES.selfhost.proYearlyMinor)} / year`, "One licence per install. Support and updates.", "#4c4a5e"], commercial: ["Commercial", `from about ${usd(PRICES.selfhost.commercialFromMinor)} / year`, "No AGPL conditions. Priced by use.", "#8a5208"] }[kind];
   const f = tex(1000, 640, (x, w, h) => { x.fillStyle = "#ffffff"; x.fillRect(0, 0, w, h); x.fillStyle = T[3]; x.fillRect(0, 0, w, 16); x.fillStyle = "#16161d"; x.font = MONO(600, 34); x.fillText("DOCUSTAY LICENCE", 60, 100); x.font = FONT(650, 78); x.fillText(T[0], 60, 220); x.fillStyle = T[3]; x.font = FONT(700, kind === "commercial" ? 58 : 92); x.fillText(T[1], 60, 340); x.fillStyle = "#4c4a5e"; x.font = FONT(500, 32); x.fillText(T[2], 60, 430); x.strokeStyle = "#e4e1f0"; x.lineWidth = 3; x.strokeRect(60, 500, w - 120, 0); x.fillStyle = "#6b6880"; x.font = MONO(500, 26); x.fillText("licence-" + kind + ".txt", 60, 580); });
   const sd = mat("#e4e1f0"); const card = new THREE.Mesh(new RoundedBoxGeometry(2.6, 1.66, 0.06, 4, 0.1), [sd, sd, sd, sd, mat("#fff", { map: f, roughness: 0.45, clearcoat: 0.4 }), sd]); card.castShadow = true; g.add(card);
   g.rotation.set(-0.25, -0.5, 0.04); return g;
@@ -198,7 +199,7 @@ function licenceCard(kind = "agpl") {
 function priceCards() {
   // Pro shows what the plan card beside it charges, from the one price list, never a typed number
   const proMinor = PRICES.pro.monthlyMinor;
-  const a = AREA.pricing, g = new THREE.Group(), items = [["Free", "$0", 0.03], ["Pro", `$${proMinor / 100} / mo`, 0.09], ["Self-host", "$390 / yr", 0.17]];
+  const a = AREA.pricing, g = new THREE.Group(), items = [["Free", "$0", 0.03], ["Pro", `${usd(proMinor)} / mo`, 0.09], ["Self-host", `${usd(PRICES.selfhost.proYearlyMinor)} / yr`, 0.17]];
   items.forEach(([n, p, d], i) => {
     const f = tex(640, 880, (x, w, h) => { x.fillStyle = "#ffffff"; x.fillRect(0, 0, w, h); x.fillStyle = a.edge; x.fillRect(0, 0, w, 14); x.fillStyle = "#16161d"; x.font = FONT(650, 70); x.fillText(n, 50, 140); x.fillStyle = "#5a3ac1"; x.font = FONT(700, 54); x.fillText(p, 50, 240); x.fillStyle = "#e4e1f0"; for (let k = 0; k < 5; k++) x.fillRect(50, 330 + k * 56, 380 - k * 24, 12); });
     const side = mat("#c9cdd6", { metalness: 0.85, roughness: 0.28 }); const edge = mat(a.edge, { metalness: 0.5, roughness: 0.3 });

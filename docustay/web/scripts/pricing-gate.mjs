@@ -6,12 +6,14 @@ import { join, relative } from "node:path";
 const root = new URL("..", import.meta.url).pathname;
 const SCAN = ["src", "static", "../docs", "i18n/memory", "../../docustay/docs"];
 const SKIP = /(^|\/)(node_modules|build|build-preview|\.svelte-kit|template-library|starters|api)(\/|$)|\.(png|jpg|jpeg|webp|gif|pdf|woff2?|mp4|webm|br|gz|ico|svg)$/;
+// the maintainer's approved positioning line and its supporting words (final decision, 26 Oct 2026): "One flat price for every user" says the price does NOT depend on users; the supporting line next to it says Pro is $35 a month for the whole team, and "no per-seat fees" is a promise, not a price. Also the signing-group comment about people in one seat of a template.
+const APPROVED = /one flat price for every user|no per-seat fees|a signing group is several people in ONE seat/i;
 const COMPETITOR = /DocuSeal|Documenso|SignWell|BoldSign|Dropbox Sign|PandaDoc|DocuSign|SignNow|Zoho|on the day this page was read|competitor/i;
 const rules = [
   ["the old founders cut-off (31 Dec) — it is three months after launch, one setting", /31 Dec(ember)?\b|December 31\b/i, () => true],
   ["the retired $16 price", /\$ ?16(?![\d,.]|\.\d)/, () => true],
   ["$25 as a list price (it is the founders price only)", /\$ ?25(?![\d,])/, (l) => !/founder/i.test(l) && !COMPETITOR.test(l)],
-  ["Docustay priced per user or per seat", /per[- ](user|seat)\b|\beach user\b|per extra user/i, (l) => !COMPETITOR.test(l) && !/not (charged )?per user|parties|"seat"|template's .seats./i.test(l) && !/^\s*\["[^"]+", "[^"]*per user/.test(l)],   // a comparison row's middle cell is the competitor's own pricing, not ours
+  ["Docustay priced per user or per seat", /per[- ](user|seat)\b|\beach user\b|per extra user/i, (l) => !COMPETITOR.test(l) && !/not (charged )?per user|parties|"seat"|template's .seats./i.test(l) && !APPROVED.test(l) && !/^\s*\["[^"]+", "[^"]*per user/.test(l)],   // a comparison row's middle cell is the competitor's own pricing, not ours
 ];
 const hits = [];
 if (process.argv.includes("--selftest")) {   // positive control: the gate must flag each bad line and pass each good one

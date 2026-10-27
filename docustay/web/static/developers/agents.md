@@ -54,7 +54,7 @@ agent  → request_send  draft_id
 send_document does nothing the first time: it returns a plain-words preview of who would be emailed. Only a call with confirm: true acts.
 
 ```
-{ "name": "send_document", "arguments": { "templateId": "TEMPLATE_ID", "parties": [{ "seat": "signer_1", "name": "Sam", "email": "sam@example.com" }] } }
+{ "name": "send_document", "arguments": { "templateId": "6f1c1f0e-7a0c-4d1d-9b5e-2f0a7b1c3d4e", "parties": [{ "seat": "signer_1", "name": "Sam", "email": "sam@example.com" }] } }
 ```
 
 ## What an assistant can and cannot do.

@@ -17,7 +17,7 @@ import { Docustay, type SendRequest } from "@docustay2026/sdk";
 const docustay = new Docustay(process.env.DOCUSTAY_API_KEY!, process.env.DOCUSTAY_URL ? { baseUrl: process.env.DOCUSTAY_URL } : {});
 const request: SendRequest = {
   templateId: process.env.DOCUSTAY_TEMPLATE_ID!,
-  parties: [{ seat: "signer_1", name: "Pat Example", email: "pat@example.com" }],
+  parties: [{ seat: "signer_1", name: "Rosa Alvarez", email: "rosa@example.com" }],
 };
 const doc = await docustay.sendDocument(request);
 console.log(doc.id, doc.state);

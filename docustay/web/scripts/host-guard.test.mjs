@@ -5,7 +5,9 @@ assert.ok(hostMayServe("sign.acme.com", "/sign/pdf"), "own host: signing page");
 assert.ok(hostMayServe("sign.acme.com", "/api/public/pdf/view"), "own host: public API");
 assert.ok(hostMayServe("sign.acme.com", "/_app/immutable/x.js"), "own host: the app's assets");
 for (const bad of ["/", "/login", "/documents", "/settings", "/billing", "/api/auth/login", "/api/documents/pdf/x", "/api/product/docustay/status", "/templates", "/signup"]) assert.ok(!hostMayServe("sign.acme.com", bad), `own host must NOT serve ${bad}`);
-for (const h of ["docustay.app", "app.docustay.app", "sign.docustay.app", "localhost:5180", "127.0.0.1", "host.example.com"]) assert.ok(isPlatformHost(h) && hostMayServe(h, "/documents"), `our host ${h} serves the workspace`);
+for (const h of ["docustay.app", "app.docustay.app", "sign.docustay.app", "localhost:5180", "127.0.0.1"]) assert.ok(isPlatformHost(h) && hostMayServe(h, "/documents"), `our host ${h} serves the workspace`);
+// the hosting platform hands the service its own name in RAILWAY_PUBLIC_DOMAIN; no hosting name is written in the source, so the test passes it in
+assert.ok(isPlatformHost("host.example.com", ["host.example.com"]) && hostMayServe("host.example.com", "/documents", ["host.example.com"]), "the platform-given host is ours");
 assert.ok(!isPlatformHost("docustay.app.evil.com"), "a look-alike is not ours");
 assert.equal(redirectFor("docustay.app", "/login"), "https://app.docustay.app/login", "sign-in belongs on the app address");
 assert.equal(redirectFor("www.docustay.app", "/documents"), "https://app.docustay.app/documents");

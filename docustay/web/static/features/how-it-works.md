@@ -69,7 +69,7 @@ Send a test document and listen for what happens to it. A test key emails only y
 
 ```
 npx docustay login
-npx docustay send --test TEMPLATE_ID --party signer_1="Pat Example <pat@example.com>"
+npx docustay send --test $DOCUSTAY_TEMPLATE_ID --party signer_1="Rosa Alvarez <rosa@example.com>"
 ```
 
 ## Reminders until it is done.

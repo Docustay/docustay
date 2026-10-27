@@ -33,8 +33,9 @@
           <div class="mi" data-menu={m.label} onmouseenter={() => enter(m.label)} onmouseleave={leave} onfocusin={() => enter(m.label)}>
             <button type="button" class:cur={is(m.href)} aria-expanded={open === m.label} aria-haspopup="true" data-umami-event="cta_click" data-umami-event-location={"header_" + m.label.toLowerCase().replace("-", "")} onclick={() => { if (open !== m.label) cur = m.cols?.[0]?.items?.[0] ?? null; open = open === m.label ? null : m.label; }}>{m.label}<svg aria-hidden="true" width="10" height="10" viewBox="0 0 10 10"><path d="M2 4l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" /></svg></button>
             {#if open === m.label}
-              <div class="panel" data-testid="{m.label.toLowerCase()}-menu">
+              <div class="panel" class:has-foot={!!m.foot} style="--n:{m.cols.length}" data-testid="{m.label.toLowerCase()}-menu">
                 {#each m.cols as c}<div class="col"><p class="ph">{c.title}</p>{#each c.items as it}<a href={it[1]} onmouseenter={() => (cur = it)} onfocus={() => (cur = it)}>{it[0]}</a>{/each}</div>{/each}
+                {#if m.foot}<div class="footrow" aria-label="{m.label}, more">{#each m.foot as it}<a href={it[1]} onmouseenter={() => (cur = it)} onfocus={() => (cur = it)}>{it[0]}</a>{/each}</div>{/if}
                 <div class="pv">{#if cur}<MenuPreview href={cur[1]} name={cur[0]} />{/if}</div>
               </div>
             {/if}
@@ -76,9 +77,10 @@
   .nav .top, .nav button { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 12px; border-radius: 10px; background: none; border: 0; color: var(--tx-2); font: 400 15px/1 var(--f-ui); text-decoration: none; cursor: pointer; }
   .nav .top:hover, .nav button:hover, .nav .cur, .nav [aria-expanded="true"] { color: var(--tx-1); background: var(--violet-tint); } .nav svg { color: var(--tx-3); }
   .mi { position: static; }
-  .panel { position: absolute; z-index: 50; left: 50%; top: calc(100% + 12px); width: 880px; max-width: 94vw; display: grid; grid-template-columns: 1fr 1fr 340px; gap: 8px 22px; padding: 22px; border-radius: 20px; border: 1px solid var(--hairline); background: #fff; box-shadow: var(--sh-2); transform: translateX(-50%); animation: rise 160ms var(--e-out) both; }
+  .panel { position: absolute; z-index: 50; left: 50%; top: calc(100% + 12px); width: calc(var(--n, 2) * 200px + 480px); max-width: 94vw; display: grid; grid-template-columns: repeat(var(--n, 2), 1fr) 340px; gap: 8px 22px; padding: 22px; border-radius: 20px; border: 1px solid var(--hairline); background: #fff; box-shadow: var(--sh-2); transform: translateX(-50%); animation: rise 160ms var(--e-out) both; }
   @keyframes rise { from { opacity: 0; transform: translate(-50%, 8px); } to { opacity: 1; transform: translate(-50%, 0); } }
-  .pv { grid-row: 1 / span 1; min-height: 300px; } .col { display: flex; flex-direction: column; gap: 2px; } .col a { display: block; padding: 8px 10px; border-radius: 10px; color: var(--tx-1); font-size: 14.5px; text-decoration: none; } .col a:hover { background: var(--violet-tint); color: var(--v-700); }
+  .pv { grid-column: calc(var(--n, 2) + 1); grid-row: 1 / span 1; min-height: 300px; } .panel.has-foot .pv { grid-row: 1 / span 2; }
+  .footrow { grid-column: 1 / span var(--n, 2); display: flex; flex-wrap: wrap; gap: 4px 6px; padding-top: 10px; border-top: 1px solid var(--hairline); } .footrow a { display: inline-block; padding: 8px 12px; border-radius: 10px; color: var(--tx-2); font-size: 14px; text-decoration: none; } .footrow a:hover { background: var(--violet-tint); color: var(--v-700); } .col { display: flex; flex-direction: column; gap: 2px; } .col a { display: block; padding: 8px 10px; border-radius: 10px; color: var(--tx-1); font-size: 14.5px; text-decoration: none; } .col a:hover { background: var(--violet-tint); color: var(--v-700); }
   .ph { font: 500 11px/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--tx-3); margin: 2px 0 8px 10px; }
   .right { display: flex; align-items: center; gap: 8px; margin-left: auto; font-size: 14px; } .nav.r + .right { margin-left: 8px; }
   .signin { padding: 10px 12px; color: var(--tx-2); text-decoration: none; border-radius: 10px; } .signin:hover { color: var(--tx-1); }
@@ -90,7 +92,7 @@
   @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) { .sheetw { backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); } }
   .sheet { max-width: 520px; margin: 0 auto; padding: 8px 20px 40px; display: grid; gap: 18px; } .big { justify-content: center; min-height: 52px; font-size: 16px; }
   .sheet nav { display: grid; } .sheet summary, .sheet .flat { display: flex; align-items: center; justify-content: space-between; min-height: 52px; padding: 0 4px; border-bottom: 1px solid var(--ln-1); color: var(--tx-1); font: 500 18px var(--f-ui); text-decoration: none; list-style: none; cursor: pointer; } .sheet summary::-webkit-details-marker { display: none; } details[open] summary svg { transform: rotate(180deg); }
-  .acc { display: grid; padding: 4px 0 10px 12px; } .acc a { display: flex; align-items: center; min-height: 44px; color: var(--tx-2); text-decoration: none; font-size: 16px; }
+  .acc { display: grid; padding: 4px 0 10px 12px; } .acc .ph { margin: 16px 0 4px 0; } .acc .ph:first-child { margin-top: 6px; } .acc a { display: flex; align-items: center; min-height: 44px; color: var(--tx-2); text-decoration: none; font-size: 16px; }
   .foot { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; } .foot a { display: flex; align-items: center; justify-content: center; min-height: 48px; border-radius: 999px; color: var(--tx-1); text-decoration: none; } .foot .outline { border: 1px solid var(--ln-2); }
   :global(html.sheet-open) { overflow: hidden; }
   @media (max-width: 1060px) { .nav, .signin, .right .start { display: none; } .burger { display: inline-grid; } .bar { padding: 0 8px 0 16px; } .demo .full { display: none; } .demo .short { display: inline; } }

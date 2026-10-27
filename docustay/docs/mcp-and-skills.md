@@ -23,7 +23,7 @@ A server other than `https://app.docustay.app` (a self-hosted install or a pract
 
 ## Words and people, and the assistant
 
-Besides sending a template, the server can make a **draft** from written words and people (`create_document`, `use_template`), check it (`check_document`), read and change it (`get_draft_source`, `revise_document`), set a template's defaults (`set_template_defaults`), ask the Docustay assistant to draft or to propose changes (`draft_document_with_ai`, `edit_document_with_ai`, `cancel_ai_job`), read the wizard's questions (`get_wizard`) and ask whether Stripe is ready for a payment (`get_payments_status`). It can also search the workspace (`search_documents`), list payments (`list_payments`) and list the playbooks (`list_playbooks`). Refunds and switching a playbook on are left to a person: see [Search and payments](/docs/payments-and-playbooks). Making or changing a draft emails nobody: `send_draft` is the only step that does, and it previews first. The assistant's edits come back as proposals for a person to accept. See [Documents from words and people](/docs/documents-from-words.md).
+Besides sending a template, the server can make a **draft** from written words and people (`create_document`, `use_template`), check it (`check_document`), read and change it (`get_draft_source`, `revise_document`), set a template's defaults (`set_template_defaults`), ask the Docustay assistant to draft or to propose changes (`draft_document_with_ai`, `edit_document_with_ai`, `cancel_ai_job`), read the wizard's questions (`get_wizard`) and ask whether Stripe is ready for a payment (`get_payments_status`). It can also search the workspace (`search_documents`), list payments (`list_payments`) and list the playbooks (`list_playbooks`). Refunds and switching a playbook on are left to a person: see [Search and payments](/docs/search-and-payments). Making or changing a draft emails nobody: `send_draft` is the only step that does, and it previews first. The assistant's edits come back as proposals for a person to accept. See [Documents from words and people](/docs/documents-from-words.md).
 
 ## Claude Code plugin and skills
 
@@ -31,10 +31,10 @@ The `docustay` plugin bundles the server and five skills: sending for signature,
 
 ## A conversation, step by step
 
-You ask the assistant: "Send the mutual NDA to Sam at sam@example.com." It calls `list_templates`, finds the NDA, then calls `send_document` without `confirm`. The preview says who would be emailed and from which template. You say yes; it calls `send_document` again with `confirm: true`. Nothing is sent until that second call.
+You ask the assistant to send the mutual NDA to Sam, and give it Sam's email address. It calls `list_templates`, finds the NDA, then calls `send_document` without `confirm`. The preview says who would be emailed and from which template. You say yes; it calls `send_document` again with `confirm: true`. Nothing is sent until that second call.
 
 ```json
-{ "name": "send_document", "arguments": { "templateId": "TEMPLATE_ID", "parties": [{ "seat": "signer_1", "name": "Sam", "email": "sam@example.com" }], "confirm": true } }
+{ "name": "send_document", "arguments": { "templateId": "6f1c1f0e-7a0c-4d1d-9b5e-2f0a7b1c3d4e", "parties": [{ "seat": "signer_1", "name": "Sam", "email": "sam@example.com" }], "confirm": true } }
 ```
 
 ## Reading and saving

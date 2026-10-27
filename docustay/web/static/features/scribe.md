@@ -23,6 +23,14 @@ Scribe is the AI document builder in Docustay. Tell it what you need. It asks a 
 
 **Your Plays.** A Play is a reusable instruction for one kind of document, and a Playbook is a set of them. Your own are on Pro.
 
+## Say what you are collecting. Code places the field.
+
+When Stripe is connected, Scribe's wizard asks for the amount, the currency, who pays and what it is for. The AI drafts the document around those values. Code checks them, writes the payment terms from your own values and places the one payment field.
+
+- The AI never sets an amount. If it writes a payment field of its own, that field is thrown away.
+- You review the draft before anything is sent.
+- Stripe must be connected first. Payments are powered by Stripe.
+
 ## From your words to a finished document.
 
 1. **You describe**: In plain words

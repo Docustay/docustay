@@ -64,6 +64,18 @@ const check = (key, label, state, detail, extra = {}) =>
  *   ★ A job at max_attempts is not WAITING — it will never run — so it is excluded from the backlog age.
  *     Before F486 an acknowledged give-up with an old run_at would have kept the backlog red on its own.
  */
+/** 26 Oct 2026 (launch night): the check for what a person is waiting on. A problem when the oldest due job of the person-facing kinds (emails, webhook deliveries, sealing, outbox dispatch) is more than 2 minutes old, or more than 3,000 jobs of any kind are waiting. It emails (health/alerts.mjs IMMEDIATE_KEYS). */
+async function queueLatencyCheck(db) {
+  const { rows: [q] } = await db.query(`
+    SELECT count(*) FILTER (WHERE attempts < max_attempts AND run_at <= now())::int AS waiting,
+           coalesce(max(extract(epoch FROM now() - run_at)) FILTER (WHERE attempts < max_attempts AND run_at <= now() AND locked_at IS NULL
+                      AND task_identifier IN ('deliver_notification_email','deliver_webhooks','deliver_n8n','archive_document_pdf','dispatch_outbox'))::int, 0) AS oldest_person_seconds
+      FROM graphile_worker.jobs`);
+  const slow = q.oldest_person_seconds > 120, deep = q.waiting > 3000;
+  const detail = `${q.waiting} job(s) waiting; the oldest person-facing job (email, webhook, sealing, dispatch) has waited ${q.oldest_person_seconds} s` + (slow || deep ? ` — more than 2 minutes, or more than 3,000 waiting. People are waiting on email and signing. See LAUNCH-NIGHT-RUNBOOK.md: queue depth, pause sweeps, pause sign-ups and email.` : "");
+  return check("queue_latency", "Queue latency", slow || deep ? "problem" : "ok", detail, { waiting: q.waiting, oldest_person_seconds: q.oldest_person_seconds });
+}
+
 async function queueCheck(db) {
   const { rows: [q] } = await db.query(`
     SELECT count(*) FILTER (WHERE attempts < max_attempts AND run_at <= now())::int          AS waiting,
@@ -422,7 +434,7 @@ export async function stripeWebhooksCheck(db) {
  */
 export async function systemChecks(db) {
   const runners = [
-    ["queue", queueCheck], ["outbox", outboxCheck], ["backup", backupCheck],
+    ["queue", queueCheck], ["queue_latency", queueLatencyCheck], ["outbox", outboxCheck], ["backup", backupCheck],
     ["migrations", migrationsCheck],
     ["restore", restoreTestCheck],
     ["worker_heartbeat", workerHeartbeatCheck],

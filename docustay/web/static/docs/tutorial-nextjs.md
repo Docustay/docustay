@@ -114,7 +114,7 @@ npx next dev
 In a second terminal, send yourself a document:
 
 ```bash
-curl -X POST localhost:3000/api/send -H 'content-type: application/json' -d '{"name":"Pat Example","email":"pat@example.com"}'
+curl -X POST localhost:3000/api/send -H 'content-type: application/json' -d '{"name":"Rosa Alvarez","email":"rosa@example.com"}'
 ```
 
 Open `/sign?id=<the id it returns>`, sign, and watch your webhook route log `documents.document.executed`. When it works, swap in a live key.

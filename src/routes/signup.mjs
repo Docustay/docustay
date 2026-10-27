@@ -159,6 +159,8 @@ export function registerSignupRoutes(app, { runTenantScoped } = {}) {
   app.post("/api/signup", async (c) => {
     // a self-hosted install does not take public sign-ups: its owner is created once, through the setup token (POST /api/setup/owner)
     if (process.env.KEYSTONE_SELF_HOST === "1") throw forbidden("This install does not take public sign-ups.");
+    // 26 Oct 2026 launch-night switch: DOCUSTAY_SIGNUPS_PAUSED=1 closes new sign-ups (people already signed in are unaffected)
+    if (process.env.DOCUSTAY_SIGNUPS_PAUSED === "1") throw dependency("New sign-ups are paused for a few minutes while we look after the service. Please try again shortly.");
     const headers = Object.fromEntries(c.req.raw.headers);
 
     // ★★ AN IDEMPOTENCY KEY IS REQUIRED HERE TOO, AND IT MATTERS MORE THAN ELSEWHERE. A retried

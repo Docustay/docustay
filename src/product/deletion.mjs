@@ -15,9 +15,9 @@ import { putLedgerEntry, storageIsConfigured } from "../storage/s3.mjs";
 import { getFirebaseAuth } from "../auth/firebase.mjs";
 
 /** The cooling-off period in days. `DOCUSTAY_DELETION_GRACE_DAYS` overrides both (0 = immediate; for self-hosted installs that want it and for tests). */
-const GRACE_DAYS = Object.freeze({ account: 14, workspace: 7 });
+const GRACE_DAYS = Object.freeze({ account: 14, workspace: 14 });
 const REAUTH_MINUTES = 15;
-const REMINDER_HOURS = 48;
+const REMINDER_HOURS = 24;
 function graceDays(kind, env = process.env) {
   const raw = env.DOCUSTAY_DELETION_GRACE_DAYS;
   if (raw !== undefined && raw !== "") { const n = Number(raw); if (Number.isInteger(n) && n >= 0 && n <= 90) return n; }
@@ -34,7 +34,7 @@ function requireFreshSession(createdAt, { now = new Date(), minutes = REAUTH_MIN
   if (!Number.isFinite(at) || now.getTime() - at > minutes * 60_000) throw forbidden("For your security, sign in again to continue — this needs a sign-in from the last few minutes.", { code: "reauth_required", minutes });
 }
 
-const present = (r) => r && ({ id: r.id, kind: r.kind, status: r.status, requestedAt: r.requested_at, scheduledFor: r.scheduled_for, cancelledAt: r.cancelled_at, finishedAt: r.finished_at, subjectUserId: r.subject_user_id, requestedBy: r.requested_by });
+const present = (r) => r && ({ progress: r.progress ?? null, id: r.id, kind: r.kind, status: r.status, requestedAt: r.requested_at, scheduledFor: r.scheduled_for, cancelledAt: r.cancelled_at, finishedAt: r.finished_at, subjectUserId: r.subject_user_id, requestedBy: r.requested_by });
 
 async function pendingOf(tx, { tenantId, kind, userId = null }) {
   const { rows: [r] } = await tx.query(`SELECT * FROM keystone.deletion_request WHERE tenant_id = $1 AND kind = $2 AND status IN ('pending','running','failed') AND subject_user_id IS NOT DISTINCT FROM $3 ORDER BY requested_at DESC LIMIT 1`, [tenantId, kind, userId]);
@@ -100,6 +100,19 @@ export async function requestWorkspaceDeletion(tx, { tenantId, actorUserId, conf
   const { rows: owners } = await tx.query(`SELECT email FROM keystone.app_user WHERE tenant_id = $1 AND staff_role = 'owner' AND lifecycle_status <> 'former' AND email NOT LIKE '%@deleted.invalid'`, [tenantId]);
   for (const o of owners) await tell(tx, { tenantId, to: o.email, kind: "workspace_scheduled", facts: { date: dateText(when), name: t.name, immediate: days === 0, planEnded: ended.ended ? ended.planName : "", daysLost: ended.daysLeft ?? 0, lifetime: ended.kind === "lifetime" } });
   return { ...present(r), alreadyRequested: false, planEnded: ended.ended ? { kind: ended.kind, planName: ended.planName, daysLost: ended.daysLeft ?? 0 } : null };
+}
+
+/** "Delete now" (26 Oct 2026): the owner skips the cooling-off period. Same checks as scheduling (owner, typed name, a recent sign-in, the plan-loss acknowledgement); the request is made due this moment and the caller wakes the worker. */
+export async function requestWorkspaceDeletionNow(tx, { tenantId, actorUserId, confirm, acknowledgePlanLoss = false, sessionCreatedAt, now = new Date() }) {
+  const r = await requestWorkspaceDeletion(tx, { tenantId, actorUserId, confirm, acknowledgePlanLoss, sessionCreatedAt, now });
+  const { rows: [due] } = await tx.query(`UPDATE keystone.deletion_request SET scheduled_for = $2, requested_at = LEAST(requested_at, $2), progress = 'queued', attempts = 0, status = CASE WHEN status = 'failed' THEN 'pending' ELSE status END WHERE id = $1 AND status IN ('pending','failed') RETURNING *`, [r.id, now]);
+  if (!due) throw conflict("It is already being deleted.", { code: "already_running" });
+  return { ...r, ...present(due), now: true };
+}
+
+/** What the worker is doing, for the progress screen. */
+export async function setProgress(tx, { tenantId, requestId, progress }) {
+  await tx.query(`UPDATE keystone.deletion_request SET progress = $3 WHERE id = $1 AND tenant_id = $2`, [requestId, tenantId, progress]);
 }
 
 /** Change my mind. An account request is cancelled by that person; a workspace request by any owner. */

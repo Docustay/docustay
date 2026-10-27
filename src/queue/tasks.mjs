@@ -2370,7 +2370,7 @@ export function emailFor(target) {
 // ★ 11 Oct 2026 (the maintainer: owner notices go out right away, like webhooks). Every minute the sweep loop queues each workspace's sweep jobs at priority 0; a notification email at priority 0
 //   waited behind all of them (MEASURED locally: 1,270 workspaces × 12 sweeps, the "A document was signed" email 376 s after signing). Graphile runs the LOWEST number first, so a person's
 //   email now goes ahead of background sweeps (the outbox dispatch already runs at -10 for the same reason, src/queue/outboxWake.mjs).
-export const NOTICE_PRIORITY = -5;
+export const NOTICE_PRIORITY = -10;
 export const deliverNotificationEmail = guardedTask("deliver_notification_email", async (payload, helpers) => {
   const { tenantId, notificationId } = payload;
   if (!notificationId) throw new Error("deliver_notification_email needs a notificationId");
@@ -2449,7 +2449,7 @@ export const deliverNotificationEmail = guardedTask("deliver_notification_email"
     //    this job is added on graphile's own connection BEFORE that transaction commits — so this job can run first and
     //    find nothing yet. The retry is the fix; after six attempts it gives up with this reason.
     throw new JobFailure("dependency",
-      `the notification to email was not found (it may not have been saved yet, or it was rolled back)`);
+      `the notification to email was not found (it may not have been saved yet, or it was rolled back)`, { quickRetry: true });
   }
   // ★★★ STAGE 3 TASK 8 — A NOTIFICATION RAISED BY A SAMPLE EVENT IS NEVER EMAILED (spec 02 §2.9). The
   //     dispatcher never raises one (notify_* listeners are outbound), so this is the door for a job that
@@ -5457,9 +5457,9 @@ export const sweepTenants = async function sweepTenants(_payload, helpers) {
     // QUEUE §23.4.6 — uploaded documents scheduled to send; each run's own find-query decides whether anything is due.
     if (!later) await helpers.addJob("send_scheduled_documents", { tenantId: tenant_id },
       { jobKey: `send_scheduled_documents:${tenant_id}`, jobKeyMode: "preserve_run_at" });
-    // Round 3 — account and workspace deletions whose cooling-off period has ended (and the reminder two days before), on the same one static sweep
+    // Round 3 — account and workspace deletions whose cooling-off period has ended (and the reminder 24 hours before), on the same one static sweep
     if (!later) await helpers.addJob("process_deletions", { tenantId: tenant_id },
-      { jobKey: `process_deletions:${tenant_id}`, jobKeyMode: "preserve_run_at" });
+      { jobKey: `process_deletions:${tenant_id}`, jobKeyMode: "preserve_run_at", priority: -50 });   // a deletion the owner asked for now must not wait behind the rest of the sweep
     // ★★★ Task 3a.4 (spec 03a §7) — the calendar renewal/pull sweeps, on the same one static entry,
     //     "same shape as sweep_tenants/retry_webhooks" (§7's own words for this JOB_POLICY row) — a
     //     flat per-tenant job_key re-added with `replace` on every 60s sweep, exactly like `sweep_due`
@@ -5497,7 +5497,7 @@ export const sweepTenants = async function sweepTenants(_payload, helpers) {
       //    queueing a second. Without it a tenant whose dispatch is slow grows an unbounded backlog of
       //    identical jobs, and the queue's depth stops meaning anything.
       //    ★ `priority: -10` (D-028): delivering a workspace's events (the signed-copy email, webhooks, notifications) runs BEFORE the housekeeping sweeps queued in the same minute, so event latency does not grow with the number of workspaces.
-      { jobKey: `dispatch_outbox:${tenant_id}`, jobKeyMode: "preserve_run_at", priority: -10 });
+      { jobKey: `dispatch_outbox:${tenant_id}`, jobKeyMode: "preserve_run_at", priority: -1 });   // the backstop (26 Oct): behind every wake-up dispatch (-12) and delivery (-10), so the per-workspace storm of this sweep never delays a person's email
   }
   // ★★★ AND ONE GLOBAL JOB, NOT PER-TENANT — because its subject is jobs whose tenant is GONE, and a
   //     per-tenant fan-out is driven by `list_active_tenant_ids()`, which by definition cannot name
@@ -5584,7 +5584,7 @@ export const deliverN8n = guardedTask("deliver_n8n", async (payload, helpers) =>
   if (!event) {
     // ★★ Same as deliver_notification_email: the event may not be visible yet, or it is gone.
     throw new JobFailure("dependency",
-      `the event to send to n8n was not found (it may not have been saved yet, or it was deleted)`);
+      `the event to send to n8n was not found (it may not have been saved yet, or it was deleted)`, { quickRetry: true });
   }
 
   try {
@@ -5865,7 +5865,7 @@ export const sendScheduledDocuments = guardedTask("send_scheduled_documents", as
 });
 
 /**
- * ROUND 3 — DELETE WHAT HAS WAITED OUT ITS COOLING-OFF PERIOD (src/product/deletion.mjs). Per workspace, every sweep: send the two-day reminder once, then run the due requests, a few at a time. Each run is ONE database transaction (all or nothing);
+ * ROUND 3 — DELETE WHAT HAS WAITED OUT ITS COOLING-OFF PERIOD (src/product/deletion.mjs). Per workspace, every sweep: send the 24-hour reminder once, then run the due requests, a few at a time. Each run is ONE database transaction (all or nothing);
  * the stored files and the identity-provider users are removed after it commits, and a ledger entry is written so a restore from a backup replays the deletion. A request that fails is marked failed with the reason, retried on later sweeps (five tries),
  * and the failure is thrown so the retry ladder and the give-up owner see it — never silently half-done.
  */
@@ -5879,6 +5879,7 @@ export const processDeletions = guardedTask("process_deletions", async (payload,
   const failures = [];
   for (const d of due) {
     let result;
+    if (d.kind === "workspace") { try { await withTenant(tenantId, (tx) => deletion.setProgress(tx, { tenantId, requestId: d.id, progress: "working" })); } catch { /* the screen only loses an animation */ } }
     try { result = await withTenant(tenantId, (tx) => deletion.runRequest(tx, { tenantId, requestId: d.id, documents: { erasePerson } })); }
     catch (e) { failures.push(`${d.id}: ${e.message}`); try { await withTenant(tenantId, (tx) => deletion.markFailed(tx, { tenantId, requestId: d.id, error: e })); } catch { /* the tenant may be half-gone; the next sweep tries again */ } continue; }
     if (!result.ran) continue;

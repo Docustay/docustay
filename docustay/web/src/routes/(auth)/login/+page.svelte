@@ -18,12 +18,14 @@
   let selfHost = $state(false);   // a self-hosted install takes no public sign-ups: its owner comes from /setup and everyone else is invited, so no "Create an account" link
   let passkeyOffered = $state(false);
   let demoOffered = $state(false);   // Launch step 8: the hosted service offers a throw-away demo workspace
+  let deletedNotice = $state(false);   // 26 Oct 2026: the workspace this person was using was deleted
   let idleNotice = $state(false);   // Run 7: the workspace signed this person out after a period without activity   // only where the server has passkeys on and this browser can use them
   onMount(async () => {
     const q = new URLSearchParams(location.search);
     if (q.get("sso") === "failed") problem = t("That sign-in could not be completed. Use the email and password you already have, or ask an owner to invite you.");
     else if (q.get("sso") === "unavailable") problem = t("Single sign-on is not available right now.");
     if (q.get("signedout") === "idle") idleNotice = true;
+    if (q.get("signedout") === "deleted") deletedNotice = true;
     { const e = q.get("email"); if (e) email = e; }
     const m = /^#t=(.+)$/.exec(location.hash);
     if (m) { history.replaceState(null, "", "/login"); try { await done(decodeURIComponent(m[1])); } catch (err) { problem = err.message; } }
@@ -83,6 +85,7 @@
 </script>
 <svelte:head><title>{t("Sign in")} · Docustay</title><meta name="description" content="Sign in to Docustay to send, sign and track documents." /></svelte:head>
 <h1 class="text-2xl font-bold tracking-tight">{t("Sign in to Docustay")}</h1>
+{#if deletedNotice}<p class="notice bad mt-4" role="status" data-testid="login-deleted">{t("This workspace was deleted")}</p>{/if}
 {#if idleNotice}<p class="notice mt-4" role="status" data-testid="login-idle">{t("You were signed out because nothing happened for a while. Sign in again to carry on.")}</p>{/if}
 {#if starter}<div class="mt-4"><StarterCard slug={starter} onclear={() => { clearStarter(); starter = null; }} /></div>{/if}
 {#if problem}<div class="mt-4 rounded-lg border border-bad-line bg-bad-bg px-3 py-2 text-sm text-bad" role="alert" data-testid="login-problem"><p>{problem}</p>

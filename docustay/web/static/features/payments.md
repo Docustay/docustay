@@ -1,152 +1,137 @@
 ---
-title: Payments inside e-signature, into your Stripe | Docustay
-description: Payments inside e-signature: the signer pays as part of signing, straight into your own Stripe account. Docustay never holds the money.
+title: Get paid inside the signature, powered by Stripe
+description: Add a payment field and the signer pays by card as the last step of signing. Payments are powered by Stripe and go straight to your own Stripe account. Docustay never holds the money.
 ---
 
 # Get paid inside the signature.
 
-Sign and pay in one step: add a payment field and the signer signs, then pays on the same page, straight into your own Stripe account. Docustay never holds the money. Pro takes no fee on these payments; Free and Pay as you go take 2%.
+Add a payment field to a document. The signer signs, then pays by card on the same page. Payments are powered by Stripe, and the money goes straight to your own Stripe account. Docustay never holds it.
 
 ## From the signer to your Stripe account.
 
-1. **Signer**: Signs, then pays
-2. **Docustay**: Checks the amount
-3. **Your Stripe**: Takes the money
+1. **Signer**: Signs, then pays by card
+2. **Docustay**: Works out the amount on the server
+3. **Your Stripe account**: Takes the money
 
-## Connect Stripe, finish onboarding, add a field.
+## Start from nothing, or bring your Stripe account.
 
-**Connect Stripe.** Connect your own Stripe account from Billing, Payments.
+Only Admins and Owners set up payments. It is under Billing, Payments.
 
-**Finish Stripe's onboarding.** Stripe asks for what it needs to pay you out. That part is between you and Stripe.
+- **Stripe account**: You do not need one. Stripe makes it for you at the end.
+- **The form**: Company or individual, your name, what you will collect for, and your country. The form shows United States.
+- **Then**: Stripe's own secure page asks for the rest.
+- **You need**: A photo ID, a bank account, and an EIN or the last 4 of an SSN.
+- **How long**: Setup takes about 5 minutes. You can stop and come back.
+- **Privacy**: Docustay never sees your ID or your bank details.
 
-**Add a payment field.** Drop a payment field on any document or template and set the amount.
+- **Choose**: I already have a Stripe account. Connect it instead.
+- **What happens**: You sign in at Stripe and allow Docustay to take payments for you.
+- **Your money**: Stays in the account you already use.
+- **Your dashboard**: The same Stripe dashboard you know.
 
-## How it works.
+## Six states, and what each one means.
 
-**You set the amount.** Set one amount in the payment field. A deposit is just a smaller amount.
+| State | What it means | What you do |
+| --- | --- | --- |
+| Ready | Stripe is connected and can take payments. | Nothing. |
+| Verifying | Stripe is checking your details. It usually takes a few minutes and sometimes up to a day. | Wait. Stripe emails you when it is done. |
+| Needs attention | Stripe needs a little more from you. It shows a deadline when it has one. | Choose Continue on Stripe. |
+| Restricted | Stripe has restricted the account until it has what it asked for. | Choose Continue on Stripe. |
+| Paused by you | You turned Take payments off. Payment boxes say payments are paused and people can still sign. Nothing is refunded. | Turn it back on whenever you like. |
+| Disconnected | Docustay no longer has access to a Stripe account. Payment boxes cannot be paid until you connect again. | Reconnect. Your Stripe account stays yours. |
 
-**They pay last.** Paying is the last step of signing. Their signature is kept for 7 days while they pay, and the receipt comes with the signed copy. The amount is worked out on the server, never trusted from the browser.
+## Pause it, disconnect it, open your dashboard.
 
-**It is your account.** Money goes to your own Stripe account, so you can take it with you.
+**Pause payments.** Payment boxes say payments are paused, and people can still sign. Nothing is refunded. Turn it back on when you want.
 
-## One payment, paid while signing.
+**Disconnect.** The Stripe account stays yours. Payment boxes cannot be paid until you connect again, and your history stays visible.
 
-The payment field charges one set amount, paid in full as the last step of signing. Use it for a deposit, a fee or the whole price.
+**Open your Stripe dashboard.** One link from Billing, Payments takes you to your own Stripe dashboard, where payouts and the bank details live.
 
-- A deposit agreement carries its own payment field.
-- Stripe's own fees go to Stripe.
+## One amount, one currency, one card payment.
+
+| You set | Options |
+| --- | --- |
+| Amount | One fixed amount, from 0.50 to 999,999.99. A deposit is just a smaller amount. |
+| Currency | USD, EUR, GBP, CAD, AUD, NZD, CHF, SEK, NOK or DKK. |
+| Who pays | One of the people on the document. |
+| What it is for | A line of text the signer sees next to the amount. |
+| A Stripe Price or Payment Link | Instead of typing an amount, point the field at a one-time Price or a Payment Link on your own Stripe account. |
+| Instalments | Write them in the document as a note. They are a note, not a charge: the field takes one payment. |
+
+## They sign, then pay on the same page.
+
+The link opens on any device, with no account. The signer signs, then pays by card as the last step. The amount is worked out on the server and never taken from the browser.
+
+**Held for 7 days.** Their signature is held for 7 days while they pay. If the payment does not arrive in time, the signature is not kept, and you and the signer are told.
+
+**The receipt.** The receipt comes with the signed copy. If your Stripe account already emails receipts, signers may get two.
 
 ## Every payment in one place.
 
-The Payments tab in Billing lists who paid, for which document, and what Stripe kept in fees. Refund in full or in part with a reason the payer sees on their receipt. Disputes open in Stripe.
+Billing, Payments shows your balance and payouts, who paid for which document, Stripe's fees, and this month's money in, fees and refunds.
 
-- This month's money in, fees and refunds at the top.
-- The same list and refunds are in the API.
+- Refund in full or in part, with a reason the payer sees.
+- A dispute opens in Stripe, where you answer it.
+- Owners get an email when Stripe asks for more information, when a payout fails and when a payment is disputed.
+- Switch on Payments in your notification settings to hear when a payment arrives or one does not go through, in the app and by email.
 
 - **Free and Pay as you go**: 2% fee on top of Stripe's
 - **Pro and Lifetime**: 0% fee on top of Stripe's
-- **Account**: Your own Stripe account
+- **Stripe's own fees**: Go to Stripe, from your Stripe account
 
-## The payment is a field, like a signature.
+## Say what you are collecting. Review what Scribe drafts.
 
-**You add a payment field.** One set amount, the same for everyone who signs.
+Once Stripe is connected, Scribe's wizard asks for the amount, the currency, who pays and what it is for. The terms are written around your values, and you review everything before it is sent.
 
-**They pay on Stripe's own page.** The amount is worked out on the server, never trusted from the browser.
+- Scribe never decides an amount. The one you typed is the one that is charged.
 
-**Then they can sign.** The signature opens once Stripe says it is paid, and the money goes to your own Stripe account.
+## The demo has no Stripe. Test mode does.
 
-## A payment is one tag.
+**The demo.** The demo has no Stripe account, so it cannot take a payment. You can still see a payment box in a document.
 
-Write the payment where it belongs. A payment is one fixed amount.
+**With a test card.** Where a server is in Stripe's test mode, Docustay says so, and a Stripe test card pays without moving real money.
 
-```
-Retainer: {{Retainer;type=payment;role=Client;amount=1500.00;currency=usd}}
-```
-
-## Who takes what.
-
-|  | Free and Pay as you go | Pro and Lifetime |
-| --- | --- | --- |
-| Stripe's own fees | To Stripe | To Stripe |
-| Docustay's fee on top | 2% | 0% |
-| Where the money lands | Your Stripe account | Your Stripe account |
-
-Stripe's fees are Stripe's. Docustay never holds the money.
-
-## Every payment has one status.
-
-| Status | Means |
-| --- | --- |
-| paid | Stripe took the money. |
-| waiting | The person has signed and the signature is kept, for up to 7 days, while they pay. |
-| started | They opened the payment and did not finish it. |
-| refunded or partially_refunded | Some or all of it was given back. |
-| disputed | The payer's bank opened a dispute. You answer it in Stripe. |
-
-This month's figures sit above the list: money in, Stripe's own fees and refunds. Stripe's fee can show as pending for a few minutes while Stripe settles it.
-
-## The amount is set on the server.
-
-- **Fixed**: amount=150.00 with a currency. From 0.50 to 999,999.99.
-- **Never the browser**: The server reads the amount from the document you sent. The browser never sends an amount.
-- **Card details**: Typed on Stripe's page. Docustay never receives or stores them.
-
-## Give money back from your own code.
-
-A refund goes through Stripe on your own account. Leave out the amount to refund the rest. A reason is required: the payer sees it on their receipt and it goes in the document's audit trail.
-
-```
-const r = await docustay.refundPayment(paymentId, { amountMinor: 500, reason: "Charged twice" });
-```
-
-- **Stripe connected**: Billing, Payments: set up payments, and Stripe's own sign-up page creates an account in your name, or choose I already have Stripe and sign in to the account you use. The status reads connected, needs_attention or not_connected.
-- **Only when connected**: A document with a payment field can only be sent when the status is connected; otherwise Send answers with a plain reason.
-- **The fee**: Docustay's fee is 2% on Free and Pay as you go and 0% on Pro and Lifetime, on top of Stripe's fees, decided when the payment starts. A refund returns the fee with it.
-- **Test mode**: Does not test payments against real cards.
-
-## The payment is part of the proof.
-
-The certificate lists what each signer paid, by Stripe's own reference, and only money that actually arrived.
-
-The payments list on GET /api/v1/documents/{id} shows each payment's status, amount, Stripe receipt link, refunds and the Docustay fee.
-
-## Keep going with the next piece.
-
-- [Templates](/free-templates): The payment tag, and the other field types.
-- [Signing](/features/how-it-works#sign): Paying is the last step of signing.
-- [Proof](/features/proof): What the certificate shows about a payment.
-
-## What happens to the payment after the signature.
-
-Paying is the last step of signing, and it goes to your own Stripe account.
-
-**One set amount.** A payment field holds one fixed amount, so one template can cover a deposit or a fee.
-
-**Every payment in one list.** The Payments page lists each payment taken while signing, with who paid, for which document and its status, and the same facts are available from the API and the command line.
-
-**Refunds go through Stripe.** A refund is made from Docustay and goes through Stripe: leave out an amount to refund what is left, or give one to refund part. The reason is required.
-
-**What it costs.** Docustay's own fee on a payment taken in a document is 2% on Free and Pay as you go and 0% on Pro and Lifetime, on top of Stripe's fees. Docustay does not charge per API call on any plan.
-
-**Where the money goes.** A payment is taken through your own Stripe account, so the money goes to you and your Stripe dashboard shows it as it would any other charge.
+**For developers.** The technical side: the API, webhooks, the command line and test mode.
 
 ## Questions
 
 **Does Docustay hold my money?**
 
-No. The charge goes through your own Stripe account.
+No. The payment goes to your own Stripe account, and Stripe pays your bank on the schedule you see in Billing, Payments.
 
 **What does it cost?**
 
-Stripe's fees go to Stripe. Docustay adds 2% on Free and Pay as you go and 0% on Pro and Lifetime.
+Stripe's own fees go to Stripe. Docustay adds 2% on Free and Pay as you go and 0% on Pro and Lifetime.
 
-**Can Scribe set payment terms?**
+**Which countries can set up payments?**
 
-Yes, once your Stripe account is connected. You review them before anything is sent.
+The guided setup makes a United States Stripe account, and its form shows United States. If you already have a Stripe account, you can connect it instead. A payment can be in USD, EUR, GBP, CAD, AUD, NZD, CHF, SEK, NOK or DKK.
+
+**What if Stripe needs more information?**
+
+The state changes to Needs attention, and Owners get an email. Choose Continue on Stripe and give it what it asks for.
+
+**Can I take a deposit?**
+
+Yes. A deposit is a payment field with a smaller amount. A payment field takes one amount, so a balance later is a second document or an invoice from your own Stripe.
+
+**Can I refund a payment?**
+
+Yes, in full or in part, from Billing, Payments or the API. Give a reason; the payer sees it.
+
+**What about disputes?**
+
+A dispute opens in Stripe, in your own account, and you answer it there. Owners get an email when one is opened.
+
+**Who can set it up?**
+
+Admins and Owners. Members can see who runs payments.
 
 
 ## Keep reading
 
-- [Deposit agreement](/templates/deposit-agreement)
-- [Pricing](/pricing)
+- [Payments for developers](/developers/payments)
+- [Payments when you self-host](/self-host/payments)
 - [Scribe](/features/scribe)
+- [Pricing](/pricing)

@@ -131,6 +131,16 @@ export function registerDocustayReads(app, { runTenantScoped, tenantIsPlatform }
     }, { bucket: "api" });
     return c.json({ requested: true, ...r }, 200);
   });
+  app.post("/api/product/docustay/delete-workspace/now", async (c) => {
+    const body = await c.req.json().catch(() => ({}));
+    const r = await runTenantScoped(c, async (ctx) => {
+      await guard(ctx.db, ctx.principal, ctx.tenantId);
+      return { ...(await deletion.requestWorkspaceDeletionNow(ctx.db, { tenantId: ctx.tenantId, actorUserId: ctx.principal.appUserId ?? null, confirm: body?.confirm, acknowledgePlanLoss: body?.acknowledgePlanLoss === true, sessionCreatedAt: await sessionStart(ctx.db, ctx) })), tenantId: ctx.tenantId };
+    }, { bucket: "api" });
+    // the worker's once-a-minute sweep picks the request up ahead of its other jobs (src/queue/tasks.mjs, process_deletions priority); the app itself has no door to the queue
+    const { tenantId: _t, ...out } = r;
+    return c.json({ requested: true, deleteNow: true, ...out }, 202);
+  });
   app.post("/api/product/docustay/delete-workspace/cancel", (c) =>
     runTenantScoped(c, async (ctx) => { await guard(ctx.db, ctx.principal, ctx.tenantId); return deletion.cancelDeletion(ctx.db, { tenantId: ctx.tenantId, kind: "workspace", actorUserId: ctx.principal.appUserId }); }, { bucket: "api" }).then((r) => c.json({ cancelled: true, ...r }, 200)));
   // Round 3 — "delete my account": any signed-in member, about themselves only (never a person named in the request)

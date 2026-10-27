@@ -542,6 +542,26 @@
    "test": "claim brand",
    "pages": [],
    "note": ""
+  },
+  {
+   "id": "F-PAYSETUP",
+   "statement": "Set up payments with a short Docustay form and Stripe's own secure page (about 5 minutes; the guided setup makes a United States Stripe account), or connect a Stripe account you already have. Account states: ready, verifying, needs attention, restricted, paused by you, disconnected. Only Admins and Owners set up and manage payments.",
+   "plan": "both",
+   "status": "BUILT",
+   "module": "docustay/web/src/lib/payments/PayWizard.svelte, StripeAccount.svelte, src/product/docustayStripeAccount.mjs",
+   "test": "read in code, 26 Oct 2026",
+   "pages": [],
+   "note": ""
+  },
+  {
+   "id": "F-PAYREFUND",
+   "statement": "Refund a payment in full or in part with a reason the payer sees; disputes open in Stripe; Owners are emailed when Stripe asks for more information, a payout fails or a payment is disputed.",
+   "plan": "both",
+   "status": "BUILT",
+   "module": "src/documents/pdfPayments.mjs, src/product/docustayStripeNotices.mjs",
+   "test": "read in code, 26 Oct 2026",
+   "pages": [],
+   "note": ""
   }
  ]
 }

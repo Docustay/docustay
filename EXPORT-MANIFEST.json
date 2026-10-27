@@ -1,5 +1,5 @@
 {
- "source_commit": "9835c5f15d50b3d220169c5b46fb9ddaeddacc85",
+ "source_commit": "c7d11b7886c1cc76b8734479d91baa55baa1cb18",
  "files": [
   {
    "path": ".dockerignore",
@@ -4880,6 +4880,20 @@
    "substitutions": 0
   },
   {
+   "path": "db/migrations/0808_workspace_deletion_progress_and_ended_sessions.sql",
+   "from": "db/migrations/0808_workspace_deletion_progress_and_ended_sessions.sql",
+   "sha256": "5183ee7759fe7f831e98cfcf645a7a47c0848a610cef4d28eb03936910aed7ae",
+   "source_sha256": "5183ee7759fe7f831e98cfcf645a7a47c0848a610cef4d28eb03936910aed7ae",
+   "substitutions": 0
+  },
+  {
+   "path": "db/migrations/0809_docustay_workspace_name_is_one_truth.sql",
+   "from": "db/migrations/0809_docustay_workspace_name_is_one_truth.sql",
+   "sha256": "611a5353a216448bb9249dd9f9d8db6130e594a0e742befe631e30d042d65767",
+   "source_sha256": "611a5353a216448bb9249dd9f9d8db6130e594a0e742befe631e30d042d65767",
+   "substitutions": 0
+  },
+  {
    "path": "design/build-tokens-react.mjs",
    "from": "design/build-tokens-react.mjs",
    "sha256": "62476ef1d60b493e123cfdf02dc2aff5d1d4567a7147dc79667fba9d728d03a9",
@@ -5064,8 +5078,8 @@
   {
    "path": "docustay/docs/email-api.md",
    "from": "docustay/docs/email-api.md",
-   "sha256": "5a18b439a86a7d6c5e905e694db9d675120c8fae81918d830f4067c9fad8bad7",
-   "source_sha256": "5a18b439a86a7d6c5e905e694db9d675120c8fae81918d830f4067c9fad8bad7",
+   "sha256": "a10dfd8fefa6ded676575722643bb2abc3a029bf04d650427742de6b2bdf5f2f",
+   "source_sha256": "a10dfd8fefa6ded676575722643bb2abc3a029bf04d650427742de6b2bdf5f2f",
    "substitutions": 0
   },
   {
@@ -5099,8 +5113,8 @@
   {
    "path": "docustay/docs/index.md",
    "from": "docustay/docs/index.md",
-   "sha256": "15e8ec07b9b38950f6ca903df1708ec3d58eb476060f541bb0d5d1fc4ab9f8f9",
-   "source_sha256": "15e8ec07b9b38950f6ca903df1708ec3d58eb476060f541bb0d5d1fc4ab9f8f9",
+   "sha256": "ec6deacd934aa9026eec35b62d31211927433c5c6f98048e6a772320f41d72af",
+   "source_sha256": "ec6deacd934aa9026eec35b62d31211927433c5c6f98048e6a772320f41d72af",
    "substitutions": 0
   },
   {
@@ -5113,22 +5127,15 @@
   {
    "path": "docustay/docs/mcp-and-skills.md",
    "from": "docustay/docs/mcp-and-skills.md",
-   "sha256": "9ab36af1395e2724fe376baf0f585ce8a2dcdad1a67c18ea3d5c7a0ab3fb8145",
-   "source_sha256": "9ab36af1395e2724fe376baf0f585ce8a2dcdad1a67c18ea3d5c7a0ab3fb8145",
-   "substitutions": 0
-  },
-  {
-   "path": "docustay/docs/payments-and-playbooks.md",
-   "from": "docustay/docs/payments-and-playbooks.md",
-   "sha256": "051cd271699221aa1d807654c8e6553fe94baf4f9dbe5fb97939a8841b9dd187",
-   "source_sha256": "051cd271699221aa1d807654c8e6553fe94baf4f9dbe5fb97939a8841b9dd187",
+   "sha256": "bfe36e7117219b27a107cc3bd1ca51c83dd0da418507abc4d53bdfc7aee97c25",
+   "source_sha256": "bfe36e7117219b27a107cc3bd1ca51c83dd0da418507abc4d53bdfc7aee97c25",
    "substitutions": 0
   },
   {
    "path": "docustay/docs/quickstart.md",
    "from": "docustay/docs/quickstart.md",
-   "sha256": "f22d3538e39af4aec45c9a83796c450476bded40f2258b0d1ddeee1320a98f23",
-   "source_sha256": "f22d3538e39af4aec45c9a83796c450476bded40f2258b0d1ddeee1320a98f23",
+   "sha256": "4c87c6a8ace653ee6bd7dc1403c33994d77c746390e6e2c41dc8aae83e1ee1ef",
+   "source_sha256": "4c87c6a8ace653ee6bd7dc1403c33994d77c746390e6e2c41dc8aae83e1ee1ef",
    "substitutions": 0
   },
   {
@@ -5141,8 +5148,15 @@
   {
    "path": "docustay/docs/sdks.md",
    "from": "docustay/docs/sdks.md",
-   "sha256": "43c6297862abaf9e78d6be9354d2dfe9a2bbb287e39b1750560848bc765f0edf",
-   "source_sha256": "43c6297862abaf9e78d6be9354d2dfe9a2bbb287e39b1750560848bc765f0edf",
+   "sha256": "a844a73287bbeb8764c03665794086d8ffa690d5c43ed3fb7496bd23e6869f2a",
+   "source_sha256": "a844a73287bbeb8764c03665794086d8ffa690d5c43ed3fb7496bd23e6869f2a",
+   "substitutions": 0
+  },
+  {
+   "path": "docustay/docs/search-and-payments.md",
+   "from": "docustay/docs/search-and-payments.md",
+   "sha256": "051cd271699221aa1d807654c8e6553fe94baf4f9dbe5fb97939a8841b9dd187",
+   "source_sha256": "051cd271699221aa1d807654c8e6553fe94baf4f9dbe5fb97939a8841b9dd187",
    "substitutions": 0
   },
   {
@@ -5190,8 +5204,8 @@
   {
    "path": "docustay/docs/settings-reference.md",
    "from": "docustay/docs/settings-reference.md",
-   "sha256": "184e4093e190c4a4cf4a60eac0f77e2da51dcfe4135cfa52dc79c322f9887135",
-   "source_sha256": "184e4093e190c4a4cf4a60eac0f77e2da51dcfe4135cfa52dc79c322f9887135",
+   "sha256": "97cba974cf39939ef68c7c8397e40b9a2560a300171ba35bbab3910a855dc551",
+   "source_sha256": "97cba974cf39939ef68c7c8397e40b9a2560a300171ba35bbab3910a855dc551",
    "substitutions": 0
   },
   {
@@ -5211,36 +5225,36 @@
   {
    "path": "docustay/docs/test-mode.md",
    "from": "docustay/docs/test-mode.md",
-   "sha256": "28a1f36ca511426ba97529085bbe2bca8021fc8087d474da97542e23a2b8f270",
-   "source_sha256": "28a1f36ca511426ba97529085bbe2bca8021fc8087d474da97542e23a2b8f270",
+   "sha256": "3e102e9d71997b1f4a2bf820ed8d820c4848c025d922d9141e9b4c6600302dc6",
+   "source_sha256": "3e102e9d71997b1f4a2bf820ed8d820c4848c025d922d9141e9b4c6600302dc6",
    "substitutions": 0
   },
   {
    "path": "docustay/docs/tutorial-agent.md",
    "from": "docustay/docs/tutorial-agent.md",
-   "sha256": "4c53f78596e56112dd0f4c5c96688a3db72e7755f5e6c01eef38ff8da493ced8",
-   "source_sha256": "4c53f78596e56112dd0f4c5c96688a3db72e7755f5e6c01eef38ff8da493ced8",
+   "sha256": "51fcdaec0f0849acc5556ce50be8a03897ac84b30de83e8dbc790aa4629558c2",
+   "source_sha256": "51fcdaec0f0849acc5556ce50be8a03897ac84b30de83e8dbc790aa4629558c2",
    "substitutions": 0
   },
   {
    "path": "docustay/docs/tutorial-nextjs.md",
    "from": "docustay/docs/tutorial-nextjs.md",
-   "sha256": "f684d8db07f6352848ebe34b9ce868152061c4df1d27907b80e5643420a0ee84",
-   "source_sha256": "f684d8db07f6352848ebe34b9ce868152061c4df1d27907b80e5643420a0ee84",
+   "sha256": "9be49ec6192727b0ac76562222c8051cc059c60c971838127b870ea58ed76b33",
+   "source_sha256": "9be49ec6192727b0ac76562222c8051cc059c60c971838127b870ea58ed76b33",
    "substitutions": 0
   },
   {
    "path": "docustay/docs/tutorial-python.md",
    "from": "docustay/docs/tutorial-python.md",
-   "sha256": "aa7b03be56b7eff4d40f2b6507c5197ea124e8e3044fd3225ff5f7f4cc5ea104",
-   "source_sha256": "aa7b03be56b7eff4d40f2b6507c5197ea124e8e3044fd3225ff5f7f4cc5ea104",
+   "sha256": "5a84c473cd7f86a0303d9ac6d3e8cf4a9b585a547569f309eb7ea17c11e2ea98",
+   "source_sha256": "5a84c473cd7f86a0303d9ac6d3e8cf4a9b585a547569f309eb7ea17c11e2ea98",
    "substitutions": 0
   },
   {
    "path": "docustay/docs/webhooks.md",
    "from": "docustay/docs/webhooks.md",
-   "sha256": "2656e6aa1af2b7e66d39b4a85a473df28c9af440882d538883f5b121d510d90f",
-   "source_sha256": "2656e6aa1af2b7e66d39b4a85a473df28c9af440882d538883f5b121d510d90f",
+   "sha256": "dfb84b81926e6795262e57bea3cdae8d18f1172acef9051e1c05edf5c78e8ac0",
+   "source_sha256": "dfb84b81926e6795262e57bea3cdae8d18f1172acef9051e1c05edf5c78e8ac0",
    "substitutions": 0
   },
   {
@@ -5414,8 +5428,8 @@
   {
    "path": "docustay/web/cspell.json",
    "from": "docustay/web/cspell.json",
-   "sha256": "76cdac24511c77f2657309235626e97a004a03afd7ccf0d559eb24170da4a730",
-   "source_sha256": "a6ba6ec7eaf6d311396d93465aff38ac0060443c6ecfa07ace0e99be0467cb85",
+   "sha256": "61291575884535de7021da851d74b2cc3f7a50667cee26a7a9daa7a6351812f2",
+   "source_sha256": "2ebb6d8be7825faa6aa10dbbf72f49906ff6a46d25a88c57943232d004b420e0",
    "substitutions": 1
   },
   {
@@ -5449,8 +5463,8 @@
   {
    "path": "docustay/web/package.json",
    "from": "docustay/web/package.json",
-   "sha256": "c694c6032e91186cc8c23374a761ae585cd18872864ffa705aa2d8c8cdf25e5d",
-   "source_sha256": "c694c6032e91186cc8c23374a761ae585cd18872864ffa705aa2d8c8cdf25e5d",
+   "sha256": "e7fffca33ccd798a33ef43af4fe1e6fdda7b5a9fa8b479bb009dd2bd236fedbd",
+   "source_sha256": "e7fffca33ccd798a33ef43af4fe1e6fdda7b5a9fa8b479bb009dd2bd236fedbd",
    "substitutions": 0
   },
   {
@@ -5505,8 +5519,8 @@
   {
    "path": "docustay/web/scripts/build-legal.mjs",
    "from": "docustay/web/scripts/build-legal.mjs",
-   "sha256": "9de4f0d8df736e423f9a8b9b53a2666e7a7d75a27bfa588717e22fecef7edc8c",
-   "source_sha256": "2261540c29f4c6d7be03a67bf33700fa45f374677b47ee90aff59ae3c2f9a178",
+   "sha256": "5fd3be14dd2ee08bf44097c15c9e5016e1a295fdb60fc6fe732615fe43215e50",
+   "source_sha256": "9e9f4a5ffc8b1d16809115e011609dcfb9a2093e826f063ea019d18f609c6cbf",
    "substitutions": 6
   },
   {
@@ -5589,9 +5603,9 @@
   {
    "path": "docustay/web/scripts/copy-lint.mjs",
    "from": "docustay/web/scripts/copy-lint.mjs",
-   "sha256": "42ea69682716e6cd02d981a87b3929f916bdd06f33c3b836d8d5e217125f534d",
-   "source_sha256": "42ea69682716e6cd02d981a87b3929f916bdd06f33c3b836d8d5e217125f534d",
-   "substitutions": 0
+   "sha256": "62930e12adee4a1fd166d37cf49622418c01964b0d16a22ffbce573515912988",
+   "source_sha256": "9dc59949e2360c1a75c10b05eb002cf3a9e3ab45ed7faa89deac3a654fe93505",
+   "substitutions": 2
   },
   {
    "path": "docustay/web/scripts/copy-pdfjs-wasm.mjs",
@@ -5638,9 +5652,9 @@
   {
    "path": "docustay/web/scripts/host-guard.test.mjs",
    "from": "docustay/web/scripts/host-guard.test.mjs",
-   "sha256": "e61640133b988fa2e54101e9612a09c3dae89aed1e3fbecb45d2f477722cb552",
-   "source_sha256": "5dd2fe653bbfe4e00174bd4fbcc7b0bd5e6c98b18cff0869c88ba1f29251a96e",
-   "substitutions": 2
+   "sha256": "daf7f3383de6dc556088321ca61527956cc625a455dc5cb1d13cc39cf2e3d048",
+   "source_sha256": "9a734e9667ccd62a7b8d28eb49ed3069363b1ff28dba716a618f17110b7dd54a",
+   "substitutions": 5
   },
   {
    "path": "docustay/web/scripts/i18n-literal-gate.mjs",
@@ -5666,8 +5680,8 @@
   {
    "path": "docustay/web/scripts/legal-extra.mjs",
    "from": "docustay/web/scripts/legal-extra.mjs",
-   "sha256": "b2d172d4a618846a78c73568e986de0ceace8489dff1a90d9c3f9fd8d2f0062e",
-   "source_sha256": "b2d172d4a618846a78c73568e986de0ceace8489dff1a90d9c3f9fd8d2f0062e",
+   "sha256": "ed8eaa4b1f98c07e053182be937dc943800083448e32bc33849b89cbaa0daa8c",
+   "source_sha256": "ed8eaa4b1f98c07e053182be937dc943800083448e32bc33849b89cbaa0daa8c",
    "substitutions": 0
   },
   {
@@ -5715,9 +5729,9 @@
   {
    "path": "docustay/web/scripts/pricing-gate.mjs",
    "from": "docustay/web/scripts/pricing-gate.mjs",
-   "sha256": "fd61b691db5f74e9bd707acc909fd300ffa4d91d25aab6616716bef297fb2dfb",
-   "source_sha256": "fd61b691db5f74e9bd707acc909fd300ffa4d91d25aab6616716bef297fb2dfb",
-   "substitutions": 0
+   "sha256": "e19f39eca7a33e91e87b342b8aa96fa9e35790f4b68cb6ef2af6cff3bbb75b1a",
+   "source_sha256": "78e6ca386c410dcc53044ff23c9fef4853dad5ca0dcc0a8fc1a6d4ac3e868ae8",
+   "substitutions": 1
   },
   {
    "path": "docustay/web/scripts/product-unique-gate.mjs",
@@ -5911,8 +5925,15 @@
   {
    "path": "docustay/web/src/lib/DeletionPanel.svelte",
    "from": "docustay/web/src/lib/DeletionPanel.svelte",
-   "sha256": "17cac50fbdba89494ff0cb93973bee0d1802b1969b6700a6296edd6f55b7f05e",
-   "source_sha256": "17cac50fbdba89494ff0cb93973bee0d1802b1969b6700a6296edd6f55b7f05e",
+   "sha256": "6b204fa7ed49d01b2f044300c0868fbc69103469fb78d1fb84c7bca0626c2be9",
+   "source_sha256": "6b204fa7ed49d01b2f044300c0868fbc69103469fb78d1fb84c7bca0626c2be9",
+   "substitutions": 0
+  },
+  {
+   "path": "docustay/web/src/lib/DeletionProgress.svelte",
+   "from": "docustay/web/src/lib/DeletionProgress.svelte",
+   "sha256": "b260d5af2c4844b5b8a459b33ef32d3ad0a0c1bbcb1314f81edc11c288ee407f",
+   "source_sha256": "b260d5af2c4844b5b8a459b33ef32d3ad0a0c1bbcb1314f81edc11c288ee407f",
    "substitutions": 0
   },
   {
@@ -6170,8 +6191,8 @@
   {
    "path": "docustay/web/src/lib/api.js",
    "from": "docustay/web/src/lib/api.js",
-   "sha256": "003ea8e0156453b54cf718200db0217d0ebeed7628f45bf3ad6252f2d500d720",
-   "source_sha256": "003ea8e0156453b54cf718200db0217d0ebeed7628f45bf3ad6252f2d500d720",
+   "sha256": "9e9f79ca1c0130877098dee24e1bd77c7467fc5209494071266a66121d36a543",
+   "source_sha256": "9e9f79ca1c0130877098dee24e1bd77c7467fc5209494071266a66121d36a543",
    "substitutions": 0
   },
   {
@@ -6373,8 +6394,8 @@
   {
    "path": "docustay/web/src/lib/claims.json",
    "from": "docustay/web/src/lib/claims.json",
-   "sha256": "0a81fbcf5d00a286a1a37d06fb1ba90bc13d09cfd1d45c0cdbcf6ed0cab9425e",
-   "source_sha256": "0a81fbcf5d00a286a1a37d06fb1ba90bc13d09cfd1d45c0cdbcf6ed0cab9425e",
+   "sha256": "9ba814a1f2e61c2d440bc2961e21ac036979b446cf581277d5e6592d00cbca14",
+   "source_sha256": "9ba814a1f2e61c2d440bc2961e21ac036979b446cf581277d5e6592d00cbca14",
    "substitutions": 0
   },
   {
@@ -6632,8 +6653,8 @@
   {
    "path": "docustay/web/src/lib/features.json",
    "from": "docustay/web/src/lib/features.json",
-   "sha256": "c860501e20bb3f4c4a055f142dd5530987d74dabef2572b9442ab3e30223f901",
-   "source_sha256": "7b6bcd25fe7f99dcdb67b81df1e3f52a6c1e2184d128ef79f669a717b5ac351b",
+   "sha256": "f507982c65bc2a462f48e82f49c2777b1a449d6c082b24b2c2999c5e525adfc1",
+   "source_sha256": "c6256432483e2f7c3e57c1e196eaf115f57172b0a6f3c8cd67625035219d9241",
    "substitutions": 3
   },
   {
@@ -7038,8 +7059,8 @@
   {
    "path": "docustay/web/src/lib/legal.json",
    "from": "docustay/web/src/lib/legal.json",
-   "sha256": "2e68712e23f7ae4f5a0ce861bfc413f090f8604a04dec5c5f89ed50bbca1a6b6",
-   "source_sha256": "2e68712e23f7ae4f5a0ce861bfc413f090f8604a04dec5c5f89ed50bbca1a6b6",
+   "sha256": "d90bb57ac99b9b9eff8d687c1477eb1a0619f07cafbb83147ae9b2bac2ba7226",
+   "source_sha256": "d90bb57ac99b9b9eff8d687c1477eb1a0619f07cafbb83147ae9b2bac2ba7226",
    "substitutions": 0
   },
   {
@@ -7269,8 +7290,8 @@
   {
    "path": "docustay/web/src/lib/site/3d/objects.js",
    "from": "docustay/web/src/lib/site/3d/objects.js",
-   "sha256": "7b7ae5ef5edbd4dcdca9edf38beea8e92811073d0b0ddb908b394a4f0911f174",
-   "source_sha256": "7b7ae5ef5edbd4dcdca9edf38beea8e92811073d0b0ddb908b394a4f0911f174",
+   "sha256": "bdda6c339bc0abb3003d0816291bf4c331456892bc0cc14953c33169a0364437",
+   "source_sha256": "bdda6c339bc0abb3003d0816291bf4c331456892bc0cc14953c33169a0364437",
    "substitutions": 0
   },
   {
@@ -7486,8 +7507,8 @@
   {
    "path": "docustay/web/src/lib/site/changelog.js",
    "from": "docustay/web/src/lib/site/changelog.js",
-   "sha256": "4e2b321ce15a3f756dbb9264c2531c583db8b8393f84edba86e4030b2c63e173",
-   "source_sha256": "4e2b321ce15a3f756dbb9264c2531c583db8b8393f84edba86e4030b2c63e173",
+   "sha256": "224fcc18e9915bbeb8ad84644d0c15fe08290bbebe381b0ee61e100f93db64e2",
+   "source_sha256": "224fcc18e9915bbeb8ad84644d0c15fe08290bbebe381b0ee61e100f93db64e2",
    "substitutions": 0
   },
   {
@@ -7591,8 +7612,8 @@
   {
    "path": "docustay/web/src/lib/site/desk/DeskHeader.svelte",
    "from": "docustay/web/src/lib/site/desk/DeskHeader.svelte",
-   "sha256": "7da8456f224eb8a8bf0f21b80a1dc494cc2bdda33481c03e4e4218ff699395e6",
-   "source_sha256": "7da8456f224eb8a8bf0f21b80a1dc494cc2bdda33481c03e4e4218ff699395e6",
+   "sha256": "c47ed9ff83d1411c845066c5d9ea6196459ca087231037c2309c6ccd7470b825",
+   "source_sha256": "c47ed9ff83d1411c845066c5d9ea6196459ca087231037c2309c6ccd7470b825",
    "substitutions": 0
   },
   {
@@ -7633,8 +7654,8 @@
   {
    "path": "docustay/web/src/lib/site/desk/FormTemplatePage.svelte",
    "from": "docustay/web/src/lib/site/desk/FormTemplatePage.svelte",
-   "sha256": "674670e4056baf6c3b1626fc99dcff0506783f7d7bd574730b57ee7958225c8e",
-   "source_sha256": "674670e4056baf6c3b1626fc99dcff0506783f7d7bd574730b57ee7958225c8e",
+   "sha256": "200575c420f7dbe9d7e68a09686cf4c962dfdb8eab12356308f7d4c908cd08bc",
+   "source_sha256": "200575c420f7dbe9d7e68a09686cf4c962dfdb8eab12356308f7d4c908cd08bc",
    "substitutions": 0
   },
   {
@@ -7724,8 +7745,8 @@
   {
    "path": "docustay/web/src/lib/site/desk/Screen.svelte",
    "from": "docustay/web/src/lib/site/desk/Screen.svelte",
-   "sha256": "54b309fdc3a7dd884c36746c9845b4f8208808f2305d252deb844690a71b5502",
-   "source_sha256": "54b309fdc3a7dd884c36746c9845b4f8208808f2305d252deb844690a71b5502",
+   "sha256": "fb735ecfcfb6a8797f0f0d14d83c29e3c366a2de97cfaa1aaaf05d1cc59f2b18",
+   "source_sha256": "fb735ecfcfb6a8797f0f0d14d83c29e3c366a2de97cfaa1aaaf05d1cc59f2b18",
    "substitutions": 0
   },
   {
@@ -7787,8 +7808,8 @@
   {
    "path": "docustay/web/src/lib/site/desk/TemplatePage.svelte",
    "from": "docustay/web/src/lib/site/desk/TemplatePage.svelte",
-   "sha256": "61d0fe267d5c339e51230f04844afdd92dd629bfcd0b519daa07d6bc4f3c8996",
-   "source_sha256": "61d0fe267d5c339e51230f04844afdd92dd629bfcd0b519daa07d6bc4f3c8996",
+   "sha256": "60d8da07a325d7ceeb67b173c9f494394a7fc2fcfb9a3a08d71ca67954f5791f",
+   "source_sha256": "60d8da07a325d7ceeb67b173c9f494394a7fc2fcfb9a3a08d71ca67954f5791f",
    "substitutions": 0
   },
   {
@@ -7829,8 +7850,8 @@
   {
    "path": "docustay/web/src/lib/site/facts.gen.json",
    "from": "docustay/web/src/lib/site/facts.gen.json",
-   "sha256": "ef9adf708e073fb35520a79da6c18b3063ff2ac050e58075aac8f1a084eeac43",
-   "source_sha256": "ef9adf708e073fb35520a79da6c18b3063ff2ac050e58075aac8f1a084eeac43",
+   "sha256": "b414cde3e9ab08cb7023714cd9edc22fcd9676dc13c203f71227ec9a5da8904d",
+   "source_sha256": "b414cde3e9ab08cb7023714cd9edc22fcd9676dc13c203f71227ec9a5da8904d",
    "substitutions": 0
   },
   {
@@ -7857,15 +7878,15 @@
   {
    "path": "docustay/web/src/lib/site/home-code.js",
    "from": "docustay/web/src/lib/site/home-code.js",
-   "sha256": "573dccd667da9c8e24c78c458f4460290331b7bc553bab9e8f1d6193ec759fec",
-   "source_sha256": "573dccd667da9c8e24c78c458f4460290331b7bc553bab9e8f1d6193ec759fec",
+   "sha256": "9ab3082c65d317894d8b7e496e0471be5470250d79807ac178c24170cc69050b",
+   "source_sha256": "9ab3082c65d317894d8b7e496e0471be5470250d79807ac178c24170cc69050b",
    "substitutions": 0
   },
   {
    "path": "docustay/web/src/lib/site/home/DevSplit.svelte",
    "from": "docustay/web/src/lib/site/home/DevSplit.svelte",
-   "sha256": "833fc296ce60c11c27c825056a457b2e9c718adf3b1c8b18795ea1f6d697b893",
-   "source_sha256": "833fc296ce60c11c27c825056a457b2e9c718adf3b1c8b18795ea1f6d697b893",
+   "sha256": "847e7bec6ceed8ea71c5cbf90646c62f44a8b15c5ac29055f0187e6606081a8c",
+   "source_sha256": "847e7bec6ceed8ea71c5cbf90646c62f44a8b15c5ac29055f0187e6606081a8c",
    "substitutions": 0
   },
   {
@@ -7969,15 +7990,15 @@
   {
    "path": "docustay/web/src/lib/site/lastmod.json",
    "from": "docustay/web/src/lib/site/lastmod.json",
-   "sha256": "4c34feccd58a91c16bf79fc9cee0523bed8268ce0c62e3e1d56f231b0ac058de",
-   "source_sha256": "4c34feccd58a91c16bf79fc9cee0523bed8268ce0c62e3e1d56f231b0ac058de",
+   "sha256": "e0a8be0b1f9bbc58b1c8941402b62b1c39e4f47172ead4ebca2f9e2ea7761707",
+   "source_sha256": "e0a8be0b1f9bbc58b1c8941402b62b1c39e4f47172ead4ebca2f9e2ea7761707",
    "substitutions": 0
   },
   {
    "path": "docustay/web/src/lib/site/nav.js",
    "from": "docustay/web/src/lib/site/nav.js",
-   "sha256": "adc1a4fa61230b02db2344bdb3266850501a050b67fee84fe5b2a043f943fd16",
-   "source_sha256": "adc1a4fa61230b02db2344bdb3266850501a050b67fee84fe5b2a043f943fd16",
+   "sha256": "d1cf4262644546ceb4eaf7f59ea0c5d55f9665054d4f050d195f6f255b6046a1",
+   "source_sha256": "d1cf4262644546ceb4eaf7f59ea0c5d55f9665054d4f050d195f6f255b6046a1",
    "substitutions": 0
   },
   {
@@ -7990,8 +8011,8 @@
   {
    "path": "docustay/web/src/lib/site/pages.js",
    "from": "docustay/web/src/lib/site/pages.js",
-   "sha256": "3c839367443f1541d83a9dbc5cef503882c01de8b55b2f92cbaa7cc57c8f21c6",
-   "source_sha256": "3c839367443f1541d83a9dbc5cef503882c01de8b55b2f92cbaa7cc57c8f21c6",
+   "sha256": "1291e3f663a3d50f98fd9888f4d2a5849e1157dbee600552054818851d2f0170",
+   "source_sha256": "1291e3f663a3d50f98fd9888f4d2a5849e1157dbee600552054818851d2f0170",
    "substitutions": 0
   },
   {
@@ -8011,15 +8032,15 @@
   {
    "path": "docustay/web/src/lib/site/pages/developers.js",
    "from": "docustay/web/src/lib/site/pages/developers.js",
-   "sha256": "d865d5de0b20c63921c7af84d2b3764afdfbd72a8e8c24fd33ff0adfd3e04700",
-   "source_sha256": "d865d5de0b20c63921c7af84d2b3764afdfbd72a8e8c24fd33ff0adfd3e04700",
+   "sha256": "e0ae1b5b6b35e0b4fe0520d1cae3795f5fed97ab976d32bbb3403fcc88e0b9b4",
+   "source_sha256": "e0ae1b5b6b35e0b4fe0520d1cae3795f5fed97ab976d32bbb3403fcc88e0b9b4",
    "substitutions": 0
   },
   {
    "path": "docustay/web/src/lib/site/pages/features.js",
    "from": "docustay/web/src/lib/site/pages/features.js",
-   "sha256": "938a51ddabc952e1feafbc0139eb7a1a9bfc9977adc7e0871ef5c358a80f73ef",
-   "source_sha256": "938a51ddabc952e1feafbc0139eb7a1a9bfc9977adc7e0871ef5c358a80f73ef",
+   "sha256": "165e1269be8c5b462722be72f8ef4772653da0a7fee1386a0b4b8077ccd7b7fb",
+   "source_sha256": "165e1269be8c5b462722be72f8ef4772653da0a7fee1386a0b4b8077ccd7b7fb",
    "substitutions": 0
   },
   {
@@ -8039,15 +8060,15 @@
   {
    "path": "docustay/web/src/lib/site/pages/pass3-dev.js",
    "from": "docustay/web/src/lib/site/pages/pass3-dev.js",
-   "sha256": "ef8885c59d58953172099188f6ad9f05042a7c976bb4aa02b79631fbb827b3ac",
-   "source_sha256": "ef8885c59d58953172099188f6ad9f05042a7c976bb4aa02b79631fbb827b3ac",
+   "sha256": "874fd5da3c7feb3a6a28f049f792a9e862464f60d55c02c5aa12fccdf2bcde36",
+   "source_sha256": "874fd5da3c7feb3a6a28f049f792a9e862464f60d55c02c5aa12fccdf2bcde36",
    "substitutions": 0
   },
   {
    "path": "docustay/web/src/lib/site/pages/pass3-home.js",
    "from": "docustay/web/src/lib/site/pages/pass3-home.js",
-   "sha256": "b03322a46f75427408206a24a61676dfd857654654d37ac750ecbf3968dc9e7d",
-   "source_sha256": "b03322a46f75427408206a24a61676dfd857654654d37ac750ecbf3968dc9e7d",
+   "sha256": "466ed3d9a6bf6d8b441082610f1c77346536cec5fe14efa901e0fd93f7a24ba1",
+   "source_sha256": "466ed3d9a6bf6d8b441082610f1c77346536cec5fe14efa901e0fd93f7a24ba1",
    "substitutions": 0
   },
   {
@@ -8095,8 +8116,8 @@
   {
    "path": "docustay/web/src/lib/site/pages/pass4-dev.js",
    "from": "docustay/web/src/lib/site/pages/pass4-dev.js",
-   "sha256": "6e46384075cb727ff1442823ee3aba76812eac94c040a94e517435ab5d72bc5a",
-   "source_sha256": "6e46384075cb727ff1442823ee3aba76812eac94c040a94e517435ab5d72bc5a",
+   "sha256": "6c3cabbe5a82a9ae4644cde616af303f230b52d3a91bea180380476f2f8ee142",
+   "source_sha256": "6c3cabbe5a82a9ae4644cde616af303f230b52d3a91bea180380476f2f8ee142",
    "substitutions": 0
   },
   {
@@ -8130,8 +8151,8 @@
   {
    "path": "docustay/web/src/lib/site/pages/pass4-product.js",
    "from": "docustay/web/src/lib/site/pages/pass4-product.js",
-   "sha256": "5bd53c35fe50c289106aa47be95dee9e080aa1bd5cfbb271d0a995d311053e56",
-   "source_sha256": "5bd53c35fe50c289106aa47be95dee9e080aa1bd5cfbb271d0a995d311053e56",
+   "sha256": "bfdc7450fb4c8cc53c33fbc8a288c71a2eb7937837f374a0951fbc2e703f8bb3",
+   "source_sha256": "bfdc7450fb4c8cc53c33fbc8a288c71a2eb7937837f374a0951fbc2e703f8bb3",
    "substitutions": 0
   },
   {
@@ -8156,6 +8177,13 @@
    "substitutions": 0
   },
   {
+   "path": "docustay/web/src/lib/site/pages/payments-suite.js",
+   "from": "docustay/web/src/lib/site/pages/payments-suite.js",
+   "sha256": "3c27bbdbb56a8f1f4dc8f387064e021f814aa0179c07a20aa42bbdca95735d90",
+   "source_sha256": "3c27bbdbb56a8f1f4dc8f387064e021f814aa0179c07a20aa42bbdca95735d90",
+   "substitutions": 0
+  },
+  {
    "path": "docustay/web/src/lib/site/pages/product.js",
    "from": "docustay/web/src/lib/site/pages/product.js",
    "sha256": "b8bd0271138a8f38686dadc3fc737ad2ca27a87f963373f9432c6140b009d13f",
@@ -8165,8 +8193,8 @@
   {
    "path": "docustay/web/src/lib/site/pages/registry.js",
    "from": "docustay/web/src/lib/site/pages/registry.js",
-   "sha256": "48853127d6b3ffa262667581e1be320dd5ec63492188f17b2167f73911ebf79f",
-   "source_sha256": "48853127d6b3ffa262667581e1be320dd5ec63492188f17b2167f73911ebf79f",
+   "sha256": "cd86ef67227fb6c42407427135f9c0ca2ef1122cfc01cee15f7248005a98b80e",
+   "source_sha256": "cd86ef67227fb6c42407427135f9c0ca2ef1122cfc01cee15f7248005a98b80e",
    "substitutions": 0
   },
   {
@@ -8179,8 +8207,8 @@
   {
    "path": "docustay/web/src/lib/site/pages/snippets.js",
    "from": "docustay/web/src/lib/site/pages/snippets.js",
-   "sha256": "1d41dad7c2daf33cad819fa7110584c3dba58585c4f6fe3de382cec0b1f17701",
-   "source_sha256": "1d41dad7c2daf33cad819fa7110584c3dba58585c4f6fe3de382cec0b1f17701",
+   "sha256": "900c3706d9e63531114e6f6152d51bc7e957aa41f23abffd3f1367d1c605b172",
+   "source_sha256": "900c3706d9e63531114e6f6152d51bc7e957aa41f23abffd3f1367d1c605b172",
    "substitutions": 0
   },
   {
@@ -8200,8 +8228,8 @@
   {
    "path": "docustay/web/src/lib/site/pages/trust.js",
    "from": "docustay/web/src/lib/site/pages/trust.js",
-   "sha256": "830b3b3d3327205a9608b7c7cc48661b768db9b6cb1a495d3c338ec7b192e80d",
-   "source_sha256": "830b3b3d3327205a9608b7c7cc48661b768db9b6cb1a495d3c338ec7b192e80d",
+   "sha256": "87cad8e6553b240d268063b5f3fdd591b712fb4301c264fe23f3e5ea238e9c3c",
+   "source_sha256": "87cad8e6553b240d268063b5f3fdd591b712fb4301c264fe23f3e5ea238e9c3c",
    "substitutions": 0
   },
   {
@@ -8214,8 +8242,8 @@
   {
    "path": "docustay/web/src/lib/site/pages/usecases.js",
    "from": "docustay/web/src/lib/site/pages/usecases.js",
-   "sha256": "1be47556bc87e03b1c27a127c6f176395997cbe3c33e8e132019450b32a15357",
-   "source_sha256": "1be47556bc87e03b1c27a127c6f176395997cbe3c33e8e132019450b32a15357",
+   "sha256": "a9f1bfd5dce1d7d89ac9a7d1990bbda887198b9cb2a8c815b747519b0870d2ee",
+   "source_sha256": "a9f1bfd5dce1d7d89ac9a7d1990bbda887198b9cb2a8c815b747519b0870d2ee",
    "substitutions": 0
   },
   {
@@ -8256,8 +8284,8 @@
   {
    "path": "docustay/web/src/lib/site/redirects.js",
    "from": "docustay/web/src/lib/site/redirects.js",
-   "sha256": "dad33322d315a933c5b4d8360b66ced095e3b1f1dc7170e736835c1296ce18b0",
-   "source_sha256": "dad33322d315a933c5b4d8360b66ced095e3b1f1dc7170e736835c1296ce18b0",
+   "sha256": "df380662b61edc305a4d5b2cff450e0ea76fc88c20195804a074b30c0d76071f",
+   "source_sha256": "df380662b61edc305a4d5b2cff450e0ea76fc88c20195804a074b30c0d76071f",
    "substitutions": 0
   },
   {
@@ -8270,15 +8298,15 @@
   {
    "path": "docustay/web/src/lib/site/send-samples.js",
    "from": "docustay/web/src/lib/site/send-samples.js",
-   "sha256": "4b06c892f5609c7128c3527feb8c4a3cf9ab5c9802876a11c7e5ea6b3a5a4ddf",
-   "source_sha256": "4b06c892f5609c7128c3527feb8c4a3cf9ab5c9802876a11c7e5ea6b3a5a4ddf",
+   "sha256": "00387538c42b0749bfcaa698e973b3b8132ecd43291d3ab5a43cf48e8e7ae3e8",
+   "source_sha256": "00387538c42b0749bfcaa698e973b3b8132ecd43291d3ab5a43cf48e8e7ae3e8",
    "substitutions": 0
   },
   {
    "path": "docustay/web/src/lib/site/signpdf.js",
    "from": "docustay/web/src/lib/site/signpdf.js",
-   "sha256": "7c3c83185d88092e8eb97f524854acf326fd5a4386d12198c807f2532fdc246c",
-   "source_sha256": "7c3c83185d88092e8eb97f524854acf326fd5a4386d12198c807f2532fdc246c",
+   "sha256": "7dbcd23cdc8f8dc4fc38297ef65af447c686b5291fea23a076d5c9afab875a7a",
+   "source_sha256": "7dbcd23cdc8f8dc4fc38297ef65af447c686b5291fea23a076d5c9afab875a7a",
    "substitutions": 0
   },
   {
@@ -8319,8 +8347,8 @@
   {
    "path": "docustay/web/src/lib/site/tools/PdfTool.svelte",
    "from": "docustay/web/src/lib/site/tools/PdfTool.svelte",
-   "sha256": "76cecda12c1a7cbc2305f12425107dbf6f4582b35ac7d6de52d5771468c65330",
-   "source_sha256": "76cecda12c1a7cbc2305f12425107dbf6f4582b35ac7d6de52d5771468c65330",
+   "sha256": "8def7de4481c56892ae497711eb8a1302218f0b69010c862c4702bf15f7167cd",
+   "source_sha256": "8def7de4481c56892ae497711eb8a1302218f0b69010c862c4702bf15f7167cd",
    "substitutions": 0
   },
   {
@@ -8501,15 +8529,22 @@
   {
    "path": "docustay/web/src/lib/site/visuals/Visual.svelte",
    "from": "docustay/web/src/lib/site/visuals/Visual.svelte",
-   "sha256": "284b981f32adfb917df5666ba46ed19532245bbbe99b8ea64e9c6182b4c09c8b",
-   "source_sha256": "284b981f32adfb917df5666ba46ed19532245bbbe99b8ea64e9c6182b4c09c8b",
+   "sha256": "6c90d3831b843a5c32e63004f36478161ecfd738ca1bd90486cb20d0feab8c0e",
+   "source_sha256": "6c90d3831b843a5c32e63004f36478161ecfd738ca1bd90486cb20d0feab8c0e",
+   "substitutions": 0
+  },
+  {
+   "path": "docustay/web/src/lib/site/visuals/previews.js",
+   "from": "docustay/web/src/lib/site/visuals/previews.js",
+   "sha256": "9c4bed0d4b5aa1ae61289ee337d8d55632551ee8af144368726829d741d93cfc",
+   "source_sha256": "9c4bed0d4b5aa1ae61289ee337d8d55632551ee8af144368726829d741d93cfc",
    "substitutions": 0
   },
   {
    "path": "docustay/web/src/lib/site/visuals/registry.js",
    "from": "docustay/web/src/lib/site/visuals/registry.js",
-   "sha256": "0beb5415bcca6afe68cdb614f7c7d72fccf3d134ef3703bbc550ae65a9b8c6a5",
-   "source_sha256": "0beb5415bcca6afe68cdb614f7c7d72fccf3d134ef3703bbc550ae65a9b8c6a5",
+   "sha256": "44cf47862a9e53ef087fb06c075094c0c49913828a9d8da5ab39ff270274d2f9",
+   "source_sha256": "44cf47862a9e53ef087fb06c075094c0c49913828a9d8da5ab39ff270274d2f9",
    "substitutions": 0
   },
   {
@@ -9341,8 +9376,8 @@
   {
    "path": "docustay/web/src/routes/(auth)/login/+page.svelte",
    "from": "docustay/web/src/routes/(auth)/login/+page.svelte",
-   "sha256": "3f550417356cdca5574cd34d2123992862e1fe460a1085a7120a0c6cba967c71",
-   "source_sha256": "3f550417356cdca5574cd34d2123992862e1fe460a1085a7120a0c6cba967c71",
+   "sha256": "492fb353ad7376e100237e1ff85b808293ca0ec959fb547d97f25757f7678bd4",
+   "source_sha256": "492fb353ad7376e100237e1ff85b808293ca0ec959fb547d97f25757f7678bd4",
    "substitutions": 0
   },
   {
@@ -9397,8 +9432,8 @@
   {
    "path": "docustay/web/src/routes/(site)/+page.svelte",
    "from": "docustay/web/src/routes/(site)/+page.svelte",
-   "sha256": "7aee837b43107280686ac964e4517e64e22b88b7b54a3d36f616e123978baceb",
-   "source_sha256": "7aee837b43107280686ac964e4517e64e22b88b7b54a3d36f616e123978baceb",
+   "sha256": "a52c4094b0f4cf75d76bd8c45783d6815a195f6012f0e7f7b27296df71b76807",
+   "source_sha256": "a52c4094b0f4cf75d76bd8c45783d6815a195f6012f0e7f7b27296df71b76807",
    "substitutions": 0
   },
   {
@@ -9572,8 +9607,8 @@
   {
    "path": "docustay/web/src/routes/(site)/docs/+layout.svelte",
    "from": "docustay/web/src/routes/(site)/docs/+layout.svelte",
-   "sha256": "24811b5adf78491937327b5e47cbf9b4b062eea03621f0f2302af2827fff5fee",
-   "source_sha256": "24811b5adf78491937327b5e47cbf9b4b062eea03621f0f2302af2827fff5fee",
+   "sha256": "118342a255094190a674e65657bfa54a8e349cf0cfe958d1003b3bfd05a3542b",
+   "source_sha256": "118342a255094190a674e65657bfa54a8e349cf0cfe958d1003b3bfd05a3542b",
    "substitutions": 0
   },
   {
@@ -9768,8 +9803,8 @@
   {
    "path": "docustay/web/src/routes/(site)/pricing/+page.svelte",
    "from": "docustay/web/src/routes/(site)/pricing/+page.svelte",
-   "sha256": "3a963ad4a1ff16234b330a537eeb7248e0d66a0bac76aea4b138a212c1018be5",
-   "source_sha256": "dc87775b148920b75d3aa7fe408f0bdb407fdf26c032e1747153872c5af07238",
+   "sha256": "8fdfdb9a66a224034966bb9c7515d2bd78e49d1386024ebc99e046c2cf13201b",
+   "source_sha256": "0bf5f126a9a5a548d2a57f3858bc54831ad63e875d6ffc00768086f0f079b33d",
    "substitutions": 1
   },
   {
@@ -10748,8 +10783,8 @@
   {
    "path": "docustay/web/static/changelog.md",
    "from": "docustay/web/static/changelog.md",
-   "sha256": "7629cf6101732c6226ca9205b58593a2bf32ae17f004ec3daca64e258b103c0d",
-   "source_sha256": "7629cf6101732c6226ca9205b58593a2bf32ae17f004ec3daca64e258b103c0d",
+   "sha256": "ea0a212d903dd749b3adeb5e5f899c68eb8958e273c9a93a91c333250da2b9b5",
+   "source_sha256": "ea0a212d903dd749b3adeb5e5f899c68eb8958e273c9a93a91c333250da2b9b5",
    "substitutions": 0
   },
   {
@@ -10769,29 +10804,29 @@
   {
    "path": "docustay/web/static/developers/agents.md",
    "from": "docustay/web/static/developers/agents.md",
-   "sha256": "3e771bbe2fe771fbcd406bff691c3e522f16381a2d2b85e1d4ee607704020a4e",
-   "source_sha256": "3e771bbe2fe771fbcd406bff691c3e522f16381a2d2b85e1d4ee607704020a4e",
+   "sha256": "3dfb417e3ca045baa035ba1be6baa99e2237615f45666d527628ace14accb3e7",
+   "source_sha256": "3dfb417e3ca045baa035ba1be6baa99e2237615f45666d527628ace14accb3e7",
    "substitutions": 0
   },
   {
    "path": "docustay/web/static/developers/api.md",
    "from": "docustay/web/static/developers/api.md",
-   "sha256": "546e294a6906286a61f78f0445d61fb1d77610c54ded29a03cf636a82baa9d56",
-   "source_sha256": "546e294a6906286a61f78f0445d61fb1d77610c54ded29a03cf636a82baa9d56",
+   "sha256": "ef767a8e044c0cbaf9eea6f14274e298010d660da7f79a455f234b6346c48f96",
+   "source_sha256": "ef767a8e044c0cbaf9eea6f14274e298010d660da7f79a455f234b6346c48f96",
    "substitutions": 0
   },
   {
    "path": "docustay/web/static/developers/cli.md",
    "from": "docustay/web/static/developers/cli.md",
-   "sha256": "6fbb211e65e5aa3625c0f5c64a220bd5f4436dda06cf1aa615f662aafe32ad7c",
-   "source_sha256": "6fbb211e65e5aa3625c0f5c64a220bd5f4436dda06cf1aa615f662aafe32ad7c",
+   "sha256": "84be2c259580ef9186020cefc28d4d0f34dfeab0fdd9cd2549a67d1d9bdab047",
+   "source_sha256": "84be2c259580ef9186020cefc28d4d0f34dfeab0fdd9cd2549a67d1d9bdab047",
    "substitutions": 0
   },
   {
    "path": "docustay/web/static/developers/embedding.md",
    "from": "docustay/web/static/developers/embedding.md",
-   "sha256": "a94f89fb4c6629112edb11553afbec5792a0b81ed64d1a94b85d43c8a714d026",
-   "source_sha256": "a94f89fb4c6629112edb11553afbec5792a0b81ed64d1a94b85d43c8a714d026",
+   "sha256": "721b16311e94d96a090baa890c10b93936acc70b1c72028aa254f33e6611fd1c",
+   "source_sha256": "721b16311e94d96a090baa890c10b93936acc70b1c72028aa254f33e6611fd1c",
    "substitutions": 0
   },
   {
@@ -10802,24 +10837,31 @@
    "substitutions": 0
   },
   {
+   "path": "docustay/web/static/developers/payments.md",
+   "from": "docustay/web/static/developers/payments.md",
+   "sha256": "ca339be34cca6fe2c451d77e0522207dc02204618a083d825bad72951383951f",
+   "source_sha256": "ca339be34cca6fe2c451d77e0522207dc02204618a083d825bad72951383951f",
+   "substitutions": 0
+  },
+  {
    "path": "docustay/web/static/developers/plays.md",
    "from": "docustay/web/static/developers/plays.md",
-   "sha256": "91cee7a53687642341cf0afc32b839730d23bda04ecd56bddf70b7be212b2a21",
-   "source_sha256": "91cee7a53687642341cf0afc32b839730d23bda04ecd56bddf70b7be212b2a21",
+   "sha256": "4079ad53532ffa211a8257c263e4ff38c18d2a226bae145d20b563a8cde83df3",
+   "source_sha256": "4079ad53532ffa211a8257c263e4ff38c18d2a226bae145d20b563a8cde83df3",
    "substitutions": 0
   },
   {
    "path": "docustay/web/static/developers/sdks.md",
    "from": "docustay/web/static/developers/sdks.md",
-   "sha256": "907df5289770cbf5e0c1f91f1b9728889fa3af466eb9c3ee9bb901da0035ac73",
-   "source_sha256": "907df5289770cbf5e0c1f91f1b9728889fa3af466eb9c3ee9bb901da0035ac73",
+   "sha256": "7fcd0e929e42a9c679cc9995c63768ff079e0c6578a1e28d126a67ed2862f150",
+   "source_sha256": "7fcd0e929e42a9c679cc9995c63768ff079e0c6578a1e28d126a67ed2862f150",
    "substitutions": 0
   },
   {
    "path": "docustay/web/static/developers/test-mode.md",
    "from": "docustay/web/static/developers/test-mode.md",
-   "sha256": "2200d6892922b55e8e356305058ebd80844624f0583136b775aa703d97141b08",
-   "source_sha256": "2200d6892922b55e8e356305058ebd80844624f0583136b775aa703d97141b08",
+   "sha256": "381bac632597668d36a5ad7dd65bcde1437d041faf12f76a3d8520630787269a",
+   "source_sha256": "381bac632597668d36a5ad7dd65bcde1437d041faf12f76a3d8520630787269a",
    "substitutions": 0
   },
   {
@@ -10860,8 +10902,8 @@
   {
    "path": "docustay/web/static/docs/email-api.md",
    "from": "docustay/web/static/docs/email-api.md",
-   "sha256": "8d9537836e2880d8cf718bd78bfb3e21689bbbbec566a801df50027f18a2be4e",
-   "source_sha256": "8d9537836e2880d8cf718bd78bfb3e21689bbbbec566a801df50027f18a2be4e",
+   "sha256": "b3f0a40cf109253dead3548279a5d5274bbfaeafd47e8dc1ab4ef0ae78d2dd59",
+   "source_sha256": "b3f0a40cf109253dead3548279a5d5274bbfaeafd47e8dc1ab4ef0ae78d2dd59",
    "substitutions": 0
   },
   {
@@ -10895,8 +10937,8 @@
   {
    "path": "docustay/web/static/docs/index.md",
    "from": "docustay/web/static/docs/index.md",
-   "sha256": "1d73ff82e0340ec05939a2e07c47542deddf90214946f34ff001b89731883b55",
-   "source_sha256": "1d73ff82e0340ec05939a2e07c47542deddf90214946f34ff001b89731883b55",
+   "sha256": "0e529f459dc4d76496c998d2064c126bbdc6a23c69f374e311782578deca99b0",
+   "source_sha256": "0e529f459dc4d76496c998d2064c126bbdc6a23c69f374e311782578deca99b0",
    "substitutions": 0
   },
   {
@@ -10909,22 +10951,15 @@
   {
    "path": "docustay/web/static/docs/mcp-and-skills.md",
    "from": "docustay/web/static/docs/mcp-and-skills.md",
-   "sha256": "fb1521ed4d98f9e438e79c6afc92c88c173de73c57837a13b6bcf39f47c69554",
-   "source_sha256": "fb1521ed4d98f9e438e79c6afc92c88c173de73c57837a13b6bcf39f47c69554",
-   "substitutions": 0
-  },
-  {
-   "path": "docustay/web/static/docs/payments-and-playbooks.md",
-   "from": "docustay/web/static/docs/payments-and-playbooks.md",
-   "sha256": "b88216a2ee3e3994ddf237aec65bf57e4e10c486e1cc6b4334137af447fe6c38",
-   "source_sha256": "b88216a2ee3e3994ddf237aec65bf57e4e10c486e1cc6b4334137af447fe6c38",
+   "sha256": "42c7d922813276a4415c7459ded64f35d02716f912b71a49c19d7378a7783629",
+   "source_sha256": "42c7d922813276a4415c7459ded64f35d02716f912b71a49c19d7378a7783629",
    "substitutions": 0
   },
   {
    "path": "docustay/web/static/docs/quickstart.md",
    "from": "docustay/web/static/docs/quickstart.md",
-   "sha256": "832bec1027a72972539dc2bf21cac38fefce06a02010a5ae9f5ade9fe7f91844",
-   "source_sha256": "832bec1027a72972539dc2bf21cac38fefce06a02010a5ae9f5ade9fe7f91844",
+   "sha256": "9ee0d4a3af1ccfc70666e68dcb517638281149b9344a890b2e451b5eced6e629",
+   "source_sha256": "9ee0d4a3af1ccfc70666e68dcb517638281149b9344a890b2e451b5eced6e629",
    "substitutions": 0
   },
   {
@@ -10937,8 +10972,15 @@
   {
    "path": "docustay/web/static/docs/sdks.md",
    "from": "docustay/web/static/docs/sdks.md",
-   "sha256": "661240f12087a86f69f8207374b7eb3ca946b8dde2cbcdcb38b36e076f2a820b",
-   "source_sha256": "661240f12087a86f69f8207374b7eb3ca946b8dde2cbcdcb38b36e076f2a820b",
+   "sha256": "6f7ab7457a017a312d0f4798bc37d7b5d59cad1ee2729b8c95871a20e1d361e1",
+   "source_sha256": "6f7ab7457a017a312d0f4798bc37d7b5d59cad1ee2729b8c95871a20e1d361e1",
+   "substitutions": 0
+  },
+  {
+   "path": "docustay/web/static/docs/search-and-payments.md",
+   "from": "docustay/web/static/docs/search-and-payments.md",
+   "sha256": "b88216a2ee3e3994ddf237aec65bf57e4e10c486e1cc6b4334137af447fe6c38",
+   "source_sha256": "b88216a2ee3e3994ddf237aec65bf57e4e10c486e1cc6b4334137af447fe6c38",
    "substitutions": 0
   },
   {
@@ -10986,8 +11028,8 @@
   {
    "path": "docustay/web/static/docs/settings-reference.md",
    "from": "docustay/web/static/docs/settings-reference.md",
-   "sha256": "d39e00f5666816abb9d3a7f2f0bd90cffe7590d8020e76285a1ab36724f80b11",
-   "source_sha256": "d39e00f5666816abb9d3a7f2f0bd90cffe7590d8020e76285a1ab36724f80b11",
+   "sha256": "c302bf61dd24bfd7dee87c8eab1a99ba913fa65195acd56dcfb131ddb7cd7642",
+   "source_sha256": "c302bf61dd24bfd7dee87c8eab1a99ba913fa65195acd56dcfb131ddb7cd7642",
    "substitutions": 0
   },
   {
@@ -11007,36 +11049,36 @@
   {
    "path": "docustay/web/static/docs/test-mode.md",
    "from": "docustay/web/static/docs/test-mode.md",
-   "sha256": "b1ca7e5fce3beab31927ac35dd6cb5031d7d5593f955f150a24cfc0e54f3dd4f",
-   "source_sha256": "b1ca7e5fce3beab31927ac35dd6cb5031d7d5593f955f150a24cfc0e54f3dd4f",
+   "sha256": "1685de59fea610ffc23068ad48f510340919f1a9971733628148903c40c7cb85",
+   "source_sha256": "1685de59fea610ffc23068ad48f510340919f1a9971733628148903c40c7cb85",
    "substitutions": 0
   },
   {
    "path": "docustay/web/static/docs/tutorial-agent.md",
    "from": "docustay/web/static/docs/tutorial-agent.md",
-   "sha256": "be18d85dbc668b27999a1d96abadbff12127684131c274417f7d18ba2994ff06",
-   "source_sha256": "be18d85dbc668b27999a1d96abadbff12127684131c274417f7d18ba2994ff06",
+   "sha256": "ca4641e8e8d212ef2f7aa2ceacb93dfe3194847bc05956c659f2b18e1d2d40e6",
+   "source_sha256": "ca4641e8e8d212ef2f7aa2ceacb93dfe3194847bc05956c659f2b18e1d2d40e6",
    "substitutions": 0
   },
   {
    "path": "docustay/web/static/docs/tutorial-nextjs.md",
    "from": "docustay/web/static/docs/tutorial-nextjs.md",
-   "sha256": "f4f372e68bbccf0af4fddb291e5c0a068a346a85d4bc3af93332120fa34b3675",
-   "source_sha256": "f4f372e68bbccf0af4fddb291e5c0a068a346a85d4bc3af93332120fa34b3675",
+   "sha256": "00950d064ecf8ebe9362b3b763365f8fe280a955500294264f87c741197f3ad5",
+   "source_sha256": "00950d064ecf8ebe9362b3b763365f8fe280a955500294264f87c741197f3ad5",
    "substitutions": 0
   },
   {
    "path": "docustay/web/static/docs/tutorial-python.md",
    "from": "docustay/web/static/docs/tutorial-python.md",
-   "sha256": "94069ed1f5c55a0dc1078339f1eab0b3f5ae7be8341fb9e7055b6d0895cb676b",
-   "source_sha256": "94069ed1f5c55a0dc1078339f1eab0b3f5ae7be8341fb9e7055b6d0895cb676b",
+   "sha256": "53f22a856cabfffa6048d370ed85ce13655d88b07d14aa08849cc5f02a145f1a",
+   "source_sha256": "53f22a856cabfffa6048d370ed85ce13655d88b07d14aa08849cc5f02a145f1a",
    "substitutions": 0
   },
   {
    "path": "docustay/web/static/docs/webhooks.md",
    "from": "docustay/web/static/docs/webhooks.md",
-   "sha256": "2cb7e943bffb73a62619dc02df4c70c873edcf2de5180537f287d4482a39a84e",
-   "source_sha256": "2cb7e943bffb73a62619dc02df4c70c873edcf2de5180537f287d4482a39a84e",
+   "sha256": "18cf6f9778549afb337bf04cf0866f1fa325b0ed115e347708ba46e4311efc99",
+   "source_sha256": "18cf6f9778549afb337bf04cf0866f1fa325b0ed115e347708ba46e4311efc99",
    "substitutions": 0
   },
   {
@@ -11056,8 +11098,8 @@
   {
    "path": "docustay/web/static/features.md",
    "from": "docustay/web/static/features.md",
-   "sha256": "61719bd51f032f1482413856c41521b1b7b13dd2f28d2de514501fc587e7602b",
-   "source_sha256": "61719bd51f032f1482413856c41521b1b7b13dd2f28d2de514501fc587e7602b",
+   "sha256": "9f3ad67dee2ca0361890abb32527eb2cdbd064f3926f196289327c59ec9ffb29",
+   "source_sha256": "9f3ad67dee2ca0361890abb32527eb2cdbd064f3926f196289327c59ec9ffb29",
    "substitutions": 0
   },
   {
@@ -11077,36 +11119,57 @@
   {
    "path": "docustay/web/static/features/how-it-works.md",
    "from": "docustay/web/static/features/how-it-works.md",
-   "sha256": "bf89a46174d7eac2c8d4851c973ed256a7c110e184dd30920212922ab38c85ac",
-   "source_sha256": "bf89a46174d7eac2c8d4851c973ed256a7c110e184dd30920212922ab38c85ac",
+   "sha256": "b120638f9de28e8c557fb3b761a2b05577b5f3ae15ca14caa33245e1cd4dff27",
+   "source_sha256": "b120638f9de28e8c557fb3b761a2b05577b5f3ae15ca14caa33245e1cd4dff27",
    "substitutions": 0
   },
   {
    "path": "docustay/web/static/features/payments.md",
    "from": "docustay/web/static/features/payments.md",
-   "sha256": "352b248638dff3b7616483365007cffccf0da708306de925331c12253d6202ac",
-   "source_sha256": "352b248638dff3b7616483365007cffccf0da708306de925331c12253d6202ac",
+   "sha256": "e7c27befd943e644b8b9cbac5d5d8b69ca46868cca51ee9f16ae694f4204afad",
+   "source_sha256": "e7c27befd943e644b8b9cbac5d5d8b69ca46868cca51ee9f16ae694f4204afad",
    "substitutions": 0
   },
   {
    "path": "docustay/web/static/features/proof.md",
    "from": "docustay/web/static/features/proof.md",
-   "sha256": "9fc41f0156c34cb082430d1d7e36dfcd4af9694d63523124d986230476d1920a",
-   "source_sha256": "9fc41f0156c34cb082430d1d7e36dfcd4af9694d63523124d986230476d1920a",
+   "sha256": "46ff79da012fbe2aedab06a0bad5916b6ddbd1f3efedb28ca0b3cc7e828afd64",
+   "source_sha256": "46ff79da012fbe2aedab06a0bad5916b6ddbd1f3efedb28ca0b3cc7e828afd64",
    "substitutions": 0
   },
   {
    "path": "docustay/web/static/features/scribe.md",
    "from": "docustay/web/static/features/scribe.md",
-   "sha256": "6bb1a5925f25e12d1ec047c1f44eb946eb5baaec32d1adb988dfd6c758f2c074",
-   "source_sha256": "6bb1a5925f25e12d1ec047c1f44eb946eb5baaec32d1adb988dfd6c758f2c074",
+   "sha256": "c8ba7647b22e0a7134ad4d07cddf5ca122f4097c55445e3c1d247c033bdea98b",
+   "source_sha256": "c8ba7647b22e0a7134ad4d07cddf5ca122f4097c55445e3c1d247c033bdea98b",
+   "substitutions": 0
+  },
+  {
+   "path": "docustay/web/static/features/signing.md",
+   "from": "docustay/web/static/features/signing.md",
+   "sha256": "77d93b0099db8b540b5bcb014111f746e6d0eb94bc818acf19c3480e74c012d7",
+   "source_sha256": "77d93b0099db8b540b5bcb014111f746e6d0eb94bc818acf19c3480e74c012d7",
+   "substitutions": 0
+  },
+  {
+   "path": "docustay/web/static/features/team-and-roles.md",
+   "from": "docustay/web/static/features/team-and-roles.md",
+   "sha256": "b08b356fea2b6deb5dce3f071c191dbddf036eed88b236c5dd3d9b1750dd96fb",
+   "source_sha256": "b08b356fea2b6deb5dce3f071c191dbddf036eed88b236c5dd3d9b1750dd96fb",
+   "substitutions": 0
+  },
+  {
+   "path": "docustay/web/static/features/templates-and-sending.md",
+   "from": "docustay/web/static/features/templates-and-sending.md",
+   "sha256": "9f0b0506f565d301f063d4eaa9bb02c7bec24b8303f3a5853500d6b6d0d11485",
+   "source_sha256": "9f0b0506f565d301f063d4eaa9bb02c7bec24b8303f3a5853500d6b6d0d11485",
    "substitutions": 0
   },
   {
    "path": "docustay/web/static/features/test-mode.md",
    "from": "docustay/web/static/features/test-mode.md",
-   "sha256": "e47a376fc37571929fae61db102144f13ef77f3562a73ac99fccbfa9c41f0166",
-   "source_sha256": "e47a376fc37571929fae61db102144f13ef77f3562a73ac99fccbfa9c41f0166",
+   "sha256": "808238e68ab009321fb8ea9de78b2aac38130ef9b19861bf85b2494475d9e0a6",
+   "source_sha256": "808238e68ab009321fb8ea9de78b2aac38130ef9b19861bf85b2494475d9e0a6",
    "substitutions": 0
   },
   {
@@ -11252,8 +11315,8 @@
   {
    "path": "docustay/web/static/index.md",
    "from": "docustay/web/static/index.md",
-   "sha256": "224f585d099d546efac60fe96eeec7218e0f5a6143b8cb295b08f8bc4338d29b",
-   "source_sha256": "224f585d099d546efac60fe96eeec7218e0f5a6143b8cb295b08f8bc4338d29b",
+   "sha256": "44685eb20f030992320cfaa64a30ee5cbe8f3359afc6a81ac620ff76b706e8fe",
+   "source_sha256": "44685eb20f030992320cfaa64a30ee5cbe8f3359afc6a81ac620ff76b706e8fe",
    "substitutions": 0
   },
   {
@@ -11329,15 +11392,15 @@
   {
    "path": "docustay/web/static/llms-full.txt",
    "from": "docustay/web/static/llms-full.txt",
-   "sha256": "0a07d191221b14bb27760de2932b32aa3cf33e042f57bf769cf368dfa5529b57",
-   "source_sha256": "0a07d191221b14bb27760de2932b32aa3cf33e042f57bf769cf368dfa5529b57",
+   "sha256": "c244281df7f16a00460e229b1a2a1bd2fc164081174c26e3b75d0ce82398c5f9",
+   "source_sha256": "c244281df7f16a00460e229b1a2a1bd2fc164081174c26e3b75d0ce82398c5f9",
    "substitutions": 0
   },
   {
    "path": "docustay/web/static/llms.txt",
    "from": "docustay/web/static/llms.txt",
-   "sha256": "ae6a4a33949bc290ca2ca5302cd3736dfc7d199c8f52bb8246d1b59bec97c6a0",
-   "source_sha256": "ae6a4a33949bc290ca2ca5302cd3736dfc7d199c8f52bb8246d1b59bec97c6a0",
+   "sha256": "309078d035037686a0f0e734e58c024da6419030a485dabd67823d06dc52f2e0",
+   "source_sha256": "309078d035037686a0f0e734e58c024da6419030a485dabd67823d06dc52f2e0",
    "substitutions": 0
   },
   {
@@ -11628,6 +11691,13 @@
    "substitutions": 0
   },
   {
+   "path": "docustay/web/static/og/developers-payments.png",
+   "from": "docustay/web/static/og/developers-payments.png",
+   "sha256": "c9a97e9538138dcb39deb4d9d3074bd84446738fdcc1dc40041c4e4aa3fc9028",
+   "source_sha256": "c9a97e9538138dcb39deb4d9d3074bd84446738fdcc1dc40041c4e4aa3fc9028",
+   "substitutions": 0
+  },
+  {
    "path": "docustay/web/static/og/developers-plays.png",
    "from": "docustay/web/static/og/developers-plays.png",
    "sha256": "f1d874230f5096ff00ffb8f5f5e10a17f184a4550a63c1568eda4c812ddcc8cb",
@@ -11775,6 +11845,13 @@
    "substitutions": 0
   },
   {
+   "path": "docustay/web/static/og/docs-search-and-payments.png",
+   "from": "docustay/web/static/og/docs-search-and-payments.png",
+   "sha256": "74997f990eb976eaf30d2f1712197da4f40451c27f6953f454a2c617675bfadc",
+   "source_sha256": "74997f990eb976eaf30d2f1712197da4f40451c27f6953f454a2c617675bfadc",
+   "substitutions": 0
+  },
+  {
    "path": "docustay/web/static/og/docs-self-host-backup.png",
    "from": "docustay/web/static/og/docs-self-host-backup.png",
    "sha256": "bd3d737038397a25256333772bc1b6db81084c91c0ffaf5f64b690598abf1a81",
@@ -11915,6 +11992,27 @@
    "substitutions": 0
   },
   {
+   "path": "docustay/web/static/og/features-signing.png",
+   "from": "docustay/web/static/og/features-signing.png",
+   "sha256": "db13e2339bee9b0d64f29d3f58360373fa590bf57f0e52ea8181ca02e02bfaaf",
+   "source_sha256": "db13e2339bee9b0d64f29d3f58360373fa590bf57f0e52ea8181ca02e02bfaaf",
+   "substitutions": 0
+  },
+  {
+   "path": "docustay/web/static/og/features-team-and-roles.png",
+   "from": "docustay/web/static/og/features-team-and-roles.png",
+   "sha256": "a2a55ac35c4c49cc1971fecf2c62e8daa9ceb5de12bcdbd44cda562b86d8af0f",
+   "source_sha256": "a2a55ac35c4c49cc1971fecf2c62e8daa9ceb5de12bcdbd44cda562b86d8af0f",
+   "substitutions": 0
+  },
+  {
+   "path": "docustay/web/static/og/features-templates-and-sending.png",
+   "from": "docustay/web/static/og/features-templates-and-sending.png",
+   "sha256": "357870b3f5d625bb5e47958aab01e9f86faa546f1e4125194cc12a9635d58511",
+   "source_sha256": "357870b3f5d625bb5e47958aab01e9f86faa546f1e4125194cc12a9635d58511",
+   "substitutions": 0
+  },
+  {
    "path": "docustay/web/static/og/features-test-mode.png",
    "from": "docustay/web/static/og/features-test-mode.png",
    "sha256": "db22fe750af21a97fa4ed9044cd4cd381386680459db51e3636217c167b69541",
@@ -12043,8 +12141,8 @@
   {
    "path": "docustay/web/static/og/pricing.png",
    "from": "docustay/web/static/og/pricing.png",
-   "sha256": "0c8f32754cf78397d2b1d17b44a4afb4b014b64a947c2d0ea32c2f810640f7a3",
-   "source_sha256": "0c8f32754cf78397d2b1d17b44a4afb4b014b64a947c2d0ea32c2f810640f7a3",
+   "sha256": "c150a1d8c5db73ee7bd5d7ce85922fe2d8182d23924942c22cae7d67b99c78b8",
+   "source_sha256": "c150a1d8c5db73ee7bd5d7ce85922fe2d8182d23924942c22cae7d67b99c78b8",
    "substitutions": 0
   },
   {
@@ -12052,6 +12150,13 @@
    "from": "docustay/web/static/og/self-host-backups-and-upgrades.png",
    "sha256": "08f16c214a43a5ddc8c959a195740a55d433f0c144621670ca9dadc006fe9f41",
    "source_sha256": "08f16c214a43a5ddc8c959a195740a55d433f0c144621670ca9dadc006fe9f41",
+   "substitutions": 0
+  },
+  {
+   "path": "docustay/web/static/og/self-host-payments.png",
+   "from": "docustay/web/static/og/self-host-payments.png",
+   "sha256": "0b739a6160ddedd682f2e724ef1cfe0add34e3010dd9e9b8c7174792cc2e235a",
+   "source_sha256": "0b739a6160ddedd682f2e724ef1cfe0add34e3010dd9e9b8c7174792cc2e235a",
    "substitutions": 0
   },
   {
@@ -12610,8 +12715,8 @@
   {
    "path": "docustay/web/static/pricing.md",
    "from": "docustay/web/static/pricing.md",
-   "sha256": "0390470dd474fbbba9e645d7a6ac39160fc039ffd7cf3e8ff4ae4ca3cfdad5ea",
-   "source_sha256": "0390470dd474fbbba9e645d7a6ac39160fc039ffd7cf3e8ff4ae4ca3cfdad5ea",
+   "sha256": "902ea10205516f6edbbe4ccc274dc27417ffb12a3bac52e0ce06b46a9c694e9c",
+   "source_sha256": "902ea10205516f6edbbe4ccc274dc27417ffb12a3bac52e0ce06b46a9c694e9c",
    "substitutions": 0
   },
   {
@@ -12818,6 +12923,13 @@
    "substitutions": 0
   },
   {
+   "path": "docustay/web/static/self-host/payments.md",
+   "from": "docustay/web/static/self-host/payments.md",
+   "sha256": "b58689a1fc1f08993453a2a98531d01ce00efd5f749b61e75162795f00d13816",
+   "source_sha256": "b58689a1fc1f08993453a2a98531d01ce00efd5f749b61e75162795f00d13816",
+   "substitutions": 0
+  },
+  {
    "path": "docustay/web/static/self-host/requirements.md",
    "from": "docustay/web/static/self-host/requirements.md",
    "sha256": "2dadfecb38a572a0ffc59327128c05523fdf811acaa8507461768786ef547206",
@@ -12841,50 +12953,50 @@
   {
    "path": "docustay/web/static/sign-pdf/csharp.md",
    "from": "docustay/web/static/sign-pdf/csharp.md",
-   "sha256": "df5f9a74d74334c5ae4f80524a24b77b0315b8a6b3aa483f32c35c160b7aaf6b",
-   "source_sha256": "df5f9a74d74334c5ae4f80524a24b77b0315b8a6b3aa483f32c35c160b7aaf6b",
+   "sha256": "f137d89085a7cb4b902b5893034c54e1123d90136c7a063d44b806e5b0cb523c",
+   "source_sha256": "f137d89085a7cb4b902b5893034c54e1123d90136c7a063d44b806e5b0cb523c",
    "substitutions": 0
   },
   {
    "path": "docustay/web/static/sign-pdf/go.md",
    "from": "docustay/web/static/sign-pdf/go.md",
-   "sha256": "a8e95d1c1b4cc2dc5c0311ffca99482a373b683323e5bc38dd631523df01529d",
-   "source_sha256": "a8e95d1c1b4cc2dc5c0311ffca99482a373b683323e5bc38dd631523df01529d",
+   "sha256": "ce5eed1ae87d65f523a765ef94366288cec765209be011db57fae7e9042d9d05",
+   "source_sha256": "ce5eed1ae87d65f523a765ef94366288cec765209be011db57fae7e9042d9d05",
    "substitutions": 0
   },
   {
    "path": "docustay/web/static/sign-pdf/javascript.md",
    "from": "docustay/web/static/sign-pdf/javascript.md",
-   "sha256": "34d3dc6306ed717a466305ad7f284b4f37988ab711e799569db33fa0aae6f25e",
-   "source_sha256": "34d3dc6306ed717a466305ad7f284b4f37988ab711e799569db33fa0aae6f25e",
+   "sha256": "26b0e582f2c93c315e5ac48d36c051c2322300965ef60ec7e9ad5f9b628e899a",
+   "source_sha256": "26b0e582f2c93c315e5ac48d36c051c2322300965ef60ec7e9ad5f9b628e899a",
    "substitutions": 0
   },
   {
    "path": "docustay/web/static/sign-pdf/php.md",
    "from": "docustay/web/static/sign-pdf/php.md",
-   "sha256": "4617120bc154137bd527a3ccd53543ff8dbc4c233f96c1c93b844bdf12df2465",
-   "source_sha256": "4617120bc154137bd527a3ccd53543ff8dbc4c233f96c1c93b844bdf12df2465",
+   "sha256": "3df39247f8eb13e1b431896d800f68713441b46dfaee2fd18f712ff47e084cc7",
+   "source_sha256": "3df39247f8eb13e1b431896d800f68713441b46dfaee2fd18f712ff47e084cc7",
    "substitutions": 0
   },
   {
    "path": "docustay/web/static/sign-pdf/python.md",
    "from": "docustay/web/static/sign-pdf/python.md",
-   "sha256": "dcbc132ab3d9af18aedcfcb6da32f609cd635d65d4eab3433dbee30fcb8d18bd",
-   "source_sha256": "dcbc132ab3d9af18aedcfcb6da32f609cd635d65d4eab3433dbee30fcb8d18bd",
+   "sha256": "f1f99002b1a8c629596a9068748ef4145a285eaccbaa170e507158389b5da30d",
+   "source_sha256": "f1f99002b1a8c629596a9068748ef4145a285eaccbaa170e507158389b5da30d",
    "substitutions": 0
   },
   {
    "path": "docustay/web/static/sign-pdf/typescript.md",
    "from": "docustay/web/static/sign-pdf/typescript.md",
-   "sha256": "797ab1101c38401c6ed9a2b2850c2b9671e41231fb81d0b241120bc192112767",
-   "source_sha256": "797ab1101c38401c6ed9a2b2850c2b9671e41231fb81d0b241120bc192112767",
+   "sha256": "6bfce7040edbec085cf58a0631a9e38188ee4638831b26f593dd9f2a25050f9f",
+   "source_sha256": "6bfce7040edbec085cf58a0631a9e38188ee4638831b26f593dd9f2a25050f9f",
    "substitutions": 0
   },
   {
    "path": "docustay/web/static/sitemap.xml",
    "from": "docustay/web/static/sitemap.xml",
-   "sha256": "36700ae30e9fa06c68d1ca9abc4b6c55ccb271b4419f821c077c25a0a85efdd7",
-   "source_sha256": "36700ae30e9fa06c68d1ca9abc4b6c55ccb271b4419f821c077c25a0a85efdd7",
+   "sha256": "595f48a02da551277b7e4e39da22c04b97e4cd5bd042153f777d4ca747ae78ad",
+   "source_sha256": "595f48a02da551277b7e4e39da22c04b97e4cd5bd042153f777d4ca747ae78ad",
    "substitutions": 0
   },
   {
@@ -13338,22 +13450,22 @@
   {
    "path": "docustay/web/static/stills/hero-price-cards.avif",
    "from": "docustay/web/static/stills/hero-price-cards.avif",
-   "sha256": "9e6b55898099e009a18ef4d8e666379584964fb425f4fc9785cdb590e77241de",
-   "source_sha256": "9e6b55898099e009a18ef4d8e666379584964fb425f4fc9785cdb590e77241de",
+   "sha256": "d7e5dcfbf250c32e86c4792473500ce807586edbbd4185089523461c523f1209",
+   "source_sha256": "d7e5dcfbf250c32e86c4792473500ce807586edbbd4185089523461c523f1209",
    "substitutions": 0
   },
   {
    "path": "docustay/web/static/stills/hero-price-cards.png",
    "from": "docustay/web/static/stills/hero-price-cards.png",
-   "sha256": "23b0284bf2a22f89029da52b70cfd3ba7f31dbed74b8c09c5e1eea9615802282",
-   "source_sha256": "23b0284bf2a22f89029da52b70cfd3ba7f31dbed74b8c09c5e1eea9615802282",
+   "sha256": "1c23e6abab73d5981ae019593daec244a51c8a82c58bd3a2e6b91d2370daf527",
+   "source_sha256": "1c23e6abab73d5981ae019593daec244a51c8a82c58bd3a2e6b91d2370daf527",
    "substitutions": 0
   },
   {
    "path": "docustay/web/static/stills/hero-price-cards.webp",
    "from": "docustay/web/static/stills/hero-price-cards.webp",
-   "sha256": "2c120f293139ed56539269f43e8e9f40393e9d53bf36adb46ef8f13f12bd715e",
-   "source_sha256": "2c120f293139ed56539269f43e8e9f40393e9d53bf36adb46ef8f13f12bd715e",
+   "sha256": "a8f3d943c4e32847211dac7f28ae09df173a734958cb90d9368b3d9594beafcc",
+   "source_sha256": "a8f3d943c4e32847211dac7f28ae09df173a734958cb90d9368b3d9594beafcc",
    "substitutions": 0
   },
   {
@@ -13401,8 +13513,8 @@
   {
    "path": "docustay/web/static/stills/manifest.json",
    "from": "docustay/web/static/stills/manifest.json",
-   "sha256": "3db85b24ad05cbc4ddda616032a2d44fceffa5da8c890210463e177f0e510e14",
-   "source_sha256": "3db85b24ad05cbc4ddda616032a2d44fceffa5da8c890210463e177f0e510e14",
+   "sha256": "0ef3181bb85a8ef25152e4fc3bbc59c6f50a2bd0e40e278d0a604a2743e2bc36",
+   "source_sha256": "0ef3181bb85a8ef25152e4fc3bbc59c6f50a2bd0e40e278d0a604a2743e2bc36",
    "substitutions": 0
   },
   {
@@ -13800,8 +13912,8 @@
   {
    "path": "docustay/web/static/trust.md",
    "from": "docustay/web/static/trust.md",
-   "sha256": "4365f63b0b64a651eacd5f1cbae698d08549e4562d9e42c5576955af734499d9",
-   "source_sha256": "4365f63b0b64a651eacd5f1cbae698d08549e4562d9e42c5576955af734499d9",
+   "sha256": "150165ab4de0bffa2e6fac9650db58b45cdc702c9755dba93d91654f7b60f447",
+   "source_sha256": "150165ab4de0bffa2e6fac9650db58b45cdc702c9755dba93d91654f7b60f447",
    "substitutions": 0
   },
   {
@@ -15823,8 +15935,8 @@
   {
    "path": "src/auth/install.mjs",
    "from": "src/auth/install.mjs",
-   "sha256": "8b54518977844bb88240d033d0215cb334d764ee0180a6fbbc5776b402dab786",
-   "source_sha256": "c156ee2c1090cd7a636e125a00282e2dc9137dca49132f5c316f8d14f814650d",
+   "sha256": "c1c484ddf85913589bca6fe77d052929cd110b7aeae90ae4df122a87981fd094",
+   "source_sha256": "0ef1f0a66267d499249673f98e9ff7df307f499c573572e7decbdc7e37249a6c",
    "substitutions": 9
   },
   {
@@ -18441,8 +18553,8 @@
   {
    "path": "src/documents/writes.mjs",
    "from": "src/documents/writes.mjs",
-   "sha256": "35fdbf96940cb18947d361b00746552ce60b0593f954b5582a825538ec7fc781",
-   "source_sha256": "0a4df52af432f8b25dc74c76d9651232e62597a1c5f598d1414dc33ae9ac2eb9",
+   "sha256": "5f426ac4e35ef2faf590f6e1634ac8633afbfc7760912e91ba9381ec64d16cee",
+   "source_sha256": "7e585a121665ed915c0a26c13f6c8709ed8714af4296433760db9832d892c4e4",
    "substitutions": 4
   },
   {
@@ -18749,8 +18861,8 @@
   {
    "path": "src/health/alerts.mjs",
    "from": "src/health/alerts.mjs",
-   "sha256": "9cc5f7402bdde2094eee886f31a35a84aaa2fccf690c811bc3d91a8d399f8a5e",
-   "source_sha256": "e40c166d7433a11016982627acb442ff5d0900ccab65c1dbb71ff00705f65421",
+   "sha256": "4d78040e38578e76687efa3de1fa6db0467db8d5fb7f48ec5da2b23deb3993cf",
+   "source_sha256": "54917a7075f16c360da5a566d0e8f5a62ef0667a11e1bccc8a15406217db84f2",
    "substitutions": 2
   },
   {
@@ -18805,8 +18917,8 @@
   {
    "path": "src/health/watch.mjs",
    "from": "src/health/watch.mjs",
-   "sha256": "1523369a8b47d4c315062d9f798be7309058854cc27e27ff3332d3753ec8a975",
-   "source_sha256": "1523369a8b47d4c315062d9f798be7309058854cc27e27ff3332d3753ec8a975",
+   "sha256": "93dc1296c7a04aac88a7eba1e0f85b661695bb1b22fc17d3a3ba23d14bc48bb6",
+   "source_sha256": "93dc1296c7a04aac88a7eba1e0f85b661695bb1b22fc17d3a3ba23d14bc48bb6",
    "substitutions": 0
   },
   {
@@ -18931,8 +19043,8 @@
   {
    "path": "src/http/securityHeaders.mjs",
    "from": "src/http/securityHeaders.mjs",
-   "sha256": "40053112b6e3bd40c3f6cecbf879ac8b982136078dd4fa983d36d3d2d3ccf5e6",
-   "source_sha256": "415deca4f69f95a4e7fc5ed7cce0ce6d0fb675ee97b4946765b69bb9ea6d7e80",
+   "sha256": "b8d5a152fb7c09d5c17f3ff8f27729cc28ce9e42cee4d39e7b24347373470733",
+   "source_sha256": "d4ae4c84f2f9fa8eaf5b8101b787feffe0ea7ab25da669aab4e3728072d74592",
    "substitutions": 1
   },
   {
@@ -19113,8 +19225,8 @@
   {
    "path": "src/mail/send.mjs",
    "from": "src/mail/send.mjs",
-   "sha256": "c49953ce0b33b3161ee75392f375e54b8116343e9dc7add2ce0105931a42485d",
-   "source_sha256": "0a3cbb175531d45fd6ed3e50fe5f0f949d2e7f5bd9807b9a77095baa092b2a2d",
+   "sha256": "995a9dc99f4ebde578887d9effcae17d641555976b396734a94c06375f3b60df",
+   "source_sha256": "d18fcb59dcbd7b794f06213d346aa08f58ef135ec1f9f1ae08d897e5b1a4a396",
    "substitutions": 3
   },
   {
@@ -19939,8 +20051,8 @@
   {
    "path": "src/product/deletion.mjs",
    "from": "src/product/deletion.mjs",
-   "sha256": "62a14bea5023b22356f64c32aff972f29b232eb21b958b3ca8dc96d844a56cdc",
-   "source_sha256": "62a14bea5023b22356f64c32aff972f29b232eb21b958b3ca8dc96d844a56cdc",
+   "sha256": "4c36ec8d4feb9d903312bb5c3ebc2d05b6543995f20a138161c023df918e2f2b",
+   "source_sha256": "4c36ec8d4feb9d903312bb5c3ebc2d05b6543995f20a138161c023df918e2f2b",
    "substitutions": 0
   },
   {
@@ -19974,15 +20086,15 @@
   {
    "path": "src/product/demoSeed.mjs",
    "from": "src/product/demoSeed.mjs",
-   "sha256": "f8cf0d9f186be52e4148415241e68b00b2923886c552f0410ba50ab29b64fa96",
-   "source_sha256": "f8cf0d9f186be52e4148415241e68b00b2923886c552f0410ba50ab29b64fa96",
+   "sha256": "d61e118e7fa3a99b12b236679ef0f4dfe9401ddea94abe34de9c9145cf9dfa10",
+   "source_sha256": "d61e118e7fa3a99b12b236679ef0f4dfe9401ddea94abe34de9c9145cf9dfa10",
    "substitutions": 0
   },
   {
    "path": "src/product/docustay.facts.json",
    "from": "src/product/docustay.facts.json",
-   "sha256": "4ff32374e215e7a7e6dcd41ac4f2bf352cef0c8c4f2814cabb1762d173c38701",
-   "source_sha256": "4ff32374e215e7a7e6dcd41ac4f2bf352cef0c8c4f2814cabb1762d173c38701",
+   "sha256": "5b2a7650d4f8a83ffe3a36608f63ff9310a12340e9d24d4ba45df858e1e10b27",
+   "source_sha256": "5b2a7650d4f8a83ffe3a36608f63ff9310a12340e9d24d4ba45df858e1e10b27",
    "substitutions": 0
   },
   {
@@ -20324,15 +20436,15 @@
   {
    "path": "src/queue/jobPolicy.mjs",
    "from": "src/queue/jobPolicy.mjs",
-   "sha256": "d74a3e7f6d570ba088600aac75ff12076c7b3c1ad21c1dce05fe36c21abd15ac",
-   "source_sha256": "b45fef6aca214cee694908879c44e5e4a438055c6bd3fe66f84f32bacbdb24c9",
+   "sha256": "9a6fbdc2c437f1e46bdf6d5ea7025d38b5ea4f3fc783fc6bf5db8a466db35f87",
+   "source_sha256": "b1bb1a0195e6a1c52ee538f916b2af65d63509f11ffb75aae49c09bb900d3635",
    "substitutions": 3
   },
   {
    "path": "src/queue/outboxWake.mjs",
    "from": "src/queue/outboxWake.mjs",
-   "sha256": "3b77849264ff5a6067f99275f76986fd3b6e2de00f9906ca0de6c2cb60ceaccb",
-   "source_sha256": "3b77849264ff5a6067f99275f76986fd3b6e2de00f9906ca0de6c2cb60ceaccb",
+   "sha256": "b842da55aeaa68d55f793a7b03e5864d6971e416c7c10aadf7cef31d8e600470",
+   "source_sha256": "b842da55aeaa68d55f793a7b03e5864d6971e416c7c10aadf7cef31d8e600470",
    "substitutions": 0
   },
   {
@@ -20359,15 +20471,15 @@
   {
    "path": "src/queue/runner.mjs",
    "from": "src/queue/runner.mjs",
-   "sha256": "2b4cabe6833e11df3d272c8c509371d6a085dab6a22e5b2c3b61b1ca91341c7f",
-   "source_sha256": "2b4cabe6833e11df3d272c8c509371d6a085dab6a22e5b2c3b61b1ca91341c7f",
+   "sha256": "da9ece523001fd338843612144a19cfef4d7d91e2b5ce5cf0acfc4f2a9204940",
+   "source_sha256": "da9ece523001fd338843612144a19cfef4d7d91e2b5ce5cf0acfc4f2a9204940",
    "substitutions": 0
   },
   {
    "path": "src/queue/tasks.mjs",
    "from": "src/queue/tasks.mjs",
-   "sha256": "9a0c8d53967caf43c3ae274fcc0c63579cc729fe54645f692738307b20ade6cb",
-   "source_sha256": "5c167b913106b0450783a08530025eb6243e5fcb35ec317784d8392e3999a46f",
+   "sha256": "e9ca5d8ce8bc10b33b8a0bb4da3d461753d9b1fe717818968ccd6dd162fe2886",
+   "source_sha256": "bcab64b5519823ea75d7c6d127ebe512950d4f53d2515b983f32f1da64de3452",
    "substitutions": 34
   },
   {
@@ -20765,8 +20877,8 @@
   {
    "path": "src/routes/docustay.mjs",
    "from": "src/routes/docustay.mjs",
-   "sha256": "e82f75229865db1861102fa61fa1f9148e4db0a7ad15ece69dc77b58ed6aecb7",
-   "source_sha256": "039016414e43d38aac69d3998e8b391603eb7257c649ad5847767cf2a763ccba",
+   "sha256": "d2cf5b14fb713f971de2e55c85625e15c43b46d71a200c97301481b4e4712326",
+   "source_sha256": "8526757b3cc32103589e830a8e0f891ca9f91aa0aa51674b009d7a73af32ddd8",
    "substitutions": 3
   },
   {
@@ -21031,8 +21143,8 @@
   {
    "path": "src/routes/signup.mjs",
    "from": "src/routes/signup.mjs",
-   "sha256": "f50661795d316bf4a47e29037d8b2c860039e3b58c484b08183f5cda26f44c0c",
-   "source_sha256": "4b832fee49ff56ac704951e01a2d9918b35a34e8d13684d62c4b2d9f6547b8fc",
+   "sha256": "5b2a96fd769a59b1af8c19c95c5d6f837070f0c27f664d352ab043b069949ea5",
+   "source_sha256": "5d53e1eb83b5925fb7adee1a64d723de70664140ed224375b658b4c1b1c1e81a",
    "substitutions": 4
   },
   {
@@ -24893,6 +25005,10 @@
    "substitutions": 1
   },
   {
+   "path": "docustay/web/scripts/copy-lint.mjs",
+   "substitutions": 2
+  },
+  {
    "path": "docustay/web/scripts/depth-gate.mjs",
    "substitutions": 1
   },
@@ -24902,7 +25018,11 @@
   },
   {
    "path": "docustay/web/scripts/host-guard.test.mjs",
-   "substitutions": 2
+   "substitutions": 5
+  },
+  {
+   "path": "docustay/web/scripts/pricing-gate.mjs",
+   "substitutions": 1
   },
   {
    "path": "docustay/web/scripts/project-licence-gate.mjs",
@@ -26461,6 +26581,6 @@
    "substitutions": 1
   }
  ],
- "rewritten_files": 414,
- "substitutions": 1463
+ "rewritten_files": 416,
+ "substitutions": 1469
 }

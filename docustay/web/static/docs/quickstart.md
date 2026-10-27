@@ -39,7 +39,7 @@ curl -X POST https://app.docustay.app/api/v1/documents/send \
 ## 3. Follow it
 
 ```bash
-curl https://app.docustay.app/api/v1/documents/DOCUMENT_ID -H "Authorization: Bearer $DOCUSTAY_API_KEY"
+curl https://app.docustay.app/api/v1/documents/$DOCUSTAY_DOCUMENT_ID -H "Authorization: Bearer $DOCUSTAY_API_KEY"
 ```
 
 `state` moves `sent` → `partially_signed` → `executed` (or `declined`, `expired`, `void`). When it is `executed`, `GET /api/v1/documents/{id}/signed.pdf` returns the sealed copy. The sealed PDF is made a few seconds after the last signature (the document says `signedCopyAvailable: true` once it exists); until then the call answers 404 "the sealed copy is being made", so ask again after a moment, or wait for the `documents.document.executed` webhook.
@@ -86,7 +86,7 @@ npx docustay whoami
 Or send a practice document from a template in one line, with your own address as the signer (a test key emails only you):
 
 ```bash
-npx docustay send --test TEMPLATE_ID --party "signer_1=Alex Rivera <you@example.com>"
+npx docustay send --test $DOCUSTAY_TEMPLATE_ID --party "signer_1=Alex Rivera <you@example.com>"
 ```
 
 ## If a step fails

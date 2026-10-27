@@ -6,8 +6,10 @@
   import { page } from "$app/state";
   import { onMount } from "svelte";
   import { inDemo } from "$lib/pro/plan.svelte.js";
+  import DeletionProgress from "$lib/DeletionProgress.svelte";
   let { wsName = "", show = "both" } = $props();   // "account" (Settings → Account, every member) | "workspace" (Workspace → Data, owners) | "both"
   let st = $state(null), loaded = $state(false), failed = $state(null);
+  let deleting = $state(false);   // 'Delete now' was accepted: the progress screen takes over
   let endedNote = $state(null), openKind = $state(null), understood = $state(false), typed = $state(""), busy = $state(false), problem = $state(null), needSignIn = $state(false);
   async function load() { if (await inDemo()) { st = null; loaded = true; return; } const r = await api("/api/account/deletion"); failed = r.ok ? null : (r.error ?? t("The delete options could not be loaded.")); st = r.ok ? r.json : null; loaded = true;   // R13-D448: a failed read is not "nothing to delete"
     dispatchEvent(new CustomEvent("ds-deletion", { detail: { state: st } })); }
@@ -16,12 +18,13 @@
   $effect(() => { if (!deepLinked && loaded && show !== "account" && st?.isOwner && !st.workspace && page.url.searchParams.get("delete") === "workspace") { deepLinked = true; openKind = "workspace"; queueMicrotask(() => document.getElementById("delete-workspace")?.scrollIntoView({ block: "center" })); } });
   const days = (n) => t("{n, plural, one {# day} other {# days}}", { n });
   function close() { openKind = null; understood = false; typed = ""; problem = null; needSignIn = false; }
-  async function request(kind) {
+  async function request(kind, now = false) {
     busy = true; problem = null; needSignIn = false;
-    const r = await api(kind === "account" ? "/api/account/deletion" : "/api/product/docustay/delete-workspace", { method: "POST", body: { confirm: typed, ...(kind === "workspace" ? { acknowledgePlanLoss: understood } : {}) } });
+    const r = await api(kind === "account" ? "/api/account/deletion" : now ? "/api/product/docustay/delete-workspace/now" : "/api/product/docustay/delete-workspace", { method: "POST", body: { confirm: typed, ...(kind === "workspace" ? { acknowledgePlanLoss: understood } : {}) } });
     busy = false;
     if (!r.ok) { if (r.json?.error?.detail?.code === "reauth_required") needSignIn = true; problem = r.error ?? t("That could not be done."); return; }
     if (kind === "workspace") endedNote = r.json?.planEnded ?? null;
+    if (now) { close(); deleting = true; return; }
     close(); await load();
   }
   async function keep(kind) {
@@ -50,9 +53,11 @@
   <input id="del-{kind}" class="field w-full" bind:value={typed} autocomplete="off" data-testid="delete-{kind}-confirm" />
   {#if problem}<p class="text-sm text-bad" role="alert" data-testid="delete-{kind}-problem">{problem}</p>{/if}
   {#if needSignIn}<button class="btn" onclick={signInAgain} data-testid="delete-{kind}-signin">{t("Sign in again")}</button>{/if}
-  <div class="flex gap-2"><button class="btn primary" disabled={busy || !typed.trim() || (kind === "workspace" && wsName && typed.trim().toLowerCase() !== wsName.trim().toLowerCase()) || (kind === "workspace" && st.plan && st.plan.kind !== "none" && !understood)} onclick={() => request(kind)} data-testid="delete-{kind}-go">{busy ? t("Working…") : t("Schedule deletion")}</button><button class="btn" onclick={close} data-testid="delete-{kind}-cancel">{t("Cancel")}</button></div>
+  <div class="flex gap-2">{#if !(kind === "workspace" && st.workspace)}<button class="btn primary" disabled={busy || !typed.trim() || (kind === "workspace" && wsName && typed.trim().toLowerCase() !== wsName.trim().toLowerCase()) || (kind === "workspace" && st.plan && st.plan.kind !== "none" && !understood)} onclick={() => request(kind)} data-testid="delete-{kind}-go">{busy ? t("Working…") : t("Schedule deletion")}</button>{/if}{#if kind === "workspace"}<button class="btn" disabled={busy || !typed.trim() || (wsName && typed.trim().toLowerCase() !== wsName.trim().toLowerCase()) || (st.plan && st.plan.kind !== "none" && !understood)} onclick={() => request(kind, true)} data-testid="delete-workspace-now">{t("Delete now")}</button>{/if}<button class="btn" onclick={close} data-testid="delete-{kind}-cancel">{t("Cancel")}</button></div>
 {/snippet}
-{#if loaded && st}
+{#if deleting}
+<DeletionProgress name={wsName} />
+{:else if loaded && st}
 {#if show !== "workspace"}
 <div class="space-y-3 rounded-xl border border-bad p-4" data-testid="delete-account">
   <h2 class="text-lg font-semibold">{t("Delete my account")}</h2>
@@ -80,9 +85,10 @@
     {#if problem}<p class="text-sm text-bad" role="alert">{problem}</p>{/if}
     {#if endedNote}<p class="notice warn" data-testid="delete-plan-ended">{endedNote.kind === "lifetime" ? t("Your Lifetime plan ended today. It cannot be recovered.") : endedNote.daysLost > 0 ? t("Your {plan} plan was cancelled today. {n, plural, one {# paid day was lost.} other {# paid days were lost.}}", { plan: endedNote.planName, n: endedNote.daysLost }) : t("Your {plan} plan was cancelled today.", { plan: endedNote.planName })}</p>{/if}
     <p class="text-sm text-mute" data-testid="delete-keep-free">{t("If you press “Keep this workspace”, it comes back on the Free plan. A paid plan that was cancelled for this deletion is not restored; you can choose a plan again in Billing.")}</p>
-    <button class="btn primary" disabled={busy} onclick={() => keep("workspace")} data-testid="delete-workspace-keep">{t("Keep this workspace")}</button>
+    <div class="flex flex-wrap gap-2"><button class="btn primary" disabled={busy} onclick={() => keep("workspace")} data-testid="delete-workspace-keep">{t("Keep this workspace")}</button>{#if openKind !== "workspace"}<button class="btn" onclick={() => { close(); openKind = "workspace"; }} data-testid="delete-workspace-now-open">{t("Delete now…")}</button>{/if}</div>
+    {#if openKind === "workspace"}{@render confirmBox("workspace", t("Type the workspace name to delete it now") + (wsName ? ` (${wsName})` : ""))}{/if}
   {:else}
-    <p class="text-sm text-mute">{t("This removes the whole workspace for good: its documents and signed copies, templates, people, settings and sign-in sessions. Download everything first. Only an owner can do this. A paid plan ends at once (you are told what is lost before you confirm). Every owner is emailed, and you have {days} to change your mind. If you do, the workspace comes back on the Free plan.", { days: days(st.graceDays.workspace) })}</p>
+    <p class="text-sm text-mute">{t("This removes the whole workspace for good: its documents and signed copies, templates, people, settings and sign-in sessions. Download everything first. Only an owner can do this. A paid plan ends at once (you are told what is lost before you confirm). Every owner is emailed, and you have {days} to change your mind, or you can delete it right away. If you keep it, the workspace comes back on the Free plan.", { days: days(st.graceDays.workspace) })}</p>
     {@render planNotice(st.plan)}
     {#if openKind !== "workspace"}<button class="btn" onclick={() => { close(); openKind = "workspace"; }} data-testid="delete-workspace-open">{t("Delete this workspace…")}</button>
     {:else}{@render confirmBox("workspace", t("Type the workspace name to confirm") + (wsName ? ` (${wsName})` : ""))}{/if}

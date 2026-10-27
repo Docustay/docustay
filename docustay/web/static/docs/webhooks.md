@@ -124,7 +124,7 @@ Two more come from the workspace rather than a document: `documents.template.fie
 4. Queue the work (fetch the document, save the signed copy) and answer `200` at once. Do slow work after you have answered.
 
 ```bash
-curl https://docustay.app/api/v1/documents/DOCUMENT_ID/signed.pdf \
+curl https://docustay.app/api/v1/documents/$DOCUSTAY_DOCUMENT_ID/signed.pdf \
   -H "Authorization: Bearer $DOCUSTAY_API_KEY" -o signed.pdf
 ```
 

@@ -259,6 +259,7 @@ export async function createInstance(tx, {
   if (typeof title !== "string" || !title.trim()) {
     throw invalid("an instance needs a non-blank title — a document listed under a raw id is unusable (F12)");
   }
+  if (title.trim().length > 250) throw invalid("A document title can be up to 250 letters. Shorten it and try again.", { field: "title" });   // BRK-001: a 10,000-letter title was accepted silently
   assertSubset("assigned_to", assignedTo, ASSIGNEES);
   if (customValues !== null && customValues !== undefined) {
     if (typeof customValues !== "object" || Array.isArray(customValues) || Object.keys(customValues).length > 100

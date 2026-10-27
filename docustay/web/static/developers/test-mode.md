@@ -37,7 +37,7 @@ The person you named is never emailed. Every page of the document carries a TEST
 curl -X POST https://app.docustay.app/api/v1/documents/send \
   -H "Authorization: Bearer $DOCUSTAY_TEST_KEY" \
   -H "Idempotency-Key: $(uuidgen)" -H "Content-Type: application/json" \
-  -d '{ "templateId": "TEMPLATE_ID", "parties": [{ "seat": "signer_1", "name": "Practice Person", "email": "someone@example.com" }] }'
+  -d '{ "templateId": "'"$DOCUSTAY_TEMPLATE_ID"'", "parties": [{ "seat": "signer_1", "name": "Practice Person", "email": "someone@example.com" }] }'
 ```
 
 ## What is different, line by line.
@@ -57,7 +57,7 @@ Use test mode to check your whole flow before anything real is sent.
 POST /api/v1/documents/{id}/test-sign signs one seat with sample answers through the same code a person's signature uses: consent, signing order, the audit trail and your webhooks all happen.
 
 ```
-curl -X POST https://app.docustay.app/api/v1/documents/DOCUMENT_ID/test-sign \
+curl -X POST https://app.docustay.app/api/v1/documents/$DOCUSTAY_DOCUMENT_ID/test-sign \
   -H "Authorization: Bearer $DOCUSTAY_TEST_KEY" \
   -H "Idempotency-Key: $(uuidgen)" -H "Content-Type: application/json" \
   -d '{ "seat": "signer_1" }'

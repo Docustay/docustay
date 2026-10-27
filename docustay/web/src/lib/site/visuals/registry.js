@@ -12,6 +12,13 @@ export const VISUALS = {
   "f-test": { still: "test-paper", with: "test-toggle", area: "home", alt: "A paper stamped TEST next to a test mode switch that is on", line: "Test mode: nothing reaches a real inbox" },
   "f-agent": { ui: "assistant-card", area: "home", alt: "An assistant drafting a document and waiting for a person to approve the send", line: "An assistant drafts. A person approves the send." },
   "f-wl": { ui: "whitelabel", area: "home", alt: "The signing page with a slot for your logo and four colour swatches", line: "Your logo and your colours" },
+  "f-sign": { ui: "signer-card", area: "home", alt: "The signing page: a document, a Sign here box, and the choices to draw, type or decline", line: "Open the link, sign, done. No account." },
+  "f-tmpl": { ui: "tag-card", area: "home", alt: "A text tag in a document and the signature field it becomes", line: "A field is a line of text, or press Find fields" },
+  "f-team": { ui: "roles-card", area: "home", alt: "Three roles: Owner, Admin and Member", line: "Owner, Admin and Member" },
+  "x-proof": { ui: "cert-card", area: "home", alt: "A certificate of completion with the seal intact and a SHA-256 fingerprint", line: "Every sealed copy carries its proof" },
+  "x-next": { ui: "next-card", area: "home", alt: "A short list of ideas being considered for later versions", line: "What we are looking at for later. Nothing is promised." },
+  "d-pay": { ui: "payments-api", area: "developers", alt: "A request for the Stripe status and a refund request", line: "Status, list and refund over the API" },
+  "h-pay": { ui: "stripe-env", area: "selfhost", alt: "Three Stripe settings for a self-hosted server", line: "Your keys, your account" },
   // developers
   "d-hub": { ui: "dev-hub", area: "developers", alt: "A terminal command that sends a document and the 201 answer", line: "One call in, one document out" },
   "d-api": { ui: "api-request", area: "developers", alt: "A POST request to create a document and its 201 Created answer with a document id", line: "A request and the 201 answer" },
@@ -60,12 +67,12 @@ export const VISUALS = {
 const RULES = [
   [/^\/$/, "LIVE"],
   [/^\/(docs|legal|about|help|guides|tools|demo|404)(\/|$)/, null], [/^\/templates\/[^/]+$/, null], [/^\/trust\/.+/, null],
-  [/^\/features$/, "f-hub"], [/^\/features\/how-it-works/, "f-how"], [/^\/features\/scribe/, "f-scribe"], [/^\/features\/payments/, "f-pay"], [/^\/features\/proof/, "f-proof"], [/^\/features\/embedded-signing/, "f-embed"], [/^\/features\/test-mode/, "f-test"], [/^\/features\/agent-ready/, "f-agent"], [/^\/features\/white-label/, "f-wl"],
-  [/^\/developers$/, "d-hub"], [/^\/developers\/api/, "d-api"], [/^\/developers\/sdks/, "d-sdks"], [/^\/developers\/webhooks/, "d-hooks"], [/^\/developers\/cli/, "d-cli"], [/^\/developers\/keys-and-security/, "d-keys"], [/^\/developers\/test-mode/, "d-test"], [/^\/developers\/embedding/, "d-embed"], [/^\/developers\/agents/, "d-agents"], [/^\/developers\/plays/, "d-plays"],
+  [/^\/features$/, "f-hub"], [/^\/features\/how-it-works/, "f-how"], [/^\/features\/scribe/, "f-scribe"], [/^\/features\/payments/, "f-pay"], [/^\/features\/signing/, "f-sign"], [/^\/features\/templates-and-sending/, "f-tmpl"], [/^\/features\/team-and-roles/, "f-team"], [/^\/features\/proof/, "f-proof"], [/^\/features\/embedded-signing/, "f-embed"], [/^\/features\/test-mode/, "f-test"], [/^\/features\/agent-ready/, "f-agent"], [/^\/features\/white-label/, "f-wl"],
+  [/^\/developers$/, "d-hub"], [/^\/developers\/api/, "d-api"], [/^\/developers\/sdks/, "d-sdks"], [/^\/developers\/webhooks/, "d-hooks"], [/^\/developers\/cli/, "d-cli"], [/^\/developers\/keys-and-security/, "d-keys"], [/^\/developers\/test-mode/, "d-test"], [/^\/developers\/embedding/, "d-embed"], [/^\/developers\/agents/, "d-agents"], [/^\/developers\/plays/, "d-plays"], [/^\/developers\/payments/, "d-pay"],
   [/^\/sign-pdf\/?$/, "s-hub"], [/^\/sign-pdf\//, "s-lang"],
   [/^\/free-templates/, "t-hub"], [/^\/use-cases\/?$/, "t-all"],
   [/^\/use-cases\/contracts/, "c-contracts"], [/^\/use-cases\/ndas/, "c-ndas"], [/^\/use-cases\/waivers-and-consent/, "c-waivers"], [/^\/use-cases\/hr-and-onboarding/, "c-hr"], [/^\/use-cases\/real-estate/, "c-lease"], [/^\/use-cases\/education/, "c-edu"], [/^\/use-cases\/agencies/, "c-agency"],
-  [/^\/self-host\/?$/, "h-hub"], [/^\/self-host\/requirements/, "h-req"], [/^\/self-host\/backups-and-upgrades/, "h-backup"], [/^\/self-host\/sso-and-hardening/, "h-sso"],
+  [/^\/self-host\/?$/, "h-hub"], [/^\/self-host\/requirements/, "h-req"], [/^\/self-host\/payments/, "h-pay"], [/^\/self-host\/backups-and-upgrades/, "h-backup"], [/^\/self-host\/sso-and-hardening/, "h-sso"],
   [/^\/open-source/, "l-agpl"], [/^\/licensing/, "l-pro"], [/^\/pricing/, "p-hub"], [/^\/trust\/?$/, "tr-hub"], [/^\/verify/, "tr-verify"],
   [/^\/contact/, "co-contact"], [/^\/status/, "co-status"], [/^\/changelog/, "co-changelog"],
 ];
@@ -76,9 +83,11 @@ export const sectionOf = (path) => (path.split("/")[1] || "home") === "use-cases
 export const PREVIEW = {
   "/developers": "d-api", "/developers/api": "d-api", "/developers/webhooks": "d-hooks", "/developers/embedding": "f-embed", "/developers/test-mode": "f-test", "/developers/agents": "f-agent", "/developers/cli": "d-cli", "/developers/keys-and-security": "d-keys",
   "/docs": "x-docs", "/docs/api-reference": "x-docs", "/changelog": "x-changelog", "/sign-pdf": "s-hub", "/openapi.json": "x-openapi",
-  "/features": "f-hub", "/features/scribe": "f-scribe", "/use-cases": "t-all", "/whats-next": "f-how",
+  "/features": "f-hub", "/features/how-it-works": "f-how", "/features/signing": "f-sign", "/features/templates-and-sending": "f-tmpl", "/features/proof": "x-proof",
+  "/features/payments": "f-pay", "/features/scribe": "f-scribe", "/features/agent-ready": "f-agent", "/features/white-label": "f-wl", "/features/embedded-signing": "f-embed", "/features/team-and-roles": "f-team", "/features/test-mode": "f-test",
+  "/use-cases": "t-all", "/whats-next": "x-next", "/developers/payments": "d-pay", "/self-host/payments": "h-pay",
   "/free-templates": "t-all", "/tools/sign-pdf": "t-all", "/tools/fill-pdf": "t-all",
   "/use-cases/contracts": "c-contracts", "/use-cases/ndas": "c-ndas", "/use-cases/waivers-and-consent": "c-waivers", "/use-cases/hr-and-onboarding": "c-hr", "/use-cases/real-estate": "c-lease", "/use-cases/education": "c-edu", "/use-cases/agencies": "c-agency",
   "/self-host": "h-cmds", "/self-host/requirements": "h-hub", "/self-host/backups-and-upgrades": "h-backup", "/self-host/sso-and-hardening": "h-sso",
-  "/licensing": "l-agpl", "/licensing#pro": "l-pro", "/licensing#commercial": "l-commercial", "/open-source": "l-agpl",
+  "/licensing": "p-hub", "/licensing#pro": "l-pro", "/licensing#commercial": "l-commercial", "/open-source": "l-agpl",
 };

@@ -116,7 +116,7 @@
     {#if sigOpen}
       <div class="sigp" role="region" aria-label="Make your signature">
         <SignatureCapture bind:ink onchange={(r) => (draftSig = r)} id="pdf-sig" />
-        <div class="row"><label class="nm">Your name, for initials<input type="text" bind:value={sigName} autocomplete="name" placeholder="Jane Doe" /></label>
+        <div class="row"><label class="nm">Your name, for initials<input type="text" bind:value={sigName} autocomplete="name" placeholder="Full name" /></label>
           <button type="button" class="d-btn main" onclick={useSig} disabled={!draftSig} data-testid="use-signature">Use this signature</button>
           {#if sigImg}<button type="button" class="d-btn alt" onclick={() => (sigOpen = false)}>Close</button>{/if}</div>
       </div>

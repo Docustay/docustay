@@ -28,7 +28,7 @@ from docustay import Docustay
 docustay = Docustay(os.environ["DOCUSTAY_API_KEY"])
 doc = docustay.send_document(
     os.environ["DOCUSTAY_TEMPLATE_ID"],
-    [{"seat": "signer_1", "name": "Pat Example", "email": "pat@example.com"}],
+    [{"seat": "signer_1", "name": "Rosa Alvarez", "email": "rosa@example.com"}],
 )
 print(doc["id"], doc["state"])
 ```

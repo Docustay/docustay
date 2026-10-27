@@ -144,9 +144,9 @@
   "height": 800,
   "source": "src/lib/site/3d/objects.js",
   "bytes": {
-   "avif": 43995,
-   "webp": 86672,
-   "png": 389628
+   "avif": 44012,
+   "webp": 85980,
+   "png": 389452
   }
  },
  "seal": {

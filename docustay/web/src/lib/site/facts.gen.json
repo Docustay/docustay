@@ -7,7 +7,8 @@
   "hnTitle": "Show HN: Docustay, an open-source e-signature API with one flat price and no seats",
   "about": "The open-source e-signature API. One flat price for every user, payments built in, self-hostable.",
   "support": "Open source and self-hostable. Pro is $35 a month for your whole team: no per-seat fees, unlimited people and documents. Signers can pay while they sign, straight into your own Stripe account, and Pro adds no fee.",
-  "payAsYouGoLine": "Pay as you go is $5 per person if you would rather pay per person."
+  "payAsYouGoLine": "Pay as you go is $5 per person if you would rather pay per person.",
+  "pricingIntro": "Start free. Pay as you go is $5 per person a month if you only send a few. Pro is $35 a month for your whole team, with no seats. Every price is on this page, and a monthly budget means the bill never surprises you."
  },
  "goVersion": "1.23",
  "subProcessors": [

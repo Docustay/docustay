@@ -98,7 +98,7 @@ Every setting you can give a self-hosted Docustay, as environment variables in `
 
 ## Advanced settings
 
-The code also reads the variables below. They tune limits and connections you will rarely need to change. Another 64 variables (plan prices and limits, and the hosted service's own accounts for Stripe Connect, Firebase, Cloudflare, domains and the like) belong to the hosted service only; a self-hosted install ignores them.
+The code also reads the variables below. They tune limits and connections you will rarely need to change. Another 65 variables (plan prices and limits, and the hosted service's own accounts for Stripe Connect, Firebase, Cloudflare, domains and the like) belong to the hosted service only; a self-hosted install ignores them.
 
 - `ANTHROPIC_WORKSPACE_ID`
 - `DOCUMENT_SIGNING_CERT_P12`
@@ -166,6 +166,7 @@ The code also reads the variables below. They tune limits and connections you wi
 - `KEYSTONE_LIMITER_POOL_MAX`
 - `KEYSTONE_MAIL_ALERT_TO`
 - `KEYSTONE_MAIL_CAPTURE_SMTP`
+- `KEYSTONE_MAIL_PAUSED`
 - `KEYSTONE_OCR_LANG_PATH`
 - `KEYSTONE_PG_IDLE_TX_MS`
 - `KEYSTONE_PG_LOCK_WAIT_MS`
@@ -180,6 +181,7 @@ The code also reads the variables below. They tune limits and connections you wi
 - `KEYSTONE_UNSUBSCRIBE_SECRET`
 - `KEYSTONE_VERSION`
 - `KEYSTONE_WORKER_DATABASE_URL`
+- `KEYSTONE_WORKER_FAST_SLOTS`
 - `KEYSTONE_WORKER_LOG`
 - `KEYSTONE_WORKER_RESERVED_SLOTS`
 - `MICROSOFT_GRAPH_OAUTH_CLIENT_ID`

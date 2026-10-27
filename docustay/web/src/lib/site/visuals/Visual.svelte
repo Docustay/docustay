@@ -2,59 +2,46 @@
   // The real-UI visuals (V3): small things built from real text and real numbers, never an image. Used as the hero of a page and as the preview in the mega menu (same component, `size`).
   // Nothing here animates. `id` picks the visual; `area` sets the one accent. Sizes: "menu" (340 x 300) and "hero" (the same layout, scaled up).
   import { AREA } from "../3d/palette.js"; import ExplodedScroll from "./ExplodedScroll.svelte";
-  import { SEND_RESPONSE } from "../home-code.js";
+  import { sendRequestText, sendAnswerText, CLI_SEND, SELFHOST_COMMANDS, WEBHOOK_EVENTS, MCP_SAMPLE_TOOLS, MCP_NOTE, mcpHead, TAG_LINE, paymentOpsText, STRIPE_SETTINGS, ROLE_ROWS, NEXT_ROWS, CERT_ROWS, changelogRows, timelineTitles, operationsLine } from "./previews.js";
   import facts from "../facts.gen.json";
   let { id, area = "home", size = "menu" } = $props();
   const ac = $derived(AREA[area]?.accent ?? AREA.home.accent);
   const soft = $derived(AREA[area]?.soft ?? AREA.home.soft);
-  const ops = facts.operations ?? 77;
+  const ops = facts.operations;
   const STEPS = ["Create", "Send", "Sign", "Pay", "Prove", "Automate"];
   const LANGS = ["JavaScript", "Python", "Go", "PHP", "C#"];
   const FLOW = [["Trigger", "A document from this template is signed"], ["Wait", "2 days"], ["Check", "Answer is yes"], ["Send", "Next document"]];
 </script>
 <div class="v {size}" style="--ac:{ac};--soft:{soft}" data-visual={id}>
   {#if id === "api-request"}
-    <div class="vz-card vz-code"><p class="vz-cap">REQUEST</p><pre><b>POST</b> /api/v1/documents
-Authorization: Bearer dsk_test_…
-Idempotency-Key: 4d1e…
-
-{`{ "template_id": "TEMPLATE_ID",
-  "parties": [{ "seat": "signer_1",
-    "name": "Pat Example",
-    "email": "pat@example.com" }] }`}</pre></div>
-    <div class="vz-card vz-code vz-ok"><p class="vz-cap"><i class="vz-ok-dot"></i>201 CREATED</p><pre>{SEND_RESPONSE.replace("// 201 Created\n", "")}</pre></div>
+    <div class="vz-card vz-code"><p class="vz-cap">REQUEST</p><pre>{sendRequestText()}</pre></div>
+    <div class="vz-card vz-code vz-ok"><p class="vz-cap"><i class="vz-ok-dot"></i>201 CREATED</p><pre>{sendAnswerText()}</pre></div>
   {:else if id === "cli-terminal"}
     <div class="vz-term"><div class="vz-tb"><i></i><i></i><i></i><span>terminal</span></div><pre>$ npx docustay login
-$ npx docustay send --test TEMPLATE_ID \
-    --party signer_1="Pat Example &lt;pat@example.com&gt;"
+$ {CLI_SEND}
 
-<span class="vz-dim">{SEND_RESPONSE.replace("// 201 Created\n", "")}</span>
+<span class="vz-dim">{sendAnswerText()}</span>
 $ npx docustay listen
 <span class="vz-dim">waiting for events…</span></pre></div>
   {:else if id === "commands-terminal"}
-    <div class="vz-term"><div class="vz-tb"><i></i><i></i><i></i><span>docustay/</span></div><pre>$ cd docustay
-$ ./init.sh
-<span class="vz-dim">setup token printed</span>
-$ docker compose up -d
-<span class="vz-dim">open http://localhost:8080/setup</span></pre></div>
+    <div class="vz-term"><div class="vz-tb"><i></i><i></i><i></i><span>terminal</span></div><pre>{#each SELFHOST_COMMANDS as [k, t]}{#if k === "dim"}<span class="vz-dim">{t}</span>{:else}{k} {t}{/if}
+{/each}</pre></div>
   {:else if id === "events-log"}
     <div class="vz-card vz-code"><p class="vz-cap">EVENT LOG</p><pre><span class="vz-dim">POST https://your.app/hooks/docustay</span>
-documents.document.sent      <b class="vz-g">200 OK</b>
-documents.document.opened    <b class="vz-g">200 OK</b>
-documents.document.signed    <b class="vz-g">200 OK</b>
-documents.document.executed  <b class="vz-g">200 OK</b></pre></div>
+{#each WEBHOOK_EVENTS as e}{e.padEnd(28)}<b class="vz-g">200 OK</b>
+{/each}</pre></div>
   {:else if id === "docs-thumb"}
     <div class="vz-card vz-docs"><div class="vz-side"><i class="vz-on"></i><i></i><i></i><i></i><i></i><i></i></div><div class="vz-art"><p class="vz-cap">QUICKSTART</p><h5>Send your first document</h5><i class="vz-l vz-w9"></i><i class="vz-l vz-w8"></i><i class="vz-l vz-w6"></i><pre>$ npm install ./sdk/js</pre><i class="vz-l vz-w9"></i><i class="vz-l vz-w7"></i></div></div>
   {:else if id === "changelog-list"}
-    <div class="vz-card vz-list"><p class="vz-cap">CHANGELOG</p>{#each ["Fourteen languages", "Payments inside a document", "A new look and a board for your documents", "Developers"] as t, i}<div class="vz-row"><span class="vz-mono">OCT 2026</span><span>{t}</span></div>{/each}</div>
+    <div class="vz-card vz-list"><p class="vz-cap">CHANGELOG</p>{#each changelogRows(4) as [d, t]}<div class="vz-row"><span class="vz-mono">{d}</span><span>{t}</span></div>{/each}</div>
   {:else if id === "signpdf-langs"}
-    <div class="vz-card"><div class="vz-signed"><p class="vz-cap">SIGNED</p><i class="vz-l vz-w9"></i><i class="vz-l vz-w8"></i><i class="vz-l vz-w6"></i><p class="vz-sig">Pat Lee</p></div><div class="vz-chips">{#each LANGS as l}<span>{l}</span>{/each}</div></div>
+    <div class="vz-card"><div class="vz-signed"><p class="vz-cap">SIGNED</p><i class="vz-l vz-w9"></i><i class="vz-l vz-w8"></i><i class="vz-l vz-w6"></i><p class="vz-sig">Signed</p></div><div class="vz-chips">{#each LANGS as l}<span>{l}</span>{/each}</div></div>
   {:else if id === "openapi-json"}
     <div class="vz-card vz-code"><p class="vz-cap">openapi.json</p><pre>{`{ "openapi": "3.1.0",
   "info": { "title": "Docustay API" },
   "paths": { … },`}
   <b>"operations": {ops}</b>
-{`}`}</pre><p class="vz-big">{ops} operations</p></div>
+{`}`}</pre><p class="vz-big">{operationsLine()}</p></div>
   {:else if id === "track-steps"}
     <div class="vz-track">{#each STEPS as s, i}<div class="vz-st"><span class="vz-dot">{i + 1}</span><b>{s}</b></div>{/each}<i class="vz-rail"></i></div>
   {:else if id === "sentence-page"}
@@ -73,27 +60,41 @@ documents.document.executed  <b class="vz-g">200 OK</b></pre></div>
 sign.addEventListener(
   "completed", done)`}</pre><div class="vz-sheet"><p class="vz-cap">SIGNING</p><span class="vz-fld">Sign here</span></div></div></div>
   {:else if id === "assistant-card"}
-    <div class="vz-card vz-asst"><p class="vz-cap">ASSISTANT</p><p class="vz-me">Draft the NDA for Pat and put it in the queue.</p><p class="vz-bot">Drafted. It is waiting for a person to look at it.</p><span class="vz-pill">A person approves the send</span></div>
+    <div class="vz-card vz-asst"><p class="vz-cap">ASSISTANT</p><p class="vz-me">Draft the NDA for the new supplier and put it in the queue.</p><p class="vz-bot">Drafted. It is waiting for a person to look at it.</p><span class="vz-pill">A person approves the send</span></div>
   {:else if id === "mcp-tools"}
-    <div class="vz-card vz-list"><p class="vz-cap">MCP SERVER · 39 TOOLS</p>{#each ["list_documents", "get_document", "create_draft", "list_templates", "get_audit_log"] as t}<div class="vz-row"><span class="vz-mono">{t}</span></div>{/each}<p class="vz-sm">It cannot send or refund.</p></div>
+    <div class="vz-card vz-list"><p class="vz-cap">{mcpHead()}</p>{#each MCP_SAMPLE_TOOLS as t}<div class="vz-row"><span class="vz-mono">{t}</span></div>{/each}<p class="vz-sm">{MCP_NOTE}</p></div>
   {:else if id === "whitelabel"}
     <div class="vz-card vz-wl"><div class="vz-logoslot">Your logo</div><b>Please sign your agreement</b><i class="vz-l vz-w9"></i><i class="vz-l vz-w7"></i><div class="vz-sw"><i style="background:#1f6feb"></i><i style="background:#0f9d58"></i><i style="background:#e0a23a"></i><i style="background:#c2410c"></i></div><span class="vz-btn">Finish and sign</span></div>
   {:else if id === "plays-fan"}
     <div class="vz-fan">{#each ["Onboarding", "Rental", "Waiver"] as t, i}<div class="vz-pc vz-c{i}"><p class="vz-cap">PLAYBOOK</p><b>{t}</b><i class="vz-l vz-w9"></i><i class="vz-l vz-w6"></i></div>{/each}</div>
   {:else if id === "dev-hub"}
-    <div class="vz-card vz-code"><p class="vz-cap">SEND</p><pre><b>$</b> npx docustay send --test TEMPLATE_ID</pre></div><div class="vz-card vz-code vz-ok"><p class="vz-cap"><i class="vz-ok-dot"></i>201 CREATED</p><pre>{SEND_RESPONSE.replace("// 201 Created\n", "")}</pre></div>
+    <div class="vz-card vz-code"><p class="vz-cap">SEND</p><pre><b>$</b> {CLI_SEND}</pre></div><div class="vz-card vz-code vz-ok"><p class="vz-cap"><i class="vz-ok-dot"></i>201 CREATED</p><pre>{sendAnswerText()}</pre></div>
   {:else if id === "quick-steps"}
     <div class="vz-card vz-list"><p class="vz-cap">QUICKSTART</p>{#each ["Make a test key", "Send a document", "Open the email, sign", "Read the signed copy"] as t, i}<div class="vz-row"><span class="vz-mono">{i + 1}</span><span>{t}</span></div>{/each}</div>
   {:else if id === "status-pulse"}
     <div class="vz-card vz-pulse"><p class="vz-cap">STATUS</p><svg viewBox="0 0 300 80" aria-hidden="true"><path d="M0 40 H90 L105 12 L125 68 L140 40 H300" fill="none" stroke="var(--ac)" stroke-width="3" stroke-linejoin="round" /></svg><p class="vz-sm">Live from the status page</p></div>
   {:else if id === "timeline"}
-    <div class="vz-card vz-list vz-tl"><p class="vz-cap">CHANGELOG</p>{#each ["Fourteen languages", "Payments inside a document", "A new look", "Developers", "Security"] as t}<div class="vz-row"><i class="vz-dot2"></i><span>{t}</span></div>{/each}</div>
+    <div class="vz-card vz-list vz-tl"><p class="vz-cap">CHANGELOG</p>{#each timelineTitles(5) as t}<div class="vz-row"><i class="vz-dot2"></i><span>{t}</span></div>{/each}</div>
   {:else if id === "req-table"}
     <div class="vz-card"><p class="vz-cap">REQUIREMENTS</p><table><tbody><tr><th>Containers</th><td>6</td></tr><tr><th>Memory to run</th><td>about 1 GiB</td></tr><tr><th>Memory to build</th><td>more than 3.8 GB</td></tr><tr><th>Database</th><td>PostgreSQL 16</td></tr><tr><th>Needs</th><td>Docker and Compose</td></tr></tbody></table></div>
   {:else if id === "all-templates-grid"}
     <div class="vz-grid">{#each ["nda", "lease", "offer-letter", "contractor"] as n}<img src={`/screens/doc-${n}.png`} alt="" width="120" height="156" loading="lazy" />{/each}<p class="vz-big">More than 50</p></div>
   {:else if id === "docs-stack"}
     <div class="vz-grid">{#each ["nda", "lease", "offer-letter", "contractor"] as n, i}<img class="vz-st{i}" src={`/screens/doc-${n}.png`} alt="" width="120" height="156" loading="lazy" />{/each}</div>
+  {:else if id === "signer-card"}
+    <div class="vz-card vz-sign"><p class="vz-cap">SIGNING PAGE</p><b>Services agreement</b><i class="vz-l vz-w9"></i><i class="vz-l vz-w6"></i><span class="vz-fld">Sign here</span><div class="vz-chips"><span>Draw</span><span>Type</span><span>Decline</span></div><p class="vz-sm">No account. Any device.</p></div>
+  {:else if id === "tag-card"}
+    <div class="vz-card vz-code"><p class="vz-cap">TEXT TAG</p><pre>{TAG_LINE}</pre></div><div class="vz-card"><p class="vz-cap">BECOMES A FIELD</p><span class="vz-fld">Buyer signature</span><p class="vz-sm">Or press Find fields and accept what Docustay finds.</p></div>
+  {:else if id === "cert-card"}
+    <div class="vz-card vz-list"><p class="vz-cap">CERTIFICATE OF COMPLETION</p>{#each CERT_ROWS as [k, t]}<div class="vz-row"><span class="vz-mono">{k}</span><span>{t}</span></div>{/each}</div>
+  {:else if id === "roles-card"}
+    <div class="vz-card vz-list"><p class="vz-cap">ROLES</p>{#each ROLE_ROWS as [k, t]}<div class="vz-row"><span class="vz-mono">{k}</span><span>{t}</span></div>{/each}</div>
+  {:else if id === "payments-api"}
+    <div class="vz-card vz-code"><p class="vz-cap">PAYMENTS API</p><pre>{paymentOpsText()}</pre></div>
+  {:else if id === "stripe-env"}
+    <div class="vz-card vz-list"><p class="vz-cap">YOUR STRIPE KEYS</p>{#each STRIPE_SETTINGS as [k, t]}<div class="vz-row"><span class="vz-mono vz-wide">{k}</span></div><p class="vz-sm vz-tight">{t}</p>{/each}</div>
+  {:else if id === "next-card"}
+    <div class="vz-card vz-list"><p class="vz-cap">BEING CONSIDERED</p>{#each NEXT_ROWS as t}<div class="vz-row"><span>{t}</span></div>{/each}<p class="vz-sm">Nothing here is promised or dated.</p></div>
   {:else if id === "test-toggle"}
     <div class="vz-card"><p class="vz-cap">TEST MODE</p><div class="vz-tog"><i></i><span>On</span></div><p class="vz-sm">Nothing reaches a real inbox. Documents are marked TEST.</p></div>
   {/if}
@@ -124,5 +125,6 @@ sign.addEventListener(
   .vz-pulse svg { width: 100%; height: 70px; display: block; } table { width: 100%; border-collapse: collapse; } th { text-align: left; font: 500 12px var(--f-ui); color: var(--tx-2); padding: 8px 0; border-top: 1px solid var(--hairline); } td { text-align: right; font: 600 13px var(--f-mono, monospace); padding: 8px 0; border-top: 1px solid var(--hairline); }
   .vz-tl .vz-dot2 { width: 9px; height: 9px; border-radius: 50%; background: var(--ac); flex: none; transform: translateY(2px); }
   .vz-grid { position: relative; display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; } .vz-grid img { width: 100%; height: auto; border-radius: 6px; box-shadow: 0 12px 24px -14px #000; } .vz-grid .vz-big { position: absolute; right: 0; bottom: -6px; left: 0; text-align: center; margin: 0; text-shadow: 0 2px 12px #000; background: linear-gradient(transparent, #ffffff); padding-top: 22px; }
+  .vz-wide { min-width: 0; font-size: 10.5px; word-break: break-all; } .vz-tight { margin: -2px 0 4px; } .vz-sign b { display: block; font: 650 14px var(--f-ui); margin-bottom: 4px; }
   .vz-tog { display: flex; align-items: center; gap: 12px; margin: 6px 0; } .vz-tog i { position: relative; width: 52px; height: 28px; border-radius: 999px; background: var(--ac); } .vz-tog i::after { content: ""; position: absolute; right: 3px; top: 3px; width: 22px; height: 22px; border-radius: 50%; background: #fff; } .vz-tog span { font: 600 14px var(--f-ui); }
 </style>

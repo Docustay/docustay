@@ -19,7 +19,7 @@ kw = {"base_url": os.environ["DOCUSTAY_URL"]} if os.environ.get("DOCUSTAY_URL") 
 docustay = Docustay(os.environ["DOCUSTAY_API_KEY"], **kw)
 doc = docustay.send_document(
     os.environ["DOCUSTAY_TEMPLATE_ID"],
-    [{"seat": "signer_1", "name": "Pat Example", "email": "pat@example.com"}],
+    [{"seat": "signer_1", "name": "Rosa Alvarez", "email": "rosa@example.com"}],
 )
 print(doc["id"], doc["state"])
 ```

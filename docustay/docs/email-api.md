@@ -16,7 +16,7 @@ Add an `email` object to a send or a draft:
 import { Docustay } from "@docustay2026/sdk";
 const docustay = new Docustay(process.env.DOCUSTAY_API_KEY);
 const templateId = process.env.DOCUSTAY_TEMPLATE_ID;   // one of your templates: GET /api/v1/documents/templates lists their ids
-const parties = [{ seat: "signer_1", name: "Pat Example", email: "pat@example.com" }];
+const parties = [{ seat: "signer_1", name: "Rosa Alvarez", email: "rosa@example.com" }];
 await docustay.sendDocument({
   templateId, parties,
   email: { subject: "Your agreement", message: "Thanks for choosing us.", replyTo: "hello@example.com", senderName: "Example Co" },

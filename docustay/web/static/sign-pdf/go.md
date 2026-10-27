@@ -34,7 +34,7 @@ func main() {
 	ctx := context.WithValue(context.Background(), docustay.ContextAccessToken, os.Getenv("DOCUSTAY_API_KEY"))
 
 	request := *docustay.NewSendRequest(os.Getenv("DOCUSTAY_TEMPLATE_ID"), []docustay.SendRequestPartiesInner{
-		*docustay.NewSendRequestPartiesInner("signer_1", "Pat Example", "pat@example.com"),
+		*docustay.NewSendRequestPartiesInner("signer_1", "Rosa Alvarez", "rosa@example.com"),
 	})
 	doc, _, err := client.DocumentsAPI.SendDocument(ctx).SendRequest(request).IdempotencyKey(fmt.Sprintf("send-%d", time.Now().UnixNano())).Execute()
 	if err != nil {

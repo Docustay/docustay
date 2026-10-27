@@ -16,7 +16,7 @@ Docustay sends documents for signature. Everything you can do in the app you can
 | Turn HTML or a tagged PDF into a template | [Templates and text tags](/docs/templates-and-text-tags.md) |
 | Show the signing form inside your own app | [Embedded signing](/docs/embedding.md) |
 | Start from a ready-made template | [The template library](/docs/template-library) |
-| Search the workspace, list and refund payments | [Search and payments](/docs/payments-and-playbooks) |
+| Search the workspace, list and refund payments | [Search and payments](/docs/search-and-payments) |
 | List the built-in templates, draft from one, customize one, switch packs on | [The template library](/docs/template-library.md) |
 | Get told when a document is signed | [Webhooks](/docs/webhooks.md) |
 | Practise without sending anything real | [Test mode](/docs/test-mode.md) |
@@ -34,7 +34,7 @@ A typical integration is small. Your system decides a document is needed, calls 
 ```bash
 curl -X POST https://docustay.app/api/v1/documents/send \
   -H "Authorization: Bearer $DOCUSTAY_API_KEY" -H "Idempotency-Key: $(uuidgen)" -H "Content-Type: application/json" \
-  -d '{ "templateId": "TEMPLATE_ID", "parties": [{ "seat": "signer_1", "name": "Rosa Alvarez", "email": "rosa@example.com" }] }'
+  -d '{ "templateId": "'"$DOCUSTAY_TEMPLATE_ID"'", "parties": [{ "seat": "signer_1", "name": "Rosa Alvarez", "email": "rosa@example.com" }] }'
 ```
 
 ## Where to start

@@ -25,8 +25,8 @@
   const TYPE = { text: "Text", date: "Date", signature: "Signature", initials: "Initials", checkbox: "Checkbox", number: "Number", payment: "Payment", email: "Email" };
   const who = (f) => (f.sender ? "You, before sending" : f.role);
   const sendTabs = $derived([
-    { label: "CLI", code: `npx docustay templates customize ${m.old} --name "${m.title.replace(/ template$/i, "")}"\n# prints the new template's id; then send it as a test:\nnpx docustay send --test TEMPLATE_ID ${t.seats.map((x) => `--party '${x.seat}=Name <email>'`).join(" ")}` },
-    { label: "cURL", code: `curl -X POST "$DOCUSTAY_URL/api/v1/documents/send" \\\n  -H "Authorization: Bearer $DOCUSTAY_API_KEY" \\\n  -H "Idempotency-Key: $(uuidgen)" \\\n  -H "Content-Type: application/json" \\\n  -d '{"templateId":"TEMPLATE_ID","parties":[${t.seats.map((x) => `{"seat":"${x.seat}","name":"${x.role} Name","email":"${x.seat}@example.com"}`).join(",")}]}'` },
+    { label: "CLI", code: `npx docustay templates customize ${m.old} --name "${m.title.replace(/ template$/i, "")}"\n# prints the new template's id; then send it as a test:\nnpx docustay send --test $DOCUSTAY_TEMPLATE_ID ${t.seats.map((x) => `--party '${x.seat}=Name <email>'`).join(" ")}` },
+    { label: "cURL", code: `curl -X POST "$DOCUSTAY_URL/api/v1/documents/send" \\\n  -H "Authorization: Bearer $DOCUSTAY_API_KEY" \\\n  -H "Idempotency-Key: $(uuidgen)" \\\n  -H "Content-Type: application/json" \\\n  -d '{"templateId":"$DOCUSTAY_TEMPLATE_ID","parties":[${t.seats.map((x) => `{"seat":"${x.seat}","name":"${x.role} Name","email":"${x.seat}@example.com"}`).join(",")}]}'` },
   ]);
   const phone = ["The signing page works on any phone, with no app and no account. {{F-SIGN}}", "Swipe through the pages in the preview above. The use button stays pinned to the bottom of the screen."];
   const keeps = ["One PDF with every signature, sealed so a later change shows. {{F-SEAL}}", "A certificate of completion on the last page. {{F-CERT}}", "The audit trail of every step, exportable as a CSV. {{F-AUDIT}}"];

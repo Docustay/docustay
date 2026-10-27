@@ -17,7 +17,7 @@ curl -X POST "$DOCUSTAY_URL/api/v1/documents/send" \
   -H "Authorization: Bearer $DOCUSTAY_API_KEY" \
   -H "Idempotency-Key: $(uuidgen)" \
   -H "Content-Type: application/json" \
-  -d '{"templateId":"TEMPLATE_ID","parties":[{"seat":"signer_1","name":"Pat Example","email":"pat@example.com"}]}'
+  -d '{"templateId":"$DOCUSTAY_TEMPLATE_ID","parties":[{"seat":"signer_1","name":"Rosa Alvarez","email":"rosa@example.com"}]}'
 ```
 
 ## Why developers choose Docustay
@@ -60,22 +60,29 @@ All the e-signature features, from creating a document to a sealed copy: send it
 
 ## One page for each thing Docustay does.
 
-Open any of them for the details, the limits and the questions people ask.
+Send and sign, get paid and use AI, and make it yours. Open any of them for the details, the limits and the questions people ask.
 
-- [How it works](/features/how-it-works): The whole flow, from creating a document to the sealed copy.
-- [Scribe](/features/scribe): Describe a document in plain words and review what Scribe builds.
-- [Templates](/free-templates): 54 templates, free, with every page real.
-- [Payments](/features/payments): The signer pays as part of signing, into your own Stripe account.
-- [Proof and verify](/features/proof): A certificate with every signed copy, and a verify page that needs no account.
+**How it works.** The whole flow, from creating a document to the sealed copy.
 
-## Four ways to make it yours.
+**Signing.** What the signer sees: any device, no account, drawn or typed.
 
-These are what you reach for when Docustay sits inside your own app.
+**Templates and sending.** Text tags, field detection, the library and sending to a list.
 
-- [Embedded signing](/features/embedded-signing): Show the signer, the builder and Scribe inside your own site.
-- [Test mode](/features/test-mode): A full sandbox: test keys, watermarked documents, mail only to you.
-- [Agent-ready](/features/agent-ready): An MCP server and a Claude plugin. Agents draft; people send.
-- [Your brand](/features/white-label): Your logo, your colour and your name on every email, on every plan.
+**Proof and verify.** A certificate with every signed copy, and a verify page that needs no account.
+
+**Payments.** The signer pays as part of signing, into your own Stripe account.
+
+**Scribe.** Describe a document in plain words and review what Scribe builds.
+
+**AI agents.** Let an assistant draft. A person approves the send.
+
+**Your brand.** Your logo and your colours on the signing page.
+
+**Embedded signing.** Show the signer inside your own product.
+
+**Team and roles.** Owner, Admin and Member, and what each costs.
+
+**Test mode.** A full sandbox where nothing reaches a real inbox.
 
 ## You do not need to write code.
 
@@ -87,7 +94,7 @@ These are what you reach for when Docustay sits inside your own app.
 
 ## Free, Pay as you go and Pro.
 
-|  | Free | Pay as you go | Pro |
+| What you get | Free | Pay as you go | Pro |
 | --- | --- | --- | --- |
 | Documents a month | 15 | 15 free, then $0.50 each | Unlimited |
 | AI drafts a month | 10 | 10 free, then $0.30 each | 100, then $0.30 each |
@@ -137,7 +144,7 @@ Every page above has a matching guide for the people who build with it.
 
 - [Quickstart](/docs/quickstart): A test key, a send and a webhook in about ten minutes.
 - [Templates and text tags](/docs/templates-and-text-tags): Write fields into a file and they place themselves.
-- [Payments in the API](/docs/payments-and-playbooks): List payments and refund with a reason.
+- [Payments in the API](/docs/search-and-payments): List payments and refund with a reason.
 - [Embedding](/docs/embedding): The elements, the allow list and the events.
 - [MCP and the Claude plugin](/docs/mcp-and-skills): Connect an assistant and set a draft-only key.
 - [Test mode](/docs/test-mode): Keys, watermarks and the listen command.
@@ -240,7 +247,7 @@ Send a test document and listen for what happens to it. A test key emails only y
 
 ```
 npx docustay login
-npx docustay send --test TEMPLATE_ID --party signer_1="Pat Example <pat@example.com>"
+npx docustay send --test $DOCUSTAY_TEMPLATE_ID --party signer_1="Rosa Alvarez <rosa@example.com>"
 ```
 
 ## Reminders until it is done.
@@ -350,6 +357,14 @@ Scribe is the AI document builder in Docustay. Tell it what you need. It asks a 
 **Your PDFs.** Upload a PDF and Scribe reads it, finds where the fields belong and proposes them for you to move or remove.
 
 **Your Plays.** A Play is a reusable instruction for one kind of document, and a Playbook is a set of them. Your own are on Pro.
+
+## Say what you are collecting. Code places the field.
+
+When Stripe is connected, Scribe's wizard asks for the amount, the currency, who pays and what it is for. The AI drafts the document around those values. Code checks them, writes the payment terms from your own values and places the one payment field.
+
+- The AI never sets an amount. If it writes a payment field of its own, that field is thrown away.
+- You review the draft before anything is sent.
+- Stripe must be connected first. Payments are powered by Stripe.
 
 ## From your words to a finished document.
 
@@ -481,157 +496,6 @@ One request that makes a document from your words or a file. Free includes 10 a 
 
 ---
 
-<!-- https://docustay.app/features/payments -->
-# Get paid inside the signature.
-
-Sign and pay in one step: add a payment field and the signer signs, then pays on the same page, straight into your own Stripe account. Docustay never holds the money. Pro takes no fee on these payments; Free and Pay as you go take 2%.
-
-## From the signer to your Stripe account.
-
-1. **Signer**: Signs, then pays
-2. **Docustay**: Checks the amount
-3. **Your Stripe**: Takes the money
-
-## Connect Stripe, finish onboarding, add a field.
-
-**Connect Stripe.** Connect your own Stripe account from Billing, Payments.
-
-**Finish Stripe's onboarding.** Stripe asks for what it needs to pay you out. That part is between you and Stripe.
-
-**Add a payment field.** Drop a payment field on any document or template and set the amount.
-
-## How it works.
-
-**You set the amount.** Set one amount in the payment field. A deposit is just a smaller amount.
-
-**They pay last.** Paying is the last step of signing. Their signature is kept for 7 days while they pay, and the receipt comes with the signed copy. The amount is worked out on the server, never trusted from the browser.
-
-**It is your account.** Money goes to your own Stripe account, so you can take it with you.
-
-## One payment, paid while signing.
-
-The payment field charges one set amount, paid in full as the last step of signing. Use it for a deposit, a fee or the whole price.
-
-- A deposit agreement carries its own payment field.
-- Stripe's own fees go to Stripe.
-
-## Every payment in one place.
-
-The Payments tab in Billing lists who paid, for which document, and what Stripe kept in fees. Refund in full or in part with a reason the payer sees on their receipt. Disputes open in Stripe.
-
-- This month's money in, fees and refunds at the top.
-- The same list and refunds are in the API.
-
-- **Free and Pay as you go**: 2% fee on top of Stripe's
-- **Pro and Lifetime**: 0% fee on top of Stripe's
-- **Account**: Your own Stripe account
-
-## The payment is a field, like a signature.
-
-**You add a payment field.** One set amount, the same for everyone who signs.
-
-**They pay on Stripe's own page.** The amount is worked out on the server, never trusted from the browser.
-
-**Then they can sign.** The signature opens once Stripe says it is paid, and the money goes to your own Stripe account.
-
-## A payment is one tag.
-
-Write the payment where it belongs. A payment is one fixed amount.
-
-```
-Retainer: {{Retainer;type=payment;role=Client;amount=1500.00;currency=usd}}
-```
-
-## Who takes what.
-
-|  | Free and Pay as you go | Pro and Lifetime |
-| --- | --- | --- |
-| Stripe's own fees | To Stripe | To Stripe |
-| Docustay's fee on top | 2% | 0% |
-| Where the money lands | Your Stripe account | Your Stripe account |
-
-Stripe's fees are Stripe's. Docustay never holds the money.
-
-## Every payment has one status.
-
-| Status | Means |
-| --- | --- |
-| paid | Stripe took the money. |
-| waiting | The person has signed and the signature is kept, for up to 7 days, while they pay. |
-| started | They opened the payment and did not finish it. |
-| refunded or partially_refunded | Some or all of it was given back. |
-| disputed | The payer's bank opened a dispute. You answer it in Stripe. |
-
-This month's figures sit above the list: money in, Stripe's own fees and refunds. Stripe's fee can show as pending for a few minutes while Stripe settles it.
-
-## The amount is set on the server.
-
-- **Fixed**: amount=150.00 with a currency. From 0.50 to 999,999.99.
-- **Never the browser**: The server reads the amount from the document you sent. The browser never sends an amount.
-- **Card details**: Typed on Stripe's page. Docustay never receives or stores them.
-
-## Give money back from your own code.
-
-A refund goes through Stripe on your own account. Leave out the amount to refund the rest. A reason is required: the payer sees it on their receipt and it goes in the document's audit trail.
-
-```
-const r = await docustay.refundPayment(paymentId, { amountMinor: 500, reason: "Charged twice" });
-```
-
-- **Stripe connected**: Billing, Payments: set up payments, and Stripe's own sign-up page creates an account in your name, or choose I already have Stripe and sign in to the account you use. The status reads connected, needs_attention or not_connected.
-- **Only when connected**: A document with a payment field can only be sent when the status is connected; otherwise Send answers with a plain reason.
-- **The fee**: Docustay's fee is 2% on Free and Pay as you go and 0% on Pro and Lifetime, on top of Stripe's fees, decided when the payment starts. A refund returns the fee with it.
-- **Test mode**: Does not test payments against real cards.
-
-## The payment is part of the proof.
-
-The certificate lists what each signer paid, by Stripe's own reference, and only money that actually arrived.
-
-The payments list on GET /api/v1/documents/{id} shows each payment's status, amount, Stripe receipt link, refunds and the Docustay fee.
-
-## Keep going with the next piece.
-
-- [Templates](/free-templates): The payment tag, and the other field types.
-- [Signing](/features/how-it-works#sign): Paying is the last step of signing.
-- [Proof](/features/proof): What the certificate shows about a payment.
-
-## What happens to the payment after the signature.
-
-Paying is the last step of signing, and it goes to your own Stripe account.
-
-**One set amount.** A payment field holds one fixed amount, so one template can cover a deposit or a fee.
-
-**Every payment in one list.** The Payments page lists each payment taken while signing, with who paid, for which document and its status, and the same facts are available from the API and the command line.
-
-**Refunds go through Stripe.** A refund is made from Docustay and goes through Stripe: leave out an amount to refund what is left, or give one to refund part. The reason is required.
-
-**What it costs.** Docustay's own fee on a payment taken in a document is 2% on Free and Pay as you go and 0% on Pro and Lifetime, on top of Stripe's fees. Docustay does not charge per API call on any plan.
-
-**Where the money goes.** A payment is taken through your own Stripe account, so the money goes to you and your Stripe dashboard shows it as it would any other charge.
-
-## Questions
-
-**Does Docustay hold my money?**
-
-No. The charge goes through your own Stripe account.
-
-**What does it cost?**
-
-Stripe's fees go to Stripe. Docustay adds 2% on Free and Pay as you go and 0% on Pro and Lifetime.
-
-**Can Scribe set payment terms?**
-
-Yes, once your Stripe account is connected. You review them before anything is sent.
-
-
-## Keep reading
-
-- [Deposit agreement](/templates/deposit-agreement)
-- [Pricing](/pricing)
-- [Scribe](/features/scribe)
-
----
-
 <!-- https://docustay.app/features/proof -->
 # Proof anyone can check.
 
@@ -741,7 +605,7 @@ Also on it when they apply: the reason a person gave, who a seat was passed on f
 ## Download the sealed copy from your own code.
 
 ```
-curl https://docustay.app/api/v1/documents/DOCUMENT_ID/signed.pdf \
+curl https://docustay.app/api/v1/documents/$DOCUSTAY_DOCUMENT_ID/signed.pdf \
   -H "Authorization: Bearer $DOCUSTAY_API_KEY" -o signed.pdf
 ```
 
@@ -961,7 +825,7 @@ import { Docustay } from "@docustay2026/sdk";
 const docustay = new Docustay(process.env.DOCUSTAY_API_KEY, process.env.DOCUSTAY_URL ? { baseUrl: process.env.DOCUSTAY_URL } : {});
 const doc = await docustay.sendDocument({
   templateId: process.env.DOCUSTAY_TEMPLATE_ID,
-  parties: [{ seat: "signer_1", name: "Pat Example", email: "pat@example.com" }],
+  parties: [{ seat: "signer_1", name: "Rosa Alvarez", email: "rosa@example.com" }],
 });
 console.log(doc.id, doc.state);
 ```
@@ -2570,7 +2434,7 @@ import { Docustay } from "@docustay2026/sdk";
 const docustay = new Docustay(process.env.DOCUSTAY_API_KEY, process.env.DOCUSTAY_URL ? { baseUrl: process.env.DOCUSTAY_URL } : {});
 const doc = await docustay.sendDocument({
   templateId: process.env.DOCUSTAY_TEMPLATE_ID,
-  parties: [{ seat: "signer_1", name: "Pat Example", email: "pat@example.com" }],
+  parties: [{ seat: "signer_1", name: "Rosa Alvarez", email: "rosa@example.com" }],
 });
 console.log(doc.id, doc.state);
 ```
@@ -2638,7 +2502,7 @@ Every error is { error: { kind, message, requestId, retryable } }. Quote the req
 state moves sent, then partially_signed, then executed (or declined, expired, void). The sealed PDF is made a few seconds after the last signature.
 
 ```
-curl https://app.docustay.app/api/v1/documents/DOCUMENT_ID \
+curl https://app.docustay.app/api/v1/documents/$DOCUSTAY_DOCUMENT_ID \
   -H "Authorization: Bearer $DOCUSTAY_API_KEY"
 ```
 
@@ -2729,7 +2593,7 @@ import { Docustay } from "@docustay2026/sdk";
 const docustay = new Docustay(process.env.DOCUSTAY_API_KEY, process.env.DOCUSTAY_URL ? { baseUrl: process.env.DOCUSTAY_URL } : {});
 const doc = await docustay.sendDocument({
   templateId: process.env.DOCUSTAY_TEMPLATE_ID,
-  parties: [{ seat: "signer_1", name: "Pat Example", email: "pat@example.com" }],
+  parties: [{ seat: "signer_1", name: "Rosa Alvarez", email: "rosa@example.com" }],
 });
 console.log(doc.id, doc.state);
 ```
@@ -2818,7 +2682,7 @@ try {
 ```
 import { Docustay } from "@docustay2026/sdk";
 const docustay = new Docustay(process.env.DOCUSTAY_API_KEY);
-const doc = await docustay.sendDocument({ templateId: "TEMPLATE_ID", parties: [{ seat: "signer_1", name: "Rosa Alvarez", email: "rosa@example.com" }] });
+const doc = await docustay.sendDocument({ templateId: process.env.DOCUSTAY_TEMPLATE_ID, parties: [{ seat: "signer_1", name: "Rosa Alvarez", email: "rosa@example.com" }] });
 console.log(doc.id, doc.state);
 ```
 
@@ -3077,7 +2941,7 @@ The person you named is never emailed. Every page of the document carries a TEST
 curl -X POST https://app.docustay.app/api/v1/documents/send \
   -H "Authorization: Bearer $DOCUSTAY_TEST_KEY" \
   -H "Idempotency-Key: $(uuidgen)" -H "Content-Type: application/json" \
-  -d '{ "templateId": "TEMPLATE_ID", "parties": [{ "seat": "signer_1", "name": "Practice Person", "email": "someone@example.com" }] }'
+  -d '{ "templateId": "'"$DOCUSTAY_TEMPLATE_ID"'", "parties": [{ "seat": "signer_1", "name": "Practice Person", "email": "someone@example.com" }] }'
 ```
 
 ## What is different, line by line.
@@ -3097,7 +2961,7 @@ Use test mode to check your whole flow before anything real is sent.
 POST /api/v1/documents/{id}/test-sign signs one seat with sample answers through the same code a person's signature uses: consent, signing order, the audit trail and your webhooks all happen.
 
 ```
-curl -X POST https://app.docustay.app/api/v1/documents/DOCUMENT_ID/test-sign \
+curl -X POST https://app.docustay.app/api/v1/documents/$DOCUSTAY_DOCUMENT_ID/test-sign \
   -H "Authorization: Bearer $DOCUSTAY_TEST_KEY" \
   -H "Idempotency-Key: $(uuidgen)" -H "Content-Type: application/json" \
   -d '{ "seat": "signer_1" }'
@@ -3223,7 +3087,7 @@ DOCUSTAY_API_KEY and DOCUSTAY_URL override the saved ones.
 ```
 export DOCUSTAY_API_KEY=dsk_test_…
 export DOCUSTAY_URL=https://sign.example.com   # only for a self-hosted install
-npx docustay send --test TEMPLATE_ID --party signer_1="Pat Example <pat@example.com>" --json
+npx docustay send --test $DOCUSTAY_TEMPLATE_ID --party signer_1="Rosa Alvarez <rosa@example.com>" --json
 ```
 
 ## Build a receiver without a public address.
@@ -3394,7 +3258,7 @@ agent  → request_send  draft_id
 send_document does nothing the first time: it returns a plain-words preview of who would be emailed. Only a call with confirm: true acts.
 
 ```
-{ "name": "send_document", "arguments": { "templateId": "TEMPLATE_ID", "parties": [{ "seat": "signer_1", "name": "Sam", "email": "sam@example.com" }] } }
+{ "name": "send_document", "arguments": { "templateId": "6f1c1f0e-7a0c-4d1d-9b5e-2f0a7b1c3d4e", "parties": [{ "seat": "signer_1", "name": "Sam", "email": "sam@example.com" }] } }
 ```
 
 ## What an assistant can and cannot do.
@@ -3563,7 +3427,7 @@ The embed-session call needs an Idempotency-Key and a key with the embedded:writ
 ```
 curl -X POST https://app.docustay.app/api/v1/documents/send \
   -H "Authorization: Bearer $DOCUSTAY_API_KEY" -H "Idempotency-Key: $(uuidgen)" -H "Content-Type: application/json" \
-  -d '{ "templateId": "TEMPLATE_ID", "embedded": ["signer_1"], "parties": [{ "seat": "signer_1", "name": "Rosa Alvarez", "email": "rosa@example.com" }] }'
+  -d '{ "templateId": "'"$DOCUSTAY_TEMPLATE_ID"'", "embedded": ["signer_1"], "parties": [{ "seat": "signer_1", "name": "Rosa Alvarez", "email": "rosa@example.com" }] }'
 ```
 
 ## What the element tells your page.
@@ -3792,7 +3656,7 @@ Yes. A key can be limited to addresses.
 <!-- https://docustay.app/developers/plays -->
 # Plays and Playbooks API
 
-List the built-in templates, draft from one, and publish your own skills and playbooks.
+List the built-in templates, draft from one, and publish your own Plays and Playbooks.
 
 ## The routes.
 
@@ -3999,7 +3863,7 @@ A signed document is kept for the period you set, or indefinitely if you leave i
 
 Take it with you. Download any signed copy as a PDF. Export a document's audit log, the workspace's audit log, and the people list as CSV. Read everything through the API.
 
-Removing it. A member can delete their own account, with a 14-day cooling-off period. An owner can delete the whole workspace, with a 7-day cooling-off period; then everything in it is removed. Backups are deleted after 30 days, and recorded deletions are carried out again after a restore. A record that a deletion happened is kept as a hash, a date and a request id, with no names or addresses.
+Removing it. A member can delete their own account, with a 14-day cooling-off period. An owner can delete the whole workspace, with a 14-day cooling-off period; then everything in it is removed. Backups are deleted after 30 days, and recorded deletions are carried out again after a restore. A record that a deletion happened is kept as a hash, a date and a request id, with no names or addresses.
 
 We do not sell data. We do not use your documents to train a model.
 
@@ -5006,6 +4870,459 @@ Docustay is a product of GLRS LLC. To reach us, use the contact page.
 - [Trust](/trust)
 - [Pricing](/pricing)
 - [About](/about)
+
+---
+
+<!-- https://docustay.app/features/payments -->
+# Get paid inside the signature.
+
+Add a payment field to a document. The signer signs, then pays by card on the same page. Payments are powered by Stripe, and the money goes straight to your own Stripe account. Docustay never holds it.
+
+## From the signer to your Stripe account.
+
+1. **Signer**: Signs, then pays by card
+2. **Docustay**: Works out the amount on the server
+3. **Your Stripe account**: Takes the money
+
+## Start from nothing, or bring your Stripe account.
+
+Only Admins and Owners set up payments. It is under Billing, Payments.
+
+- **Stripe account**: You do not need one. Stripe makes it for you at the end.
+- **The form**: Company or individual, your name, what you will collect for, and your country. The form shows United States.
+- **Then**: Stripe's own secure page asks for the rest.
+- **You need**: A photo ID, a bank account, and an EIN or the last 4 of an SSN.
+- **How long**: Setup takes about 5 minutes. You can stop and come back.
+- **Privacy**: Docustay never sees your ID or your bank details.
+
+- **Choose**: I already have a Stripe account. Connect it instead.
+- **What happens**: You sign in at Stripe and allow Docustay to take payments for you.
+- **Your money**: Stays in the account you already use.
+- **Your dashboard**: The same Stripe dashboard you know.
+
+## Six states, and what each one means.
+
+| State | What it means | What you do |
+| --- | --- | --- |
+| Ready | Stripe is connected and can take payments. | Nothing. |
+| Verifying | Stripe is checking your details. It usually takes a few minutes and sometimes up to a day. | Wait. Stripe emails you when it is done. |
+| Needs attention | Stripe needs a little more from you. It shows a deadline when it has one. | Choose Continue on Stripe. |
+| Restricted | Stripe has restricted the account until it has what it asked for. | Choose Continue on Stripe. |
+| Paused by you | You turned Take payments off. Payment boxes say payments are paused and people can still sign. Nothing is refunded. | Turn it back on whenever you like. |
+| Disconnected | Docustay no longer has access to a Stripe account. Payment boxes cannot be paid until you connect again. | Reconnect. Your Stripe account stays yours. |
+
+## Pause it, disconnect it, open your dashboard.
+
+**Pause payments.** Payment boxes say payments are paused, and people can still sign. Nothing is refunded. Turn it back on when you want.
+
+**Disconnect.** The Stripe account stays yours. Payment boxes cannot be paid until you connect again, and your history stays visible.
+
+**Open your Stripe dashboard.** One link from Billing, Payments takes you to your own Stripe dashboard, where payouts and the bank details live.
+
+## One amount, one currency, one card payment.
+
+| You set | Options |
+| --- | --- |
+| Amount | One fixed amount, from 0.50 to 999,999.99. A deposit is just a smaller amount. |
+| Currency | USD, EUR, GBP, CAD, AUD, NZD, CHF, SEK, NOK or DKK. |
+| Who pays | One of the people on the document. |
+| What it is for | A line of text the signer sees next to the amount. |
+| A Stripe Price or Payment Link | Instead of typing an amount, point the field at a one-time Price or a Payment Link on your own Stripe account. |
+| Instalments | Write them in the document as a note. They are a note, not a charge: the field takes one payment. |
+
+## They sign, then pay on the same page.
+
+The link opens on any device, with no account. The signer signs, then pays by card as the last step. The amount is worked out on the server and never taken from the browser.
+
+**Held for 7 days.** Their signature is held for 7 days while they pay. If the payment does not arrive in time, the signature is not kept, and you and the signer are told.
+
+**The receipt.** The receipt comes with the signed copy. If your Stripe account already emails receipts, signers may get two.
+
+## Every payment in one place.
+
+Billing, Payments shows your balance and payouts, who paid for which document, Stripe's fees, and this month's money in, fees and refunds.
+
+- Refund in full or in part, with a reason the payer sees.
+- A dispute opens in Stripe, where you answer it.
+- Owners get an email when Stripe asks for more information, when a payout fails and when a payment is disputed.
+- Switch on Payments in your notification settings to hear when a payment arrives or one does not go through, in the app and by email.
+
+- **Free and Pay as you go**: 2% fee on top of Stripe's
+- **Pro and Lifetime**: 0% fee on top of Stripe's
+- **Stripe's own fees**: Go to Stripe, from your Stripe account
+
+## Say what you are collecting. Review what Scribe drafts.
+
+Once Stripe is connected, Scribe's wizard asks for the amount, the currency, who pays and what it is for. The terms are written around your values, and you review everything before it is sent.
+
+- Scribe never decides an amount. The one you typed is the one that is charged.
+
+## The demo has no Stripe. Test mode does.
+
+**The demo.** The demo has no Stripe account, so it cannot take a payment. You can still see a payment box in a document.
+
+**With a test card.** Where a server is in Stripe's test mode, Docustay says so, and a Stripe test card pays without moving real money.
+
+**For developers.** The technical side: the API, webhooks, the command line and test mode.
+
+## Questions
+
+**Does Docustay hold my money?**
+
+No. The payment goes to your own Stripe account, and Stripe pays your bank on the schedule you see in Billing, Payments.
+
+**What does it cost?**
+
+Stripe's own fees go to Stripe. Docustay adds 2% on Free and Pay as you go and 0% on Pro and Lifetime.
+
+**Which countries can set up payments?**
+
+The guided setup makes a United States Stripe account, and its form shows United States. If you already have a Stripe account, you can connect it instead. A payment can be in USD, EUR, GBP, CAD, AUD, NZD, CHF, SEK, NOK or DKK.
+
+**What if Stripe needs more information?**
+
+The state changes to Needs attention, and Owners get an email. Choose Continue on Stripe and give it what it asks for.
+
+**Can I take a deposit?**
+
+Yes. A deposit is a payment field with a smaller amount. A payment field takes one amount, so a balance later is a second document or an invoice from your own Stripe.
+
+**Can I refund a payment?**
+
+Yes, in full or in part, from Billing, Payments or the API. Give a reason; the payer sees it.
+
+**What about disputes?**
+
+A dispute opens in Stripe, in your own account, and you answer it there. Owners get an email when one is opened.
+
+**Who can set it up?**
+
+Admins and Owners. Members can see who runs payments.
+
+
+## Keep reading
+
+- [Payments for developers](/developers/payments)
+- [Payments when you self-host](/self-host/payments)
+- [Scribe](/features/scribe)
+- [Pricing](/pricing)
+
+---
+
+<!-- https://docustay.app/features/signing -->
+# Signing that needs no account.
+
+The person you send to opens a link on a phone or a computer, reads the document, signs and is done. They do not make an account.
+
+## Open the link. Sign. Done.
+
+**Any device.** The link opens in the browser on a phone, a tablet or a computer. Nothing to install and no account to make.
+
+**Draw or type.** A signature is drawn with a finger or a mouse, or typed. Initials and dates are fields on the page.
+
+**Keep going later.** A signer can save their place and come back to the same link.
+
+## Sign, decline, or pass it on.
+
+**Remember my signature.** On the same browser, a signature can be remembered under the signer's name, so the next one takes a tap. A different name on that browser is never offered someone else's.
+
+**Decline.** A person can decline. You can ask them to say why, and you are told at once. The decline is part of the record.
+
+**Pass it to someone else.** A signer who is not the right person can pass the document to another name and email.
+
+**A reason for signing.** You can ask each signer to say why they are signing, for example their role. The reason is kept with the signature.
+
+**Check who is signing.** Ask for an email code or an access code you share before the document opens.
+
+**Payment, if you added one.** If the document has a payment field, the signer pays as the last step.
+
+## Reminders and a deadline.
+
+| You choose | Options |
+| --- | --- |
+| Reminders | None; after 3 and 7 days; every week for three weeks; every day for three days; or after 2, 5 and 10 days. |
+| Expiry | Never, or in 7, 14, 30, 60 or 90 days. The sender is told when a document lapses unsigned. |
+| Stopping | Reminders stop once everyone has signed. A reminder is never charged. |
+
+## Questions
+
+**Does the signer need an account?**
+
+No. They need the link, and an email code or access code if you asked for one.
+
+**Can a signer decline?**
+
+Yes. They can decline and say why, and you are told at once.
+
+**Can I remind someone by hand?**
+
+Yes. Open the document and send a reminder. Reminders are free.
+
+**What proves who signed?**
+
+Every signed copy carries a certificate with the record of each signature. See Proof.
+
+
+## Keep reading
+
+- [Templates and sending](/features/templates-and-sending)
+- [Proof](/features/proof)
+- [How it works](/features/how-it-works)
+
+---
+
+<!-- https://docustay.app/features/templates-and-sending -->
+# Make a template once. Send it as often as you like.
+
+Put fields in with a text tag or let Docustay find them. Keep the result as a template, send it to one person or a list, and choose the order, the reminders and the deadline.
+
+## A field is a line of text.
+
+Write the field where it belongs. The first part is its name; the rest are key=value pairs.
+
+```
+{{Buyer signature;type=signature;role=Buyer}}
+```
+
+## Upload a PDF. Press Find fields.
+
+Uploading never places boxes by itself. Press Find fields and Docustay reads the page the way a person would, then proposes signature lines, dates, initials and text lines. Nothing is placed until you accept it.
+
+- A scanned page is read by character recognition on the server, in English.
+- The optional Find fields with AI button is shown only where AI is turned on.
+
+## A library, your own templates, or a sentence.
+
+**The template library.** More than 50 free templates, from an NDA to a lease addendum. Make your own copy and change it.
+
+**Your templates.** Keep a document as a template with its people and fields in place. Send it again with one click or one API call.
+
+**Scribe.** Describe the document in plain words and review what Scribe builds.
+
+## One person, many people, in order or all at once.
+
+**Send to a list.** Upload a spreadsheet and each row gets its own copy and its own signed record. Free sends to up to 15 at a time.
+
+**Signing order.** Name each person and choose whether they sign one at a time or all at once. Each box belongs to one person.
+
+**Reminders and expiry.** Pick when reminders go out and when the document expires. Reminders stop once everyone has signed.
+
+## Questions
+
+**Do I have to use text tags?**
+
+No. You can place boxes by hand in the editor, or press Find fields. Tags are for when you write the document yourself or send it from code.
+
+**Can the sender fill in a box before sending?**
+
+Yes. A box marked filled by sender is answered before you send, and the signer sees the answer and cannot change it.
+
+**Is sending to a list on every plan?**
+
+Yes. Free sends to up to 15 at a time.
+
+
+## Keep reading
+
+- [Signing](/features/signing)
+- [Scribe](/features/scribe)
+- [Free templates](/free-templates)
+
+---
+
+<!-- https://docustay.app/features/team-and-roles -->
+# Give people the right access.
+
+A workspace has three roles. You invite people, put them in teams, and the price is simple: Pay as you go is per person, and Pro is one price for the whole workspace.
+
+## Owner, Admin, Member.
+
+| Role | What it can do |
+| --- | --- |
+| Owner | Everything, including deleting the workspace and resetting a teammate's two-step sign-in. An Owner can make someone else an Owner. |
+| Admin | Everything except deleting the workspace and resetting a teammate's two-step. Admins set up and manage payments. |
+| Member | Makes, sends and tracks their own documents, and uses the templates and plays that are switched on. |
+
+## Invite, group, change a role.
+
+**Invites.** Invite a person by email and choose their role. You can change a role later or remove the person.
+
+**Organise into teams.** Put people into teams so a team sees its own documents.
+
+**Sign-in.** An Owner can require two-step sign-in for the whole team.
+
+- **Free**: One person, the Owner
+- **Pay as you go**: $5 per team member a month
+- **Pro**: One price for the whole workspace, with unlimited team members
+
+## Questions
+
+**Do signers count as team members?**
+
+No. A signer is anyone you send to, and signers are free on every plan.
+
+**Is Pro really one price for everyone?**
+
+Yes. Pro is one price for the whole workspace, with unlimited team members, signers and documents.
+
+**Who can set up payments?**
+
+Admins and Owners.
+
+
+## Keep reading
+
+- [Pricing](/pricing)
+- [Payments](/features/payments)
+- [Signing](/features/signing)
+
+---
+
+<!-- https://docustay.app/developers/payments -->
+# Payments, from code.
+
+Read the state of Stripe, list the payments taken through documents and refund them. Three events tell you when a payment arrives, fails or runs out of time.
+
+## GET /api/v1/payments/status
+
+Answers whether payments can be taken now. A document with a payment field can only be sent when it is connected.
+
+```
+curl https://app.docustay.app/api/v1/payments/status \
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY"
+```
+
+## GET /api/v1/payments
+
+Payments taken through documents, newest first: who paid, for which document, the amount and the status (paid, waiting, started, refunded, partially_refunded or disputed), and this month's figures. Page with before and limit.
+
+```
+curl "https://app.docustay.app/api/v1/payments?limit=20" \
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY"
+```
+
+## A payment, as GET /api/v1/documents/{id} shows it.
+
+Each payment on a document carries its status, the amount in the smallest unit of its currency, the Stripe receipt, what was refunded and the Docustay fee.
+
+```
+{ "id": "6f1c1f0e-7a0c-4d1d-9b5e-2f0a7b1c3d4e",
+  "fieldId": null,
+  "person": "Rosa Alvarez",
+  "status": "partially_refunded",
+  "amountMinor": 15000,
+  "currency": "usd",
+  "paidAt": "2026-10-26T17:04:11Z",
+  "receiptUrl": "https://pay.stripe.com/receipts/…",
+  "refundedMinor": 500,
+  "fee": { "basisPoints": 200, "amountMinor": 300, "refundedMinor": 10, "plan": "docustay_free" },
+  "test": false }
+```
+
+## What a key needs.
+
+| Operation | Scope |
+| --- | --- |
+| GET /api/v1/payments/status | account:read |
+| GET /api/v1/payments | documents:read |
+| POST /api/v1/payments/{id}/refund | documents:write |
+
+## POST /api/v1/payments/{id}/refund
+
+Refund in full or in part. The reason is required, and the payer sees it. Leave out amountMinor to refund the rest. Needs an Idempotency-Key.
+
+```
+curl -X POST "https://app.docustay.app/api/v1/payments/$DOCUSTAY_PAYMENT_ID/refund" \
+  -H "Authorization: Bearer $DOCUSTAY_API_KEY" \
+  -H "Idempotency-Key: $(uuidgen)" \
+  -H "Content-Type: application/json" \
+  -d '{ "amountMinor": 500, "reason": "Charged twice" }'
+```
+
+## Three payment events.
+
+| Event | Means |
+| --- | --- |
+| documents.payment.received | A payment arrived. |
+| documents.payment.failed | A payment attempt failed. |
+| documents.payment.hold_lapsed | A payment hold ran out before the signer paid. |
+
+## docustay payments
+
+**list.** Lists the payments taken while signing.
+
+**refund.** Refunds one payment. It moves money, so it asks you to confirm, or you add --yes.
+
+## An MCP tool, and test mode.
+
+**MCP.** The get_payments_status tool reports whether Stripe is ready. It needs the account:read scope.
+
+**Test mode.** A seat with a payment field cannot be test-signed. Pay it with a Stripe test card.
+
+**Fees.** Each payment carries the Docustay fee decided when it started: 200 basis points on Free, 0 on Pro. Stripe's fees are separate.
+
+## Questions
+
+**Can the API set up Stripe?**
+
+No. Setup is in the app, under Billing, Payments, by an Admin or Owner. The API reads the state.
+
+**Does a payment field work from the send call?**
+
+Yes, when the template has one and Stripe is connected. The amount is worked out on the server.
+
+
+## Keep reading
+
+- [Payments for businesses](/features/payments)
+- [Payments when you self-host](/self-host/payments)
+- [Webhooks](/developers/webhooks)
+- [Test mode](/developers/test-mode)
+
+---
+
+<!-- https://docustay.app/self-host/payments -->
+# Payments on your own server.
+
+Put your own Stripe keys in the settings file and payment fields work. The money goes to your Stripe account, and no Docustay fee applies to it.
+
+## Four settings for payments.
+
+| Setting | What it does |
+| --- | --- |
+| KEYSTONE_STRIPE_SECRET_KEY | Your own Stripe secret key. Needed for payment fields. |
+| KEYSTONE_STRIPE_PUBLISHABLE_KEY | The matching publishable key. With it the signer pays inside the signing page; without it, on Stripe's own page, and comes back. |
+| KEYSTONE_STRIPE_CHARGES_ENABLED | Off by default. Live charges are refused until it is on. |
+| KEYSTONE_ENVIRONMENT | Set to staging and the server refuses live Stripe keys. |
+
+## What is and is not the same.
+
+**No Docustay fee.** A self-hosted install has no Docustay plan, so no Docustay fee is added to a payment. Stripe's own fees still apply.
+
+**No guided setup.** The hosted Set up payments and Stripe connect pages are not available. The app says Connecting is not switched on for this server yet. You use your own keys.
+
+**Every payment is checked.** A payment counts only when Stripe says it is paid. Docustay reads it back from Stripe before it records it.
+
+## Questions
+
+**Does Docustay trust the browser about a payment?**
+
+No. When the payer comes back to the signing page, Docustay asks Stripe whether the payment was made and records it only if Stripe says it was paid.
+
+**How do I try it without real money?**
+
+Use Stripe test keys. The app then says the server is in Stripe's test mode, and a Stripe test card pays without moving real money.
+
+**Can I use live keys on a staging server?**
+
+No. With KEYSTONE_ENVIRONMENT set to staging, live Stripe keys are refused.
+
+
+## Keep reading
+
+- [Payments for businesses](/features/payments)
+- [Payments for developers](/developers/payments)
+- [Install and run](/self-host)
 
 ---
 
@@ -6796,7 +7113,7 @@ A signed record that each person read the current version of a policy.
 <!-- https://docustay.app/pricing -->
 # Pricing
 
-The e-signature API you own. One flat price for every user. Pay as you go is $5 per person if you would rather pay per person.
+Start free. Pay as you go is $5 per person a month if you only send a few. Pro is $35 a month for your whole team, with no seats. Every price is on this page, and a monthly budget means the bill never surprises you.
 
 - **Free**: 15 documents a month, 10 AI drafts, 5 new templates a month, 15 different signers a month, one team member. A 2% fee on payments taken while signing.
 - **Pay as you go**: $5 per team member per month, signers free. 25 new templates a month. 15 documents free, then $0.50 each. 10 AI drafts free, then $0.30 each. Budget of $50 by default with alerts at 50, 80 and 100%.
@@ -6940,10 +7257,6 @@ The live status of the app and API, and past incidents with what happened.
 - Images built from this repository before this version contained the install's .env file (its master key, sign-in secret and database password). Upgrade as usual (git pull, docker compose build, docker compose up -d), then delete the old images with docker image prune. If you ever pushed or copied an image you built, treat the secrets in that .env as known to whoever has the image.
 - An install that sends through its own mail server or a connected mailbox now gets its notices (someone signed, everyone has signed), which were skipped before.
 - A fresh install says plainly that email is not set up on the Email settings and the Check step, before you press Send.
-
-## Fourteen languages (October 2026)
-
-- The signing page, the emails and the Certificate of Completion can be in fourteen languages, with Arabic read right to left. Every language except English is a machine-written draft marked Beta.
 
 ## Payments inside a document (October 2026)
 
@@ -7112,7 +7425,7 @@ import { Docustay } from "@docustay2026/sdk";
 const docustay = new Docustay(process.env.DOCUSTAY_API_KEY, process.env.DOCUSTAY_URL ? { baseUrl: process.env.DOCUSTAY_URL } : {});
 const doc = await docustay.sendDocument({
   templateId: process.env.DOCUSTAY_TEMPLATE_ID,
-  parties: [{ seat: "signer_1", name: "Pat Example", email: "pat@example.com" }],
+  parties: [{ seat: "signer_1", name: "Rosa Alvarez", email: "rosa@example.com" }],
 });
 console.log(doc.id, doc.state);
 ```
@@ -7134,7 +7447,7 @@ import { Docustay, type SendRequest } from "@docustay2026/sdk";
 const docustay = new Docustay(process.env.DOCUSTAY_API_KEY!, process.env.DOCUSTAY_URL ? { baseUrl: process.env.DOCUSTAY_URL } : {});
 const request: SendRequest = {
   templateId: process.env.DOCUSTAY_TEMPLATE_ID!,
-  parties: [{ seat: "signer_1", name: "Pat Example", email: "pat@example.com" }],
+  parties: [{ seat: "signer_1", name: "Rosa Alvarez", email: "rosa@example.com" }],
 };
 const doc = await docustay.sendDocument(request);
 console.log(doc.id, doc.state);
@@ -7159,7 +7472,7 @@ kw = {"base_url": os.environ["DOCUSTAY_URL"]} if os.environ.get("DOCUSTAY_URL") 
 docustay = Docustay(os.environ["DOCUSTAY_API_KEY"], **kw)
 doc = docustay.send_document(
     os.environ["DOCUSTAY_TEMPLATE_ID"],
-    [{"seat": "signer_1", "name": "Pat Example", "email": "pat@example.com"}],
+    [{"seat": "signer_1", "name": "Rosa Alvarez", "email": "rosa@example.com"}],
 )
 print(doc["id"], doc["state"])
 ```
@@ -7198,7 +7511,7 @@ func main() {
 	ctx := context.WithValue(context.Background(), docustay.ContextAccessToken, os.Getenv("DOCUSTAY_API_KEY"))
 
 	request := *docustay.NewSendRequest(os.Getenv("DOCUSTAY_TEMPLATE_ID"), []docustay.SendRequestPartiesInner{
-		*docustay.NewSendRequestPartiesInner("signer_1", "Pat Example", "pat@example.com"),
+		*docustay.NewSendRequestPartiesInner("signer_1", "Rosa Alvarez", "rosa@example.com"),
 	})
 	doc, _, err := client.DocumentsAPI.SendDocument(ctx).SendRequest(request).IdempotencyKey(fmt.Sprintf("send-%d", time.Now().UnixNano())).Execute()
 	if err != nil {
@@ -7233,7 +7546,7 @@ $api = new Docustay\Api\DocumentsApi(new GuzzleHttp\Client(), $config);
 $request = new Docustay\Model\SendRequest([
     'template_id' => getenv('DOCUSTAY_TEMPLATE_ID'),
     'parties' => [new Docustay\Model\SendRequestPartiesInner([
-        'seat' => 'signer_1', 'name' => 'Pat Example', 'email' => 'pat@example.com',
+        'seat' => 'signer_1', 'name' => 'Rosa Alvarez', 'email' => 'rosa@example.com',
     ])],
 ]);
 $doc = $api->sendDocument(bin2hex(random_bytes(16)), $request);
@@ -7262,7 +7575,7 @@ var api = new DocumentsApi(config);
 
 var request = new SendRequest(
     templateId: Guid.Parse(Environment.GetEnvironmentVariable("DOCUSTAY_TEMPLATE_ID")!),
-    parties: new List<SendRequestPartiesInner> { new SendRequestPartiesInner(seat: "signer_1", name: "Pat Example", email: "pat@example.com") });
+    parties: new List<SendRequestPartiesInner> { new SendRequestPartiesInner(seat: "signer_1", name: "Rosa Alvarez", email: "rosa@example.com") });
 var doc = api.SendDocument(Guid.NewGuid().ToString(), request);
 Console.WriteLine($"{doc.Id} {doc.State}");
 ```
@@ -7281,7 +7594,7 @@ Docustay sends documents for signature. Everything you can do in the app you can
 | Turn HTML or a tagged PDF into a template | [Templates and text tags](/docs/templates-and-text-tags.md) |
 | Show the signing form inside your own app | [Embedded signing](/docs/embedding.md) |
 | Start from a ready-made template | [The template library](/docs/template-library) |
-| Search the workspace, list and refund payments | [Search and payments](/docs/payments-and-playbooks) |
+| Search the workspace, list and refund payments | [Search and payments](/docs/search-and-payments) |
 | List the built-in templates, draft from one, customize one, switch packs on | [The template library](/docs/template-library.md) |
 | Get told when a document is signed | [Webhooks](/docs/webhooks.md) |
 | Practise without sending anything real | [Test mode](/docs/test-mode.md) |
@@ -7299,7 +7612,7 @@ A typical integration is small. Your system decides a document is needed, calls 
 ```bash
 curl -X POST https://docustay.app/api/v1/documents/send \
   -H "Authorization: Bearer $DOCUSTAY_API_KEY" -H "Idempotency-Key: $(uuidgen)" -H "Content-Type: application/json" \
-  -d '{ "templateId": "TEMPLATE_ID", "parties": [{ "seat": "signer_1", "name": "Rosa Alvarez", "email": "rosa@example.com" }] }'
+  -d '{ "templateId": "'"$DOCUSTAY_TEMPLATE_ID"'", "parties": [{ "seat": "signer_1", "name": "Rosa Alvarez", "email": "rosa@example.com" }] }'
 ```
 
 ## Where to start
@@ -7368,7 +7681,7 @@ curl -X POST https://app.docustay.app/api/v1/documents/send \
 ## 3. Follow it
 
 ```bash
-curl https://app.docustay.app/api/v1/documents/DOCUMENT_ID -H "Authorization: Bearer $DOCUSTAY_API_KEY"
+curl https://app.docustay.app/api/v1/documents/$DOCUSTAY_DOCUMENT_ID -H "Authorization: Bearer $DOCUSTAY_API_KEY"
 ```
 
 `state` moves `sent` → `partially_signed` → `executed` (or `declined`, `expired`, `void`). When it is `executed`, `GET /api/v1/documents/{id}/signed.pdf` returns the sealed copy. The sealed PDF is made a few seconds after the last signature (the document says `signedCopyAvailable: true` once it exists); until then the call answers 404 "the sealed copy is being made", so ask again after a moment, or wait for the `documents.document.executed` webhook.
@@ -7415,7 +7728,7 @@ npx docustay whoami
 Or send a practice document from a template in one line, with your own address as the signer (a test key emails only you):
 
 ```bash
-npx docustay send --test TEMPLATE_ID --party "signer_1=Alex Rivera <you@example.com>"
+npx docustay send --test $DOCUSTAY_TEMPLATE_ID --party "signer_1=Alex Rivera <you@example.com>"
 ```
 
 ## If a step fails
@@ -7922,7 +8235,7 @@ Two more come from the workspace rather than a document: `documents.template.fie
 4. Queue the work (fetch the document, save the signed copy) and answer `200` at once. Do slow work after you have answered.
 
 ```bash
-curl https://docustay.app/api/v1/documents/DOCUMENT_ID/signed.pdf \
+curl https://docustay.app/api/v1/documents/$DOCUSTAY_DOCUMENT_ID/signed.pdf \
   -H "Authorization: Bearer $DOCUSTAY_API_KEY" -o signed.pdf
 ```
 
@@ -7956,19 +8269,19 @@ Use test mode to check your whole flow before anything real is sent: that your t
 
 ## A short run-through
 
-Put your test key (it starts `dsk_test_`) in `DOCUSTAY_API_KEY`, the same variable every other page uses, and the id of one of your templates in place of `TEMPLATE_ID` (`GET /api/v1/documents/templates` lists them). Send, and open the email:
+Put your test key (it starts `dsk_test_`) in `DOCUSTAY_API_KEY`, the same variable every other page uses, and the id of one of your templates in place of `$DOCUSTAY_TEMPLATE_ID` (`GET /api/v1/documents/templates` lists them). Send, and open the email:
 
 ```bash
 curl -X POST https://app.docustay.app/api/v1/documents/send \
   -H "Authorization: Bearer $DOCUSTAY_API_KEY" \
   -H "Idempotency-Key: $(uuidgen)" -H "Content-Type: application/json" \
-  -d '{ "templateId": "TEMPLATE_ID", "parties": [{ "seat": "signer_1", "name": "Practice Person", "email": "someone@example.com" }] }'
+  -d '{ "templateId": "'"$DOCUSTAY_TEMPLATE_ID"'", "parties": [{ "seat": "signer_1", "name": "Practice Person", "email": "someone@example.com" }] }'
 ```
 
-The answer is the same shape as a live send (it does not carry a `test` field); fetching the document afterwards shows `"test": true`. The email arrives in your own inbox, not someone@example.com's. Sign it, then fetch the document, with the `id` the send answered in place of `DOCUMENT_ID`:
+The answer is the same shape as a live send (it does not carry a `test` field); fetching the document afterwards shows `"test": true`. The email arrives in your own inbox, not the address you put on the seat. Sign it, then fetch the document, with the `id` the send answered in place of `$DOCUSTAY_DOCUMENT_ID`:
 
 ```bash
-curl https://app.docustay.app/api/v1/documents/DOCUMENT_ID -H "Authorization: Bearer $DOCUSTAY_API_KEY"
+curl https://app.docustay.app/api/v1/documents/$DOCUSTAY_DOCUMENT_ID -H "Authorization: Bearer $DOCUSTAY_API_KEY"
 ```
 
 ## What test mode does not do
@@ -8267,12 +8580,12 @@ Install from the registries: `npm install @docustay2026/sdk` (JavaScript and Typ
 ```js
 import { Docustay } from "@docustay2026/sdk";
 const docustay = new Docustay(process.env.DOCUSTAY_API_KEY);
-const doc = await docustay.sendDocument({ templateId: "TEMPLATE_ID", parties: [{ seat: "signer_1", name: "Rosa Alvarez", email: "rosa@example.com" }] });
+const doc = await docustay.sendDocument({ templateId: process.env.DOCUSTAY_TEMPLATE_ID, parties: [{ seat: "signer_1", name: "Rosa Alvarez", email: "rosa@example.com" }] });
 console.log(doc.id, doc.state);
 ```
 
 ```python
-doc = d.send_document(template_id="TEMPLATE_ID", parties=[{"seat": "signer_1", "name": "Rosa Alvarez", "email": "rosa@example.com"}])
+doc = d.send_document(template_id=os.environ["DOCUSTAY_TEMPLATE_ID"], parties=[{"seat": "signer_1", "name": "Rosa Alvarez", "email": "rosa@example.com"}])
 print(doc["id"], doc["state"])
 ```
 
@@ -8381,7 +8694,7 @@ A server other than `https://app.docustay.app` (a self-hosted install or a pract
 
 ## Words and people, and the assistant
 
-Besides sending a template, the server can make a **draft** from written words and people (`create_document`, `use_template`), check it (`check_document`), read and change it (`get_draft_source`, `revise_document`), set a template's defaults (`set_template_defaults`), ask the Docustay assistant to draft or to propose changes (`draft_document_with_ai`, `edit_document_with_ai`, `cancel_ai_job`), read the wizard's questions (`get_wizard`) and ask whether Stripe is ready for a payment (`get_payments_status`). It can also search the workspace (`search_documents`), list payments (`list_payments`) and list the playbooks (`list_playbooks`). Refunds and switching a playbook on are left to a person: see [Search and payments](/docs/payments-and-playbooks). Making or changing a draft emails nobody: `send_draft` is the only step that does, and it previews first. The assistant's edits come back as proposals for a person to accept. See [Documents from words and people](/docs/documents-from-words.md).
+Besides sending a template, the server can make a **draft** from written words and people (`create_document`, `use_template`), check it (`check_document`), read and change it (`get_draft_source`, `revise_document`), set a template's defaults (`set_template_defaults`), ask the Docustay assistant to draft or to propose changes (`draft_document_with_ai`, `edit_document_with_ai`, `cancel_ai_job`), read the wizard's questions (`get_wizard`) and ask whether Stripe is ready for a payment (`get_payments_status`). It can also search the workspace (`search_documents`), list payments (`list_payments`) and list the playbooks (`list_playbooks`). Refunds and switching a playbook on are left to a person: see [Search and payments](/docs/search-and-payments). Making or changing a draft emails nobody: `send_draft` is the only step that does, and it previews first. The assistant's edits come back as proposals for a person to accept. See [Documents from words and people](/docs/documents-from-words.md).
 
 ## Claude Code plugin and skills
 
@@ -8389,10 +8702,10 @@ The `docustay` plugin bundles the server and five skills: sending for signature,
 
 ## A conversation, step by step
 
-You ask the assistant: "Send the mutual NDA to Sam at sam@example.com." It calls `list_templates`, finds the NDA, then calls `send_document` without `confirm`. The preview says who would be emailed and from which template. You say yes; it calls `send_document` again with `confirm: true`. Nothing is sent until that second call.
+You ask the assistant to send the mutual NDA to Sam, and give it Sam's email address. It calls `list_templates`, finds the NDA, then calls `send_document` without `confirm`. The preview says who would be emailed and from which template. You say yes; it calls `send_document` again with `confirm: true`. Nothing is sent until that second call.
 
 ```json
-{ "name": "send_document", "arguments": { "templateId": "TEMPLATE_ID", "parties": [{ "seat": "signer_1", "name": "Sam", "email": "sam@example.com" }], "confirm": true } }
+{ "name": "send_document", "arguments": { "templateId": "6f1c1f0e-7a0c-4d1d-9b5e-2f0a7b1c3d4e", "parties": [{ "seat": "signer_1", "name": "Sam", "email": "sam@example.com" }], "confirm": true } }
 ```
 
 ## Reading and saving
@@ -10457,7 +10770,7 @@ Add an `email` object to a send or a draft:
 import { Docustay } from "@docustay2026/sdk";
 const docustay = new Docustay(process.env.DOCUSTAY_API_KEY);
 const templateId = process.env.DOCUSTAY_TEMPLATE_ID;   // one of your templates: GET /api/v1/documents/templates lists their ids
-const parties = [{ seat: "signer_1", name: "Pat Example", email: "pat@example.com" }];
+const parties = [{ seat: "signer_1", name: "Rosa Alvarez", email: "rosa@example.com" }];
 await docustay.sendDocument({
   templateId, parties,
   email: { subject: "Your agreement", message: "Thanks for choosing us.", replyTo: "hello@example.com", senderName: "Example Co" },
@@ -10616,7 +10929,7 @@ Every setting you can give a self-hosted Docustay, as environment variables in `
 
 ## Advanced settings
 
-The code also reads the variables below. They tune limits and connections you will rarely need to change. Another 64 variables (plan prices and limits, and the hosted service's own accounts for Stripe Connect, Firebase, Cloudflare, domains and the like) belong to the hosted service only; a self-hosted install ignores them.
+The code also reads the variables below. They tune limits and connections you will rarely need to change. Another 65 variables (plan prices and limits, and the hosted service's own accounts for Stripe Connect, Firebase, Cloudflare, domains and the like) belong to the hosted service only; a self-hosted install ignores them.
 
 - `ANTHROPIC_WORKSPACE_ID`
 - `DOCUMENT_SIGNING_CERT_P12`
@@ -10684,6 +10997,7 @@ The code also reads the variables below. They tune limits and connections you wi
 - `KEYSTONE_LIMITER_POOL_MAX`
 - `KEYSTONE_MAIL_ALERT_TO`
 - `KEYSTONE_MAIL_CAPTURE_SMTP`
+- `KEYSTONE_MAIL_PAUSED`
 - `KEYSTONE_OCR_LANG_PATH`
 - `KEYSTONE_PG_IDLE_TX_MS`
 - `KEYSTONE_PG_LOCK_WAIT_MS`
@@ -10698,6 +11012,7 @@ The code also reads the variables below. They tune limits and connections you wi
 - `KEYSTONE_UNSUBSCRIBE_SECRET`
 - `KEYSTONE_VERSION`
 - `KEYSTONE_WORKER_DATABASE_URL`
+- `KEYSTONE_WORKER_FAST_SLOTS`
 - `KEYSTONE_WORKER_LOG`
 - `KEYSTONE_WORKER_RESERVED_SLOTS`
 - `MICROSOFT_GRAPH_OAUTH_CLIENT_ID`
@@ -11306,7 +11621,7 @@ npx next dev
 In a second terminal, send yourself a document:
 
 ```bash
-curl -X POST localhost:3000/api/send -H 'content-type: application/json' -d '{"name":"Pat Example","email":"pat@example.com"}'
+curl -X POST localhost:3000/api/send -H 'content-type: application/json' -d '{"name":"Rosa Alvarez","email":"rosa@example.com"}'
 ```
 
 Open `/sign?id=<the id it returns>`, sign, and watch your webhook route log `documents.document.executed`. When it works, swap in a live key.
@@ -11349,7 +11664,7 @@ from docustay import Docustay
 docustay = Docustay(os.environ["DOCUSTAY_API_KEY"])
 doc = docustay.send_document(
     os.environ["DOCUSTAY_TEMPLATE_ID"],
-    [{"seat": "signer_1", "name": "Pat Example", "email": "pat@example.com"}],
+    [{"seat": "signer_1", "name": "Rosa Alvarez", "email": "rosa@example.com"}],
 )
 print(doc["id"], doc["state"])
 ```
@@ -11448,7 +11763,7 @@ const source = { type: "doc", content: [
   { type: "paragraph", content: [{ type: "text", text: "The Client agrees to the services described in this agreement." }] },
   { type: "paragraph", content: [{ type: "fieldTag", attrs: { name: "Sign here", type: "signature", role: "Client" } }] },
 ] };
-const people = [{ name: "Pat Example", email: "pat@example.com", role: "Client" }];
+const people = [{ name: "Rosa Alvarez", email: "rosa@example.com", role: "Client" }];
 const check = await docustay.checkDocument({ source, people });   // read every problem it lists
 const draft = await docustay.createDocument({ title: "Services agreement", source, people });
 console.log(check, draft.id);

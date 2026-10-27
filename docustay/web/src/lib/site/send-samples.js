@@ -14,7 +14,7 @@ func main() {
 	if base == "" {
 		base = "https://app.docustay.app"
 	}
-	body := []byte(\`{"templateId":"\` + os.Getenv("DOCUSTAY_TEMPLATE_ID") + \`","parties":[{"seat":"signer_1","name":"Pat Example","email":"pat@example.com"}]}\`)
+	body := []byte(\`{"templateId":"\` + os.Getenv("DOCUSTAY_TEMPLATE_ID") + \`","parties":[{"seat":"signer_1","name":"Rosa Alvarez","email":"rosa@example.com"}]}\`)
 	req, _ := http.NewRequest("POST", base+"/api/v1/documents/send", bytes.NewReader(body))
 	req.Header.Set("Authorization", "Bearer "+os.Getenv("DOCUSTAY_API_KEY"))
 	req.Header.Set("Content-Type", "application/json")
@@ -34,7 +34,7 @@ export const PHP = `<?php
 $base = getenv("DOCUSTAY_URL") ?: "https://app.docustay.app";
 $body = json_encode([
   "templateId" => getenv("DOCUSTAY_TEMPLATE_ID"),
-  "parties" => [["seat" => "signer_1", "name" => "Pat Example", "email" => "pat@example.com"]],
+  "parties" => [["seat" => "signer_1", "name" => "Rosa Alvarez", "email" => "rosa@example.com"]],
 ]);
 $ch = curl_init($base . "/api/v1/documents/send");
 curl_setopt_array($ch, [
@@ -56,7 +56,7 @@ using System.Text;
 
 var baseUrl = Environment.GetEnvironmentVariable("DOCUSTAY_URL") ?? "https://app.docustay.app";
 var body = "{\\"templateId\\":\\"" + Environment.GetEnvironmentVariable("DOCUSTAY_TEMPLATE_ID") + "\\","
-  + "\\"parties\\":[{\\"seat\\":\\"signer_1\\",\\"name\\":\\"Pat Example\\",\\"email\\":\\"pat@example.com\\"}]}";
+  + "\\"parties\\":[{\\"seat\\":\\"signer_1\\",\\"name\\":\\"Rosa Alvarez\\",\\"email\\":\\"rosa@example.com\\"}]}";
 using var http = new HttpClient();
 using var request = new HttpRequestMessage(HttpMethod.Post, baseUrl + "/api/v1/documents/send") { Content = new StringContent(body, Encoding.UTF8, "application/json") };
 request.Headers.Add("Authorization", "Bearer " + Environment.GetEnvironmentVariable("DOCUSTAY_API_KEY"));

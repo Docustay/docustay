@@ -77,7 +77,7 @@ const row = (label, { periodic = false } = {}) =>
                   retrySeconds: periodic ? PERIODIC_RETRY_SECONDS : RETRY_SCHEDULE_SECONDS });
 
 /** Graphile priority per task (LOWER RUNS FIRST; everything not listed is 0). A signed copy never waits behind AI drafts, bulk sends, reminders or sweeps. */
-export const JOB_PRIORITY = Object.freeze({ archive_document_pdf: -20, dispatch_outbox: -10, document_ai_draft: -5, document_detect_page: -5 });   // the next document goes out ahead of the minute sweeps   // a person is watching an AI draft: ahead of sweeps, bulk sends and reminders (0), behind the sealed copy
+export const JOB_PRIORITY = Object.freeze({ archive_document_pdf: -20, dispatch_outbox: -12, document_ai_draft: -5, document_detect_page: -5 });   // the next document goes out ahead of the minute sweeps   // a person is watching an AI draft: ahead of sweeps, bulk sends and reminders (0), behind the sealed copy
 
 export const JOB_POLICY = Object.freeze({
   dispatch_outbox:            row("Delivering a practice's events to their listeners", { periodic: true }),
@@ -202,13 +202,14 @@ const RETRYABLE_KINDS = new Set([ErrorKind.DEPENDENCY, ErrorKind.TIMEOUT, ErrorK
  *   is a `timeout`, and still must not be retried, because a retry could send it twice (02 §2.6).
  */
 export class JobFailure extends Error {
-  constructor(kind, reason, { retryable, retryAfterSeconds = null, cause } = {}) {
+  constructor(kind, reason, { retryable, retryAfterSeconds = null, quickRetry = false, cause } = {}) {
     super(reason, { cause });
     if (!Object.values(ErrorKind).includes(kind)) throw new Error(`JobFailure: unknown kind "${kind}"`);
     this.name = "JobFailure";
     this.kind = kind;
     this.retryable = retryable ?? RETRYABLE_KINDS.has(kind);
     this.retryAfterSeconds = retryAfterSeconds;
+    this.quickRetry = quickRetry === true;   // 26 Oct 2026: "not saved yet" (the job ran before the dispatcher's transaction committed): try again in 2, 3 and 5 seconds, not after a minute
   }
 }
 
@@ -261,7 +262,7 @@ export function plainText(s, max = 300) {
  */
 export function classifyFailure(err) {
   if (err instanceof JobFailure) {
-    return { kind: err.kind, retryable: err.retryable, retryAfterSeconds: err.retryAfterSeconds, detail: plainText(err.message) };
+    return { kind: err.kind, retryable: err.retryable, retryAfterSeconds: err.retryAfterSeconds, quick: err.quickRetry === true, detail: plainText(err.message) };
   }
   if (err instanceof AppError) {
     // ★ M4: an `internal` AppError that WRAPS a failure (toAppError, internal(msg, cause)) is judged by what it wraps
@@ -387,11 +388,18 @@ export const DELIVERY_JOBS = Object.freeze(new Set(["deliver_webhooks", "deliver
 /** Periodic tasks that are NOT sweeps: they feed the delivery lane (dispatch), call out to a client's site (pulls), or are the platform's. */
 const NOT_A_SWEEP = Object.freeze(new Set(["dispatch_outbox", "run_pull"]));
 export function laneOf(name) {
+  if (name === "deliver_notification_email") return "e";   // 26 Oct 2026: a person's email never waits behind a slow webhook endpoint of the same workspace (measured: 54 s behind an endpoint that took a minute to answer)
   if (DELIVERY_JOBS.has(name)) return "d";
   if (JOB_POLICY[name]?.periodic && !NOT_A_SWEEP.has(name) && !PLATFORM_WIDE_JOBS.has(name)) return "s";
   return "";
 }
-export const LANE_SUFFIX = Object.freeze({ "": "", d: ":d", s: ":s" });
+export const LANE_SUFFIX = Object.freeze({ "": "", d: ":d", e: ":e", s: ":s" });
+// ★★★ 26 Oct 2026 (launch night) — THE LANE FOR WHAT A PERSON IS WAITING ON. Measured on beta under a 17,000-job backlog: a signing email, a reminder, a webhook and a signed copy took 1 to 3 seconds (they are sent inside the request), but the owner's "someone signed" email took 54 to 62 seconds,
+//   because it waits for a workspace's outbox dispatch and then its email job, and both queue behind the once-a-minute dispatch the sweep adds for EVERY workspace (hundreds of them at the same priority) on the same five slots as the heavy document and AI jobs.
+//   So these tasks get a worker runner of their own (KEYSTONE_WORKER_FAST_SLOTS, default 4) that takes nothing else, and the main runner no longer takes them. Priority ladder, lowest number first: sealing and archiving -20, outbox wake-up dispatch -12, notification emails and webhook deliveries -10,
+//   the sweep's backstop dispatch -1, everything else 0; sweeps run on their own capped runner (KEYSTONE_WORKER_RESERVED_SLOTS). Fairness between workspaces is the per-workspace queue (one job at a time per lane per workspace).
+export const FAST_TASKS = Object.freeze(new Set(["dispatch_outbox", "deliver_notification_email", "deliver_webhooks", "deliver_n8n", "archive_document_pdf"]));
+export const isFastTask = (name) => FAST_TASKS.has(name);
 /** Sweeps and the platform-wide jobs: what the reserved worker slots will take (and ONLY these). */
 export const isReservedTask = (name) => laneOf(name) === "s" || PLATFORM_WIDE_JOBS.has(name);
 /** Pending deliveries in one practice's delivery lane beyond which the dispatcher stops handing it more (events stay safe in the outbox). */
@@ -475,7 +483,8 @@ export async function addJobWithPolicy(adder, name, payload, opts = {}) {
 const GRAPHILE_FAIL_BACKOFF_SQL = `(exp(least(j.attempts, 10)) * interval '1 second')`;
 
 /** The wait after attempt `attempt` failed: the schedule's step, or Retry-After when that is longer. */
-function waitSeconds(p, attempt, retryAfterSeconds) {
+function waitSeconds(p, attempt, retryAfterSeconds, quick = false) {
+  if (quick && attempt >= 1 && attempt <= 3) return [2, 3, 5][attempt - 1];
   const step = p.retrySeconds[Math.min(Math.max(attempt, 1), p.retrySeconds.length) - 1];
   const ra = Number.isFinite(retryAfterSeconds) && retryAfterSeconds > 0 ? Math.min(retryAfterSeconds, 86_400) : 0;
   return Math.max(step, Math.ceil(ra));
@@ -510,7 +519,7 @@ async function decide(taskName, payload, helpers, c) {
       //   legacy job gives up at the 6th attempt like any other instead of retrying 12-hourly for another ten days.
       const max = Math.min(r.max_attempts, p.maxAttempts);
       if (c.retryable && r.attempts < max) {
-        const wait = waitSeconds(p, r.attempts, c.retryAfterSeconds);
+        const wait = waitSeconds(p, r.attempts, c.retryAfterSeconds, c.quick === true);
         await pg.query(
           `UPDATE graphile_worker._private_jobs j
               SET run_at = now() + make_interval(secs => $2) - ${GRAPHILE_FAIL_BACKOFF_SQL}

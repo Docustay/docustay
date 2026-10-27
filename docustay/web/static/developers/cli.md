@@ -51,7 +51,7 @@ DOCUSTAY_API_KEY and DOCUSTAY_URL override the saved ones.
 ```
 export DOCUSTAY_API_KEY=dsk_test_…
 export DOCUSTAY_URL=https://sign.example.com   # only for a self-hosted install
-npx docustay send --test TEMPLATE_ID --party signer_1="Pat Example <pat@example.com>" --json
+npx docustay send --test $DOCUSTAY_TEMPLATE_ID --party signer_1="Rosa Alvarez <rosa@example.com>" --json
 ```
 
 ## Build a receiver without a public address.

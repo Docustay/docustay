@@ -64,7 +64,7 @@
 
 import { run, runOnce, makeWorkerUtils, Logger } from "graphile-worker";
 import { TASK_LIST, requestDispatchStop, resumeDispatch } from "./tasks.mjs";
-import { addJobWithPolicy, isReservedTask } from "./jobPolicy.mjs";
+import { addJobWithPolicy, isReservedTask, isFastTask } from "./jobPolicy.mjs";
 import { wrapWithRunLedger } from "./runLedger.mjs";
 
 /** ★ The one place the worker's connection string is resolved, so there is one answer to "as whom". */
@@ -289,7 +289,9 @@ export async function startWorker({ connectionString, concurrency = 5, sweepEver
   //     runner's task list.) `KEYSTONE_WORKER_RESERVED_SLOTS` sets the number (default 2, at least 1).
   const fullList = wrapWithRunLedger({ ...TASK_LIST });
   const reservedList = Object.fromEntries(Object.entries(fullList).filter(([name]) => isReservedTask(name)));
-  const mainList = Object.fromEntries(Object.entries(fullList).filter(([name]) => !isReservedTask(name)));
+  const fastList = Object.fromEntries(Object.entries(fullList).filter(([name]) => isFastTask(name) && !isReservedTask(name)));
+  const mainList = Object.fromEntries(Object.entries(fullList).filter(([name]) => !isReservedTask(name) && !isFastTask(name)));
+  const fastSlots = Math.max(1, Number.parseInt(process.env.KEYSTONE_WORKER_FAST_SLOTS ?? "4", 10) || 4);
   const reservedSlots = Math.max(1, Number.parseInt(process.env.KEYSTONE_WORKER_RESERVED_SLOTS ?? "2", 10) || 2);
   const runnerOptions = {
     connectionString: cs,
@@ -301,6 +303,7 @@ export async function startWorker({ connectionString, concurrency = 5, sweepEver
     }),
   };
   const sweepRunner = await run({ ...runnerOptions, taskList: reservedList, concurrency: reservedSlots });
+  const fastRunner = await run({ ...runnerOptions, taskList: fastList, concurrency: fastSlots });
   const runner = await run({
     connectionString: cs,
     taskList: mainList,
@@ -365,6 +368,7 @@ export async function startWorker({ connectionString, concurrency = 5, sweepEver
   return {
     runner,
     sweepRunner,
+    fastRunner,
     async stop() {
       clearInterval(timer);
       clearInterval(beatTimer);
@@ -376,6 +380,7 @@ export async function startWorker({ connectionString, concurrency = 5, sweepEver
       // ★★ `runner.stop()` lets in-flight jobs finish. It does NOT abandon them — and an abandoned job
       //    would be recovered anyway by graphile's lock expiry, which is feature (5) above and the same
       //    property migration 0040 gave the outbox.
+      await fastRunner.stop();
       await runner.stop();
       await sweepRunner.stop();
     },

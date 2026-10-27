@@ -15,7 +15,7 @@ exact["/templates/intake-form"] = "/free-templates"; exact["/templates/consent-t
 Object.assign(exact, { "/trust/security": "/trust#security", "/trust/privacy": "/trust#privacy", "/trust/data-handling": "/trust#privacy", "/trust/audit-trail": "/trust#proof", "/trust/signature-standards": "/trust#proof", "/trust/sub-processors": "/trust#sub-processors" });
 // 17 Oct 2026 (V1): the Forms system, Automations and the translated docs are gone; the two template indexes became one; Facts folded into About. Every old address goes to its new home in ONE hop.
 import { FORMS } from "./pages/formTemplates.js";
-Object.assign(exact, { "/features/automations": "/whats-next", "/facts": "/about#facts", "/docs/languages": "/docs/index", "/docs/email-templates": "/docs/email-api", "/docs/contracts-payments-playbooks": "/docs/payments-and-playbooks",
+Object.assign(exact, { "/docs/payments-and-playbooks": "/docs/search-and-payments", "/features/automations": "/whats-next", "/facts": "/about#facts", "/docs/languages": "/docs/index", "/docs/email-templates": "/docs/email-api", "/docs/contracts-payments-playbooks": "/docs/payments-and-playbooks",
   "/form-templates": "/free-templates", "/document-templates": "/free-templates", "/templates": "/free-templates" });
 for (const f of FORMS) exact[`/form-templates/${f.slug}`] = `/templates/${f.slug}`;
 export const REDIRECTS = exact;

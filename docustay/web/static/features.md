@@ -17,22 +17,29 @@ All the e-signature features, from creating a document to a sealed copy: send it
 
 ## One page for each thing Docustay does.
 
-Open any of them for the details, the limits and the questions people ask.
+Send and sign, get paid and use AI, and make it yours. Open any of them for the details, the limits and the questions people ask.
 
-- [How it works](/features/how-it-works): The whole flow, from creating a document to the sealed copy.
-- [Scribe](/features/scribe): Describe a document in plain words and review what Scribe builds.
-- [Templates](/free-templates): 54 templates, free, with every page real.
-- [Payments](/features/payments): The signer pays as part of signing, into your own Stripe account.
-- [Proof and verify](/features/proof): A certificate with every signed copy, and a verify page that needs no account.
+**How it works.** The whole flow, from creating a document to the sealed copy.
 
-## Four ways to make it yours.
+**Signing.** What the signer sees: any device, no account, drawn or typed.
 
-These are what you reach for when Docustay sits inside your own app.
+**Templates and sending.** Text tags, field detection, the library and sending to a list.
 
-- [Embedded signing](/features/embedded-signing): Show the signer, the builder and Scribe inside your own site.
-- [Test mode](/features/test-mode): A full sandbox: test keys, watermarked documents, mail only to you.
-- [Agent-ready](/features/agent-ready): An MCP server and a Claude plugin. Agents draft; people send.
-- [Your brand](/features/white-label): Your logo, your colour and your name on every email, on every plan.
+**Proof and verify.** A certificate with every signed copy, and a verify page that needs no account.
+
+**Payments.** The signer pays as part of signing, into your own Stripe account.
+
+**Scribe.** Describe a document in plain words and review what Scribe builds.
+
+**AI agents.** Let an assistant draft. A person approves the send.
+
+**Your brand.** Your logo and your colours on the signing page.
+
+**Embedded signing.** Show the signer inside your own product.
+
+**Team and roles.** Owner, Admin and Member, and what each costs.
+
+**Test mode.** A full sandbox where nothing reaches a real inbox.
 
 ## You do not need to write code.
 
@@ -44,7 +51,7 @@ These are what you reach for when Docustay sits inside your own app.
 
 ## Free, Pay as you go and Pro.
 
-|  | Free | Pay as you go | Pro |
+| What you get | Free | Pay as you go | Pro |
 | --- | --- | --- | --- |
 | Documents a month | 15 | 15 free, then $0.50 each | Unlimited |
 | AI drafts a month | 10 | 10 free, then $0.30 each | 100, then $0.30 each |
@@ -94,7 +101,7 @@ Every page above has a matching guide for the people who build with it.
 
 - [Quickstart](/docs/quickstart): A test key, a send and a webhook in about ten minutes.
 - [Templates and text tags](/docs/templates-and-text-tags): Write fields into a file and they place themselves.
-- [Payments in the API](/docs/payments-and-playbooks): List payments and refund with a reason.
+- [Payments in the API](/docs/search-and-payments): List payments and refund with a reason.
 - [Embedding](/docs/embedding): The elements, the allow list and the events.
 - [MCP and the Claude plugin](/docs/mcp-and-skills): Connect an assistant and set a draft-only key.
 - [Test mode](/docs/test-mode): Keys, watermarks and the listen command.

@@ -1,11 +1,11 @@
 ---
-title: Template library API for documents
-description: List the 54 built-in templates, draft from one or customize it, and manage skills and playbooks over the API. Built-in templates are free; your own Plays and Playbooks are on Pro.
+title: Plays and Playbooks API
+description: List the built-in Plays, draft from one or customize it, and manage your own Plays and Playbooks over the API. Built-in templates are free; your own Plays and Playbooks are on Pro.
 ---
 
 # Plays and Playbooks API
 
-List the built-in templates, draft from one, and publish your own skills and playbooks.
+List the built-in templates, draft from one, and publish your own Plays and Playbooks.
 
 ## The routes.
 

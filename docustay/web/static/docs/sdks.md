@@ -52,12 +52,12 @@ Install from the registries: `npm install @docustay2026/sdk` (JavaScript and Typ
 ```js
 import { Docustay } from "@docustay2026/sdk";
 const docustay = new Docustay(process.env.DOCUSTAY_API_KEY);
-const doc = await docustay.sendDocument({ templateId: "TEMPLATE_ID", parties: [{ seat: "signer_1", name: "Rosa Alvarez", email: "rosa@example.com" }] });
+const doc = await docustay.sendDocument({ templateId: process.env.DOCUSTAY_TEMPLATE_ID, parties: [{ seat: "signer_1", name: "Rosa Alvarez", email: "rosa@example.com" }] });
 console.log(doc.id, doc.state);
 ```
 
 ```python
-doc = d.send_document(template_id="TEMPLATE_ID", parties=[{"seat": "signer_1", "name": "Rosa Alvarez", "email": "rosa@example.com"}])
+doc = d.send_document(template_id=os.environ["DOCUSTAY_TEMPLATE_ID"], parties=[{"seat": "signer_1", "name": "Rosa Alvarez", "email": "rosa@example.com"}])
 print(doc["id"], doc["state"])
 ```
 

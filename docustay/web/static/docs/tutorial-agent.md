@@ -24,7 +24,7 @@ const source = { type: "doc", content: [
   { type: "paragraph", content: [{ type: "text", text: "The Client agrees to the services described in this agreement." }] },
   { type: "paragraph", content: [{ type: "fieldTag", attrs: { name: "Sign here", type: "signature", role: "Client" } }] },
 ] };
-const people = [{ name: "Pat Example", email: "pat@example.com", role: "Client" }];
+const people = [{ name: "Rosa Alvarez", email: "rosa@example.com", role: "Client" }];
 const check = await docustay.checkDocument({ source, people });   // read every problem it lists
 const draft = await docustay.createDocument({ title: "Services agreement", source, people });
 console.log(check, draft.id);

@@ -7,6 +7,7 @@ import { DEV_PAGES } from "./developers.js";
 import { TRUST_PAGES } from "./trust.js";
 import { COMPANY_PAGES } from "./company.js";
 import { V1_PAGES } from "./v1.js";
+import { SUITE_PAGES } from "./payments-suite.js";
 import { AI_PLAN } from "./aiPlan.js";
 import facts from "../facts.gen.json" with { type: "json" };
 import { ADD as ADD3 } from "./pass3.js";
@@ -17,7 +18,7 @@ import { dollars, DEFAULT_PLANS, SELFHOST_PRO_YEARLY_MINOR, COMMERCIAL_FROM_MINO
 const ORDER = ["javascript", "typescript", "python", "go", "php", "csharp"];
 export const sendTabs = () => ORDER.filter((k) => SEND[k]).map((k) => ({ label: SEND_NAME[k] ?? k, code: SEND[k] }));
 
-const GROUPS = [FEATURE_PAGES, SELFHOST_PAGES, USECASE_PAGES, DEV_PAGES, TRUST_PAGES, COMPANY_PAGES, V1_PAGES];
+const GROUPS = [FEATURE_PAGES, SELFHOST_PAGES, USECASE_PAGES, DEV_PAGES, TRUST_PAGES, COMPANY_PAGES, V1_PAGES, SUITE_PAGES];
 const hubTabs = () => [{ label: "curl", code: CURL_SEND }, { label: "JavaScript", code: SEND.javascript }, { label: "Python", code: SEND.python }];
 const fill = (b) => (b.tabs === "__SEND_TABS__" ? { ...b, tabs: sendTabs() } : b.tabs === "__HUB_TABS__" ? { ...b, tabs: hubTabs() } : b.t === "tree" ? { ...b, selfPro: `${dollars(SELFHOST_PRO_YEARLY_MINOR)} a year per install`, commercial: `from about ${dollars(COMMERCIAL_FROM_MINOR)} a year` } : b);
 // The /product pages became /features (V2, 14 Oct 2026): every internal link and mention is rewritten once, here, so no page links to a redirect. Plays and Playbooks is the only name for reusable instructions.

@@ -18,6 +18,8 @@ export function securityHeaders() {
     if (!h.has("permissions-policy")) h.set("permissions-policy", PERMISSIONS);
     // a page that names its own frame-ancestors (the embedded signing form, served by docustay/web) already says who may frame it; the older header would override that in some browsers
     if (!h.has("x-frame-options") && !/frame-ancestors/i.test(h.get("content-security-policy") ?? "")) h.set("x-frame-options", "SAMEORIGIN");
+    // 26 Oct 2026 (SEC-008): a JSON answer is never rendered, so it can carry the strictest policy without touching any screen
+    if (!h.has("content-security-policy") && /^application\/(json|problem\+json)/i.test(h.get("content-type") ?? "")) h.set("content-security-policy", "default-src 'none'; frame-ancestors 'none'");
     if (!h.has("cross-origin-opener-policy")) h.set("cross-origin-opener-policy", "same-origin");
   };
 }

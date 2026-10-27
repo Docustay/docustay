@@ -494,6 +494,15 @@ export function registerAuthRoutes(app, { loginImpl = login } = {}) {
     return c.body(b, 200, { "content-type": type, "cache-control": "no-store", "x-content-type-options": "nosniff" });
   });
 
+  // 26 Oct 2026: a page whose session is gone asks why. The only reason this answers is "its workspace was deleted"; an unknown, expired or logged-out session answers false, so it is no oracle for anything else (the id it checks is the public half of the cookie, not the secret).
+  app.get("/api/auth/session-ended", async (c) => {
+    const parsed = parsePresented(bearerOrCookie(c));
+    let ended = false;
+    if (parsed) { try { ended = await withCredentialLookup(async (db) => (await db.query(`SELECT 1 FROM keystone.ended_session WHERE token_id = $1 AND reason = 'workspace_deleted'`, [parsed.tokenId])).rows.length > 0); } catch { ended = false; } }
+    if (ended) c.header("set-cookie", "ks_session=; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=0");
+    c.header("cache-control", "no-store");
+    return c.json({ ended }, 200);
+  });
   app.post("/api/auth/logout", async (c) => {
     // ★ Logout is best-effort by design: a caller with no valid session still gets a 204 and a
     //   cleared cookie. Telling them "that session did not exist" is an oracle. ★★ CT-024/F472 —

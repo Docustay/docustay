@@ -3,7 +3,7 @@ const SEND_CURL = `curl -X POST https://app.docustay.app/api/v1/documents/send \
   -H "Authorization: Bearer $DOCUSTAY_API_KEY" \\
   -H "Idempotency-Key: $(uuidgen)" \\
   -H "Content-Type: application/json" \\
-  -d '{ "templateId": "TEMPLATE_ID", "parties": [{ "seat": "signer_1", "name": "Rosa Alvarez", "email": "rosa@example.com" }] }'`;
+  -d '{ "templateId": "'"$DOCUSTAY_TEMPLATE_ID"'", "parties": [{ "seat": "signer_1", "name": "Rosa Alvarez", "email": "rosa@example.com" }] }'`;
 const SEND_RESP = `{ "id": "doc_…", "state": "sent", "test": true }`;
 const dev = (o) => ({ tpl: "T7", voice: "V2", hooks: "O F A", crumbs: [["Developers", "/developers"], [o.crumb, o.path]], ...o });
 export const DEV_PAGES = [
@@ -84,7 +84,7 @@ export const DEV_PAGES = [
       { t: "cols", eyebrow: "Three things to know", h2: "Connect it, call it, cut it off.", cols: [{ h: "Hosted connector", p: "Add one address to the assistant, sign in once and press Allow. Sign-in uses OAuth with PKCE. {{F-MCP}}" }, { h: "Plays API (Pro)", p: "List and publish plays, and call them from code. {{F-PLAYSAPI}}" }, { h: "Revoke any time", p: "Every use is in the audit log with the key's name. Revoking takes effect at once. {{F-DRAFTKEYS}}" }] },
       { t: "code", eyebrow: "Local server", h2: "The local MCP server runs on your computer.", tabs: [{ label: "mcp config", code: "{ \"mcpServers\": { \"docustay\": { \"command\": \"npx\", \"args\": [\"-y\", \"@docustay2026/mcp\"],\n  \"env\": { \"DOCUSTAY_API_KEY\": \"dsk_test_…\" } } } }" }], after: "Sends, reminders and voids show a preview first; a second call with confirm: true acts. Set DOCUSTAY_READ_ONLY=1 and every tool that changes anything is removed. {{F-MCP}}" },
       { t: "faq", items: [["Can I make it read-only?", "Yes. Set DOCUSTAY_READ_ONLY=1 and every tool that changes anything is removed. {{F-MCP}}"], ["Which assistants work?", "Any that speaks the Model Context Protocol and can use OAuth or a bearer key."], ["Where are the skills?", "The Claude Code plugin bundles the server and five skills: sending, text tags, embedded signing, webhooks and agent safety. {{F-MCP}}"], ["Does a tool return a signing link or a key?", "Never. No tool returns a signing link, a code or the key. {{F-MCP}}"]] },
-    ], closing: { title: "Connect an assistant.", label: "Read the connector guide", href: "/docs/connector" }, keep: [["Templates and skills API", "/developers/plays"], ["Keys and security", "/developers/keys-and-security"], ["Scribe", "/product/scribe"]], claimUntilProven: true }),
+    ], closing: { title: "Connect an assistant.", label: "Read the connector guide", href: "/docs/connector" }, keep: [["Plays and Playbooks API", "/developers/plays"], ["Keys and security", "/developers/keys-and-security"], ["Scribe", "/product/scribe"]], claimUntilProven: true }),
 
   dev({ path: "/developers/embedding", crumb: "Embedding the signer", seo: "Put the signer in your own page", meta: "Show the signing form inside your own page with the docustay-sign element. Sessions last one hour, origins are allow-listed, and your key stays on your server.", eyebrow: "DEVELOPERS · EMBEDDING",
     h1: "Embedding the signer", sub: "Put the signing form in your own page with one element. Your key stays on your server. {{F-EMBED}}",
@@ -106,9 +106,9 @@ export const DEV_PAGES = [
       { t: "faq", items: [["What does a 401 mean?", "The key is missing, wrong, revoked or lacks the scope. One answer covers all four on purpose."], ["Can a key expire?", "Yes. Set an expiry when you make it. {{F-API}}"], ["Can I limit where it is used?", "Yes. A key can be limited to addresses. {{F-API}}"]] },
     ], closing: { title: "Make a scoped key.", label: "Create an API key", href: "/signup" }, keep: [["REST API", "/developers/api"], ["Security", "/trust#security"], ["Agents", "/developers/agents"]] }),
 
-  dev({ path: "/developers/plays", crumb: "Templates and skills API", seo: "Template library API for documents", meta: "List the 54 built-in templates, draft from one or customize it, and manage skills and playbooks over the API. Built-in templates are free; your own skills and playbooks are on Pro.", eyebrow: "DEVELOPERS · PLAYS",
-    h1: "Templates and skills API", sub: "List the built-in templates, draft from one, and publish your own skills and playbooks. {{F-PLAYSAPI}}",
-    actions: [["Read the API reference", "/docs/api-reference", "main"], ["See Scribe", "/product/scribe", "alt"]], fine: "Your own skills on Pro",
+  dev({ path: "/developers/plays", crumb: "Plays and Playbooks API", seo: "Plays and Playbooks API", meta: "List the built-in Plays, draft from one or customize it, and manage your own Plays and Playbooks over the API. Built-in templates are free; your own Plays and Playbooks are on Pro.", eyebrow: "DEVELOPERS · PLAYS",
+    h1: "Plays and Playbooks API", sub: "List the built-in templates, draft from one, and publish your own Plays and Playbooks. {{F-PLAYSAPI}}",
+    actions: [["Read the API reference", "/docs/api-reference", "main"], ["See Scribe", "/product/scribe", "alt"]], fine: "Your own Plays on Pro",
     hero: { kind: "code", label: "List templates", tabs: [{ label: "curl", code: "curl https://app.docustay.app/api/v1/templates/library \\\n  -H \"Authorization: Bearer $DOCUSTAY_API_KEY\"" }] },
     blocks: [
       { t: "twofig", h2: "The routes.", a: { caption: "FIG. 01 · TEMPLATES", rows: [["GET", "/api/v1/templates/library: the built-in templates"], ["GET", "/api/v1/templates/library/{slug}"], ["POST", "/api/v1/templates/library/{slug}/documents"], ["POST", "/api/v1/templates/library/{slug}/customize"]] }, b: { caption: "FIG. 02 · SKILLS AND PLAYBOOKS", rows: [["GET", "/api/v1/plays: skills"], ["POST", "/api/v1/plays: publish your own"], ["GET", "/api/v1/playbooks: packs of templates and skills"], ["POST", "/api/v1/drafts: a draft from a template"]] } },

@@ -114,7 +114,7 @@ export const DPA_EXTRA = [
   ]) + p("If a signer writes to Docustay instead, we point them to the organisation that sent the document, and we help the organisation answer when asked.") },
 
   { after: "deletion", id: "retention-detail", title: "6A. Retention and deletion, step by step", bodyHtml: p(
-    "<strong>Whole workspace.</strong> An owner types the workspace name, signs in again recently and confirms that a paid plan ends at once, with no refund for the days left. There is a 7-day cooling-off period, every owner is emailed, and any owner can keep the workspace. After that, everything in it is removed, including signed copies and certificates.",
+    "<strong>Whole workspace.</strong> An owner types the workspace name, signs in again recently and confirms that a paid plan ends at once, with no refund for the days left. There is a 14-day cooling-off period, every owner is emailed, and any owner can keep the workspace. After that, everything in it is removed, including signed copies and certificates.",
     "<strong>A team member's account.</strong> Deletion has a 14-day cooling-off period in which the person can press Keep my account.",
     "<strong>What we keep.</strong> A platform record that a deletion happened: a SHA-256 hash of the lower-cased email address (or the workspace id), the date and a request id. It holds no names or addresses.",
     "<strong>Backups.</strong> Daily backups are deleted after 30 days, so deleted data can remain in a backup for up to 30 days. If a backup is restored, the recorded deletions are carried out again so that deleted people and workspaces do not come back.",

@@ -34,8 +34,8 @@ export const ADD4_PRODUCT = {
       { icon: "clock", h: "How long it is kept", p: "Signed documents stay in your workspace, and you can download the sealed copy and its audit log at any time. {{F-AUDIT}}" },
     ] },
     { t: "code", eyebrow: "Fetch it", h2: "Download the sealed copy from your own code.", tabs: [
-      { label: "Signed PDF", code: "curl https://docustay.app/api/v1/documents/DOCUMENT_ID/signed.pdf \\\n  -H \"Authorization: Bearer $DOCUSTAY_API_KEY\" -o signed.pdf" },
-      { label: "Audit log CSV", code: "curl https://app.docustay.app/api/v1/documents/DOCUMENT_ID/audit-log.csv \\\n  -H \"Authorization: Bearer $DOCUSTAY_API_KEY\"" },
+      { label: "Signed PDF", code: "curl https://docustay.app/api/v1/documents/$DOCUSTAY_DOCUMENT_ID/signed.pdf \\\n  -H \"Authorization: Bearer $DOCUSTAY_API_KEY\" -o signed.pdf" },
+      { label: "Audit log CSV", code: "curl https://app.docustay.app/api/v1/documents/$DOCUSTAY_DOCUMENT_ID/audit-log.csv \\\n  -H \"Authorization: Bearer $DOCUSTAY_API_KEY\"" },
     ], after: "Until the sealed copy exists the call answers 404 saying it is being made. Ask again after a moment, or wait for the documents.document.executed webhook. {{F-SEAL}}" },
     { t: "prose", eyebrow: "Self-hosting", h2: "On your own server, the seal is yours.", paras: [
       "A self-hosted install makes a signing certificate for itself at first run. Set your own to use one from a trusted authority, and point it at a timestamp authority so finished documents carry a trusted timestamp. {{F-SELFHOST}}",
@@ -64,7 +64,7 @@ export const ADD4_PRODUCT = {
     { t: "code", eyebrow: "Refunds", h2: "Give money back from your own code.", sub: "A refund goes through Stripe on your own account. Leave out the amount to refund the rest. A reason is required: the payer sees it on their receipt and it goes in the document's audit trail. {{F-PAYPAGE}}", tabs: [
       { label: "JavaScript", code: "const r = await docustay.refundPayment(paymentId, { amountMinor: 500, reason: \"Charged twice\" });" },
       { label: "Python", code: "docustay.refund_payment(payment_id, reason=\"Charged twice\")   # the rest of the payment" },
-      { label: "Command line", code: "docustay payments list\ndocustay payments refund PAYMENT_ID --reason \"Charged twice\" --amount-minor 500 --yes" },
+      { label: "Command line", code: "docustay payments list\ndocustay payments refund $DOCUSTAY_PAYMENT_ID --reason \"Charged twice\" --amount-minor 500 --yes" },
     ], after: "A refund moves money, so it needs an Idempotency-Key, and the same key never refunds twice. The command line never runs without --yes. The MCP server has no tool to refund, so only a person does. {{F-API}}" },
     { t: "limits", eyebrow: "Before the first payment", h2: "What has to be true to send a document with a payment field.", items: [
       ["Stripe connected", "Billing, Payments: set up payments, and Stripe's own sign-up page creates an account in your name, or choose I already have Stripe and sign in to the account you use. The status reads connected, needs_attention or not_connected."],
