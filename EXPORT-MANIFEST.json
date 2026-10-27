@@ -1,5 +1,5 @@
 {
- "source_commit": "c7d11b7886c1cc76b8734479d91baa55baa1cb18",
+ "source_commit": "754d169ecf92f443d41005014430418c6113068b",
  "files": [
   {
    "path": ".dockerignore",
@@ -9432,8 +9432,8 @@
   {
    "path": "docustay/web/src/routes/(site)/+page.svelte",
    "from": "docustay/web/src/routes/(site)/+page.svelte",
-   "sha256": "a52c4094b0f4cf75d76bd8c45783d6815a195f6012f0e7f7b27296df71b76807",
-   "source_sha256": "a52c4094b0f4cf75d76bd8c45783d6815a195f6012f0e7f7b27296df71b76807",
+   "sha256": "e10dd696ec63b6f562b2f3b573b2c45594c5247fce2c6369304c243fafe6b51a",
+   "source_sha256": "e10dd696ec63b6f562b2f3b573b2c45594c5247fce2c6369304c243fafe6b51a",
    "substitutions": 0
   },
   {
@@ -9579,8 +9579,8 @@
   {
    "path": "docustay/web/src/routes/(site)/developers/+page.svelte",
    "from": "docustay/web/src/routes/(site)/developers/+page.svelte",
-   "sha256": "ddedbc2b5c1e95bd38919178775cd7c5cc1713a8306aa47d413d474f8bae632a",
-   "source_sha256": "ddedbc2b5c1e95bd38919178775cd7c5cc1713a8306aa47d413d474f8bae632a",
+   "sha256": "43ec97b5a4f35a7892bbec911a46c2f24eabf1a3760463e98a0dfc1d2a52530e",
+   "source_sha256": "43ec97b5a4f35a7892bbec911a46c2f24eabf1a3760463e98a0dfc1d2a52530e",
    "substitutions": 0
   },
   {

@@ -95,7 +95,7 @@
     <li data-reveal {@attach reveal}><Tile kind="A3" size={44}><svg viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d={I.plug} /></svg></Tile><div><h3 class="d-h3">Claude plugin</h3><p data-feature="F-MCP">The server plus five skills for sending, text tags, embedding, webhooks and agent safety.</p></div></li>
   </ul>
   <div class="two-code" data-reveal {@attach reveal}>
-    <Terminal title="your laptop" lines={[{ t: "cmd", s: "npx docustay login" }, { t: "cmd", s: "npx docustay send --test TEMPLATE_ID --party 'signer_1=Pat Example <pat@example.com>'" }, { t: "ok", s: "✔ sent — document 11111111-2222-4333-8444-555555555555 (test), 1 email sent" }, { t: "cmd", s: "npx docustay listen --forward-to http://localhost:3000/webhooks" }]} />
+    <Terminal title="your laptop" lines={[{ t: "cmd", s: "npx docustay login" }, { t: "cmd", s: "npx docustay send --test $DOCUSTAY_TEMPLATE_ID --party 'signer_1=Rosa Alvarez <rosa@example.com>'" }, { t: "ok", s: "✔ sent — document 11111111-2222-4333-8444-555555555555 (test), 1 email sent" }, { t: "cmd", s: "npx docustay listen --forward-to http://localhost:3000/webhooks" }]} />
   </div>
   <p class="more"><a class="d-btn alt sm" href="/developers/sdks">SDKs</a><a class="d-btn alt sm" href="/developers/cli">The CLI</a><a class="d-btn alt sm" href="/developers/agents">Agents and MCP</a></p>
 </section>

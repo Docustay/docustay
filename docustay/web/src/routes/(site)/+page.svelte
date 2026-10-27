@@ -170,7 +170,7 @@
     <p class="more2"><a class="d-btn alt sm" href="/docs/webhooks">Webhook events</a><a class="d-btn alt sm" href="/verify">Verify a PDF</a></p></div>
   <div class="sp-r" data-reveal {@attach reveal}>
     <div class="still-tile slim" aria-hidden="true"><Still name="seal" max={250} /></div>
-    <Terminal title="your laptop" lines={[{ t: "cmd", s: "npx docustay send --test TEMPLATE_ID --party 'signer_1=Pat Example <pat@example.com>'" }, { t: "ok", s: "✔ sent — document 11111111-2222-4333-8444-555555555555 (test), 1 email sent" }, { t: "cmd", s: "npx docustay listen --forward-to http://localhost:3000/webhooks" }]} />
+    <Terminal title="your laptop" lines={[{ t: "cmd", s: "npx docustay send --test $DOCUSTAY_TEMPLATE_ID --party 'signer_1=Rosa Alvarez <rosa@example.com>'" }, { t: "ok", s: "✔ sent — document 11111111-2222-4333-8444-555555555555 (test), 1 email sent" }, { t: "cmd", s: "npx docustay listen --forward-to http://localhost:3000/webhooks" }]} />
   </div>
 </section>
 
